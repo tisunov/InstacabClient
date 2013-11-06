@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SVRequestViewController">
+            <connections>
+                <outlet property="addressView" destination="sVe-Pv-ovU" id="g4s-oY-X2Y"/>
+                <outlet property="bottomActionView" destination="T9t-2n-lFJ" id="qdP-kT-1ff"/>
+                <outlet property="locationLabel" destination="noL-DQ-skU" id="UpP-Ad-7vF"/>
+                <outlet property="pickupBtn" destination="WW7-hF-aDX" id="mZP-Nb-5nb"/>
+                <outlet property="pickupTimeLabel" destination="7tm-9b-PCc" id="Vcr-2m-Pr8"/>
+                <outlet property="pickupTitleLabel" destination="gHA-hD-WQ1" id="c0v-qH-rfr"/>
+                <outlet property="view" destination="1" id="moN-WR-1Fv"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sVe-Pv-ovU">
+                    <rect key="frame" x="0.0" y="64" width="320" height="40"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="11" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="noL-DQ-skU">
+                            <rect key="frame" x="20" y="17" width="280" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="МЕСТО ПОСАДКИ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gHA-hD-WQ1">
+                            <rect key="frame" x="41" y="4" width="239" height="16"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <gestureRecognizers/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="8"/>
+                            <color key="textColor" red="0.11180043259761747" green="0.25078069888170307" blue="0.91025185585021973" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.91000000000000003" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="oHo-S2-50Z"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-2n-lFJ">
+                    <rect key="frame" x="0.0" y="410" width="320" height="70"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WW7-hF-aDX" customClass="HRHighlightButton">
+                            <rect key="frame" x="20" y="7" width="280" height="40"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="0.24131059954753478" green="0.76225685586734693" blue="0.3890975385997309" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
+                            <state key="normal" title="Увезите меня">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <state key="selected">
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <state key="highlighted">
+                                <color key="titleColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
+                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="requestPickup:" destination="-1" eventType="touchUpInside" id="OUY-w8-kPn"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tm-9b-PCc">
+                            <rect key="frame" x="20" y="47" width="280" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                            <color key="textColor" red="0.37089445153061229" green="0.37089445153061229" blue="0.37089445153061229" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.97348312043795615" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="70" id="BPx-ac-i7N"/>
+                        <constraint firstAttribute="width" constant="320" id="cOK-dX-DxF"/>
+                        <constraint firstAttribute="height" constant="70" id="hKT-ip-qLt"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="66" id="lXu-Qh-1Zh"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstItem="T9t-2n-lFJ" firstAttribute="leading" secondItem="sVe-Pv-ovU" secondAttribute="leading" id="BsP-96-4uC"/>
+                <constraint firstAttribute="bottom" secondItem="T9t-2n-lFJ" secondAttribute="bottom" id="E7N-ca-PKq"/>
+                <constraint firstItem="sVe-Pv-ovU" firstAttribute="top" secondItem="1" secondAttribute="top" constant="64" id="J3o-ig-VL4"/>
+                <constraint firstItem="sVe-Pv-ovU" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="LjP-3Z-Ut5"/>
+                <constraint firstAttribute="bottom" secondItem="T9t-2n-lFJ" secondAttribute="bottom" id="Pxk-N6-e90"/>
+                <constraint firstAttribute="bottom" secondItem="T9t-2n-lFJ" secondAttribute="bottom" id="aCX-bl-xeE"/>
+                <constraint firstAttribute="bottom" secondItem="T9t-2n-lFJ" secondAttribute="bottom" id="ghF-Ne-twi"/>
+                <constraint firstItem="sVe-Pv-ovU" firstAttribute="top" relation="greaterThanOrEqual" secondItem="1" secondAttribute="top" constant="64" id="kzp-87-9wx"/>
+                <constraint firstAttribute="trailing" secondItem="sVe-Pv-ovU" secondAttribute="trailing" id="sv4-o6-8sr"/>
+                <constraint firstItem="sVe-Pv-ovU" firstAttribute="top" relation="lessThanOrEqual" secondItem="1" secondAttribute="top" constant="64" id="zZZ-dE-eL6"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+</document>
