@@ -8,21 +8,33 @@
 
 #import "AppDelegate.h"
 #import <GoogleMaps/GoogleMaps.h>
-#import "SVRequestViewController.h"
-#import "SVDispatchServer.h"
-#import "SVUserLocation.h"
+#import "ICLoginViewController.h"
+#import "ICDispatchServer.h"
+#import "ICLocationService.h"
+#import "UIColor+Colours.h"
+#import "UIApplication+Alerts.h"
+#import "Bugsnag.h"
+//#import <Crashlytics/Crashlytics.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+//    [Crashlytics startWithAPIKey:@"513638f30675a9a0e0197887a95cd129213cb96a"];
+    [Bugsnag startBugsnagWithApiKey:@"07683146286ebf0f4aff27edae5b5043"];
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    [self setupServices];
+    [self setupServices:application];
     
-    SVRequestViewController *requestViewController = [[SVRequestViewController alloc] initWithNibName:@"SVRequestViewController" bundle:nil];
-    UINavigationController *nav = [[UINavigationController alloc]  initWithRootViewController:requestViewController];
+    ICLoginViewController *vc = [[ICLoginViewController alloc] initWithNibName:@"ICLoginViewController" bundle:nil];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nav;
+    
+    nav.navigationBar.barTintColor = [UIColor colorFromHexString:@"#F8F8F4"];
+    
+    NSDictionary *textAttributes = @{ NSForegroundColorAttributeName:[UIColor colorFromHexString:@"#403F3C"] };
+    nav.navigationBar.titleTextAttributes = textAttributes;
     
     [self.window makeKeyAndVisible];
     return YES;
@@ -38,15 +50,32 @@
 // Как узнать тип соединения, WiFi, 3G or EDGE или Нету Соединения с помощью класса Reachability
 // http://stackoverflow.com/questions/11049660/detect-carrier-connection-type-3g-edge-gprs - 2ой ответ
 
-- (void)setupServices {
+- (void)setupServices:(UIApplication *)application {
     // Google Maps key
     [GMSServices provideAPIKey:@"AIzaSyDcikveiQmWRQ8Qv-gPofHuMHgYhjCpsqQ"];
     
     // Initiate connection to server
-    [[SVDispatchServer sharedInstance] connect];
+    ICDispatchServer *dispatchServer = [ICDispatchServer sharedInstance];
+    dispatchServer.appType = @"client";
     
-    // Start updating location
-    [SVUserLocation sharedInstance];
+    
+    if([CLLocationManager locationServicesEnabled]) {
+        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted )
+        {
+            [application showAlertWithTitle:@"Warning" message:@"Determining your current location cannot be performed at this time because location services are enabled but restricted"];
+            
+            NSLog(@"Determining your current location cannot be performed at this time because location services are enabled but restricted");
+        }
+        else {
+            // Start updating location
+            [[ICLocationService sharedInstance] start];
+        }
+    }
+    else {
+        [application showAlertWithTitle:@"Error" message:@"Determining your current location cannot be performed at this time because location services are not enabled."];
+        
+        NSLog(@"Location services are OFF!");
+    }
 }
 
 - (void)setupBugTracking {

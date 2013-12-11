@@ -48,6 +48,24 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 0
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 0
 
+// Colours
+#define COCOAPODS_POD_AVAILABLE_Colours
+#define COCOAPODS_VERSION_MAJOR_Colours 2
+#define COCOAPODS_VERSION_MINOR_Colours 0
+#define COCOAPODS_VERSION_PATCH_Colours 0
+
+// EDStarRating
+#define COCOAPODS_POD_AVAILABLE_EDStarRating
+#define COCOAPODS_VERSION_MAJOR_EDStarRating 1
+#define COCOAPODS_VERSION_MINOR_EDStarRating 1
+#define COCOAPODS_VERSION_PATCH_EDStarRating 0
+
+// MBProgressHUD
+#define COCOAPODS_POD_AVAILABLE_MBProgressHUD
+#define COCOAPODS_VERSION_MAJOR_MBProgressHUD 0
+#define COCOAPODS_VERSION_MINOR_MBProgressHUD 8
+#define COCOAPODS_VERSION_PATCH_MBProgressHUD 0
+
 // Mantle
 #define COCOAPODS_POD_AVAILABLE_Mantle
 #define COCOAPODS_VERSION_MAJOR_Mantle 1
@@ -59,6 +77,30 @@
 #define COCOAPODS_VERSION_MAJOR_Mantle_extobjc 1
 #define COCOAPODS_VERSION_MINOR_Mantle_extobjc 3
 #define COCOAPODS_VERSION_PATCH_Mantle_extobjc 1
+
+// ReactiveCocoa
+#define COCOAPODS_POD_AVAILABLE_ReactiveCocoa
+#define COCOAPODS_VERSION_MAJOR_ReactiveCocoa 2
+#define COCOAPODS_VERSION_MINOR_ReactiveCocoa 1
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa 7
+
+// ReactiveCocoa/Core
+#define COCOAPODS_POD_AVAILABLE_ReactiveCocoa_Core
+#define COCOAPODS_VERSION_MAJOR_ReactiveCocoa_Core 2
+#define COCOAPODS_VERSION_MINOR_ReactiveCocoa_Core 1
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_Core 7
+
+// ReactiveCocoa/no-arc
+#define COCOAPODS_POD_AVAILABLE_ReactiveCocoa_no_arc
+#define COCOAPODS_VERSION_MAJOR_ReactiveCocoa_no_arc 2
+#define COCOAPODS_VERSION_MINOR_ReactiveCocoa_no_arc 1
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_no_arc 7
+
+// SLScrollViewKeyboardSupport
+#define COCOAPODS_POD_AVAILABLE_SLScrollViewKeyboardSupport
+#define COCOAPODS_VERSION_MAJOR_SLScrollViewKeyboardSupport 1
+#define COCOAPODS_VERSION_MINOR_SLScrollViewKeyboardSupport 1
+#define COCOAPODS_VERSION_PATCH_SLScrollViewKeyboardSupport 2
 
 // SocketRocket
 #define COCOAPODS_POD_AVAILABLE_SocketRocket

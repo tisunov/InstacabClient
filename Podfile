@@ -1,6 +1,6 @@
 workspace 'Instacab'
 xcodeproj 'Instacab.xcodeproj'
-xcodeproj 'InstacabDriver/InstacabDriver.xcodeproj'
+#xcodeproj 'InstacabDriver/InstacabDriver.xcodeproj'
 
 target 'Instacab' do
     platform :ios, '7.0'
@@ -9,15 +9,26 @@ target 'Instacab' do
     pod 'SocketRocket', '~> 0.3.1-beta2'
     pod 'Mantle', '~> 1.3.1'
     pod 'EDStarRating'
+    pod 'ReactiveCocoa', '~> 2.1.7'
+    pod 'MBProgressHUD', :git => 'https://github.com/dannybabiy/MBProgressHUD.git', :branch=>'ios7'
+    pod 'SLScrollViewKeyboardSupport', :git => 'https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git'
+    pod 'TSMessages', :git => 'https://github.com/tisunov/TSMessages.git'
+    pod 'Bugsnag'
+    pod 'ObjectiveSugar'
 
     xcodeproj 'Instacab.xcodeproj'
 end
 
-target 'InstacabDriver' do
-    platform :ios, '7.0'
-    pod 'AFNetworking', '~> 2.0'    
-    pod 'SocketRocket', '~> 0.3.1-beta2'
-    pod 'Mantle', '~> 1.3.1'
-    
-    xcodeproj 'InstacabDriver/InstacabDriver.xcodeproj'
-end
+#target 'InstacabDriver' do
+#    platform :ios, '7.0'
+#    pod 'AFNetworking', '~> 2.0'
+#    pod 'SocketRocket', '~> 0.3.1-beta2'
+#    pod 'Mantle', '~> 1.3.1'
+#    pod 'Colours', '~> 2.0'
+#    pod 'EDStarRating'
+#    pod 'ReactiveCocoa', '~> 2.1.7'
+#    pod 'MBProgressHUD', :git => 'https://github.com/dannybabiy/MBProgressHUD.git', :branch=>'ios7'
+#    pod 'SLScrollViewKeyboardSupport', :git => 'https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git'
+#
+#    xcodeproj 'InstacabDriver/InstacabDriver.xcodeproj'
+#end

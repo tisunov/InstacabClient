@@ -48,6 +48,12 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 0
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 0
 
+// Bugsnag
+#define COCOAPODS_POD_AVAILABLE_Bugsnag
+#define COCOAPODS_VERSION_MAJOR_Bugsnag 3
+#define COCOAPODS_VERSION_MINOR_Bugsnag 1
+#define COCOAPODS_VERSION_PATCH_Bugsnag 0
+
 // Colours
 #define COCOAPODS_POD_AVAILABLE_Colours
 #define COCOAPODS_VERSION_MAJOR_Colours 2
@@ -59,6 +65,18 @@
 #define COCOAPODS_VERSION_MAJOR_EDStarRating 1
 #define COCOAPODS_VERSION_MINOR_EDStarRating 1
 #define COCOAPODS_VERSION_PATCH_EDStarRating 0
+
+// HexColors
+#define COCOAPODS_POD_AVAILABLE_HexColors
+#define COCOAPODS_VERSION_MAJOR_HexColors 2
+#define COCOAPODS_VERSION_MINOR_HexColors 2
+#define COCOAPODS_VERSION_PATCH_HexColors 1
+
+// MBProgressHUD
+#define COCOAPODS_POD_AVAILABLE_MBProgressHUD
+#define COCOAPODS_VERSION_MAJOR_MBProgressHUD 0
+#define COCOAPODS_VERSION_MINOR_MBProgressHUD 8
+#define COCOAPODS_VERSION_PATCH_MBProgressHUD 0
 
 // Mantle
 #define COCOAPODS_POD_AVAILABLE_Mantle
@@ -72,9 +90,45 @@
 #define COCOAPODS_VERSION_MINOR_Mantle_extobjc 3
 #define COCOAPODS_VERSION_PATCH_Mantle_extobjc 1
 
+// Reachability
+#define COCOAPODS_POD_AVAILABLE_Reachability
+#define COCOAPODS_VERSION_MAJOR_Reachability 3
+#define COCOAPODS_VERSION_MINOR_Reachability 1
+#define COCOAPODS_VERSION_PATCH_Reachability 1
+
+// ReactiveCocoa
+#define COCOAPODS_POD_AVAILABLE_ReactiveCocoa
+#define COCOAPODS_VERSION_MAJOR_ReactiveCocoa 2
+#define COCOAPODS_VERSION_MINOR_ReactiveCocoa 1
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa 7
+
+// ReactiveCocoa/Core
+#define COCOAPODS_POD_AVAILABLE_ReactiveCocoa_Core
+#define COCOAPODS_VERSION_MAJOR_ReactiveCocoa_Core 2
+#define COCOAPODS_VERSION_MINOR_ReactiveCocoa_Core 1
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_Core 7
+
+// ReactiveCocoa/no-arc
+#define COCOAPODS_POD_AVAILABLE_ReactiveCocoa_no_arc
+#define COCOAPODS_VERSION_MAJOR_ReactiveCocoa_no_arc 2
+#define COCOAPODS_VERSION_MINOR_ReactiveCocoa_no_arc 1
+#define COCOAPODS_VERSION_PATCH_ReactiveCocoa_no_arc 7
+
+// SLScrollViewKeyboardSupport
+#define COCOAPODS_POD_AVAILABLE_SLScrollViewKeyboardSupport
+#define COCOAPODS_VERSION_MAJOR_SLScrollViewKeyboardSupport 1
+#define COCOAPODS_VERSION_MINOR_SLScrollViewKeyboardSupport 1
+#define COCOAPODS_VERSION_PATCH_SLScrollViewKeyboardSupport 2
+
 // SocketRocket
 #define COCOAPODS_POD_AVAILABLE_SocketRocket
 #define COCOAPODS_VERSION_MAJOR_SocketRocket 0
 #define COCOAPODS_VERSION_MINOR_SocketRocket 3
 #define COCOAPODS_VERSION_PATCH_SocketRocket 1
+
+// TSMessages
+#define COCOAPODS_POD_AVAILABLE_TSMessages
+#define COCOAPODS_VERSION_MAJOR_TSMessages 0
+#define COCOAPODS_VERSION_MINOR_TSMessages 9
+#define COCOAPODS_VERSION_PATCH_TSMessages 4
 
