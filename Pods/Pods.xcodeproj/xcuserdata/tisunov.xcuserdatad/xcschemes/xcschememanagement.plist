@@ -39,6 +39,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-Instacab-ObjectiveSugar.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Instacab-Reachability.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,67 +77,72 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3A65E92A43E64DA1A0DA81F1</key>
+		<key>017F42A32E494190B903C176</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>57CF3AF0846F47C584DFC21B</key>
+		<key>2694784DC0EF44E6878D19DE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>73354B4320D24DBBA2EC3739</key>
+		<key>3BF059084AF74DBF904FF170</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>79BD43D7E4464BEC9B5D5B5B</key>
+		<key>64BCEBD1439944C782C39222</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>851D89DECD3E4B65A068935D</key>
+		<key>8B5F4B2B1A1C435FACC75B95</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>87E2E811C9BE4B85A5E044F2</key>
+		<key>8C9AC2CDA1E84DC79CDB29F5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9290E773BD124120918B4D4D</key>
+		<key>92E9B27EFAED45F78A0E852B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9AE83DF09BA9475CA058F31B</key>
+		<key>AEB5C831E5E34071BAC9B883</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A4E6BA59372C4C7CBE68AACC</key>
+		<key>B3916336A9CE4719AADC95FC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A70454F005A34C2198FE75DD</key>
+		<key>C7044B083C2C46029987EF0D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BCAADAEE793844959E25AE2A</key>
+		<key>D170115B61334D0B8F43EF46</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CF3E390EB275413BAD652D1A</key>
+		<key>EBA7DDA4358B4D509A266080</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EE083F657B324DF598B380F6</key>
+		<key>EFF5D987CC2C405A9014EB75</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F1AEA52B89974C1D89C6C196</key>
 		<dict>
 			<key>primary</key>
 			<true/>

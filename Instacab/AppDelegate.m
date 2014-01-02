@@ -14,7 +14,6 @@
 #import "UIColor+Colours.h"
 #import "UIApplication+Alerts.h"
 #import "Bugsnag.h"
-#import "UIAlertView+Additions.h"
 //#import <Crashlytics/Crashlytics.h>
 
 @implementation AppDelegate
