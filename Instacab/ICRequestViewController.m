@@ -18,6 +18,8 @@
 #import "UINavigationController+Animation.h"
 #import "UIApplication+Alerts.h"
 #import "CGRectUtils.h"
+#import "UIActionSheet+Blocks.h"
+#import "UIAlertView+Additions.h"
 
 // HELPFUL: Меню для добавления действий пользователя во время поездки
 // https://github.com/rnystrom/RNGridMenu
@@ -160,41 +162,40 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
 }
 
 -(void)showTripActionSheet {
-    UIActionSheet *actionSheet =
-        [[UIActionSheet alloc] initWithTitle:@"Вы уверены что хотите отменить заказ?"
-                                    delegate:self
-                           cancelButtonTitle:@"Закрыть"
-                      destructiveButtonTitle:@"Отменить Заказ"
-                           otherButtonTitles:nil];
-    actionSheet.tag = 1;
-    
-    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
+    [UIActionSheet presentOnView:self.view
+                       withTitle:@"Вы уверены что хотите отменить заказ?"
+                    cancelButton:@"Закрыть"
+               destructiveButton:@"Отменить Заказ"
+                    otherButtons:nil
+                        onCancel:^(UIActionSheet *actionSheet) {
+                            NSLog(@"Touched cancel button");
+                        }
+                   onDestructive:^(UIActionSheet *actionSheet) {
+                       NSLog(@"Touched destructive button");
+                       [self cancelTrip];
+                   }
+                 onClickedButton:^(UIActionSheet *actionSheet, NSUInteger index) {
+                     NSLog(@"Selected button at index %d", index);
+                 }];
 }
 
 -(void)showAccountActionSheet {
-    UIActionSheet *actionSheet =
-        [[UIActionSheet alloc] initWithTitle:nil
-                                    delegate:self
-                           cancelButtonTitle:@"Отмена"
-                      destructiveButtonTitle:@"Выйти"
-                           otherButtonTitles:nil];
-    actionSheet.tag = 0;
+    [UIActionSheet presentOnView:self.view
+                       withTitle:nil
+                    cancelButton:@"Отмена"
+               destructiveButton:@"Выйти"
+                    otherButtons:nil
+                        onCancel:^(UIActionSheet *actionSheet) {
+                            NSLog(@"Touched cancel button");
+                        }
+                   onDestructive:^(UIActionSheet *actionSheet) {
+                       NSLog(@"Touched destructive button");
+                       [self logout];
+                   }
+                 onClickedButton:^(UIActionSheet *actionSheet, NSUInteger index) {
+                     NSLog(@"Selected button at index %d", index);
+                 }];
     
-    [actionSheet showInView:[UIApplication sharedApplication].keyWindow];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch ( actionSheet.tag )
-    {
-        // Shift actions
-        case 0:
-            if (buttonIndex == 0) [self logout];
-            break;
-        // Trip actions
-        case 1:
-            if (buttonIndex == 0) [self cancelTrip];
-            break;
-    }
 }
 
 -(void)logout {
@@ -620,7 +621,7 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     
     switch (driverState) {
         case SVDriverStateArrived:
-            [self updateStatusLabel:@"Ваш Instacab ожидает вас"];
+            [self updateStatusLabel:@"Ваш Instacab прибыл"];
             [self showDriverPanelWithButton:YES];
             [self updateVehiclePosition];
             break;
@@ -776,6 +777,7 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     [_mapView addSubview:_greenPinView];
 
     [self showAddressBar];
+    [self hideTripCancelButton];
     
     // Get address for current location
     [_googleService reverseGeocodeLocation:_locationService.coordinates];
