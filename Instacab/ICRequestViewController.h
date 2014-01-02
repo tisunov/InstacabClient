@@ -15,7 +15,7 @@
 #import "ICClientService.h"
 #import "ICLocationService.h"
 
-@interface ICRequestViewController : UIViewController<SVGoogleServiceDelegate, ICLocationServiceDelegate, UIActionSheetDelegate>
+@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, UIActionSheetDelegate>
 - (IBAction)requestPickup:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *view;
@@ -29,7 +29,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
 @property (strong, nonatomic) IBOutlet UIView *driverView;
 @property (strong, nonatomic) IBOutlet ICHighlightButton *beginTripButton;
-@property (strong, nonatomic) IBOutlet UIButton *callDriverButton;
+@property (strong, nonatomic) IBOutlet ICHighlightButton *callDriverButton;
 @property (strong, nonatomic) IBOutlet UILabel *driverNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *vehicleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *vehicleLicenseLabel;

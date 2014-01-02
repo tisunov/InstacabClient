@@ -11,13 +11,13 @@
 #import "ICLocation.h"
 #import "ICSingleton.h"
 
-@protocol SVGoogleServiceDelegate <NSObject>
+@protocol ICGoogleServiceDelegate <NSObject>
 - (void)didGeocodeLocation:(ICLocation*)location;
 - (void)didFailToGeocodeWithError:(NSError*)error;
 @end
 
 @interface ICGoogleService : ICSingleton
 - (void)reverseGeocodeLocation: (CLLocationCoordinate2D) location;
-@property (nonatomic,strong) id <SVGoogleServiceDelegate> delegate;
+@property (nonatomic,weak) id <ICGoogleServiceDelegate> delegate;
 
 @end

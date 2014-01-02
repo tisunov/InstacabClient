@@ -54,7 +54,7 @@
     
     ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
     // Display fare with comma as decimal separator
-    // LATER: This should be handled by server backend
+    // LATER: This should be handled by server backend => Trip.fareString
     NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
     formatter.numberStyle = NSNumberFormatterDecimalStyle;
     formatter.locale = locale;
@@ -68,7 +68,7 @@
     dateFormatter.locale = locale;
     
     // We've got it in milliseconds
-    NSTimeInterval epochTime = [trip.dropoffTimestamp doubleValue] / 1000;
+    NSTimeInterval epochTime = [trip.dropoffTimestamp doubleValue];
     NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:epochTime];
     
     _timestampLabel.text = [[dateFormatter stringFromDate:date] uppercaseString];

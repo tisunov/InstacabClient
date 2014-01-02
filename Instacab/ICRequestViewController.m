@@ -121,6 +121,8 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     
     ICClient *client = [ICClient sharedInstance];
     [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:nil];
+    
+    [self updateLocationOnce];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -212,11 +214,15 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     [self.navigationController slideLayerAndPopInDirection:kCATransitionFromTop];
 }
 
-- (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
+- (void)updateLocationOnce {
     if (_justStarted) {
-        [_googleService reverseGeocodeLocation:coordinates];
+        [_googleService reverseGeocodeLocation:_locationService.coordinates];
         _justStarted = NO;
     }
+}
+
+- (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
+    [self updateLocationOnce];
 //    [self moveMapToPosition:location];
 }
 
@@ -500,9 +506,10 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     _vehicleLabel.textColor = [UIColor black50PercentColor];
     _vehicleLicenseLabel.textColor = [UIColor black50PercentColor];
     
-    _callDriverButton.backgroundColor = [UIColor colorFromHexString:@"#BDC3C7"];
+    _callDriverButton.normalColor = [UIColor colorFromHexString:@"#BDC3C7"];
+    _callDriverButton.highlightedColor = [UIColor colorFromHexString:@"#7F8C8D"];
     _callDriverButton.tintColor = [UIColor whiteColor];
-    _callDriverButton.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
+    _callDriverButton.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
     [_callDriverButton setImage:[UIImage imageNamed:@"call_driver2.png"] forState:UIControlStateNormal];
     [_callDriverButton addTarget:self action:@selector(callDriver) forControlEvents:UIControlEventTouchUpInside];
     
@@ -621,7 +628,7 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
         case SVDriverStateAccepted:
             [self showDriverPanelWithButton:NO];
             [self updateVehiclePosition];
-            [self updateStatusLabel:@"Водитель подтвердил и уже в пути"];
+            [self updateStatusLabel:@"Водитель выехал"];
             break;
 
         case SVDriverStateDrivingClient:
@@ -636,12 +643,12 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
 
 -(void)layoutForClientState: (ICClientState)clientState {
     NSLog(@"Layout for Client state: %d", clientState);
-    [self hideProgress];
     
     switch (clientState) {
         case SVClientStateLooking:
             [self prepareForNextTrip];
             [[ICTrip sharedInstance] clear];
+            [self hideProgress];
             break;
             
         case SVClientStateDispatching:
@@ -655,6 +662,7 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
             [self showDispatchedVehicle];
             [self addPickupLocationMarker];
             [self showStatusBar];
+            [self hideProgress];
             break;
             
         case SVClientStateOnTrip:
@@ -663,6 +671,7 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
             [self addPickupLocationMarker];
             [self showDispatchedVehicle];
             [self showStatusBar];
+            [self hideProgress];
             break;
             
         case SVClientStatePendingRating:
@@ -678,11 +687,11 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([[change valueForKey:NSKeyValueChangeKindKey] intValue] == NSKeyValueChangeSetting) {
-        ICClientState newClientState = (ICClientState)[[change valueForKey:NSKeyValueChangeNewKey] intValue];
-        ICClientState oldClientState = (ICClientState)[[change valueForKey:NSKeyValueChangeOldKey] intValue];
+        ICClientState newClientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
+        ICClientState oldClientState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
         
         if (newClientState != oldClientState) {
-            [self layoutForClientState:newClientState];            
+            [self layoutForClientState:newClientState];
         }
     }
 }

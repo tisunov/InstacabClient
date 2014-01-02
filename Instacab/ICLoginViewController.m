@@ -49,7 +49,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"ВХОД";
+    self.title = @"INSTACAB";
     self.view.backgroundColor = [UIColor colorFromHexString:@"#F8F8F4"];
     
     CGColorRef textFieldBorderColor = [[UIColor colorFromHexString:@"#AEAEA3"] CGColor];

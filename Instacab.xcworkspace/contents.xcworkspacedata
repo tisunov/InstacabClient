@@ -2,9 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:9yanvarya.gpx">
-   </FileRef>
-   <FileRef
       location = "group:Instacab.xcodeproj">
    </FileRef>
    <FileRef

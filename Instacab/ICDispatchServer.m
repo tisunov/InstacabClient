@@ -14,7 +14,7 @@
 #import "AFHTTPRequestOperation.h"
 #import "AFURLResponseSerialization.h"
 #import "AFURLRequestSerialization.h"
-
+#include "TargetConditionals.h"
 
 @interface ICDispatchServer ()
 @property (nonatomic) BOOL isConnected;
@@ -34,8 +34,13 @@
 
 NSUInteger const kMaxReconnectAttemps = 1;
 NSString * const kDevice = @"iphone";
-NSString * const kDispatchServerUrl = @"http://localhost:9000";
 NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServerConnectionChangeNotification";
+
+#if !(TARGET_IPHONE_SIMULATOR)
+    NSString * const kDispatchServerUrl = @"http://192.168.1.36.xip.io:9000/";
+#else
+    NSString * const kDispatchServerUrl = @"http://localhost:9000";
+#endif
 
 - (id)init
 {
