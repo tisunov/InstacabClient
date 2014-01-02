@@ -9,7 +9,6 @@
                 <outlet property="addressLabel" destination="noL-DQ-skU" id="etv-3z-WrE"/>
                 <outlet property="addressTitleLabel" destination="gHA-hD-WQ1" id="1lr-pt-MyK"/>
                 <outlet property="addressView" destination="sVe-Pv-ovU" id="g4s-oY-X2Y"/>
-                <outlet property="beginTripButton" destination="LPh-ok-lei" id="c7d-BP-jQB"/>
                 <outlet property="callDriverButton" destination="gPu-de-iHu" id="VSK-cI-7Rc"/>
                 <outlet property="driverNameLabel" destination="rb0-MO-89J" id="Hby-x7-FW2"/>
                 <outlet property="driverView" destination="tGL-uD-7oP" id="fzq-hZ-OpB"/>
@@ -101,17 +100,9 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
                 <view alpha="0.94999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tGL-uD-7oP" userLabel="DriverView">
-                    <rect key="frame" x="0.0" y="568" width="320" height="120"/>
+                    <rect key="frame" x="0.0" y="568" width="320" height="75"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LPh-ok-lei" customClass="ICHighlightButton">
-                            <rect key="frame" x="5" y="75" width="310" height="40"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <state key="normal" title="НАЧАТЬ ПОЕЗДКУ">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                        </button>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="driver_photo" translatesAutoresizingMaskIntoConstraints="NO" id="8sm-Nx-73L">
                             <rect key="frame" x="5" y="5" width="70" height="65"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>

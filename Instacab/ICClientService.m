@@ -89,17 +89,6 @@ NSString * const kFieldPassword = @"password";
     [self sendMessage: message];
 }
 
--(void)beginTrip {
-    NSDictionary *message = @{
-        kFieldMessageType: @"BeginTripClient",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID,
-        @"tripId": [ICTrip sharedInstance].tripId
-    };
-    
-    [self sendMessage: message];
-}
-
 -(void)cancelTrip {
     NSDictionary *message = @{
         kFieldMessageType: @"CancelTripClient",

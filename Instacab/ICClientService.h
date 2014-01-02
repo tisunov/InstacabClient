@@ -17,7 +17,6 @@ extern NSString *const kClientServiceMessageNotification;
 -(void)loginWithEmail:(NSString *)email password: (NSString *)password;
 -(void)pickupAt: (ICLocation *)location;
 -(void)ping: (CLLocationCoordinate2D)location;
--(void)beginTrip;
 -(void)cancelTrip;
 -(void)rateDriver:(NSUInteger)rating forTrip: (ICTrip*)trip;
 -(void)logOut;

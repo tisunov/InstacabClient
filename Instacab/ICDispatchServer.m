@@ -37,9 +37,11 @@ NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServerConnectionChangeNotification";
 
 #if !(TARGET_IPHONE_SIMULATOR)
-    NSString * const kDispatchServerUrl = @"http://192.168.1.36.xip.io:9000/";
+    // @"http://192.168.1.36.xip.io:9000/"
+    NSString * const kDispatchServerUrl = @"http://node.instacab.ru";
 #else
-    NSString * const kDispatchServerUrl = @"http://localhost:9000";
+    // @"http://localhost:9000";
+    NSString * const kDispatchServerUrl = @"http://node.instacab.ru";
 #endif
 
 - (id)init

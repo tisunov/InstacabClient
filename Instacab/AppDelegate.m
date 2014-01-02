@@ -58,7 +58,6 @@
     ICDispatchServer *dispatchServer = [ICDispatchServer sharedInstance];
     dispatchServer.appType = @"client";
     
-    
     if([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted )
         {

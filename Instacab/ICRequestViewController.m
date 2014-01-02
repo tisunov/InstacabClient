@@ -48,7 +48,6 @@
 NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
 NSString * const kConfirmPickupLocation = @"Вызвать машину сюда";
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
-NSString * const kBeginTrip = @"Начать Поездку";
 
 NSString * const kProgressLookingForDriver = @"Выбираем водителя";
 NSString * const kProgressWaitingConfirmation = @"Ожидаем водителя";
@@ -58,7 +57,6 @@ NSString * const kProgressCancelingTrip = @"Отменяю...";
 CGFloat const kDefaultMapZoom = 15.0f;
 NSUInteger const kMapPaddingY = 64.0;
 CGFloat const kDriverInfoPanelHeight = 75.0f;
-CGFloat const kDefaultBeginTripHeight = 45.0f;
 
 #define EPSILON 0.00000001
 #define CLCOORDINATES_EQUAL( coord1, coord2 ) (fabs(coord1.latitude - coord2.latitude) <= EPSILON && fabs(coord1.longitude - coord2.longitude) <= EPSILON)
@@ -514,14 +512,6 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     [_callDriverButton setImage:[UIImage imageNamed:@"call_driver2.png"] forState:UIControlStateNormal];
     [_callDriverButton addTarget:self action:@selector(callDriver) forControlEvents:UIControlEventTouchUpInside];
     
-    _beginTripButton.layer.cornerRadius = 3.0f;
-    _beginTripButton.tintColor = [UIColor whiteColor];
-    _beginTripButton.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
-    _beginTripButton.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
-    _beginTripButton.titleLabel.font = [UIFont fontWithName:@"Helvetica" size:16.0];
-    [_beginTripButton setTitle:[kBeginTrip uppercaseString] forState:UIControlStateNormal];
-    [_beginTripButton addTarget:self action:@selector(beginTrip) forControlEvents:UIControlEventTouchUpInside];
-    
     [self setViewTopShadow:_driverView];
 }
 
@@ -532,8 +522,8 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     _vehicleLicenseLabel.text = trip.vehicle.licensePlate;
 }
 
-- (void)showDriverPanelWithButton:(BOOL)withButton {
-    float driverPanelY = self.view.bounds.size.height - (kDriverInfoPanelHeight + (withButton ? kDefaultBeginTripHeight : 0));
+- (void)showDriverPanel {
+    float driverPanelY = self.view.bounds.size.height - kDriverInfoPanelHeight;
 
     // if already shown
     if (driverPanelY == _driverView.frame.origin.y) return;
@@ -622,19 +612,19 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
     switch (driverState) {
         case SVDriverStateArrived:
             [self updateStatusLabel:@"Ваш Instacab прибыл"];
-            [self showDriverPanelWithButton:YES];
+            [self showDriverPanel];
             [self updateVehiclePosition];
             break;
 
         case SVDriverStateAccepted:
-            [self showDriverPanelWithButton:NO];
+            [self showDriverPanel];
             [self updateVehiclePosition];
             [self updateStatusLabel:@"Водитель выехал"];
             break;
 
         case SVDriverStateDrivingClient:
             [self updateStatusLabel:@"Приятной дороги"];
-            [self showDriverPanelWithButton:NO];
+            [self showDriverPanel];
             break;
             
         default:
@@ -788,11 +778,6 @@ CGFloat const kDefaultBeginTripHeight = 45.0f;
 -(void)zoomMapOnLocation:(CLLocationCoordinate2D)coordinates {
     GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinates zoom:kDefaultMapZoom];
     [_mapView animateWithCameraUpdate:update];
-}
-
--(void)beginTrip {
-    [self showProgressWithMessage:kProgressBeginningTrip];
-    [_clientService beginTrip];
 }
 
 -(void)callDriver{
