@@ -30,7 +30,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Чек";
+    self.title = @"ЧЕК";
     self.navigationItem.hidesBackButton = YES;
 
     _submitRatingBtn.enabled = NO;
