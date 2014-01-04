@@ -13,6 +13,7 @@
 #import "ICLocationService.h"
 #import "UIColor+Colours.h"
 #import "UIApplication+Alerts.h"
+#include "TargetConditionals.h"
 #import "Bugsnag.h"
 //#import <Crashlytics/Crashlytics.h>
 
@@ -20,8 +21,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [Crashlytics startWithAPIKey:@"513638f30675a9a0e0197887a95cd129213cb96a"];
+#if !(TARGET_IPHONE_SIMULATOR)
+    // [Crashlytics startWithAPIKey:@"513638f30675a9a0e0197887a95cd129213cb96a"];
     [Bugsnag startBugsnagWithApiKey:@"07683146286ebf0f4aff27edae5b5043"];
+#endif
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
