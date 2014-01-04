@@ -618,14 +618,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             break;
 
         case SVDriverStateAccepted:
+            [self updateStatusLabel:@"Водитель выехал"];
             [self showDriverPanel];
             [self updateVehiclePosition];
-            [self updateStatusLabel:@"Водитель выехал"];
             break;
 
         case SVDriverStateDrivingClient:
             [self updateStatusLabel:@"Приятной дороги"];
             [self showDriverPanel];
+            [self updateVehiclePosition];
             break;
             
         default:
@@ -702,6 +703,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     switch (message.messageType) {
         case SVMessageTypeNearbyVehicles:
             [self showNearbyVehicles:message.nearbyVehicles];
+            break;
+            
+        case SVMessageTypeEnroute:
+            [self updateVehiclePosition];
             break;
             
         case SVMessageTypeTripCanceled:

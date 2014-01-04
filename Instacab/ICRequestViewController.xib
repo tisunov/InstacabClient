@@ -62,7 +62,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" red="0.047034438775510168" green="0.047034438775510168" blue="0.047034438775510168" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.2088448660714286" green="0.2088448660714286" blue="0.2088448660714286" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view alpha="0.94999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-2n-lFJ" userLabel="PickupView">
                     <rect key="frame" x="0.0" y="498" width="320" height="70"/>
