@@ -11,6 +11,7 @@
                 <outlet property="addressView" destination="sVe-Pv-ovU" id="g4s-oY-X2Y"/>
                 <outlet property="callDriverButton" destination="gPu-de-iHu" id="VSK-cI-7Rc"/>
                 <outlet property="driverNameLabel" destination="rb0-MO-89J" id="Hby-x7-FW2"/>
+                <outlet property="driverRatingLabel" destination="pfy-cl-tfc" id="XWr-wg-ax5"/>
                 <outlet property="driverView" destination="tGL-uD-7oP" id="fzq-hZ-OpB"/>
                 <outlet property="pickupBtn" destination="WW7-hF-aDX" id="mZP-Nb-5nb"/>
                 <outlet property="pickupTimeLabel" destination="7tm-9b-PCc" id="Vcr-2m-Pr8"/>
@@ -115,7 +116,7 @@
                             </state>
                         </button>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rb0-MO-89J">
-                            <rect key="frame" x="85" y="5" width="152" height="21"/>
+                            <rect key="frame" x="85" y="5" width="108" height="21"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -133,6 +134,17 @@
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="star" translatesAutoresizingMaskIntoConstraints="NO" id="JIr-ob-dze" userLabel="Driver star">
+                            <rect key="frame" x="224" y="8" width="14" height="14"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pfy-cl-tfc" userLabel="Driver rating">
+                            <rect key="frame" x="198" y="5" width="24" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                 </view>
@@ -145,5 +157,6 @@
     </objects>
     <resources>
         <image name="driver_photo" width="1248" height="1170"/>
+        <image name="star" width="26" height="26"/>
     </resources>
 </document>

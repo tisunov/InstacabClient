@@ -518,6 +518,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)populateTripInfo {
     ICTrip *trip = [ICTrip sharedInstance];
     _driverNameLabel.text = trip.driver.firstName;
+    _driverRatingLabel.text = trip.driver.rating;
     _vehicleLabel.text = trip.vehicle.makeAndModel;
     _vehicleLicenseLabel.text = trip.vehicle.licensePlate;
 }
