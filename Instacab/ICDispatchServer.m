@@ -41,7 +41,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     NSString * const kDispatchServerUrl = @"http://node.instacab.ru";
 #else
     // @"http://localhost:9000";
-    NSString * const kDispatchServerUrl = @"http://node.instacab.ru";
+    NSString * const kDispatchServerUrl = @"http://localhost:9000";
 #endif
 
 - (id)init
