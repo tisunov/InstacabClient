@@ -27,7 +27,8 @@
         @"pickupLocation": @"pickupLocation",
         @"dropoffLocation": @"dropoffLocation",
         @"fareBilledToCard": @"fareBilledToCard",
-        @"dropoffTimestamp": @"dropoffTimestamp"
+        @"dropoffTimestamp": @"dropoffTimestamp",
+        @"eta": @"eta"
     };
 }
 

@@ -19,6 +19,7 @@
 @property (nonatomic, strong) ICLocation *pickupLocation;
 @property (nonatomic, strong, readonly) ICLocation *dropoffLocation;
 @property (nonatomic, copy, readonly) NSNumber* dropoffTimestamp;
+@property (nonatomic, copy, readonly) NSNumber *eta;
 
 @property (nonatomic, readonly) CLLocationCoordinate2D driverCoordinate;
 
