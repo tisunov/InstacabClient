@@ -14,7 +14,9 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"minEta": @"minEta",
-        @"vehiclePoints": @"vehiclePoints"
+        @"vehiclePoints": @"vehiclePoints",
+        @"sorryMsg": @"sorryMsg",
+        @"noneAvailableString": @"noneAvailableString"
     };
 }
 
@@ -22,8 +24,8 @@
     return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:ICVehiclePoint.class];
 }
 
--(BOOL)noVehicles {
-    return _sorryMsg != nil;
+-(BOOL)zeroVehicles {
+    return _sorryMsg != nil || _noneAvailableString != nil;
 }
 
 @end

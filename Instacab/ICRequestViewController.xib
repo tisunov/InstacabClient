@@ -13,6 +13,7 @@
                 <outlet property="driverNameLabel" destination="rb0-MO-89J" id="Hby-x7-FW2"/>
                 <outlet property="driverRatingLabel" destination="pfy-cl-tfc" id="XWr-wg-ax5"/>
                 <outlet property="driverView" destination="tGL-uD-7oP" id="fzq-hZ-OpB"/>
+                <outlet property="etaLabel" destination="uec-hM-kVf" id="EQk-kk-aQQ"/>
                 <outlet property="pickupBtn" destination="WW7-hF-aDX" id="mZP-Nb-5nb"/>
                 <outlet property="pickupTimeLabel" destination="7tm-9b-PCc" id="Vcr-2m-Pr8"/>
                 <outlet property="pickupView" destination="T9t-2n-lFJ" id="c6h-wZ-SaT"/>
@@ -51,13 +52,20 @@
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.91000000000000003" colorSpace="calibratedRGB"/>
                 </view>
                 <view hidden="YES" alpha="0.94999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UKi-ek-Hm6" userLabel="StatusView">
-                    <rect key="frame" x="5" y="69" width="310" height="35"/>
+                    <rect key="frame" x="5" y="69" width="310" height="46"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ВОДИТЕЛЬ ВЫЕХАЛ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="4fC-fN-8Km" userLabel="StatusLabel">
-                            <rect key="frame" x="10" y="3" width="280" height="30"/>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ВОДИТЕЛЬ В ПУТИ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="4fC-fN-8Km" userLabel="StatusLabel">
+                            <rect key="frame" x="10" y="5" width="280" height="18"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ПРИБУДЕТ ЧЕРЕЗ 8 МИНУТ" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uec-hM-kVf" userLabel="ETA">
+                            <rect key="frame" x="15" y="24" width="270" height="17"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -93,8 +101,8 @@
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tm-9b-PCc">
                             <rect key="frame" x="5" y="2" width="310" height="24"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
-                            <color key="textColor" red="0.37089445153061229" green="0.37089445153061229" blue="0.37089445153061229" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
+                            <color key="textColor" red="0.17205436862244894" green="0.17205436862244894" blue="0.17205436862244894" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>

@@ -27,6 +27,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *pickupTimeLabel;
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
+@property (strong, nonatomic) IBOutlet UILabel *etaLabel;
 @property (strong, nonatomic) IBOutlet UIView *driverView;
 @property (strong, nonatomic) IBOutlet ICHighlightButton *callDriverButton;
 @property (strong, nonatomic) IBOutlet UILabel *driverNameLabel;

@@ -54,6 +54,7 @@ NSString * const kProgressLookingForDriver = @"Выбираем водителя
 NSString * const kProgressWaitingConfirmation = @"Ожидаем водителя";
 NSString * const kProgressBeginningTrip = @"Начинаем поездку";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
+NSString * const kEtaLabelTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
 
 CGFloat const kDefaultMapZoom = 15.0f;
 NSUInteger const kMapPaddingY = 64.0;
@@ -383,14 +384,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)showNearbyVehicles: (ICNearbyVehicles *) nearbyVehicles {
-    if ([nearbyVehicles noVehicles]) {
-        _pickupTimeLabel.text = nearbyVehicles.sorryMsg;
+    if ([nearbyVehicles zeroVehicles]) {
+        _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
         _pickupBtn.enabled = NO;
         [_mapView clear];
         return;
     }
     
-    _pickupTimeLabel.text = [NSString stringWithFormat:@"Ближайший водитель примерно в %@ минутах", nearbyVehicles.minEta];
+    _pickupTimeLabel.text = [[NSString stringWithFormat:@"Примерное время подачи машины - %@ минут", nearbyVehicles.minEta] uppercaseString];
     _pickupBtn.enabled = YES;
     
     // Add new vehicles and update existing vehicles' positions
@@ -440,7 +441,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)updateAddressLabel: (NSString *)text {
     if ([_addressLabel.text isEqualToString:text]) return;
 
-    // Animate text change to from blank to address
+    // Animate text change from blank to address
     if (![text isEqualToString:kGoToMarker]) {
         [_addressLabel.layer addAnimation:_animation forKey:@"kCATransitionFade"];
     }
@@ -448,9 +449,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _addressLabel.text = [text uppercaseString];
 }
 
-- (void)updateStatusLabel: (NSString *)text {
+- (void)updateStatusLabel: (NSString *)text withETA:(BOOL)withEta {
     [_statusLabel.layer addAnimation:_animation forKey:@"kCATransitionFade"];
     _statusLabel.text = [text uppercaseString];
+    
+    _etaLabel.hidden = !withEta;
+    if (withEta) {
+        _etaLabel.text = [self formatDriverEta];
+        _statusView.frame = CGRectSetHeight(_statusView.frame, 46.0f);
+    }
+    else {
+        _statusView.frame = CGRectSetHeight(_statusView.frame, 29.0f);
+    }
 }
 
 -(void)showProgressWithMessage:(NSString *)message allowCancel:(BOOL)cancelable {
@@ -640,19 +650,19 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     switch (driverState) {
         case SVDriverStateArrived:
-            [self updateStatusLabel:@"Ваш Instacab прибыл"];
+            [self updateStatusLabel:@"Ваш InstaCab прибыл" withETA:NO];
             [self showDriverPanel];
             [self updateVehiclePosition];
             break;
 
         case SVDriverStateAccepted:
-            [self updateStatusLabel:@"Водитель выехал"];
+            [self updateStatusLabel:@"Водитель в пути" withETA:YES];
             [self showDriverPanel];
             [self updateVehiclePosition];
             break;
 
         case SVDriverStateDrivingClient:
-            [self updateStatusLabel:@"Приятной дороги"];
+            [self updateStatusLabel:@"Приятной дороги!" withETA:NO];
             [self showDriverPanel];
             [self updateVehiclePosition];
             break;
@@ -818,6 +828,20 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)callDriver{
     [[ICTrip sharedInstance].driver call];
+}
+
+- (NSString *)formatDriverEta
+{
+    int eta = [[ICTrip sharedInstance].eta intValue];
+    int d = (int)floor(eta) % 10;
+    
+    NSString *minute = @"минут";
+    
+    if(d == 0 || d > 4 || d == 11 || d == 12 || d == 13 || d == 14) minute = @"минут";
+    if(d != 1 && d < 5) minute = @"минуты";
+    if(d == 1) minute = @"минуту";
+    
+    return [NSString stringWithFormat:kEtaLabelTemplate, [ICTrip sharedInstance].eta, minute];
 }
 
 - (void)didReceiveMemoryWarning

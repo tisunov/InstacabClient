@@ -12,6 +12,7 @@
 @property (nonatomic, copy, readonly) NSNumber *minEta;
 @property (nonatomic, copy, readonly) NSArray *vehiclePoints;
 @property (nonatomic, copy, readonly) NSString *sorryMsg;
+@property (nonatomic, copy, readonly) NSString *noneAvailableString;
 
--(BOOL)noVehicles;
+-(BOOL)zeroVehicles;
 @end
