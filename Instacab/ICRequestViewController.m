@@ -40,6 +40,7 @@
     ICClientService *_clientService;
     ICLocationService *_locationService;
     ICLocation *_pickupLocation;
+    UIGestureRecognizer *_hudGesture;
     UIImageView *_greenPinView;
     UIView *_statusView;
     UILabel *_statusLabel;
@@ -118,6 +119,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                              selector:@selector(observeDriverStateNotification:)
                                                  name:kDriverStateChangeNotification
                                                object:nil];
+    
+    _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
     
     ICClient *client = [ICClient sharedInstance];
     [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:nil];
@@ -206,7 +209,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)cancelTrip {
     [_clientService cancelTrip];
-    [self showProgressWithMessage:kProgressCancelingTrip];
+    [self showProgressWithMessage:kProgressCancelingTrip allowCancel:NO];
 }
 
 -(void)popViewController {
@@ -450,10 +453,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _statusLabel.text = [text uppercaseString];
 }
 
--(void)showProgressWithMessage:(NSString *)message {
+-(void)showProgressWithMessage:(NSString *)message allowCancel:(BOOL)cancelable {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
     if (hud) {
         hud.labelText = message;
+        if (cancelable) {
+            hud.detailsLabelText = @"коснитесь для отмены";
+            [hud setGestureRecognizers:@[_hudGesture]];
+        }
+        else {
+            hud.detailsLabelText = @"";
+            [hud removeGestureRecognizer:_hudGesture];
+        }        
         return;
     }
     
@@ -467,6 +478,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 	[hud show:YES];
 }
 
+- (void)hudWasCancelled {
+    [UIAlertView presentWithTitle:@"Вы уверены что хотите отменить вызов?"
+                          message:@""
+                          buttons:@[ @"Нет", @"Да" ]
+                    buttonHandler:^(NSUInteger index) {
+                        /* ДА */
+                        if (index == 1) {
+                            [self cancelPickup];
+                        }
+                    }];
+}
+
 -(void)hideProgress {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
     if (hud) {
@@ -475,9 +498,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
+-(void)cancelPickup {
+    [_clientService cancelPickup];
+    [self showProgressWithMessage:@"Отсылаю..." allowCancel:NO];
+}
+
 - (IBAction)requestPickup:(id)sender {
     if (_readyToRequest) {
-        [self showProgressWithMessage:kProgressLookingForDriver];
+        [self showProgressWithMessage:kProgressLookingForDriver allowCancel:NO];
         // Request pickup
         [_clientService pickupAt:_pickupLocation];
     }
@@ -645,7 +673,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             break;
             
         case SVClientStateDispatching:
-            [self showProgressWithMessage:kProgressWaitingConfirmation];
+            [self showProgressWithMessage:kProgressWaitingConfirmation allowCancel:YES];
             break;
             
         case SVClientStateWaitingForPickup:
@@ -772,6 +800,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _dispatchedVehicleMarker = nil;
     [_mapView addSubview:_greenPinView];
 
+    [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
+    
     [self showAddressBar];
     [self hideTripCancelButton];
     

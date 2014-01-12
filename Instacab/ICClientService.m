@@ -89,6 +89,17 @@ NSString * const kFieldPassword = @"password";
     [self sendMessage: message];
 }
 
+-(void)cancelPickup {
+    NSDictionary *message = @{
+        kFieldMessageType: @"CancelPickup",
+        @"token": [ICClient sharedInstance].token,
+        @"id": [ICClient sharedInstance].uID,
+        @"tripId": [ICTrip sharedInstance].tripId
+    };
+    
+    [self sendMessage:message];
+}
+
 -(void)cancelTrip {
     NSDictionary *message = @{
         kFieldMessageType: @"CancelTripClient",
