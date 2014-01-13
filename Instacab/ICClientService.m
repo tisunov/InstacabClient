@@ -155,7 +155,7 @@ NSString * const kFieldPassword = @"password";
 
 -(void)rateDriver:(NSUInteger)rating forTrip: (ICTrip*)trip {
     NSDictionary *message = @{
-        kFieldMessageType: @"RateDriver",
+        kFieldMessageType: @"RatingDriver",
         @"token": [ICClient sharedInstance].token,
         @"id": [ICClient sharedInstance].uID,
         @"tripId": trip.tripId,
