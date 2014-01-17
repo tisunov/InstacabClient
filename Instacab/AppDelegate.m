@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <GoogleMaps/GoogleMaps.h>
 #import "ICLoginViewController.h"
+#import "ICWelcomeViewController.h"
 #import "ICDispatchServer.h"
 #import "ICLocationService.h"
 #import "UIColor+Colours.h"
@@ -30,13 +31,17 @@
     
     [self setupServices:application];
     
-    ICLoginViewController *vc = [[ICLoginViewController alloc] initWithNibName:@"ICLoginViewController" bundle:nil];
+    ICWelcomeViewController *vc = [[ICWelcomeViewController alloc] initWithNibName:@"ICWelcomeViewController" bundle:nil];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nav;
     
     nav.navigationBar.barTintColor = [UIColor colorFromHexString:@"#F8F8F4"];
     
-    NSDictionary *textAttributes = @{ NSForegroundColorAttributeName:[UIColor colorFromHexString:@"#403F3C"] };
+    NSDictionary *textAttributes = @{
+        NSForegroundColorAttributeName:[UIColor colorFromHexString:@"#403F3C"],
+//        NSKernAttributeName: @6.0f,
+//        NSFontAttributeName: [UIFont fontWithName:@"Menlo" size:18.0f]
+    };
     nav.navigationBar.titleTextAttributes = textAttributes;
     
     [self.window makeKeyAndVisible];
@@ -57,7 +62,7 @@
     // Google Maps key
     [GMSServices provideAPIKey:@"AIzaSyDcikveiQmWRQ8Qv-gPofHuMHgYhjCpsqQ"];
     
-    // Initiate connection to server
+    // Configure default app type (we share code with Driver app)
     ICDispatchServer *dispatchServer = [ICDispatchServer sharedInstance];
     dispatchServer.appType = @"client";
     

@@ -27,6 +27,7 @@
     NSString *_deviceModel;
     NSString *_deviceOS;
     int _reconnectAttempts;
+    NSString *_jsonPendingSend;
     
     SRWebSocket *_webSocket;
     AFHTTPRequestOperationManager *_httpClient;
@@ -118,7 +119,17 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     
     [data addEntriesFromDictionary:message];
     
-    [_webSocket send: [self _serializeToJSON:data]];
+    NSAssert(_jsonPendingSend == nil, @"Overwriting data waiting to be sent");
+    
+    _jsonPendingSend = [self _serializeToJSON:data];
+    if (self.isConnected) {
+        [_webSocket send:_jsonPendingSend];
+        _jsonPendingSend = nil;
+    }
+    else {
+        NSLog(@"Save data and send it later");
+        [self connect];
+    }
 }
 
 - (NSString *)_serializeToJSON: (NSDictionary *)message {
@@ -163,13 +174,22 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     _reconnectAttempts = kMaxReconnectAttemps;
     
     self.isConnected = YES;
+    if (_jsonPendingSend) {
+        NSLog(@"Sending pending data %@", _jsonPendingSend);
+        [_webSocket send:_jsonPendingSend];
+        _jsonPendingSend = nil;
+    }
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
 }
 
 -(void)handleDisconnect {
     self.isConnected = NO;
-
+    _jsonPendingSend = nil;
+    
     if (_reconnectAttempts == 0) {
+        [self.delegate didDisconnect];
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
         _reconnectAttempts = kMaxReconnectAttemps;
         return;

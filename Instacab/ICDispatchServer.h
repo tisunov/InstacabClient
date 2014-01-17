@@ -15,6 +15,7 @@ extern NSString *const kDispatchServerConnectionChangeNotification;
 
 @protocol ICDispatchServerDelegate <NSObject>
 - (void)didReceiveMessage:(NSDictionary *)jsonDictionary;
+- (void)didDisconnect;
 @end
 
 @interface ICDispatchServer : ICSingleton<SRWebSocketDelegate>

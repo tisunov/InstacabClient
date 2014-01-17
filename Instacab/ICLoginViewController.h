@@ -9,17 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "ICClientService.h"
 #import "ICLocationService.h"
-#import "ICHighlightButton.h"
+#import "QuickDialog.h"
 
-@interface ICTextField : UITextField
-
-@end
-
-@interface ICLoginViewController : UIViewController<UITextFieldDelegate>
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (strong, nonatomic) IBOutlet ICTextField *emailTextField;
-@property (strong, nonatomic) IBOutlet ICTextField *passwordTextField;
-@property (strong, nonatomic) IBOutlet ICHighlightButton *beginShiftButton;
-- (IBAction)beginShift:(id)sender;
+@interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate>
 
 @end

@@ -11,7 +11,7 @@
 #import <sys/sysctl.h>
 #import "ICVehiclePoint.h"
 #import "UIColor+Colours.h"
-#import "DriverRatingViewController.h"
+#import "ICRatingViewController.h"
 #import "MBProgressHUD.h"
 #import "TSMessageView.h"
 #import "TSMessage.h"
@@ -50,9 +50,8 @@ NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
 NSString * const kConfirmPickupLocation = @"Вызвать машину сюда";
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
 
-NSString * const kProgressLookingForDriver = @"Выбираем водителя";
-NSString * const kProgressWaitingConfirmation = @"Ожидаем водителя";
-NSString * const kProgressBeginningTrip = @"Начинаем поездку";
+NSString * const kProgressLookingForDriver = @"Выбираю водителя";
+NSString * const kProgressWaitingConfirmation = @"Запрашиваю ближайшего водителя";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
 NSString * const kEtaLabelTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
 
@@ -85,8 +84,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [super viewDidLoad];
     
     // set title and labels
-    [self setTitle:@"INSTACAB"];
+    self.title = @"INSTACAB";
     
+    self.navigationController.navigationBarHidden = NO;
     self.navigationItem.leftBarButtonItem =
         [[UIBarButtonItem alloc]
              initWithBarButtonSystemItem:UIBarButtonSystemItemAction
@@ -203,7 +203,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)logout {
     _googleService.delegate = nil;
     _locationService.delegate = nil;
-//    [self unsubscribeFromClientState];
     [_clientService logOut];
     [self popViewController];
 }
@@ -641,8 +640,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)showFareAndRateDriver {
-    DriverRatingViewController *tripEndViewController = [[DriverRatingViewController alloc] initWithNibName: @"DriverRatingViewController" bundle: nil];
-    [self.navigationController pushViewController:tripEndViewController animated:YES];
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:[[ICRatingViewController alloc] initWithNibName:@"ICRatingViewController" bundle:nil]];
+    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
 }
 
 -(void)layoutForDriverState:(SVDriverState)driverState {
@@ -800,7 +799,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)prepareForNextTrip {
     NSLog(@"prepareForNextTrip");
-    [self setTitle:@"INSTACAB"];
+
+    self.title = @"INSTACAB";
     [self showPickupPanel];
     
     // Clear all markers and add pickup marker

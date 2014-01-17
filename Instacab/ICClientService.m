@@ -13,6 +13,8 @@
 
 @implementation ICClientService {
     ICDispatchServer *_dispatchServer;
+    ICClientServiceSuccessBlock _successBlock;
+    ICClientServiceFailureBlock _failureBlock;
 }
 
 NSString * const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
@@ -40,13 +42,47 @@ NSString * const kFieldPassword = @"password";
     [_dispatchServer sendMessage:pingMessage withCoordinates:location];
 }
 
--(void)loginWithEmail:(NSString *)email password: (NSString *)password {
-    // Connect first
-    if (!_dispatchServer.isConnected) {
-        [_dispatchServer connect];
-        return;
-    }
+-(void)signUp:(ICSignUpInfo *)info
+   withCardIo:(BOOL)cardio
+      success:(ICClientServiceSuccessBlock)success
+      failure:(ICClientServiceFailureBlock)failure
+{
+    _successBlock = success;
+    _failureBlock = failure;
     
+    NSDictionary *message = @{
+        @"user": [MTLJSONAdapter JSONDictionaryFromModel:info],
+        @"cardio": @(cardio),
+        kFieldMessageType: @"SignUpClient"
+    };
+    
+    [self sendMessage:message];
+}
+
+-(void)validateEmail:(NSString *)email
+            password:(NSString *)password
+              mobile:(NSString *)mobile
+         withSuccess:(ICClientServiceSuccessBlock)success
+             failure:(ICClientServiceFailureBlock)failure
+{
+    _successBlock = success;
+    _failureBlock = failure;
+    
+    NSDictionary *message = @{
+        kFieldMessageType: @"ApiCommand",
+        @"apiUrl": @"/clients/validate",
+        @"apiMethod": @"POST",
+        @"apiParameters": @{
+            @"email": email,
+            @"password": password,
+            @"mobile": mobile
+        }
+    };
+    
+    [self sendMessage:message];
+}
+
+-(void)loginWithEmail:(NSString *)email password: (NSString *)password {
     // init Login message
     NSDictionary *message = @{
         kFieldEmail: email,
@@ -174,6 +210,18 @@ NSString * const kFieldPassword = @"password";
                                                  error:&error];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kClientServiceMessageNotification object:self userInfo:@{@"message": response}];
+    
+    if (_successBlock != nil) {
+        _successBlock(response);
+        _successBlock = nil;
+    }
+}
+
+- (void)didDisconnect {
+    if (_failureBlock != nil) {
+        _failureBlock();
+        _failureBlock = nil;
+    }
 }
 
 @end

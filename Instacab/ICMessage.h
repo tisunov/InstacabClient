@@ -10,9 +10,10 @@
 #import "ICClient.h"
 #import "ICTrip.h"
 #import "ICNearbyVehicles.h"
+#import "ICApiResponse.h"
 
 typedef enum : NSUInteger {
-    SVMessageTypeLogin,
+    SVMessageTypeLoginResponse,
     SVMessageTypeNearbyVehicles,
     SVMessageTypeOK,
     SVMessageTypePing,
@@ -24,7 +25,8 @@ typedef enum : NSUInteger {
     SVMessageTypeArrivingNow,
     SVMessageTypeArrived,
     SVMessageTypeBeginTrip,
-    SVMessageTypeEndTrip
+    SVMessageTypeEndTrip,
+    SVMessageTypeApiResponse,
 } ICMessageType;
 
 @interface ICMessage : MTLModel <MTLJSONSerializing>
@@ -34,5 +36,6 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong, readonly) ICClient *client;
 @property (nonatomic, strong, readonly) ICTrip *trip;
 @property (nonatomic, strong, readonly) ICNearbyVehicles *nearbyVehicles;
+@property (nonatomic, strong, readonly) ICApiResponse *apiResponse;
 
 @end

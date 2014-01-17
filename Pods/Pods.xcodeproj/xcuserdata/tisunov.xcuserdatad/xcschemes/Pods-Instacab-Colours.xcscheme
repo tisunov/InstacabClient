@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C7044B083C2C46029987EF0D"
+               BlueprintIdentifier = "127235E97BF44519B053B178"
                BuildableName = "libPods-Instacab-Colours.a"
                BlueprintName = "Pods-Instacab-Colours"
                ReferencedContainer = "container:Pods.xcodeproj">

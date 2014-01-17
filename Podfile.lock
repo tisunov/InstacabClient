@@ -19,6 +19,7 @@ PODS:
   - AFNetworking/Serialization (2.0.0)
   - AFNetworking/UIKit (2.0.0):
     - AFNetworking/NSURLConnection
+  - AKNumericFormatter (0.0.1)
   - Bugsnag (3.1.0):
     - Reachability
   - Colours (2.0)
@@ -29,6 +30,10 @@ PODS:
   - Mantle/extobjc (1.3.1)
   - MBProgressHUD (0.8)
   - ObjectiveSugar (1.1.0)
+  - PaymentKit (1.0.0)
+  - QuickDialog (0.9.1):
+    - QuickDialog/Core
+  - QuickDialog/Core (0.9.1)
   - Reachability (3.1.1)
   - ReactiveCocoa (2.1.7):
     - ReactiveCocoa/Core
@@ -43,21 +48,30 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
+  - AKNumericFormatter (from `https://github.com/blackm00n/AKNumericFormatter.git`)
   - Bugsnag
   - Colours (~> 2.0)
   - EDStarRating
   - Mantle (~> 1.3.1)
   - MBProgressHUD (from `https://github.com/dannybabiy/MBProgressHUD.git`, branch `ios7`)
   - ObjectiveSugar
+  - PaymentKit (from `https://github.com/lmcd/PaymentKit.git`)
+  - QuickDialog (from `https://github.com/escoz/QuickDialog.git`)
   - ReactiveCocoa (~> 2.1.7)
   - SLScrollViewKeyboardSupport (from `https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git`)
   - SocketRocket (~> 0.3.1-beta2)
   - TSMessages (from `https://github.com/tisunov/TSMessages.git`)
 
 EXTERNAL SOURCES:
+  AKNumericFormatter:
+    :git: https://github.com/blackm00n/AKNumericFormatter.git
   MBProgressHUD:
     :branch: ios7
     :git: https://github.com/dannybabiy/MBProgressHUD.git
+  PaymentKit:
+    :git: https://github.com/lmcd/PaymentKit.git
+  QuickDialog:
+    :git: https://github.com/escoz/QuickDialog.git
   SLScrollViewKeyboardSupport:
     :git: https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git
   TSMessages:
@@ -65,6 +79,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 3fa983b1beaba69566a3374612511e2a6e3fe845
+  AKNumericFormatter: 49e215306b97d774bff72d16ffe9951ebcd11931
   Bugsnag: 7a61040b4be9fa2b51a34e87e1da2007b6640637
   Colours: db86d21666586908dee6f27f54d04bd81a67984a
   EDStarRating: 6761f41fd040f1cde155e2885dddc96461620f67
@@ -72,6 +87,8 @@ SPEC CHECKSUMS:
   Mantle: abc3b0c81bc66eb624cf9cebb8640e377d5a44ae
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   ObjectiveSugar: e90d09b348ec0d1739d6d93bdcee385cf0a96036
+  PaymentKit: 40e5673a9a0960d7ef111d66d0604af245caf635
+  QuickDialog: dc1dfabc55ab72d02356e1a908a091cdc90ce477
   Reachability: be4883bb93f31e38266ae3365e5600a317aae735
   ReactiveCocoa: 1117f7968c8667d2ca00b5aa47156fabcb56af75
   SLScrollViewKeyboardSupport: 8e59a8af41cc29a8b63b7adf8de3da09d523cc2c

@@ -8,6 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		AE07F330A31646F1B6AEFF7D /* libPods-Instacab.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAA71C8A26847CBB29B2EF5 /* libPods-Instacab.a */; };
+		D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE121884306600E03F3E /* ICWelcomeViewController.m */; };
+		D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */; };
+		D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */; };
+		D90BAE1E1884356B00E03F3E /* ICLinkCardDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */; };
+		D90BAE231884359500E03F3E /* ICThanksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE211884359500E03F3E /* ICThanksViewController.m */; };
+		D90BAE241884359500E03F3E /* ICThanksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D90BAE221884359500E03F3E /* ICThanksViewController.xib */; };
+		D90BAE271885C89900E03F3E /* ICCreateProfileDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */; };
+		D90BAE2B1885CB2200E03F3E /* QuickDialogController+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */; };
 		D911228418094462006A49DA /* ICHighlightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D911228318094462006A49DA /* ICHighlightButton.m */; };
 		D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC0187552C000288448 /* UIAlertView+Additions.m */; };
 		D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */; };
@@ -15,12 +23,15 @@
 		D967F913184208C200085B2F /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D967F912184208C200085B2F /* GoogleMaps.framework */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
 		D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97B7AE618083E2A00B8315D /* AdSupport.framework */; };
+		D97D34EF1887FF7400A3AE6D /* ICFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97D34ED1887FF7400A3AE6D /* ICFeedbackViewController.m */; };
+		D97D34F01887FF7400A3AE6D /* ICFeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97D34EE1887FF7400A3AE6D /* ICFeedbackViewController.xib */; };
 		D98058BD181A4EE000DD0BBF /* ICTrip.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058BC181A4EE000DD0BBF /* ICTrip.m */; };
 		D98058C0181A518700DD0BBF /* ICDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058BF181A518700DD0BBF /* ICDriver.m */; };
 		D98058C3181A52F700DD0BBF /* ICPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058C2181A52F700DD0BBF /* ICPerson.m */; };
 		D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058C5181A5A1800DD0BBF /* ICSingleton.m */; };
+		D982840318878F4A0014BBF7 /* ICApiResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D982840218878F4A0014BBF7 /* ICApiResponse.m */; };
+		D982840618878FF10014BBF7 /* ICError.m in Sources */ = {isa = PBXBuildFile; fileRef = D982840518878FF10014BBF7 /* ICError.m */; };
 		D98EFDB11842921C005A2BAA /* ICLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */; };
-		D98EFDB21842921C005A2BAA /* ICLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D98EFDB01842921C005A2BAA /* ICLoginViewController.xib */; };
 		D98EFDC118429BA8005A2BAA /* UINavigationController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDC018429BA8005A2BAA /* UINavigationController+Animation.m */; };
 		D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDC218435677005A2BAA /* CGRectUtils.c */; };
 		D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D99833D11820E89A00A7DA8E /* Images.xcassets */; };
@@ -56,9 +67,14 @@
 		D9BA28AF181D4FF2009584D1 /* ICNearbyVehicles.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BA28AE181D4FF2009584D1 /* ICNearbyVehicles.m */; };
 		D9BA28B2181D50E0009584D1 /* ICVehiclePoint.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BA28B1181D50E0009584D1 /* ICVehiclePoint.m */; };
 		D9C114CE1813C00C002833FF /* ICRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */; };
+		D9C193231888779200A889E4 /* ICAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C193211888779200A889E4 /* ICAccountViewController.m */; };
+		D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C193221888779200A889E4 /* ICAccountViewController.xib */; };
 		D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */; };
-		D9CD0E4C1829A55400A02619 /* DriverRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CD0E4A1829A55400A02619 /* DriverRatingViewController.m */; };
-		D9CD0E4D1829A55400A02619 /* DriverRatingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* DriverRatingViewController.xib */; };
+		D9CD0E4C1829A55400A02619 /* ICRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */; };
+		D9CD0E4D1829A55400A02619 /* ICRatingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */; };
+		D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */; };
+		D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D4A27F1886629C00067879 /* libCardIO.a */; };
+		D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D4A28218866F2500067879 /* ICSignUpInfo.m */; };
 		D9EF8ED318170AEB00F9DD52 /* ICDispatchServer.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */; };
 		D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EF8ED518170B3500F9DD52 /* ICClient.m */; };
 		D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EFF9A31805867100A68AED /* QuartzCore.framework */; };
@@ -77,6 +93,20 @@
 
 /* Begin PBXFileReference section */
 		6FAA71C8A26847CBB29B2EF5 /* libPods-Instacab.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Instacab.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D90BAE111884306600E03F3E /* ICWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICWelcomeViewController.h; sourceTree = "<group>"; };
+		D90BAE121884306600E03F3E /* ICWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICWelcomeViewController.m; sourceTree = "<group>"; };
+		D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICWelcomeViewController.xib; sourceTree = "<group>"; };
+		D90BAE161884353300E03F3E /* ICCreateAccountDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICCreateAccountDialog.h; sourceTree = "<group>"; };
+		D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICCreateAccountDialog.m; sourceTree = "<group>"; };
+		D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICLinkCardDialog.h; sourceTree = "<group>"; };
+		D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICLinkCardDialog.m; sourceTree = "<group>"; };
+		D90BAE201884359500E03F3E /* ICThanksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICThanksViewController.h; sourceTree = "<group>"; };
+		D90BAE211884359500E03F3E /* ICThanksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICThanksViewController.m; sourceTree = "<group>"; };
+		D90BAE221884359500E03F3E /* ICThanksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICThanksViewController.xib; sourceTree = "<group>"; };
+		D90BAE251885C89900E03F3E /* ICCreateProfileDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICCreateProfileDialog.h; sourceTree = "<group>"; };
+		D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICCreateProfileDialog.m; sourceTree = "<group>"; };
+		D90BAE291885CB2200E03F3E /* QuickDialogController+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QuickDialogController+Additions.h"; sourceTree = "<group>"; };
+		D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QuickDialogController+Additions.m"; sourceTree = "<group>"; };
 		D911228218094462006A49DA /* ICHighlightButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICHighlightButton.h; sourceTree = "<group>"; };
 		D911228318094462006A49DA /* ICHighlightButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICHighlightButton.m; sourceTree = "<group>"; };
 		D940FBBF187552C000288448 /* UIAlertView+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Additions.h"; sourceTree = "<group>"; };
@@ -88,6 +118,9 @@
 		D967F912184208C200085B2F /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
 		D97B7AE618083E2A00B8315D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		D97D34EC1887FF7400A3AE6D /* ICFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICFeedbackViewController.h; sourceTree = "<group>"; };
+		D97D34ED1887FF7400A3AE6D /* ICFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICFeedbackViewController.m; sourceTree = "<group>"; };
+		D97D34EE1887FF7400A3AE6D /* ICFeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICFeedbackViewController.xib; sourceTree = "<group>"; };
 		D98058BB181A4EE000DD0BBF /* ICTrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICTrip.h; sourceTree = "<group>"; };
 		D98058BC181A4EE000DD0BBF /* ICTrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICTrip.m; sourceTree = "<group>"; };
 		D98058BE181A518700DD0BBF /* ICDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICDriver.h; sourceTree = "<group>"; };
@@ -96,9 +129,12 @@
 		D98058C2181A52F700DD0BBF /* ICPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPerson.m; sourceTree = "<group>"; };
 		D98058C4181A5A1800DD0BBF /* ICSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICSingleton.h; sourceTree = "<group>"; };
 		D98058C5181A5A1800DD0BBF /* ICSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICSingleton.m; sourceTree = "<group>"; };
+		D982840118878F4A0014BBF7 /* ICApiResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICApiResponse.h; sourceTree = "<group>"; };
+		D982840218878F4A0014BBF7 /* ICApiResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICApiResponse.m; sourceTree = "<group>"; };
+		D982840418878FF10014BBF7 /* ICError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICError.h; sourceTree = "<group>"; };
+		D982840518878FF10014BBF7 /* ICError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICError.m; sourceTree = "<group>"; };
 		D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICLoginViewController.m; sourceTree = "<group>"; };
 		D98EFDAF1842921C005A2BAA /* ICLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICLoginViewController.h; sourceTree = "<group>"; };
-		D98EFDB01842921C005A2BAA /* ICLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICLoginViewController.xib; sourceTree = "<group>"; };
 		D98EFDBF18429BA8005A2BAA /* UINavigationController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Animation.h"; sourceTree = "<group>"; };
 		D98EFDC018429BA8005A2BAA /* UINavigationController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Animation.m"; sourceTree = "<group>"; };
 		D98EFDC218435677005A2BAA /* CGRectUtils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CGRectUtils.c; sourceTree = "<group>"; };
@@ -148,11 +184,25 @@
 		D9BA28AE181D4FF2009584D1 /* ICNearbyVehicles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICNearbyVehicles.m; sourceTree = "<group>"; };
 		D9BA28B0181D50E0009584D1 /* ICVehiclePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVehiclePoint.h; sourceTree = "<group>"; };
 		D9BA28B1181D50E0009584D1 /* ICVehiclePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVehiclePoint.m; sourceTree = "<group>"; };
+		D9BD7BB11887C087009351D6 /* ICCancelDialogDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICCancelDialogDelegate.h; sourceTree = "<group>"; };
+		D9C193201888779200A889E4 /* ICAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICAccountViewController.h; sourceTree = "<group>"; };
+		D9C193211888779200A889E4 /* ICAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICAccountViewController.m; sourceTree = "<group>"; };
+		D9C193221888779200A889E4 /* ICAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICAccountViewController.xib; sourceTree = "<group>"; };
 		D9C27D911845B7A7007969EA /* UIApplication+Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Alerts.h"; sourceTree = "<group>"; };
 		D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Alerts.m"; sourceTree = "<group>"; };
-		D9CD0E491829A55400A02619 /* DriverRatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriverRatingViewController.h; sourceTree = "<group>"; };
-		D9CD0E4A1829A55400A02619 /* DriverRatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriverRatingViewController.m; sourceTree = "<group>"; };
-		D9CD0E4B1829A55400A02619 /* DriverRatingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriverRatingViewController.xib; sourceTree = "<group>"; };
+		D9CD0E491829A55400A02619 /* ICRatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICRatingViewController.h; sourceTree = "<group>"; };
+		D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICRatingViewController.m; sourceTree = "<group>"; };
+		D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRatingViewController.xib; sourceTree = "<group>"; };
+		D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICLinkCardDialog.xib; sourceTree = "<group>"; };
+		D9D4A2791886629C00067879 /* CardIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIO.h; sourceTree = "<group>"; };
+		D9D4A27A1886629C00067879 /* CardIOCreditCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOCreditCardInfo.h; sourceTree = "<group>"; };
+		D9D4A27B1886629C00067879 /* CardIOPaymentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewController.h; sourceTree = "<group>"; };
+		D9D4A27C1886629C00067879 /* CardIOPaymentViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOPaymentViewControllerDelegate.h; sourceTree = "<group>"; };
+		D9D4A27D1886629C00067879 /* CardIOView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOView.h; sourceTree = "<group>"; };
+		D9D4A27E1886629C00067879 /* CardIOViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOViewDelegate.h; sourceTree = "<group>"; };
+		D9D4A27F1886629C00067879 /* libCardIO.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCardIO.a; sourceTree = "<group>"; };
+		D9D4A28118866F2500067879 /* ICSignUpInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICSignUpInfo.h; sourceTree = "<group>"; };
+		D9D4A28218866F2500067879 /* ICSignUpInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICSignUpInfo.m; sourceTree = "<group>"; };
 		D9EF8ED118170AEB00F9DD52 /* ICDispatchServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICDispatchServer.h; sourceTree = "<group>"; };
 		D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICDispatchServer.m; sourceTree = "<group>"; };
 		D9EF8ED418170B3500F9DD52 /* ICClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICClient.h; sourceTree = "<group>"; };
@@ -174,6 +224,7 @@
 				D9B0328C1805864D00F7AF69 /* OpenGLES.framework in Frameworks */,
 				D9B0328A1805864800F7AF69 /* libz.dylib in Frameworks */,
 				D9B032881805863F00F7AF69 /* libicucore.dylib in Frameworks */,
+				D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */,
 				D9B032861805863900F7AF69 /* libc++.dylib in Frameworks */,
 				D9B032841805863300F7AF69 /* ImageIO.framework in Frameworks */,
 				D9B032821805862B00F7AF69 /* GLKit.framework in Frameworks */,
@@ -223,6 +274,12 @@
 				D9BA28B0181D50E0009584D1 /* ICVehiclePoint.h */,
 				D9532E1D1819B44E0046E5EC /* ICMessage.m */,
 				D9532E1C1819B44E0046E5EC /* ICMessage.h */,
+				D9D4A28218866F2500067879 /* ICSignUpInfo.m */,
+				D9D4A28118866F2500067879 /* ICSignUpInfo.h */,
+				D982840218878F4A0014BBF7 /* ICApiResponse.m */,
+				D982840118878F4A0014BBF7 /* ICApiResponse.h */,
+				D982840518878FF10014BBF7 /* ICError.m */,
+				D982840418878FF10014BBF7 /* ICError.h */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -230,16 +287,36 @@
 		D9532E1B1819A5510046E5EC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				D9D4A2781886629C00067879 /* CardIO */,
 				D9AD515C1817C80100692E7E /* UI Support */,
+				D90BAE121884306600E03F3E /* ICWelcomeViewController.m */,
+				D90BAE111884306600E03F3E /* ICWelcomeViewController.h */,
+				D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */,
+				D9BD7BB11887C087009351D6 /* ICCancelDialogDelegate.h */,
 				D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */,
 				D98EFDAF1842921C005A2BAA /* ICLoginViewController.h */,
-				D98EFDB01842921C005A2BAA /* ICLoginViewController.xib */,
+				D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */,
+				D90BAE161884353300E03F3E /* ICCreateAccountDialog.h */,
+				D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */,
+				D90BAE251885C89900E03F3E /* ICCreateProfileDialog.h */,
+				D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */,
+				D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */,
+				D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */,
 				D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */,
 				D9B0327218057E2C00F7AF69 /* ICRequestViewController.h */,
 				D96EEB281805895B0048A669 /* ICRequestViewController.xib */,
-				D9CD0E4A1829A55400A02619 /* DriverRatingViewController.m */,
-				D9CD0E491829A55400A02619 /* DriverRatingViewController.h */,
-				D9CD0E4B1829A55400A02619 /* DriverRatingViewController.xib */,
+				D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */,
+				D9CD0E491829A55400A02619 /* ICRatingViewController.h */,
+				D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */,
+				D90BAE211884359500E03F3E /* ICThanksViewController.m */,
+				D90BAE201884359500E03F3E /* ICThanksViewController.h */,
+				D90BAE221884359500E03F3E /* ICThanksViewController.xib */,
+				D97D34ED1887FF7400A3AE6D /* ICFeedbackViewController.m */,
+				D97D34EC1887FF7400A3AE6D /* ICFeedbackViewController.h */,
+				D97D34EE1887FF7400A3AE6D /* ICFeedbackViewController.xib */,
+				D9C193201888779200A889E4 /* ICAccountViewController.h */,
+				D9C193211888779200A889E4 /* ICAccountViewController.m */,
+				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -276,6 +353,8 @@
 				D911228318094462006A49DA /* ICHighlightButton.m */,
 				D98EFDC218435677005A2BAA /* CGRectUtils.c */,
 				D98EFDC318435677005A2BAA /* CGRectUtils.h */,
+				D90BAE291885CB2200E03F3E /* QuickDialogController+Additions.h */,
+				D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */,
 			);
 			name = "UI Support";
 			sourceTree = "<group>";
@@ -372,6 +451,20 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D9D4A2781886629C00067879 /* CardIO */ = {
+			isa = PBXGroup;
+			children = (
+				D9D4A2791886629C00067879 /* CardIO.h */,
+				D9D4A27A1886629C00067879 /* CardIOCreditCardInfo.h */,
+				D9D4A27B1886629C00067879 /* CardIOPaymentViewController.h */,
+				D9D4A27C1886629C00067879 /* CardIOPaymentViewControllerDelegate.h */,
+				D9D4A27D1886629C00067879 /* CardIOView.h */,
+				D9D4A27E1886629C00067879 /* CardIOViewDelegate.h */,
+				D9D4A27F1886629C00067879 /* libCardIO.a */,
+			);
+			path = CardIO;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -463,10 +556,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D98EFDB21842921C005A2BAA /* ICLoginViewController.xib in Resources */,
+				D90BAE241884359500E03F3E /* ICThanksViewController.xib in Resources */,
+				D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */,
+				D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */,
 				D9B03243180572B400F7AF69 /* InfoPlist.strings in Resources */,
 				D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */,
-				D9CD0E4D1829A55400A02619 /* DriverRatingViewController.xib in Resources */,
+				D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */,
+				D97D34F01887FF7400A3AE6D /* ICFeedbackViewController.xib in Resources */,
+				D9CD0E4D1829A55400A02619 /* ICRatingViewController.xib in Resources */,
 				D9B03278180585E400F7AF69 /* GoogleMaps.bundle in Resources */,
 				D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */,
 				D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */,
@@ -540,26 +637,37 @@
 				D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */,
 				D9B03249180572B400F7AF69 /* AppDelegate.m in Sources */,
 				D9AD51571817B74C00692E7E /* ICGoogleService.m in Sources */,
+				D982840318878F4A0014BBF7 /* ICApiResponse.m in Sources */,
+				D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */,
 				D9AD515B1817C7A200692E7E /* ICClientService.m in Sources */,
 				D911228418094462006A49DA /* ICHighlightButton.m in Sources */,
 				D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */,
+				D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */,
 				D9AD51621817EE1E00692E7E /* ICLocation.m in Sources */,
 				D9C114CE1813C00C002833FF /* ICRequestViewController.m in Sources */,
 				D99833D5182159C600A7DA8E /* ICVehicle.m in Sources */,
 				D98EFDC118429BA8005A2BAA /* UINavigationController+Animation.m in Sources */,
 				D98058BD181A4EE000DD0BBF /* ICTrip.m in Sources */,
+				D90BAE231884359500E03F3E /* ICThanksViewController.m in Sources */,
+				D97D34EF1887FF7400A3AE6D /* ICFeedbackViewController.m in Sources */,
+				D90BAE271885C89900E03F3E /* ICCreateProfileDialog.m in Sources */,
 				D9BA28B2181D50E0009584D1 /* ICVehiclePoint.m in Sources */,
 				D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */,
+				D9C193231888779200A889E4 /* ICAccountViewController.m in Sources */,
 				D9532E1E1819B44E0046E5EC /* ICMessage.m in Sources */,
 				D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */,
 				D9BA28AF181D4FF2009584D1 /* ICNearbyVehicles.m in Sources */,
 				D9AD515F1817D17C00692E7E /* ICLocationService.m in Sources */,
 				D9B03245180572B400F7AF69 /* main.m in Sources */,
+				D982840618878FF10014BBF7 /* ICError.m in Sources */,
 				D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */,
-				D9CD0E4C1829A55400A02619 /* DriverRatingViewController.m in Sources */,
+				D9CD0E4C1829A55400A02619 /* ICRatingViewController.m in Sources */,
 				D98058C0181A518700DD0BBF /* ICDriver.m in Sources */,
 				D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */,
+				D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */,
 				D98058C3181A52F700DD0BBF /* ICPerson.m in Sources */,
+				D90BAE2B1885CB2200E03F3E /* QuickDialogController+Additions.m in Sources */,
+				D90BAE1E1884356B00E03F3E /* ICLinkCardDialog.m in Sources */,
 				D98EFDB11842921C005A2BAA /* ICLoginViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -698,6 +806,11 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Instacab/Instacab-Prefix.pch";
 				INFOPLIST_FILE = "Instacab/Instacab-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/tisunov/InstacabApp/Instacab/CardIO,
+				);
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
@@ -725,6 +838,11 @@
 				GCC_PREFIX_HEADER = "Instacab/Instacab-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				INFOPLIST_FILE = "Instacab/Instacab-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/tisunov/InstacabApp/Instacab/CardIO,
+				);
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",

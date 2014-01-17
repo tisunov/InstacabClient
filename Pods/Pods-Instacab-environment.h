@@ -48,6 +48,12 @@
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 0
 #define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 0
 
+// AKNumericFormatter
+#define COCOAPODS_POD_AVAILABLE_AKNumericFormatter
+#define COCOAPODS_VERSION_MAJOR_AKNumericFormatter 0
+#define COCOAPODS_VERSION_MINOR_AKNumericFormatter 0
+#define COCOAPODS_VERSION_PATCH_AKNumericFormatter 1
+
 // Bugsnag
 #define COCOAPODS_POD_AVAILABLE_Bugsnag
 #define COCOAPODS_VERSION_MAJOR_Bugsnag 3
@@ -95,6 +101,24 @@
 #define COCOAPODS_VERSION_MAJOR_ObjectiveSugar 1
 #define COCOAPODS_VERSION_MINOR_ObjectiveSugar 1
 #define COCOAPODS_VERSION_PATCH_ObjectiveSugar 0
+
+// PaymentKit
+#define COCOAPODS_POD_AVAILABLE_PaymentKit
+#define COCOAPODS_VERSION_MAJOR_PaymentKit 1
+#define COCOAPODS_VERSION_MINOR_PaymentKit 0
+#define COCOAPODS_VERSION_PATCH_PaymentKit 0
+
+// QuickDialog
+#define COCOAPODS_POD_AVAILABLE_QuickDialog
+#define COCOAPODS_VERSION_MAJOR_QuickDialog 0
+#define COCOAPODS_VERSION_MINOR_QuickDialog 9
+#define COCOAPODS_VERSION_PATCH_QuickDialog 1
+
+// QuickDialog/Core
+#define COCOAPODS_POD_AVAILABLE_QuickDialog_Core
+#define COCOAPODS_VERSION_MAJOR_QuickDialog_Core 0
+#define COCOAPODS_VERSION_MINOR_QuickDialog_Core 9
+#define COCOAPODS_VERSION_PATCH_QuickDialog_Core 1
 
 // Reachability
 #define COCOAPODS_POD_AVAILABLE_Reachability

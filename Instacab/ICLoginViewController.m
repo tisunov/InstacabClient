@@ -9,31 +9,18 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ICLoginViewController.h"
 #import "UIColor+Colours.h"
-#import "SLScrollViewKeyboardSupport.h"
-#import "ICRequestViewController.h"
 #import "UINavigationController+Animation.h"
 #import "ReactiveCocoa/ReactiveCocoa.h"
 #import "MBProgressHUD.h"
+#import "QuickDialogController+Additions.h"
+#import "UIApplication+Alerts.h"
 
 @interface ICLoginViewController ()
 
 @end
 
-@implementation ICTextField
-
-- (CGRect)textRectForBounds:(CGRect)bounds {
-    return CGRectInset(bounds, 10, 0);
-}
-
-- (CGRect)editingRectForBounds:(CGRect)bounds {
-    return CGRectInset(bounds, 10, 0);
-}
-
-@end
-
 @implementation ICLoginViewController {
     ICClientService *_clientService;
-    SLScrollViewKeyboardSupport *_keyboardSupport;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -41,6 +28,32 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _clientService = [ICClientService sharedInstance];
+        
+        self.root = [[QRootElement alloc] init];
+        self.root.grouped = YES;
+        self.root.title = @"ВХОД";
+        
+        ICClient *client = [[ICClient sharedInstance] load];
+
+        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:client.email Placeholder:@"email@domain.ru"];
+        email.keyboardType = UIKeyboardTypeEmailAddress;
+        email.enablesReturnKeyAutomatically = YES;
+        email.hiddenToolbar = YES;
+        email.key = @"email";
+        email.delegate = self;
+        
+        QEntryElement *password = [[QEntryElement alloc] initWithTitle:@"Пароль" Value:client.password Placeholder:nil];
+        password.secureTextEntry = YES;
+        password.enablesReturnKeyAutomatically = YES;
+        password.hiddenToolbar = YES;
+        password.key = @"password";
+        password.delegate = self;
+        
+        QSection *section = [[QSection alloc] init];
+        [section addElement:email];
+        [section addElement:password];
+        
+        [self.root addSection:section];
     }
     return self;
 }
@@ -49,52 +62,22 @@
 {
     [super viewDidLoad];
     
-    self.title = @"INSTACAB";
-    self.view.backgroundColor = [UIColor colorFromHexString:@"#F8F8F4"];
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPressed:)];
+    self.navigationItem.leftBarButtonItem = cancel;
     
-    CGColorRef textFieldBorderColor = [[UIColor colorFromHexString:@"#AEAEA3"] CGColor];
-    _emailTextField.layer.borderColor = textFieldBorderColor;
-    _emailTextField.layer.borderWidth = 1.0f;
-    _emailTextField.backgroundColor = [UIColor whiteColor];
-
-    _passwordTextField.layer.borderColor = textFieldBorderColor;
-    _passwordTextField.layer.borderWidth = 1.0f;
-    _passwordTextField.backgroundColor = [UIColor whiteColor];
+    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(next:)];
+    next.tintColor = [UIColor colorFromHexString:@"#27AE60"];
+    next.enabled = NO;
+    self.navigationItem.rightBarButtonItem = next;
     
-    // Auto scroll text inputs
-    _keyboardSupport = [[SLScrollViewKeyboardSupport alloc] initWithScrollView:_scrollView];
-    
-    _beginShiftButton.layer.cornerRadius = 3.0f;
-    _beginShiftButton.tintColor = [UIColor whiteColor];
-    _beginShiftButton.normalColor = [UIColor colorFromHexString:@"#2ECC71"];
-    _beginShiftButton.highlightedColor = [UIColor colorFromHexString:@"#27AE60"];
-    _beginShiftButton.disabledColor = [UIColor colorFromHexString:@"#BDC3C7"];
-    [_beginShiftButton setTitleColor:[UIColor colorWithWhite:255 alpha:0.75] forState:UIControlStateDisabled];
-    
-    // Get the stored data before the view loads
-    [self loadSavedCredentials];
-
-    // Enable button after entering email and password
-    RAC(self.beginShiftButton, enabled) =
-        [RACSignal
-            combineLatest:@[self.emailTextField.rac_textSignal, self.passwordTextField.rac_textSignal]
-            reduce:^(NSString *email, NSString *password) {
-               return @(email.length > 0 && password.length > 0);
-            }];
-    
-    // TODO: Нужно показать какую то заставку и анимацию чтобы было видно что приложение работает
-    // и скоро им можно будет начать пользоваться
-    if ([[ICClient sharedInstance] isSignedIn]) {
-        [self showProgress];
-        [[ICDispatchServer sharedInstance] connect];
-    }
+    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);    
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveClientMessage:)
+                                             selector:@selector(clientDidReceiveMessage:)
                                                  name:kClientServiceMessageNotification
                                                object:nil];
 
@@ -104,38 +87,38 @@
                                                object:nil];
 }
 
+-(void)viewDidAppear:(BOOL)animated {
+    // Focus email field and show keyboard
+    [[self.quickDialogTableView cellForElement:[self entryElementWithKey:@"email"]] becomeFirstResponder];
+    
+    NSArray *signals = @[
+        [self textFieldForEntryElementWithKey:@"email"].rac_textSignal,
+        [self textFieldForEntryElementWithKey:@"password"].rac_textSignal
+    ];
+    
+    RAC(self.navigationItem.rightBarButtonItem, enabled) =
+        [RACSignal
+             combineLatest:signals
+             reduce:^(NSString *email, NSString *password) {
+                 return @(email.length > 0 && password.length > 0);
+             }];
+}
+
 -(void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void)loadSavedCredentials {
-    ICClient *client = [[ICClient sharedInstance] load];
-    _emailTextField.text = client.email;
-    _passwordTextField.text = client.password;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self.view endEditing:YES];
-    return YES;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 -(void)login {
-    [_clientService loginWithEmail:_emailTextField.text password:_passwordTextField.text];    
+    [_clientService loginWithEmail:[self textForElementKey:@"email"]
+                          password:[self textForElementKey:@"password"]];
 }
 
 - (void)showProgress {
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
-    hud.labelText = @"Выполняем вход";
-    hud.graceTime = 0.1; // 100 msec
+    hud.labelText = @"Проверяю";
     hud.removeFromSuperViewOnHide = YES;
-    hud.taskInProgress = YES;
     
     [self.view addSubview:hud];
     [hud show:YES];
@@ -143,61 +126,40 @@
 
 -(void)dismissProgress {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:self.view];
-    hud.taskInProgress = NO;
     [hud hide:YES];
-}
-
-- (IBAction)beginShift:(id)sender {
-    [self showProgress];
-    [self login];
 }
 
 -(void)dispatcherConnectionChanged:(NSNotification*)note {
     ICDispatchServer *dispatcher = [note object];
     
     if (dispatcher.isConnected) {
-        if ([[ICClient sharedInstance] isSignedIn]) {
-            [self dismissProgress];
-            [self pushRequestViewControllerAnimated:YES];
-        }
-        else {
-            [self login];
-        }
     }
     else {
-       [self signInError:@"Невозможно подключиться к серверу."];
+        [self dismissProgress];
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
     }
 }
 
--(void)pushRequestViewControllerAnimated: (BOOL)animated {
-    ICRequestViewController *vc = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
-    if (animated) {
-        [self.navigationController slideLayerInDirection:kCATransitionFromBottom andPush:vc];
-    }
-    else {
-        [self.navigationController pushViewController:vc animated:NO];
-    }
-}
-
-- (void)receiveClientMessage:(NSNotification *)note {
+- (void)clientDidReceiveMessage:(NSNotification *)note {
     ICMessage *message = [[note userInfo] objectForKey:@"message"];
     ICClient *client = [ICClient sharedInstance];
      
     switch (message.messageType) {
-        case SVMessageTypeLogin:
+        case SVMessageTypeLoginResponse:
             [client update:message.client];
-            client.email = _emailTextField.text;
-            client.password = _passwordTextField.text;
+            client.email = [self textForElementKey:@"email"];
+            client.password = [self textForElementKey:@"password"];
             [client save];
             
+            [self dismissViewControllerAnimated:YES completion:NULL];
             [self dismissProgress];
-            [self pushRequestViewControllerAnimated:YES];
             break;
             
         case SVMessageTypeError:
             // TODO: Сервер должен возвращать код ошибки чтобы я показал по коду сообщение
             // или возвращать на русском языке текст ошибки
-            [self signInError:@"Пожалуйста проверьте введенный email и пароль."];
+            [self dismissProgress];
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Неверные данные" message:message.errorDescription cancelButtonTitle:@"OK"];
             break;
             
         default:
@@ -205,11 +167,28 @@
     }
 }
 
--(void)signInError:(NSString *)errorText {
-    [self dismissProgress];
-    
-    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Ошибка Входа" message:errorText delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-    [alert show];
+-(void)cancelPressed:(id)sender {
+    [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+}
+
+// Handle Done button
+- (BOOL)QEntryShouldReturnForElement:(QEntryElement *)element andCell:(QEntryTableViewCell *)cell
+{
+    if ([element.key isEqualToString:@"password"]) {
+        [self performSelector:@selector(next:)];
+    }
+
+    return YES;
+}
+
+-(void)next:(id)sender {
+    [self showProgress];
+    [self login];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 @end

@@ -17,7 +17,8 @@
         @"reason": @"reason",
         @"client": @"client",
         @"trip": @"trip",
-        @"nearbyVehicles": @"nearbyVehicles"
+        @"nearbyVehicles": @"nearbyVehicles",
+        @"apiResponse": @"apiResponse",
     };
 }
 
@@ -33,9 +34,13 @@
     return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICNearbyVehicles.class];
 }
 
++ (NSValueTransformer *)apiResponseJSONTransformer {
+    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICApiResponse.class];
+}
+
 + (NSValueTransformer *)messageTypeJSONTransformer {
     NSDictionary *messageTypes = @{
-        @"Login": @(SVMessageTypeLogin),
+        @"LoginResponse": @(SVMessageTypeLoginResponse),
         @"NearbyVehicles": @(SVMessageTypeNearbyVehicles),
         @"OK": @(SVMessageTypeOK),
         @"Ping": @(SVMessageTypePing),
@@ -47,7 +52,8 @@
         @"ArrivingNow": @(SVMessageTypeArrivingNow),
         @"Arrived": @(SVMessageTypeArrived),
         @"BeginTrip": @(SVMessageTypeBeginTrip),
-        @"EndTrip": @(SVMessageTypeEndTrip)
+        @"EndTrip": @(SVMessageTypeEndTrip),
+        @"ApiResponse": @(SVMessageTypeApiResponse),
     };
     
     return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {

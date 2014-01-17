@@ -15,6 +15,9 @@ target 'Instacab' do
     pod 'TSMessages', :git => 'https://github.com/tisunov/TSMessages.git'
     pod 'Bugsnag'
     pod 'ObjectiveSugar'
+    pod 'QuickDialog', :git => 'https://github.com/escoz/QuickDialog.git'
+    pod 'AKNumericFormatter', :git => 'https://github.com/blackm00n/AKNumericFormatter.git'
+    pod 'PaymentKit', :git => 'https://github.com/lmcd/PaymentKit.git'
 
     xcodeproj 'Instacab.xcodeproj'
 end

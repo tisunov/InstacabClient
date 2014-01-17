@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4514" systemVersion="13B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ICThanksViewController">
+            <connections>
+                <outlet property="ratingSentLabel" destination="5rY-M3-lIA" id="TRj-zM-k6w"/>
+                <outlet property="view" destination="1" id="3"/>
+                <outlet property="writeFeedbackButton" destination="OZa-l5-IFf" id="3dk-Wo-iio"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="1">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ваш рейтинг 4 звезды для водителя Михаил отправлен" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="5rY-M3-lIA">
+                    <rect key="frame" x="20" y="92" width="280" height="41"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" red="0.067801339285714302" green="0.067801339285714302" blue="0.067801339285714302" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Спасибо за поездку с InstaCab" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="Mg8-sF-ZLs">
+                    <rect key="frame" x="20" y="178" width="280" height="58"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OZa-l5-IFf" customClass="ICHighlightButton">
+                    <rect key="frame" x="35" y="401" width="250" height="40"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="Nfy-jy-JL8"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <state key="normal" title="Расскажите нам о поездке">
+                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="feedbackButtonPressed:" destination="-1" eventType="touchUpInside" id="ur6-0J-Kut"/>
+                    </connections>
+                </button>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="чтобы улучшить InstaCab для всех." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kpw-2z-Xhi">
+                    <rect key="frame" x="34" y="449" width="253" height="24"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="ons-nU-RDF"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.16440130739795922" green="0.16440130739795922" blue="0.16440130739795922" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.93646364795918369" green="0.93646364795918369" blue="0.93646364795918369" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="Kpw-2z-Xhi" secondAttribute="bottom" constant="95" id="3l9-N8-py6"/>
+                <constraint firstItem="OZa-l5-IFf" firstAttribute="centerX" secondItem="Mg8-sF-ZLs" secondAttribute="centerX" id="5wB-gF-XUC"/>
+                <constraint firstItem="Mg8-sF-ZLs" firstAttribute="top" secondItem="5rY-M3-lIA" secondAttribute="bottom" constant="45" id="7XH-NQ-YPc"/>
+                <constraint firstItem="5rY-M3-lIA" firstAttribute="trailing" secondItem="Mg8-sF-ZLs" secondAttribute="trailing" id="JkE-L2-pyg"/>
+                <constraint firstItem="Kpw-2z-Xhi" firstAttribute="top" secondItem="OZa-l5-IFf" secondAttribute="bottom" constant="8" symbolic="YES" id="TnA-GY-5FF"/>
+                <constraint firstItem="5rY-M3-lIA" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" symbolic="YES" id="TtI-9f-fwf"/>
+                <constraint firstItem="5rY-M3-lIA" firstAttribute="leading" secondItem="Mg8-sF-ZLs" secondAttribute="leading" id="bhM-nW-wOD"/>
+                <constraint firstItem="5rY-M3-lIA" firstAttribute="top" secondItem="1" secondAttribute="top" constant="92" id="ddP-mU-aL7"/>
+                <constraint firstAttribute="trailing" secondItem="5rY-M3-lIA" secondAttribute="trailing" constant="20" symbolic="YES" id="oCn-rJ-R3j"/>
+                <constraint firstItem="OZa-l5-IFf" firstAttribute="centerX" secondItem="Kpw-2z-Xhi" secondAttribute="centerX" id="quf-gN-yqf"/>
+                <constraint firstItem="OZa-l5-IFf" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="35" id="tI6-7o-gMN"/>
+            </constraints>
+            <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+            <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+        </view>
+    </objects>
+</document>

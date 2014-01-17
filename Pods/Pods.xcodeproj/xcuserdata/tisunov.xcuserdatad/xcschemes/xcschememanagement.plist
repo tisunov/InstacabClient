@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-Instacab-AKNumericFormatter.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-Instacab-Bugsnag.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -40,6 +45,16 @@
 			<false/>
 		</dict>
 		<key>Pods-Instacab-ObjectiveSugar.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Instacab-PaymentKit.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-Instacab-QuickDialog.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -77,72 +92,87 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>017F42A32E494190B903C176</key>
+		<key>127235E97BF44519B053B178</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>2694784DC0EF44E6878D19DE</key>
+		<key>13FF3F23EB3646719E7CD2E1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3BF059084AF74DBF904FF170</key>
+		<key>1B127E15A82B496AB9B424C5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>64BCEBD1439944C782C39222</key>
+		<key>7056ABF8BD264D479651384D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8B5F4B2B1A1C435FACC75B95</key>
+		<key>892DECB029CC4D8B8A7182E0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8C9AC2CDA1E84DC79CDB29F5</key>
+		<key>8D8C9D6DDA9E4A7988A4AC03</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>92E9B27EFAED45F78A0E852B</key>
+		<key>8FF9D5A135354567848BF69B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AEB5C831E5E34071BAC9B883</key>
+		<key>9B2628B82A4A40A1BE7EF9E6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B3916336A9CE4719AADC95FC</key>
+		<key>A648C8799F1B4E23A0A77587</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C7044B083C2C46029987EF0D</key>
+		<key>A87560C3B42648D99CF1A92E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D170115B61334D0B8F43EF46</key>
+		<key>B0EEAC12016F4571A9AF7E64</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EBA7DDA4358B4D509A266080</key>
+		<key>B53E67DA78E64DDB913AA209</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>EFF5D987CC2C405A9014EB75</key>
+		<key>D53755012B4B4BF7B2D3ADD5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F1AEA52B89974C1D89C6C196</key>
+		<key>E52AF32A9D74488E9A47CFF8</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EA258C08C2E84AF0AE8AB398</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EDB7749F8FBD4A9AA48B3021</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F9BFB7AEA9934113A7870910</key>
 		<dict>
 			<key>primary</key>
 			<true/>
