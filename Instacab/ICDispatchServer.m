@@ -15,6 +15,7 @@
 #import "AFURLResponseSerialization.h"
 #import "AFURLRequestSerialization.h"
 #include "TargetConditionals.h"
+#import "UIDevice+FCUtilities.h"
 
 @interface ICDispatchServer ()
 @property (nonatomic) BOOL isConnected;
@@ -26,6 +27,7 @@
     NSString *_deviceId;
     NSString *_deviceModel;
     NSString *_deviceOS;
+    NSString *_deviceModelHuman;
     int _reconnectAttempts;
     NSString *_jsonPendingSend;
     
@@ -55,7 +57,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
         _appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         _deviceId = [ASIdentifierManager.sharedManager.advertisingIdentifier UUIDString];
         _deviceOS = UIDevice.currentDevice.systemVersion;
-        _deviceModel = [self deviceModel];
+        _deviceModel = UIDevice.currentDevice.fc_modelIdentifier;
+        _deviceModelHuman = UIDevice.currentDevice.fc_modelHumanIdentifier;
         
         // Initialize HTTP library to send event logs
         NSURL *URL = [NSURL URLWithString:kDispatchServerUrl];
@@ -66,24 +69,25 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     return self;
 }
 
-- (NSString *)deviceModel{
-    size_t len;
-    char *machine;
-    
-    int mib[] = {CTL_HW, HW_MACHINE};
-    sysctl(mib, 2, NULL, &len, NULL, 0);
-    machine = malloc(len);
-    sysctl(mib, 2, machine, &len, NULL, 0);
-    
-    NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
-    free(machine);
-    return platform;
-}
+//- (NSString *)deviceModel{
+//    size_t len;
+//    char *machine;
+//    
+//    int mib[] = {CTL_HW, HW_MACHINE};
+//    sysctl(mib, 2, NULL, &len, NULL, 0);
+//    machine = malloc(len);
+//    sysctl(mib, 2, machine, &len, NULL, 0);
+//    
+//    NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
+//    free(machine);
+//    return platform;
+//}
 
 - (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude {
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     [data setValue:_deviceOS forKey:@"deviceOS"];
     [data setValue:_deviceModel forKey:@"deviceModel"];
+    [data setValue:_deviceModelHuman forKey:@"deviceModelHuman"];
     [data setValue:_appVersion forKey:@"appVersion"];
     [data setValue:_appType forKey:@"app"];
     [data setValue:kDevice forKey:@"device"];

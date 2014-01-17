@@ -18,7 +18,7 @@ static const char *HANDLER_KEY = "com.mattrajca.alertview.handler";
                  buttons:(NSArray *)buttons
            buttonHandler:(void (^)(NSUInteger))handler {
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[title uppercaseString]
                                                     message:message
                                                    delegate:nil
                                           cancelButtonTitle:nil

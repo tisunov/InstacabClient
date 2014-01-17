@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8D8C9D6DDA9E4A7988A4AC03"
+               BlueprintIdentifier = "6B094B65E497457BA68CF65D"
                BuildableName = "libPods-Instacab-Mantle.a"
                BlueprintName = "Pods-Instacab-Mantle"
                ReferencedContainer = "container:Pods.xcodeproj">

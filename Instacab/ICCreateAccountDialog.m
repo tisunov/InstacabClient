@@ -52,7 +52,6 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
         
         self.root = [[QRootElement alloc] init];
         self.root.grouped = YES;
-        self.root.title = @"СОЗДАТЬ АККАУНТ";
         self.root.appearance = [QCustomAppearance new];
         
         QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:@"tisunov.pavel1@gmail.com" Placeholder:@"email@domain.ru"];
@@ -91,6 +90,8 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.titleText = @"СОЗДАТЬ АККАУНТ";
     
     self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
     

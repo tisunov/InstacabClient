@@ -69,6 +69,7 @@
 		D9C114CE1813C00C002833FF /* ICRequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */; };
 		D9C193231888779200A889E4 /* ICAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C193211888779200A889E4 /* ICAccountViewController.m */; };
 		D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C193221888779200A889E4 /* ICAccountViewController.xib */; };
+		D9C1932C1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */; };
 		D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */; };
 		D9CD0E4C1829A55400A02619 /* ICRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */; };
 		D9CD0E4D1829A55400A02619 /* ICRatingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */; };
@@ -188,6 +189,8 @@
 		D9C193201888779200A889E4 /* ICAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICAccountViewController.h; sourceTree = "<group>"; };
 		D9C193211888779200A889E4 /* ICAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICAccountViewController.m; sourceTree = "<group>"; };
 		D9C193221888779200A889E4 /* ICAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICAccountViewController.xib; sourceTree = "<group>"; };
+		D9C1932A1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+TitleLabelAttritbutes.h"; sourceTree = "<group>"; };
+		D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TitleLabelAttritbutes.m"; sourceTree = "<group>"; };
 		D9C27D911845B7A7007969EA /* UIApplication+Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Alerts.h"; sourceTree = "<group>"; };
 		D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Alerts.m"; sourceTree = "<group>"; };
 		D9CD0E491829A55400A02619 /* ICRatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICRatingViewController.h; sourceTree = "<group>"; };
@@ -317,6 +320,8 @@
 				D9C193201888779200A889E4 /* ICAccountViewController.h */,
 				D9C193211888779200A889E4 /* ICAccountViewController.m */,
 				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
+				D9C1932A1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.h */,
+				D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -658,6 +663,7 @@
 				D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */,
 				D9BA28AF181D4FF2009584D1 /* ICNearbyVehicles.m in Sources */,
 				D9AD515F1817D17C00692E7E /* ICLocationService.m in Sources */,
+				D9C1932C1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m in Sources */,
 				D9B03245180572B400F7AF69 /* main.m in Sources */,
 				D982840618878FF10014BBF7 /* ICError.m in Sources */,
 				D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */,

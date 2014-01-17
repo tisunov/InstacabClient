@@ -37,13 +37,6 @@
     
     nav.navigationBar.barTintColor = [UIColor colorFromHexString:@"#F8F8F4"];
     
-    NSDictionary *textAttributes = @{
-        NSForegroundColorAttributeName:[UIColor colorFromHexString:@"#403F3C"],
-//        NSKernAttributeName: @6.0f,
-//        NSFontAttributeName: [UIFont fontWithName:@"Menlo" size:18.0f]
-    };
-    nav.navigationBar.titleTextAttributes = textAttributes;
-    
     [self.window makeKeyAndVisible];
     return YES;
 }

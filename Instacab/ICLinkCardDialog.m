@@ -35,7 +35,7 @@
 {
     [super viewDidLoad];
     
-    self.title = @"РЕГИСТРАЦИЯ";
+    self.titleText = @"РЕГИСТРАЦИЯ";
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancel;

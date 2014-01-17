@@ -84,7 +84,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [super viewDidLoad];
     
     // set title and labels
-    self.title = @"INSTACAB";
+    self.titleText = @"INSTACAB";
     
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.leftBarButtonItem =
@@ -283,7 +283,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)setReadyToRequest: (BOOL)isReady {
     _readyToRequest = isReady;
     if (isReady) {
-        [self setTitle:@"ПОДТВЕРЖДЕНИЕ"];
+        self.titleText = @"ПОДТВЕРЖДЕНИЕ";
         
         CGFloat zoomLevel =
             [GMSCameraPosition zoomAtCoordinate:_mapView.camera.target

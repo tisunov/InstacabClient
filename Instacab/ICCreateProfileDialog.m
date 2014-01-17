@@ -23,7 +23,6 @@
     if (self) {
         self.root = [[QRootElement alloc] init];
         self.root.grouped = YES;
-        self.root.title = @"ПРОФИЛЬ";
         
         QEntryElement *firstName = [[QEntryElement alloc] initWithTitle:@"Имя" Value:@"Павел" Placeholder:nil];
         firstName.enablesReturnKeyAutomatically = YES;
@@ -48,6 +47,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.titleText = @"ПРОФИЛЬ";
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancel;

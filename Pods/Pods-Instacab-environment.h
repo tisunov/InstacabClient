@@ -72,6 +72,12 @@
 #define COCOAPODS_VERSION_MINOR_EDStarRating 1
 #define COCOAPODS_VERSION_PATCH_EDStarRating 0
 
+// FCUtilities
+#define COCOAPODS_POD_AVAILABLE_FCUtilities
+#define COCOAPODS_VERSION_MAJOR_FCUtilities 0
+#define COCOAPODS_VERSION_MINOR_FCUtilities 1
+#define COCOAPODS_VERSION_PATCH_FCUtilities 0
+
 // HexColors
 #define COCOAPODS_POD_AVAILABLE_HexColors
 #define COCOAPODS_VERSION_MAJOR_HexColors 2

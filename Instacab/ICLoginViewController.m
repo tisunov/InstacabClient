@@ -31,7 +31,6 @@
         
         self.root = [[QRootElement alloc] init];
         self.root.grouped = YES;
-        self.root.title = @"ВХОД";
         
         ICClient *client = [[ICClient sharedInstance] load];
 
@@ -61,6 +60,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.titleText = @"ВХОД";
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPressed:)];
     self.navigationItem.leftBarButtonItem = cancel;

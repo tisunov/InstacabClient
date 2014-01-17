@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "QuickDialog.h"
 #import "ICCancelDialogDelegate.h"
+#import "UIViewController+TitleLabelAttritbutes.h"
 
 @interface QCustomAppearance : QFlatAppearance
 

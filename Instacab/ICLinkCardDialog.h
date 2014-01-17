@@ -11,6 +11,7 @@
 #import "CardIO.h"
 #import "ICSignUpInfo.h"
 #import "ICCancelDialogDelegate.h"
+#import "UIViewController+TitleLabelAttritbutes.h"
 
 @interface ICLinkCardDialog : UIViewController<PKViewDelegate, CardIOPaymentViewControllerDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *helpLabel;

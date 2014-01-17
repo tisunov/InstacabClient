@@ -14,6 +14,7 @@
 #import "ICGoogleService.h"
 #import "ICClientService.h"
 #import "ICLocationService.h"
+#import "UIViewController+TitleLabelAttritbutes.h"
 
 @interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate>
 - (IBAction)requestPickup:(id)sender;

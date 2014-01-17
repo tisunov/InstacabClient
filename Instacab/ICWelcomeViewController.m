@@ -111,7 +111,7 @@
 }
 
 -(void)cancelDialog:(UIViewController *)dialogController {
-    [UIAlertView presentWithTitle:@"Отмена создания аккаунта"
+    [UIAlertView presentWithTitle:@"Отменить создание аккаунта"
                           message:@"Вы уверены что хотите прекратить регистрацию? Вы потеряете введенные данные."
                           buttons:@[ @"Нет", @"Да" ]
                     buttonHandler:^(NSUInteger index) {

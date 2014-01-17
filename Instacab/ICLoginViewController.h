@@ -10,6 +10,7 @@
 #import "ICClientService.h"
 #import "ICLocationService.h"
 #import "QuickDialog.h"
+#import "UIViewController+TitleLabelAttritbutes.h"
 
 @interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate>
 
