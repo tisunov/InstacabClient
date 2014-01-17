@@ -12,8 +12,8 @@
 		D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */; };
 		D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */; };
 		D90BAE1E1884356B00E03F3E /* ICLinkCardDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */; };
-		D90BAE231884359500E03F3E /* ICThanksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE211884359500E03F3E /* ICThanksViewController.m */; };
-		D90BAE241884359500E03F3E /* ICThanksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D90BAE221884359500E03F3E /* ICThanksViewController.xib */; };
+		D90BAE231884359500E03F3E /* ICFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE211884359500E03F3E /* ICFeedbackViewController.m */; };
+		D90BAE241884359500E03F3E /* ICFeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D90BAE221884359500E03F3E /* ICFeedbackViewController.xib */; };
 		D90BAE271885C89900E03F3E /* ICCreateProfileDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */; };
 		D90BAE2B1885CB2200E03F3E /* QuickDialogController+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */; };
 		D911228418094462006A49DA /* ICHighlightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D911228318094462006A49DA /* ICHighlightButton.m */; };
@@ -23,8 +23,6 @@
 		D967F913184208C200085B2F /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D967F912184208C200085B2F /* GoogleMaps.framework */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
 		D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97B7AE618083E2A00B8315D /* AdSupport.framework */; };
-		D97D34EF1887FF7400A3AE6D /* ICFeedbackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97D34ED1887FF7400A3AE6D /* ICFeedbackViewController.m */; };
-		D97D34F01887FF7400A3AE6D /* ICFeedbackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97D34EE1887FF7400A3AE6D /* ICFeedbackViewController.xib */; };
 		D98058BD181A4EE000DD0BBF /* ICTrip.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058BC181A4EE000DD0BBF /* ICTrip.m */; };
 		D98058C0181A518700DD0BBF /* ICDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058BF181A518700DD0BBF /* ICDriver.m */; };
 		D98058C3181A52F700DD0BBF /* ICPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058C2181A52F700DD0BBF /* ICPerson.m */; };
@@ -101,9 +99,9 @@
 		D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICCreateAccountDialog.m; sourceTree = "<group>"; };
 		D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICLinkCardDialog.h; sourceTree = "<group>"; };
 		D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICLinkCardDialog.m; sourceTree = "<group>"; };
-		D90BAE201884359500E03F3E /* ICThanksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICThanksViewController.h; sourceTree = "<group>"; };
-		D90BAE211884359500E03F3E /* ICThanksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICThanksViewController.m; sourceTree = "<group>"; };
-		D90BAE221884359500E03F3E /* ICThanksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICThanksViewController.xib; sourceTree = "<group>"; };
+		D90BAE201884359500E03F3E /* ICFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICFeedbackViewController.h; sourceTree = "<group>"; };
+		D90BAE211884359500E03F3E /* ICFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICFeedbackViewController.m; sourceTree = "<group>"; };
+		D90BAE221884359500E03F3E /* ICFeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICFeedbackViewController.xib; sourceTree = "<group>"; };
 		D90BAE251885C89900E03F3E /* ICCreateProfileDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICCreateProfileDialog.h; sourceTree = "<group>"; };
 		D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICCreateProfileDialog.m; sourceTree = "<group>"; };
 		D90BAE291885CB2200E03F3E /* QuickDialogController+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QuickDialogController+Additions.h"; sourceTree = "<group>"; };
@@ -119,9 +117,6 @@
 		D967F912184208C200085B2F /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
 		D97B7AE618083E2A00B8315D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
-		D97D34EC1887FF7400A3AE6D /* ICFeedbackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICFeedbackViewController.h; sourceTree = "<group>"; };
-		D97D34ED1887FF7400A3AE6D /* ICFeedbackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICFeedbackViewController.m; sourceTree = "<group>"; };
-		D97D34EE1887FF7400A3AE6D /* ICFeedbackViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICFeedbackViewController.xib; sourceTree = "<group>"; };
 		D98058BB181A4EE000DD0BBF /* ICTrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICTrip.h; sourceTree = "<group>"; };
 		D98058BC181A4EE000DD0BBF /* ICTrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICTrip.m; sourceTree = "<group>"; };
 		D98058BE181A518700DD0BBF /* ICDriver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICDriver.h; sourceTree = "<group>"; };
@@ -311,12 +306,9 @@
 				D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */,
 				D9CD0E491829A55400A02619 /* ICRatingViewController.h */,
 				D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */,
-				D90BAE211884359500E03F3E /* ICThanksViewController.m */,
-				D90BAE201884359500E03F3E /* ICThanksViewController.h */,
-				D90BAE221884359500E03F3E /* ICThanksViewController.xib */,
-				D97D34ED1887FF7400A3AE6D /* ICFeedbackViewController.m */,
-				D97D34EC1887FF7400A3AE6D /* ICFeedbackViewController.h */,
-				D97D34EE1887FF7400A3AE6D /* ICFeedbackViewController.xib */,
+				D90BAE211884359500E03F3E /* ICFeedbackViewController.m */,
+				D90BAE201884359500E03F3E /* ICFeedbackViewController.h */,
+				D90BAE221884359500E03F3E /* ICFeedbackViewController.xib */,
 				D9C193201888779200A889E4 /* ICAccountViewController.h */,
 				D9C193211888779200A889E4 /* ICAccountViewController.m */,
 				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
@@ -561,13 +553,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D90BAE241884359500E03F3E /* ICThanksViewController.xib in Resources */,
+				D90BAE241884359500E03F3E /* ICFeedbackViewController.xib in Resources */,
 				D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */,
 				D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */,
 				D9B03243180572B400F7AF69 /* InfoPlist.strings in Resources */,
 				D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */,
 				D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */,
-				D97D34F01887FF7400A3AE6D /* ICFeedbackViewController.xib in Resources */,
 				D9CD0E4D1829A55400A02619 /* ICRatingViewController.xib in Resources */,
 				D9B03278180585E400F7AF69 /* GoogleMaps.bundle in Resources */,
 				D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */,
@@ -653,8 +644,7 @@
 				D99833D5182159C600A7DA8E /* ICVehicle.m in Sources */,
 				D98EFDC118429BA8005A2BAA /* UINavigationController+Animation.m in Sources */,
 				D98058BD181A4EE000DD0BBF /* ICTrip.m in Sources */,
-				D90BAE231884359500E03F3E /* ICThanksViewController.m in Sources */,
-				D97D34EF1887FF7400A3AE6D /* ICFeedbackViewController.m in Sources */,
+				D90BAE231884359500E03F3E /* ICFeedbackViewController.m in Sources */,
 				D90BAE271885C89900E03F3E /* ICCreateProfileDialog.m in Sources */,
 				D9BA28B2181D50E0009584D1 /* ICVehiclePoint.m in Sources */,
 				D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */,

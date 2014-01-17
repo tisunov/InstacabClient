@@ -23,7 +23,7 @@ typedef void (^ICClientServiceFailureBlock)();
 -(void)ping: (CLLocationCoordinate2D)location;
 -(void)cancelPickup;
 -(void)cancelTrip;
--(void)rateDriver:(NSUInteger)rating forTrip: (ICTrip*)trip;
+-(void)rateDriver:(NSUInteger)rating withFeedback:(NSString *)feedback forTrip: (ICTrip*)trip;
 -(void)logOut;
 -(void)signUp:(ICSignUpInfo *)info
    withCardIo:(BOOL)cardio

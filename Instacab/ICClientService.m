@@ -189,14 +189,18 @@ NSString * const kFieldPassword = @"password";
     return event;
 }
 
--(void)rateDriver:(NSUInteger)rating forTrip: (ICTrip*)trip {
-    NSDictionary *message = @{
+-(void)rateDriver:(NSUInteger)rating withFeedback:(NSString *)feedback forTrip: (ICTrip*)trip {
+    NSMutableDictionary *message = [NSMutableDictionary dictionaryWithDictionary: @{
         kFieldMessageType: @"RatingDriver",
         @"token": [ICClient sharedInstance].token,
         @"id": [ICClient sharedInstance].uID,
         @"tripId": trip.tripId,
-        @"rating": [NSNumber numberWithInteger:rating]
-    };
+        @"rating": [NSNumber numberWithInteger:rating],
+    }];
+    
+    if (feedback.length > 0) {
+        [message setObject:feedback forKey:@"feedback"];
+    }
     
     [self sendMessage:message];
 }

@@ -2,13 +2,16 @@
 //  ICFeedbackViewController.m
 //  Instacab
 //
-//  Created by Pavel Tisunov on 16/01/14.
+//  Created by Pavel Tisunov on 13/01/14.
 //  Copyright (c) 2014 Bright Stripe. All rights reserved.
 //
 
 #import "ICFeedbackViewController.h"
-#import "ICClientService.h"
 #import "UIColor+Colours.h"
+#import <QuartzCore/QuartzCore.h>
+#import "UIViewController+TitleLabelAttritbutes.h"
+#import "ICClientService.h"
+#import "SLScrollViewKeyboardSupport.h"
 
 @interface ICFeedbackViewController ()
 
@@ -16,7 +19,9 @@
 
 NSString * const kFeedbackPlaceholder = @"Дополнительные комментарии";
 
-@implementation ICFeedbackViewController
+@implementation ICFeedbackViewController {
+    SLScrollViewKeyboardSupport *_keybdSupport;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,20 +35,48 @@ NSString * const kFeedbackPlaceholder = @"Дополнительные комм�
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.titleText = @"СПАСИБО ЗА ПОЕЗДКУ С INSTACAB";
+    self.navigationItem.hidesBackButton = YES;
+    self.view.backgroundColor = [UIColor colorFromHexString:@"#f4f7f7"];
     
-    self.title = @"ОТЗЫВ";
-    self.view.backgroundColor = [UIColor colorFromHexString:@"#efeff4"];
+    self.submitButton.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
+    self.submitButton.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
     
-//    self.feedbackTextView.delegate = self;
-//    self.feedbackTextView.text = kFeedbackPlaceholder;
-//    self.feedbackTextView.textColor = [UIColor lightGrayColor]; //optional
+    self.submitButton.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
+    self.submitButton.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
+    self.submitButton.layer.cornerRadius = 3.0f;
     
-    UIBarButtonItem *done = [[UIBarButtonItem alloc] initWithTitle:@"Отправить" style:UIBarButtonItemStyleDone target:self action:@selector(done:)];
-    self.navigationItem.rightBarButtonItem = done;
+    _feedbackTextView.text = kFeedbackPlaceholder;
+    _feedbackTextView.delegate = self;
+    _feedbackTextView.textColor = [UIColor lightGrayColor];
+    UIToolbar *toolbar = [self createActionBar];
+    _feedbackTextView.inputAccessoryView = toolbar;
+    
+    _starRating.rating = self.driverRating;
+    _starRating.starImage = [UIImage imageNamed:@"rating_star_empty.png"];
+    _starRating.starHighlightedImage = [UIImage imageNamed:@"rating_star_full.png"];
+    _starRating.maxRating = 5.0;
+    _starRating.delegate = self;
+    _starRating.horizontalMargin = 12;
+    _starRating.editable = YES;
+    _starRating.displayMode = EDStarRatingDisplayFull;
+    [_starRating setNeedsDisplay];
+    
+    _keybdSupport = [[SLScrollViewKeyboardSupport alloc] initWithScrollView:(UIScrollView *)self.view];
 }
 
--(void)done:(id)sender {
-    // TODO: Отправить текст из _feedbackTextView.text
+-(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating
+{
+    _driverRating = rating;
+    _submitButton.enabled = rating > 0;
+}
+
+- (IBAction)submitPressed:(id)sender {
+    ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
+    [[ICClientService sharedInstance] rateDriver:_driverRating withFeedback:self.feedbackTextView.text forTrip:trip];
+    
+    [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView{
@@ -86,6 +119,24 @@ NSString * const kFeedbackPlaceholder = @"Дополнительные комм�
     }
     
     return YES;
+}
+
+-(UIToolbar *)createActionBar {
+    UIToolbar *actionBar = [[UIToolbar alloc] init];
+    [actionBar sizeToFit];
+    
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Готово"
+                                                                   style:UIBarButtonItemStyleDone target:self
+                                                                  action:@selector(handleActionBarDone:)];
+    
+    UIBarButtonItem *flexible = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    [actionBar setItems:[NSArray arrayWithObjects:flexible, doneButton, nil]];
+    
+	return actionBar;
+}
+
+-(void)handleActionBarDone:(id)sender {
+    [_feedbackTextView resignFirstResponder];
 }
 
 

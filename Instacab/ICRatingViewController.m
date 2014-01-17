@@ -10,13 +10,13 @@
 #import "ICClient.h"
 #import "ICClientService.h"
 #import "UIColor+Colours.h"
-#import "ICThanksViewController.h"
+#import "ICFeedbackViewController.h"
 
 @interface ICRatingViewController ()
 @end
 
 @implementation ICRatingViewController {
-    float _driverRating;
+
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -31,15 +31,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"КВИТАНЦИЯ";
+    self.titleText = @"КВИТАНЦИЯ";
     self.navigationItem.hidesBackButton = YES;
-
-    _submitRatingBtn.enabled = NO;
-    _submitRatingBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
-    _submitRatingBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
     
-    _fareSection.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"receipt_details_pattern.png"]];
-    _ratingSection.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"receipt_background_tile.png"]];
+    _fareSection.backgroundColor = [UIColor colorFromHexString:@"#f4f7f7"];
+    _ratingSection.backgroundColor = [UIColor colorFromHexString:@"#e2e2e1"];
+//    _ratingSection.backgroundColor = [UIColor colorWithPatternImage: [UIImage imageNamed:@"receipt_background_tile.png"]];
 
     _starRating.starImage = [UIImage imageNamed:@"rating_star_empty.png"];
     _starRating.starHighlightedImage = [UIImage imageNamed:@"rating_star_full.png"];
@@ -77,16 +74,14 @@
 
 -(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating
 {
-    _driverRating = rating;
-    _submitRatingBtn.enabled = rating > 0;
+    ICFeedbackViewController *vc = [[ICFeedbackViewController alloc] initWithNibName:@"ICFeedbackViewController" bundle:nil];
+    vc.driverRating = rating;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (IBAction)submitRating:(id)sender {
-    ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
     
-//    [[ICClientService sharedInstance] rateDriver:_driverRating forTrip:trip];
-    
-    ICThanksViewController *vc = [[ICThanksViewController alloc] initWithNibName:@"ICThanksViewController" bundle:nil];
+    ICFeedbackViewController *vc = [[ICFeedbackViewController alloc] initWithNibName:@"ICFeedbackViewController" bundle:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

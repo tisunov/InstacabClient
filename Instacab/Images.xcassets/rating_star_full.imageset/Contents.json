@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "rating_star_full.png"
+      "filename" : "star_highlight.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "rating_star_full@2x.png"
+      "filename" : "star_highlight@2x.png"
     }
   ],
   "info" : {

@@ -800,7 +800,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)prepareForNextTrip {
     NSLog(@"prepareForNextTrip");
 
-    self.title = @"INSTACAB";
+    self.titleText = @"INSTACAB";
     [self showPickupPanel];
     
     // Clear all markers and add pickup marker
