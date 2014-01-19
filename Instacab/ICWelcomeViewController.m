@@ -76,9 +76,9 @@
         
         [_clientService ping:_locationService.coordinates];
     }
-    else {
-        [self performSelector:@selector(registerAction:)];
-    }
+//    else {
+//        [self performSelector:@selector(registerAction:)];
+//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -79,12 +79,6 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-- (IBAction)submitRating:(id)sender {
-    
-    ICFeedbackViewController *vc = [[ICFeedbackViewController alloc] initWithNibName:@"ICFeedbackViewController" bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

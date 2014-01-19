@@ -640,8 +640,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)showFareAndRateDriver {
-    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:[[ICRatingViewController alloc] initWithNibName:@"ICRatingViewController" bundle:nil]];
-    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+    ICRatingViewController *vc = [[ICRatingViewController alloc] initWithNibName:@"ICRatingViewController" bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)layoutForDriverState:(SVDriverState)driverState {
@@ -772,18 +772,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)dispatcherConnectionChanged:(NSNotification*)note {
     ICDispatchServer *dispatcher = [note object];
     
-    // Restore state even if connection was lost only for 2 seconds
-    // DispatchServer will try to connect 1 time on its own without reporting disconnect
-    if (dispatcher.isConnected) {
-        [self ping];
-    }
-    else {
+    if (!dispatcher.isConnected) {
         [TSMessage showNotificationInViewController:self.navigationController
                                               title:@"Нет Сетевого Соединения"
-                                           subtitle:@"Проверьте свое подключение к сети."
+                                           subtitle:@"Немогу подключиться к серверу."
                                               image:[UIImage imageNamed:@"server-alert"]
                                                type:TSMessageNotificationTypeError
-                                           duration:TSMessageNotificationDurationEndless];
+                                           duration:TSMessageNotificationDurationAutomatic];
         [self popViewController];
     }
 }

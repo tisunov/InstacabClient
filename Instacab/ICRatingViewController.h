@@ -16,6 +16,5 @@
 @property (strong, nonatomic) IBOutlet EDStarRating *starRating;
 @property (strong, nonatomic) IBOutlet UIView *ratingSection;
 @property (strong, nonatomic) IBOutlet UIView *fareSection;
-- (IBAction)submitRating:(id)sender;
 
 @end
