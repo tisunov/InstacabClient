@@ -13,17 +13,13 @@
 #import "ICApiResponse.h"
 
 typedef enum : NSUInteger {
-    SVMessageTypeLoginResponse,
-    SVMessageTypeNearbyVehicles,
     SVMessageTypeOK,
-    SVMessageTypePing,
     SVMessageTypeError,
     SVMessageTypeConfirmPickup,
     SVMessageTypePickupCanceled,
     SVMessageTypeTripCanceled,
     SVMessageTypeEnroute,
     SVMessageTypeArrivingNow,
-    SVMessageTypeArrived,
     SVMessageTypeBeginTrip,
     SVMessageTypeEndTrip,
     SVMessageTypeApiResponse,

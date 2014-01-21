@@ -185,8 +185,7 @@
 
 - (void)didReceiveMessage:(ICMessage *)message {
     switch (message.messageType) {
-        case SVMessageTypePing:
-        case SVMessageTypeNearbyVehicles:
+        case SVMessageTypeOK:
             [self pushRequestViewControllerAnimated:YES];
             [self stopLoading];
             break;

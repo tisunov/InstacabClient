@@ -40,17 +40,13 @@
 
 + (NSValueTransformer *)messageTypeJSONTransformer {
     NSDictionary *messageTypes = @{
-        @"LoginResponse": @(SVMessageTypeLoginResponse),
-        @"NearbyVehicles": @(SVMessageTypeNearbyVehicles),
         @"OK": @(SVMessageTypeOK),
-        @"Ping": @(SVMessageTypePing),
         @"Error": @(SVMessageTypeError),
         @"ConfirmPickup": @(SVMessageTypeConfirmPickup),
         @"PickupCanceled": @(SVMessageTypePickupCanceled),
         @"TripCanceled": @(SVMessageTypeTripCanceled),
         @"Enroute": @(SVMessageTypeEnroute),
         @"ArrivingNow": @(SVMessageTypeArrivingNow),
-        @"Arrived": @(SVMessageTypeArrived),
         @"BeginTrip": @(SVMessageTypeBeginTrip),
         @"EndTrip": @(SVMessageTypeEndTrip),
         @"ApiResponse": @(SVMessageTypeApiResponse),

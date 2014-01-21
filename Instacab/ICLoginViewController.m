@@ -130,7 +130,7 @@
     ICClient *client = [ICClient sharedInstance];
      
     switch (message.messageType) {
-        case SVMessageTypeLoginResponse:
+        case SVMessageTypeOK:
             [client update:message.client];
             client.email = [self textForElementKey:@"email"];
             client.password = [self textForElementKey:@"password"];

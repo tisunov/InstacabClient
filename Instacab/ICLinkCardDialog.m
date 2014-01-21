@@ -101,7 +101,7 @@
                                      success:^(ICMessage *message) {
                                          [self dismissProgress];
                                          
-                                         if (message.messageType == SVMessageTypeLoginResponse) {
+                                         if (message.messageType == SVMessageTypeOK) {
                                              [self signupComplete:message];
                                          }
                                          else {

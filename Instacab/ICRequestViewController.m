@@ -742,7 +742,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [[ICClient sharedInstance] update:message.client];
     
     switch (message.messageType) {
-        case SVMessageTypeNearbyVehicles:
+        case SVMessageTypeOK:
             [self showNearbyVehicles:message.nearbyVehicles];
             break;
             
