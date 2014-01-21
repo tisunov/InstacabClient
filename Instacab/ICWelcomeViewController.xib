@@ -76,7 +76,7 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" red="0.1343615082968706" green="0.1351692405341641" blue="0.18767107664233576" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.10616791119340419" green="0.10658732406003119" blue="0.14961336096938771" alpha="1" colorSpace="calibratedRGB"/>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
             <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
         </view>

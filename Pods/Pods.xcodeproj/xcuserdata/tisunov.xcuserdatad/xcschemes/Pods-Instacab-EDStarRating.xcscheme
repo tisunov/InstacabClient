@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9702163898E647BCB9F637F3"
+               BlueprintIdentifier = "8B6F1346AA6D4F6BAE21B927"
                BuildableName = "libPods-Instacab-EDStarRating.a"
                BlueprintName = "Pods-Instacab-EDStarRating"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -20,14 +20,23 @@
     [self pushViewController:destVC animated:NO];
 }
 
-- (void) slideLayerAndPopInDirection:(NSString *)direction {
+- (void)commonTransitionInDirection:(NSString *)direction {
     CATransition *transition = [CATransition animation];
     transition.duration = 0.5;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     transition.type = kCATransitionPush;
     transition.subtype = direction;
     [self.view.layer addAnimation:transition forKey:kCATransition];
+}
+
+- (void) slideLayerAndPopInDirection:(NSString *)direction {
+    [self commonTransitionInDirection:direction];
     [self popViewControllerAnimated:NO];
+}
+
+- (void) slideLayerAndPopToRootInDirection:(NSString *)direction completion:(VoidBlock)completionBlock {
+    [self commonTransitionInDirection:direction];
+    [self popToRootViewControllerAnimated:NO onCompletion:completionBlock];
 }
 
 @end

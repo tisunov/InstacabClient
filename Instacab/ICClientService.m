@@ -32,7 +32,13 @@ NSString * const kFieldPassword = @"password";
     return self;
 }
 
--(void)ping: (CLLocationCoordinate2D)location {
+-(void)ping: (CLLocationCoordinate2D)location
+    success:(ICClientServiceSuccessBlock)success
+    failure:(ICClientServiceFailureBlock)failure
+{
+    _successBlock = [success copy];
+    _failureBlock = [failure copy];
+    
     NSDictionary *pingMessage = @{
         kFieldMessageType: @"PingClient",
         @"token": [ICClient sharedInstance].token,
@@ -47,8 +53,8 @@ NSString * const kFieldPassword = @"password";
       success:(ICClientServiceSuccessBlock)success
       failure:(ICClientServiceFailureBlock)failure
 {
-    _successBlock = success;
-    _failureBlock = failure;
+    _successBlock = [success copy];
+    _failureBlock = [failure copy];
     
     NSDictionary *message = @{
         @"user": [MTLJSONAdapter JSONDictionaryFromModel:info],
@@ -65,8 +71,8 @@ NSString * const kFieldPassword = @"password";
          withSuccess:(ICClientServiceSuccessBlock)success
              failure:(ICClientServiceFailureBlock)failure
 {
-    _successBlock = success;
-    _failureBlock = failure;
+    _successBlock = [success copy];
+    _failureBlock = [failure copy];
     
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
@@ -82,7 +88,14 @@ NSString * const kFieldPassword = @"password";
     [self sendMessage:message];
 }
 
--(void)loginWithEmail:(NSString *)email password: (NSString *)password {
+-(void)loginWithEmail:(NSString *)email
+             password: (NSString *)password
+              success:(ICClientServiceSuccessBlock)success
+              failure:(ICClientServiceFailureBlock)failure
+{
+    _successBlock = [success copy];
+    _failureBlock = [failure copy];
+    
     // init Login message
     NSDictionary *message = @{
         kFieldEmail: email,
@@ -209,15 +222,16 @@ NSString * const kFieldPassword = @"password";
     NSError *error;
     
     // Deserialize to object instance
-    ICMessage *response = [MTLJSONAdapter modelOfClass:ICMessage.class
+    ICMessage *msg = [MTLJSONAdapter modelOfClass:ICMessage.class
                                     fromJSONDictionary:responseMessage
                                                  error:&error];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kClientServiceMessageNotification object:self userInfo:@{@"message": response}];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kClientServiceMessageNotification object:self userInfo:@{@"message":msg}];
     
     if (_successBlock != nil) {
-        _successBlock(response);
+        _successBlock(msg);
         _successBlock = nil;
+        _failureBlock = nil;
     }
 }
 
@@ -225,6 +239,7 @@ NSString * const kFieldPassword = @"password";
     if (_failureBlock != nil) {
         _failureBlock();
         _failureBlock = nil;
+        _successBlock = nil;
     }
 }
 

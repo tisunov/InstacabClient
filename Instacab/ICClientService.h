@@ -18,13 +18,25 @@ typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
 typedef void (^ICClientServiceFailureBlock)();
 
 @interface ICClientService : ICSingleton<ICDispatchServerDelegate>
--(void)loginWithEmail:(NSString *)email password: (NSString *)password;
+-(void)loginWithEmail:(NSString *)email
+             password: (NSString *)password
+              success:(ICClientServiceSuccessBlock)success
+              failure:(ICClientServiceFailureBlock)failure;
 -(void)pickupAt: (ICLocation *)location;
--(void)ping: (CLLocationCoordinate2D)location;
+
+-(void)ping: (CLLocationCoordinate2D)location
+    success:(ICClientServiceSuccessBlock)success
+    failure:(ICClientServiceFailureBlock)failure;
+
 -(void)cancelPickup;
 -(void)cancelTrip;
--(void)rateDriver:(NSUInteger)rating withFeedback:(NSString *)feedback forTrip: (ICTrip*)trip;
+
+-(void)rateDriver:(NSUInteger)rating
+     withFeedback:(NSString *)feedback
+          forTrip: (ICTrip*)trip;
+
 -(void)logOut;
+
 -(void)signUp:(ICSignUpInfo *)info
    withCardIo:(BOOL)cardio
       success:(ICClientServiceSuccessBlock)success

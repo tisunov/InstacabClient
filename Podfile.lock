@@ -26,6 +26,7 @@ PODS:
   - EDStarRating (1.1)
   - FCUtilities (0.1.0)
   - HexColors (2.2.1)
+  - iOSBlocks (1.0.2)
   - Mantle (1.3.1):
     - Mantle/extobjc
   - Mantle/extobjc (1.3.1)
@@ -53,7 +54,8 @@ DEPENDENCIES:
   - Bugsnag
   - Colours (~> 2.0)
   - EDStarRating
-  - FCUtilities (from `https://github.com/marcoarment/FCUtilities`)
+  - FCUtilities (from `https://github.com/marcoarment/FCUtilities.git`)
+  - iOSBlocks (from `https://github.com/dzenbot/iOSBlocks.git`)
   - Mantle (~> 1.3.1)
   - MBProgressHUD (from `https://github.com/dannybabiy/MBProgressHUD.git`, branch `ios7`)
   - ObjectiveSugar
@@ -68,7 +70,9 @@ EXTERNAL SOURCES:
   AKNumericFormatter:
     :git: https://github.com/blackm00n/AKNumericFormatter.git
   FCUtilities:
-    :git: https://github.com/marcoarment/FCUtilities
+    :git: https://github.com/marcoarment/FCUtilities.git
+  iOSBlocks:
+    :git: https://github.com/dzenbot/iOSBlocks.git
   MBProgressHUD:
     :branch: ios7
     :git: https://github.com/dannybabiy/MBProgressHUD.git
@@ -89,9 +93,10 @@ SPEC CHECKSUMS:
   EDStarRating: 6761f41fd040f1cde155e2885dddc96461620f67
   FCUtilities: d0f0da2640a643bb319c3ef58e9c43530fcbc521
   HexColors: 3a68db077cd6572a8f7d4aa1add284dd2436a934
+  iOSBlocks: fecd9f6ff80da30bc23b9d35ccf78f483baa8043
   Mantle: abc3b0c81bc66eb624cf9cebb8640e377d5a44ae
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
-  ObjectiveSugar: e90d09b348ec0d1739d6d93bdcee385cf0a96036
+  ObjectiveSugar: fed588577bcf9733546aeaa089de444e4bab9a52
   PaymentKit: 40e5673a9a0960d7ef111d66d0604af245caf635
   QuickDialog: dc1dfabc55ab72d02356e1a908a091cdc90ce477
   Reachability: be4883bb93f31e38266ae3365e5600a317aae735

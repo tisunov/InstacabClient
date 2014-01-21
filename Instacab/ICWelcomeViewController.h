@@ -10,8 +10,9 @@
 #import "ICHighlightButton.h"
 #import "ICLocationService.h"
 #import "ICCancelDialogDelegate.h"
+#import "ICLoginViewController.h"
 
-@interface ICWelcomeViewController : UIViewController<ICLocationServiceDelegate, ICCancelDialogDelegate>
+@interface ICWelcomeViewController : UIViewController<ICLocationServiceDelegate, ICCancelDialogDelegate, ICLoginViewControllerDelegate>
 @property (strong, nonatomic) IBOutlet ICHighlightButton *signinButton;
 @property (strong, nonatomic) IBOutlet ICHighlightButton *signupButton;
 @property (strong, nonatomic) IBOutlet UILabel *loadingLabel;

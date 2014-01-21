@@ -76,16 +76,6 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(clientDidReceiveMessage:)
-                                                 name:kClientServiceMessageNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dispatcherConnectionChanged:)
-                                                 name:kDispatchServerConnectionChangeNotification
-                                               object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -113,36 +103,30 @@
 
 -(void)login {
     [_clientService loginWithEmail:[self textForElementKey:@"email"]
-                          password:[self textForElementKey:@"password"]];
+                          password:[self textForElementKey:@"password"]
+                          success:^(ICMessage *message) {
+                              [self clientDidReceiveMessage:message];
+                          } failure:^{
+                              [self dismissProgress];
+                              [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
+                          }];
 }
 
 - (void)showProgress {
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
     hud.labelText = @"Проверяю";
     hud.removeFromSuperViewOnHide = YES;
     
-    [self.view addSubview:hud];
+    [[UIApplication sharedApplication].keyWindow addSubview:hud];
     [hud show:YES];
 }
 
 -(void)dismissProgress {
-    MBProgressHUD *hud = [MBProgressHUD HUDForView:self.view];
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
     [hud hide:YES];
 }
 
--(void)dispatcherConnectionChanged:(NSNotification*)note {
-    ICDispatchServer *dispatcher = [note object];
-    
-    if (dispatcher.isConnected) {
-    }
-    else {
-        [self dismissProgress];
-        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
-    }
-}
-
-- (void)clientDidReceiveMessage:(NSNotification *)note {
-    ICMessage *message = [[note userInfo] objectForKey:@"message"];
+- (void)clientDidReceiveMessage:(ICMessage *)message {
     ICClient *client = [ICClient sharedInstance];
      
     switch (message.messageType) {
@@ -151,9 +135,12 @@
             client.email = [self textForElementKey:@"email"];
             client.password = [self textForElementKey:@"password"];
             [client save];
-            
-            [self dismissViewControllerAnimated:YES completion:NULL];
+
             [self dismissProgress];
+            
+            if ([self.delegate respondsToSelector:@selector(closeLoginViewController:andSignIn:)]) {
+                [self.delegate closeLoginViewController:self andSignIn:YES];
+            }
             break;
             
         case SVMessageTypeError:
@@ -169,7 +156,9 @@
 }
 
 -(void)cancelPressed:(id)sender {
-    [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+    if ([self.delegate respondsToSelector:@selector(closeLoginViewController:andSignIn:)]) {
+        [self.delegate closeLoginViewController:self andSignIn:NO];
+    }
 }
 
 // Handle Done button

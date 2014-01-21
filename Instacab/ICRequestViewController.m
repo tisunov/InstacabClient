@@ -65,7 +65,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    // Custom initialization
+    // Custom initializationj
     if (self) {
         _justStarted = YES;
         
@@ -83,7 +83,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // set title and labels
     self.titleText = @"INSTACAB";
     
     self.navigationController.navigationBarHidden = NO;
@@ -106,21 +105,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
     [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dispatcherConnectionChanged:)
-                                                 name:kDispatchServerConnectionChangeNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveMessage:)
-                                                 name:kClientServiceMessageNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(observeDriverStateNotification:)
-                                                 name:kDriverStateChangeNotification
-                                               object:nil];
-    
     _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
     
     ICClient *client = [ICClient sharedInstance];
@@ -129,15 +113,35 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self updateLocationOnce];
 }
 
--(void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self ping];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveMessage:)
+                                                 name:kClientServiceMessageNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(observeDriverStateNotification:)
+                                                 name:kDriverStateChangeNotification
+                                               object:nil];
+    
+    [self ping:_locationService.coordinates];
+    
+    // Use existing client state (it could have been updated already when Welcome controller sent ping)
+    if ([ICClient sharedInstance].state == SVClientStatePendingRating)
+        [self showFareAndRateDriver];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 // Unsubscribe from notifications before releasing view from memory
 -(void)dealloc {
     NSLog(@"+ ICRequestViewController::dealloc()");
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     // Unsubscribe from client state notifications
     ICClient *client = [ICClient sharedInstance];
@@ -326,7 +330,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             // Slide down
             _pickupView.frame = CGRectSetY(_pickupView.frame, self.view.frame.size.height);
             
-             _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
+            _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
             [self setNeedsStatusBarAppearanceUpdate];
         }];
         [self.navigationController setNavigationBarHidden:YES animated:YES];
@@ -379,7 +383,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Find street address
     [_googleService reverseGeocodeLocation:_mapView.camera.target];
     // Find nearby vehicles
-    [_clientService ping:_mapView.camera.target];
+    [self ping:_mapView.camera.target];
 }
 
 - (void)showNearbyVehicles: (ICNearbyVehicles *) nearbyVehicles {
@@ -671,7 +675,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)layoutForClientState: (ICClientState)clientState {
+-(void)layoutForClientState:(ICClientState)clientState {
     NSLog(@"Layout for Client state: %d", clientState);
     
     switch (clientState) {
@@ -765,22 +769,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)ping {
-    [_clientService ping:_locationService.coordinates];
-}
-
--(void)dispatcherConnectionChanged:(NSNotification*)note {
-    ICDispatchServer *dispatcher = [note object];
-    
-    if (!dispatcher.isConnected) {
-        [TSMessage showNotificationInViewController:self.navigationController
-                                              title:@"Нет Сетевого Соединения"
-                                           subtitle:@"Немогу подключиться к серверу."
-                                              image:[UIImage imageNamed:@"server-alert"]
-                                               type:TSMessageNotificationTypeError
-                                           duration:TSMessageNotificationDurationAutomatic];
-        [self popViewController];
-    }
+-(void)ping:(CLLocationCoordinate2D)coordinates {
+    [_clientService ping:coordinates success:nil failure:nil];
 }
 
 - (void)showPickupPanel {

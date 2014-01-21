@@ -12,6 +12,12 @@
 #import "QuickDialog.h"
 #import "UIViewController+TitleLabelAttritbutes.h"
 
-@interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate>
+@class ICLoginViewController;
 
+@protocol ICLoginViewControllerDelegate <NSObject>
+- (void)closeLoginViewController:(ICLoginViewController *)vc andSignIn:(BOOL)signIn;
+@end
+
+@interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate>
+@property (nonatomic, weak) id <ICLoginViewControllerDelegate> delegate;
 @end

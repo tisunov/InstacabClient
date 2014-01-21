@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UINavigationController+Block.h"
 
 @interface UINavigationController (Animation)
 
 - (void) slideLayerInDirection:(NSString *)direction andPush:(UIViewController *)destVC;
 - (void) slideLayerAndPopInDirection:(NSString *)direction;
+- (void) slideLayerAndPopToRootInDirection:(NSString *)direction completion:(VoidBlock)completionBlock;
 
 @end
