@@ -93,7 +93,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     [data setValue:kDevice forKey:@"device"];
     // Unix epoch time
     NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    [data setValue:[NSNumber numberWithLong:timestamp] forKey:@"epochTime"];
+    [data setValue:[NSNumber numberWithLong:timestamp] forKey:@"epoch"];
     // Device id
     [data setValue:_deviceId forKey:@"deviceId"];
     // Location
