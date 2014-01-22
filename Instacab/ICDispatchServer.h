@@ -23,7 +23,7 @@ extern NSString *const kDispatchServerConnectionChangeNotification;
 - (void)connect;
 - (void)disconnect;
 
-@property (nonatomic, readonly) BOOL isConnected;
+@property (nonatomic, readonly) BOOL connected;
 @property (nonatomic, copy) NSString *appType;
 @property (nonatomic, weak) id <ICDispatchServerDelegate> delegate;
 

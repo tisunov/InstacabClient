@@ -123,6 +123,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                                  name:kDriverStateChangeNotification
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dispatcherDidConnectionChange:)
+                                                 name:kDispatchServerConnectionChangeNotification
+                                               object:nil];
+    
     ICClient *client = [ICClient sharedInstance];
     [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:nil];
     
@@ -727,6 +732,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)observeDriverStateNotification:(NSNotification *)note {
     SVDriverState newDriverState = (SVDriverState)[[note.userInfo objectForKey:@"state"] intValue];
     [self layoutForDriverState:newDriverState];
+}
+
+-(void)dispatcherDidConnectionChange:(NSNotification*)note {
+    ICDispatchServer *dispatcher = [note object];
+    // Connection was lost, now it's online again
+    if (dispatcher.connected) {
+        [self ping:_locationService.coordinates];
+    }
 }
 
 - (void)didReceiveMessage:(NSNotification *)note {

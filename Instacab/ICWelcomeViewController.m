@@ -129,7 +129,7 @@
 
 -(void)dispatcherDidConnectionChange:(NSNotification*)note {
     ICDispatchServer *dispatcher = [note object];
-    if (!dispatcher.isConnected) {
+    if (!dispatcher.connected) {
         [self stopLoading];
         
         if (self.navigationController.visibleViewController != self)

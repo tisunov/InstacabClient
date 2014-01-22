@@ -18,7 +18,7 @@
 #import "UIDevice+FCUtilities.h"
 
 @interface ICDispatchServer ()
-@property (nonatomic) BOOL isConnected;
+@property (nonatomic) BOOL connected;
 
 @end
 
@@ -126,7 +126,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     NSAssert(_jsonPendingSend == nil, @"Overwriting data waiting to be sent");
     
     _jsonPendingSend = [self _serializeToJSON:data];
-    if (self.isConnected) {
+    if (self.connected) {
         [_webSocket send:_jsonPendingSend];
         _jsonPendingSend = nil;
     }
@@ -177,7 +177,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     NSLog(@"Connected to dispatch server");
     _reconnectAttempts = kMaxReconnectAttemps;
     
-    self.isConnected = YES;
+    self.connected = YES;
     if (_jsonPendingSend) {
         NSLog(@"Sending pending data %@", _jsonPendingSend);
         [_webSocket send:_jsonPendingSend];
@@ -188,7 +188,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 }
 
 -(void)handleDisconnect {
-    self.isConnected = NO;
+    self.connected = NO;
     _jsonPendingSend = nil;
     
     if (_reconnectAttempts == 0) {
@@ -235,7 +235,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     [_webSocket closeWithCode:1000 reason:@"Graceful disconnect"];
     _webSocket = nil;
     
-    self.isConnected = NO;
+    self.connected = NO;
 }
 
 @end
