@@ -35,7 +35,7 @@
     AFHTTPRequestOperationManager *_httpClient;
 }
 
-NSUInteger const kMaxReconnectAttemps = 1;
+NSUInteger const kMaxReconnectAttemps = 2;
 NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServerConnectionChangeNotification";
 

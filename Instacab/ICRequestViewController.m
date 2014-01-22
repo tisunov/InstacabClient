@@ -388,7 +388,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         return;
     }
     
-    _pickupTimeLabel.text = [[NSString stringWithFormat:@"Примерное время подачи машины - %@ минут", nearbyVehicles.minEta] uppercaseString];
+    _pickupTimeLabel.text = [[NSString stringWithFormat:@"Машина приедет примерно через %@ минуты", nearbyVehicles.minEta] uppercaseString];
     _pickupBtn.enabled = YES;
     
     // Add new vehicles and update existing vehicles' positions

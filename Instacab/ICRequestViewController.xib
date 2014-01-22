@@ -73,11 +73,11 @@
                     <color key="backgroundColor" red="0.2088448660714286" green="0.2088448660714286" blue="0.2088448660714286" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view alpha="0.94999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T9t-2n-lFJ" userLabel="PickupView">
-                    <rect key="frame" x="0.0" y="498" width="320" height="70"/>
+                    <rect key="frame" x="0.0" y="493" width="320" height="75"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WW7-hF-aDX" customClass="ICHighlightButton">
-                            <rect key="frame" x="5" y="25" width="310" height="40"/>
+                            <rect key="frame" x="5" y="5" width="310" height="40"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.24131059954753478" green="0.76225685586734693" blue="0.3890975385997309" alpha="1" colorSpace="calibratedRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -99,7 +99,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7tm-9b-PCc">
-                            <rect key="frame" x="5" y="2" width="310" height="24"/>
+                            <rect key="frame" x="5" y="47" width="310" height="24"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
                             <color key="textColor" red="0.17205436862244894" green="0.17205436862244894" blue="0.17205436862244894" alpha="1" colorSpace="calibratedRGB"/>
