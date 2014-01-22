@@ -287,19 +287,13 @@
 			children = (
 				D9D4A2781886629C00067879 /* CardIO */,
 				D9AD515C1817C80100692E7E /* UI Support */,
+				D9D88412188FE79E006BD004 /* SignUp */,
 				D90BAE121884306600E03F3E /* ICWelcomeViewController.m */,
 				D90BAE111884306600E03F3E /* ICWelcomeViewController.h */,
 				D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */,
 				D9BD7BB11887C087009351D6 /* ICCancelDialogDelegate.h */,
 				D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */,
 				D98EFDAF1842921C005A2BAA /* ICLoginViewController.h */,
-				D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */,
-				D90BAE161884353300E03F3E /* ICCreateAccountDialog.h */,
-				D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */,
-				D90BAE251885C89900E03F3E /* ICCreateProfileDialog.h */,
-				D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */,
-				D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */,
-				D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */,
 				D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */,
 				D9B0327218057E2C00F7AF69 /* ICRequestViewController.h */,
 				D96EEB281805895B0048A669 /* ICRequestViewController.xib */,
@@ -312,8 +306,6 @@
 				D9C193201888779200A889E4 /* ICAccountViewController.h */,
 				D9C193211888779200A889E4 /* ICAccountViewController.m */,
 				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
-				D9C1932A1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.h */,
-				D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -338,6 +330,8 @@
 		D9AD515C1817C80100692E7E /* UI Support */ = {
 			isa = PBXGroup;
 			children = (
+				D9C1932A1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.h */,
+				D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */,
 				D940FBC2187553E800288448 /* UIActionSheet+Blocks.h */,
 				D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */,
 				D940FBBF187552C000288448 /* UIAlertView+Additions.h */,
@@ -460,6 +454,20 @@
 				D9D4A27F1886629C00067879 /* libCardIO.a */,
 			);
 			path = CardIO;
+			sourceTree = "<group>";
+		};
+		D9D88412188FE79E006BD004 /* SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */,
+				D90BAE161884353300E03F3E /* ICCreateAccountDialog.h */,
+				D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */,
+				D90BAE251885C89900E03F3E /* ICCreateProfileDialog.h */,
+				D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */,
+				D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */,
+				D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */,
+			);
+			name = SignUp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
