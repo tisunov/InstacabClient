@@ -15,7 +15,6 @@
 typedef enum : NSUInteger {
     SVMessageTypeOK,
     SVMessageTypeError,
-    SVMessageTypeConfirmPickup,
     SVMessageTypePickupCanceled,
     SVMessageTypeTripCanceled,
     SVMessageTypeEnroute,

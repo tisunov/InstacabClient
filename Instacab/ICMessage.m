@@ -42,7 +42,6 @@
     NSDictionary *messageTypes = @{
         @"OK": @(SVMessageTypeOK),
         @"Error": @(SVMessageTypeError),
-        @"ConfirmPickup": @(SVMessageTypeConfirmPickup),
         @"PickupCanceled": @(SVMessageTypePickupCanceled),
         @"TripCanceled": @(SVMessageTypeTripCanceled),
         @"Enroute": @(SVMessageTypeEnroute),
