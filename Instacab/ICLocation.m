@@ -34,7 +34,6 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"streetAddress": @"streetAddress",
-        @"region": @"region",
         @"city": @"city",
         @"latitude": @"latitude",
         @"longitude": @"longitude"
