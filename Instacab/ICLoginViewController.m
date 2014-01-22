@@ -102,7 +102,10 @@
 }
 
 -(void)login {
-    [_clientService loginWithEmail:[self textForElementKey:@"email"]
+    // Take keyboard shortcuts into account: em, @@
+    NSString *email = [[self textForElementKey:@"email"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
+    [_clientService loginWithEmail:email
                           password:[self textForElementKey:@"password"]
                           success:^(ICMessage *message) {
                               [self clientDidReceiveMessage:message];
