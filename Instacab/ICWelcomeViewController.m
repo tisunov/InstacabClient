@@ -14,6 +14,7 @@
 #import "UINavigationController+Animation.h"
 #import "ICLinkCardDialog.h"
 #import "ICRequestViewController.h"
+#import "ICRatingViewController.h"
 #import "UIApplication+Alerts.h"
 #import "UIAlertView+Additions.h"
 #import "TSMessageView.h"
@@ -44,6 +45,11 @@
     return UIStatusBarStyleLightContent;
 }
 
+// Uncomment to take LaunchImage screenshot
+//-(BOOL)prefersStatusBarHidden {
+//    return YES;
+//}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -63,6 +69,12 @@
     _signupButton.tintColor = [UIColor whiteColor];
     _signupButton.normalColor = [UIColor colorFromHexString:@"#3498DB"];
     _signupButton.highlightedColor = [UIColor colorFromHexString:@"#2980B9"];
+    
+
+    // Uncomment to take LaunchImage screenshot
+//    [self setNeedsStatusBarAppearanceUpdate];
+//    _signinButton.hidden = YES;
+//    _signupButton.hidden = YES;
     
     // Add observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -141,7 +153,12 @@
 
 - (void)closeLoginViewController:(ICLoginViewController *)vc andSignIn:(BOOL)signIn {
     if (signIn) {
-        [self pushRequestViewControllerAnimated:NO];
+        if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
+            self.navigationController.viewControllers = [self viewControllers];
+        }
+        else {
+            [self pushRequestViewControllerAnimated:NO];
+        }
     }
     [vc.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -183,12 +200,29 @@
     [self.loadingIndicator stopAnimating];
 }
 
+- (NSArray *)viewControllers {
+    ICRequestViewController *vc1 = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
+    
+    ICRatingViewController *vc2 = [[ICRatingViewController alloc] initWithNibName:@"ICRatingViewController" bundle:nil];
+    
+    return @[self, vc1, vc2];
+}
+
 - (void)didReceiveMessage:(ICMessage *)message {
     switch (message.messageType) {
         case SVMessageTypeOK:
-            [self pushRequestViewControllerAnimated:YES];
+        {
+            [[ICClient sharedInstance] update:message.client];
+            
+            if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
+                [self.navigationController slideLayerInDirection:kCATransitionFromBottom andSetViewControllers:[self viewControllers]];
+            }
+            else {
+                [self pushRequestViewControllerAnimated:YES];
+            }
             [self stopLoading];
             break;
+        }
             
         case SVMessageTypeError:
             [self stopLoading];

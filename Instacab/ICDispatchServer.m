@@ -14,7 +14,7 @@
 #import "AFHTTPRequestOperation.h"
 #import "AFURLResponseSerialization.h"
 #import "AFURLRequestSerialization.h"
-#include "TargetConditionals.h"
+#import "TargetConditionals.h"
 #import "UIDevice+FCUtilities.h"
 
 @interface ICDispatchServer ()

@@ -63,10 +63,10 @@
     
     self.titleText = @"ВХОД";
     
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPressed:)];
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPressed)];
     self.navigationItem.leftBarButtonItem = cancel;
     
-    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(next:)];
+    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(next)];
     next.tintColor = [UIColor colorFromHexString:@"#27AE60"];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
@@ -155,7 +155,7 @@
     }
 }
 
--(void)cancelPressed:(id)sender {
+-(void)cancelPressed {
     if ([self.delegate respondsToSelector:@selector(closeLoginViewController:andSignIn:)]) {
         [self.delegate closeLoginViewController:self andSignIn:NO];
     }
@@ -165,13 +165,13 @@
 - (BOOL)QEntryShouldReturnForElement:(QEntryElement *)element andCell:(QEntryTableViewCell *)cell
 {
     if ([element.key isEqualToString:@"password"]) {
-        [self performSelector:@selector(next:)];
+        [self performSelector:@selector(next)];
     }
 
     return YES;
 }
 
--(void)next:(id)sender {
+-(void)next {
     [self showProgress];
     [self login];
 }

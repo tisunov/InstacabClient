@@ -33,6 +33,7 @@
     [super viewDidLoad];
     self.titleText = @"КВИТАНЦИЯ";
     self.navigationItem.hidesBackButton = YES;
+    self.navigationController.navigationBarHidden = NO;
     
     _fareSection.backgroundColor = [UIColor colorFromHexString:@"#f4f7f7"];
     _ratingSection.backgroundColor = [UIColor colorFromHexString:@"#e2e2e1"];

@@ -76,7 +76,10 @@ NSString * const kFeedbackPlaceholder = @"Дополнительные комм�
     ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
     [[ICClientService sharedInstance] rateDriver:_driverRating withFeedback:self.feedbackTextView.text forTrip:trip];
     
-    [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
+    // 0 - WelcomeController
+    // 1 - RequestController
+    UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];
+    [self.navigationController popToViewController:requestViewController animated:YES];
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView{

@@ -12,6 +12,7 @@
 @interface UINavigationController (Animation)
 
 - (void) slideLayerInDirection:(NSString *)direction andPush:(UIViewController *)destVC;
+- (void) slideLayerInDirection:(NSString *)direction andSetViewControllers:(NSArray *)viewControllers;
 - (void) slideLayerAndPopInDirection:(NSString *)direction;
 - (void) slideLayerAndPopToRootInDirection:(NSString *)direction completion:(VoidBlock)completionBlock;
 

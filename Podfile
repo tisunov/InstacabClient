@@ -19,7 +19,7 @@ target 'Instacab' do
     pod 'AKNumericFormatter', :git => 'https://github.com/blackm00n/AKNumericFormatter.git'
     pod 'PaymentKit', :git => 'https://github.com/lmcd/PaymentKit.git'
     pod 'FCUtilities', :git => 'https://github.com/marcoarment/FCUtilities.git'
-    pod 'iOSBlocks', :git => 'https://github.com/dzenbot/iOSBlocks.git'
+    pod 'iOSBlocks', :git => 'https://github.com/dzenbot/iOSBlocks.git', :inhibit_warnings => true
 
     xcodeproj 'Instacab.xcodeproj'
 end

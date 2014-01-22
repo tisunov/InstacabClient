@@ -50,10 +50,10 @@
 
     self.titleText = @"ПРОФИЛЬ";
     
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
     self.navigationItem.leftBarButtonItem = cancel;
     
-    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(next:)];
+    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(next)];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
     
@@ -87,12 +87,12 @@
 - (BOOL)QEntryShouldReturnForElement:(QEntryElement *)element andCell:(QEntryTableViewCell *)cell
 {
     if ([element.key isEqualToString:@"lastName"]) {
-        [self performSelector:@selector(next:)];
+        [self performSelector:@selector(next)];
     }
     return YES;
 }
 
--(void)next:(id)sender {
+-(void)next {
     ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
     controller.delegate = self.delegate;
     controller.signupInfo = self.signupInfo;

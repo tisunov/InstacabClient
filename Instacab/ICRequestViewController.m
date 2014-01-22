@@ -84,8 +84,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [super viewDidLoad];
     
     self.titleText = @"INSTACAB";
-    
     self.navigationController.navigationBarHidden = NO;
+    
     self.navigationItem.leftBarButtonItem =
         [[UIBarButtonItem alloc]
              initWithBarButtonSystemItem:UIBarButtonSystemItemAction
@@ -107,9 +107,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
     
-    ICClient *client = [ICClient sharedInstance];
-    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:nil];
-    
     [self updateLocationOnce];
 }
 
@@ -126,15 +123,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                                  name:kDriverStateChangeNotification
                                                object:nil];
     
-    [self ping:_locationService.coordinates];
+    ICClient *client = [ICClient sharedInstance];
+    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:nil];
     
-    // Use existing client state (it could have been updated already when Welcome controller sent ping)
-    if ([ICClient sharedInstance].state == SVClientStatePendingRating)
-        [self showFareAndRateDriver];
+    [self ping:_locationService.coordinates];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
+    // Unsubscribe from client state notifications
+    ICClient *client = [ICClient sharedInstance];
+    [client removeObserver:self forKeyPath:@"state"];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -142,12 +142,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 // Unsubscribe from notifications before releasing view from memory
 -(void)dealloc {
     NSLog(@"+ ICRequestViewController::dealloc()");
-
-    // Unsubscribe from client state notifications
-    ICClient *client = [ICClient sharedInstance];
-    if (client) {
-        [client removeObserver:self forKeyPath:@"state"];
-    }
     
     NSLog(@"- ICRequestViewController::dealloc()");
 }

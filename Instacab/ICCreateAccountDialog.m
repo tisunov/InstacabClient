@@ -95,10 +95,10 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     
     self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
     
-    UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(back:)];
+    UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     self.navigationItem.leftBarButtonItem = back;
 
-    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(next:)];
+    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(next)];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
 }
@@ -126,12 +126,12 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
 - (BOOL)QEntryShouldReturnForElement:(QEntryElement *)element andCell:(QEntryTableViewCell *)cell
 {
     if ([element.key isEqualToString:@"password"]) {
-        [self performSelector:@selector(next:)];
+        [self performSelector:@selector(next)];
     }
     return YES;
 }
 
--(void)back:(id)sender {
+-(void)back {
     [self.delegate cancelDialog:self];
 }
 
@@ -157,7 +157,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     [hud hide:YES];
 }
 
--(void)next:(id)sender {
+-(void)next {
     NSString *regExPattern = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
     NSRegularExpression *regEx = [[NSRegularExpression alloc] initWithPattern:regExPattern options:NSRegularExpressionCaseInsensitive error:nil];
     NSString *emailString = [self textForElementKey:@"email"];
