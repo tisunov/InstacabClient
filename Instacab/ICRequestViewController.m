@@ -51,7 +51,7 @@ NSString * const kConfirmPickupLocation = @"Вызвать машину сюда
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
 
 NSString * const kProgressLookingForDriver = @"Выбираю водителя";
-NSString * const kProgressWaitingConfirmation = @"Запрашиваю ближайшего водителя";
+NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
 NSString * const kEtaLabelTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
 
