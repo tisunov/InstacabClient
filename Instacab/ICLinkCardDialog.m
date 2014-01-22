@@ -78,7 +78,6 @@
     // Save email and password for login
     [[ICClient sharedInstance] save];
     // Close registration modal dialog
-    // ... Welcome controller already pushed Request controller to the foreground behind the scenes
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 

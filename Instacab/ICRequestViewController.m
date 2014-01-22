@@ -453,10 +453,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _etaLabel.hidden = !withEta;
     if (withEta) {
         _etaLabel.text = [self formatDriverEta];
-        _statusView.frame = CGRectSetHeight(_statusView.frame, 46.0f);
+        _statusView.frame = CGRectSetHeight(_statusView.frame, 50.0f);
     }
     else {
-        _statusView.frame = CGRectSetHeight(_statusView.frame, 29.0f);
+        _statusView.frame = CGRectSetHeight(_statusView.frame, 33.0f);
     }
 }
 
@@ -684,7 +684,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             break;
             
         case SVClientStateWaitingForPickup:
-            [self setTitle:@"INSTACAB"];
+            self.titleText = @"INSTACAB";
             [self showTripCancelButton];
             [self populateTripInfo];
             [self showDispatchedVehicle];
