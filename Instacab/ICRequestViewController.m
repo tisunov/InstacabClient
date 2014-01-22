@@ -384,6 +384,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)showNearbyVehicles: (ICNearbyVehicles *) nearbyVehicles {
+    if (!nearbyVehicles || [ICClient sharedInstance].state != SVClientStateLooking) return;
+    
     if ([nearbyVehicles zeroVehicles]) {
         _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
         _pickupBtn.enabled = NO;
