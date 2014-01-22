@@ -53,7 +53,8 @@ NSString * const kSelectPickupLocation = @"Выбрать место посад�
 NSString * const kProgressLookingForDriver = @"Выбираю водителя";
 NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
-NSString * const kEtaLabelTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
+NSString * const kTripEtaTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
+NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина в %@ %@ от вас";
 
 CGFloat const kDefaultMapZoom = 15.0f;
 NSUInteger const kMapPaddingY = 64.0;
@@ -390,7 +391,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         return;
     }
     
-    _pickupTimeLabel.text = [[NSString stringWithFormat:@"Машина приедет примерно через %@ минуты", nearbyVehicles.minEta] uppercaseString];
+    _pickupTimeLabel.text = [self eta:nearbyVehicles.minEta withFormat:kRequestMinimumEtaTemplate];
     _pickupBtn.enabled = YES;
     
     // Add new vehicles and update existing vehicles' positions
@@ -456,7 +457,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     _etaLabel.hidden = !withEta;
     if (withEta) {
-        _etaLabel.text = [self formatDriverEta];
+        _etaLabel.text = [self eta:[ICTrip sharedInstance].eta withFormat:kTripEtaTemplate];
         _statusView.frame = CGRectSetHeight(_statusView.frame, 50.0f);
     }
     else {
@@ -467,7 +468,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)showProgressWithMessage:(NSString *)message allowCancel:(BOOL)cancelable {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
     if (hud) {
-        hud.labelText = message;
+        hud.labelText = [message uppercaseString];
         if (cancelable) {
             hud.detailsLabelText = @"коснитесь для отмены";
             [hud setGestureRecognizers:@[_hudGesture]];
@@ -481,7 +482,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
 	hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
     hud.graceTime = 0.1; // 100 msec grace period
-    hud.labelText = message;
+    hud.labelText = [message uppercaseString];
     hud.taskInProgress = YES;
     hud.removeFromSuperViewOnHide = YES;
     
@@ -821,9 +822,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [[ICTrip sharedInstance].driver call];
 }
 
-- (NSString *)formatDriverEta
+- (NSString *)eta:(NSNumber *)etaValue withFormat:(NSString *)format
 {
-    int eta = [[ICTrip sharedInstance].eta intValue];
+    int eta = [etaValue intValue];
     int d = (int)floor(eta) % 10;
     
     NSString *minute = @"минут";
@@ -832,7 +833,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if(d != 1 && d < 5) minute = @"минуты";
     if(d == 1) minute = @"минуту";
     
-    return [NSString stringWithFormat:kEtaLabelTemplate, [ICTrip sharedInstance].eta, minute];
+    return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 }
 
 - (void)didReceiveMemoryWarning
