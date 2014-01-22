@@ -98,7 +98,7 @@
 }
 
 -(NSString *)formattedAddress {
-    return [NSString stringWithFormat:@"%@, %@, %@", _streetAddress, _region, _city];
+    return [NSString stringWithFormat:@"%@, %@", _streetAddress, _city];
 }
 
 @end
