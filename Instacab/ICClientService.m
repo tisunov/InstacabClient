@@ -117,6 +117,30 @@ NSString * const kFieldPassword = @"password";
     [[ICClient sharedInstance] clear];
 }
 
+-(void)submitRating:(NSUInteger)rating
+       withFeedback:(NSString *)feedback
+            forTrip: (ICTrip*)trip
+            success:(ICClientServiceSuccessBlock)success
+            failure:(ICClientServiceFailureBlock)failure
+{
+    NSMutableDictionary *message = [NSMutableDictionary dictionaryWithDictionary: @{
+        kFieldMessageType: @"RatingDriver",
+        @"token": [ICClient sharedInstance].token,
+        @"id": [ICClient sharedInstance].uID,
+        @"tripId": trip.tripId,
+        @"rating": [NSNumber numberWithInteger:rating],
+    }];
+    
+    if (feedback.length > 0) {
+        [message setObject:feedback forKey:@"feedback"];
+    }
+    
+    _successBlock = [success copy];
+    _failureBlock = [failure copy];
+    
+    [self sendMessage:message];
+}
+
 -(void)sendMessage: (NSDictionary *)message {
     // get current location
     CLLocationCoordinate2D coordinates = [ICLocationService sharedInstance].coordinates;
@@ -200,22 +224,6 @@ NSString * const kFieldPassword = @"password";
     [event setValue:parameters forKey:@"parameters"];
     
     return event;
-}
-
--(void)rateDriver:(NSUInteger)rating withFeedback:(NSString *)feedback forTrip: (ICTrip*)trip {
-    NSMutableDictionary *message = [NSMutableDictionary dictionaryWithDictionary: @{
-        kFieldMessageType: @"RatingDriver",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID,
-        @"tripId": trip.tripId,
-        @"rating": [NSNumber numberWithInteger:rating],
-    }];
-    
-    if (feedback.length > 0) {
-        [message setObject:feedback forKey:@"feedback"];
-    }
-    
-    [self sendMessage:message];
 }
 
 - (void)didReceiveMessage:(NSDictionary *)responseMessage {

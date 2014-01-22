@@ -8,7 +8,7 @@
 
 #import "ICDriver.h"
 
-NSString * const kDriverStateChangeNotification = @"kDriverStateChangeNotification";
+//NSString * const kDriverStateChangeNotification = @"kDriverStateChangeNotification";
 
 @implementation ICDriver
 
@@ -48,9 +48,9 @@ NSString * const kDriverStateChangeNotification = @"kDriverStateChangeNotificati
 }
 
 -(void)setState:(SVDriverState)state {
-    if (_state != state) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kDriverStateChangeNotification object:self userInfo:@{@"state": [NSNumber numberWithInt:state]}];
-    }
+//    if (_state != state) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kDriverStateChangeNotification object:self userInfo:@{@"state": [NSNumber numberWithInt:state]}];
+//    }
     _state = state;
 }
 

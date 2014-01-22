@@ -59,4 +59,8 @@
     }];
 }
 
+- (BOOL)isOK {
+    return self.messageType == SVMessageTypeOK;
+}
+
 @end

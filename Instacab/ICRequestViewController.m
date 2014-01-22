@@ -119,18 +119,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(observeDriverStateNotification:)
-                                                 name:kDriverStateChangeNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(dispatcherDidConnectionChange:)
                                                  name:kDispatchServerConnectionChangeNotification
                                                object:nil];
     
     ICClient *client = [ICClient sharedInstance];
-    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld context:nil];
+    // Use initial value of client state
+    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld | NSKeyValueObservingOptionInitial context:nil];
     
+    [self presentDriverState];
     [self ping:_locationService.coordinates];
 }
 
@@ -452,6 +449,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)updateStatusLabel: (NSString *)text withETA:(BOOL)withEta {
+    [self showStatusBar];
+    
     [_statusLabel.layer addAnimation:_animation forKey:@"kCATransitionFade"];
     _statusLabel.text = [text uppercaseString];
     
@@ -555,7 +554,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self setViewTopShadow:_driverView];
 }
 
-- (void)populateTripInfo {
+- (void)loadDriverDetails {
     ICTrip *trip = [ICTrip sharedInstance];
     _driverNameLabel.text = trip.driver.firstName;
     _driverRatingLabel.text = trip.driver.rating;
@@ -568,6 +567,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
     // if already shown
     if (driverPanelY == _driverView.frame.origin.y) return;
+
+    [self loadDriverDetails];
     
     [UIView animateWithDuration:0.35 animations:^(void){
         // Slide down
@@ -589,6 +590,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)showStatusBar {
+    if (!_statusView.hidden) return;
+    
     _statusView.hidden = NO;
     
     [UIView animateWithDuration:0.25 animations:^(void) {
@@ -647,10 +650,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
--(void)layoutForDriverState:(SVDriverState)driverState {
-    NSLog(@"Layout for Driver state: %d", driverState);
+-(void)presentDriverState {
+    ICDriver *driver = [ICTrip sharedInstance].driver;
+    if (!driver) return;
+
+    NSLog(@"Present Driver state: %d", driver.state);
     
-    switch (driverState) {
+    [self showDispatchedVehicle];
+    
+    switch (driver.state) {
         case SVDriverStateArrived:
             [self updateStatusLabel:@"Ваш InstaCab прибыл" withETA:NO];
             [self showDriverPanel];
@@ -674,8 +682,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)layoutForClientState:(ICClientState)clientState {
-    NSLog(@"Layout for Client state: %d", clientState);
+-(void)presentClientState:(ICClientState)clientState {
+    NSLog(@"Present Client state: %d", clientState);
     
     switch (clientState) {
         case SVClientStateLooking:
@@ -691,19 +699,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         case SVClientStateWaitingForPickup:
             self.titleText = @"INSTACAB";
             [self showTripCancelButton];
-            [self populateTripInfo];
-            [self showDispatchedVehicle];
             [self addPickupLocationMarker];
-            [self showStatusBar];
             [self hideProgress];
             break;
             
         case SVClientStateOnTrip:
-            [self populateTripInfo];
             [self hideTripCancelButton];
             [self addPickupLocationMarker];
-            [self showDispatchedVehicle];
-            [self showStatusBar];
             [self hideProgress];
             break;
             
@@ -723,15 +725,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         ICClientState newClientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
         ICClientState oldClientState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
         
-        if (newClientState != oldClientState) {
-            [self layoutForClientState:newClientState];
+        if (newClientState != oldClientState || !change[NSKeyValueChangeOldKey]) {
+            [self presentClientState:newClientState];
         }
     }
-}
-
--(void)observeDriverStateNotification:(NSNotification *)note {
-    SVDriverState newDriverState = (SVDriverState)[[note.userInfo objectForKey:@"state"] intValue];
-    [self layoutForDriverState:newDriverState];
 }
 
 -(void)dispatcherDidConnectionChange:(NSNotification*)note {
@@ -747,6 +744,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [[ICTrip sharedInstance] update:message.trip];
     [[ICClient sharedInstance] update:message.client];
+    
+    [self presentDriverState];
     
     switch (message.messageType) {
         case SVMessageTypeOK:

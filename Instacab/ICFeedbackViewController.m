@@ -12,6 +12,8 @@
 #import "UIViewController+TitleLabelAttritbutes.h"
 #import "ICClientService.h"
 #import "SLScrollViewKeyboardSupport.h"
+#import "MBProgressHUD.h"
+#import "UIApplication+Alerts.h"
 
 @interface ICFeedbackViewController ()
 
@@ -73,13 +75,46 @@ NSString * const kFeedbackPlaceholder = @"Дополнительные комм�
 }
 
 - (IBAction)submitPressed:(id)sender {
-    ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
-    [[ICClientService sharedInstance] rateDriver:_driverRating withFeedback:self.feedbackTextView.text forTrip:trip];
+    [self showProgress];
     
-    // 0 - WelcomeController
-    // 1 - RequestController
-    UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];
-    [self.navigationController popToViewController:requestViewController animated:YES];
+    ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
+    [[ICClientService sharedInstance] submitRating:_driverRating
+                                      withFeedback:self.feedbackTextView.text
+                                           forTrip:trip
+                                           success:^(ICMessage *message) {
+                                               [self dismissProgress];
+                                               
+                                               if (message.isOK) {
+                                                   [[ICClient sharedInstance] update:message.client];
+                                                   
+                                                   // 0 - WelcomeController
+                                                   // 1 - RequestController
+                                                   UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];
+                                                   [self.navigationController popToViewController:requestViewController animated:YES];
+                                               }
+                                               else {
+                                                   NSLog(@"[Feedback] Can't submit feedback");
+                                               }
+                                           }
+                                           failure:^{
+                                               NSLog(@"[Feedback] Failed to submit feedback");
+                                               [self dismissProgress];
+                                           }
+     ];
+}
+
+- (void)showProgress {
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
+    hud.labelText = @"Отправляю";
+    hud.removeFromSuperViewOnHide = YES;
+    
+    [[UIApplication sharedApplication].keyWindow addSubview:hud];
+    [hud show:YES];
+}
+
+-(void)dismissProgress {
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
+    [hud hide:YES];
 }
 
 - (void)textViewDidChangeSelection:(UITextView *)textView{

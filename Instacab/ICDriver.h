@@ -19,7 +19,7 @@ typedef enum : NSUInteger {
     SVDriverStatePendingRating
 } SVDriverState;
 
-extern NSString *const kDriverStateChangeNotification;
+//extern NSString *const kDriverStateChangeNotification;
 
 @interface ICDriver : ICPerson
 @property (nonatomic, strong, readonly) ICLocation *location;

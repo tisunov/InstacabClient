@@ -31,9 +31,12 @@ typedef void (^ICClientServiceFailureBlock)();
 -(void)cancelPickup;
 -(void)cancelTrip;
 
--(void)rateDriver:(NSUInteger)rating
-     withFeedback:(NSString *)feedback
-          forTrip: (ICTrip*)trip;
+-(void)submitRating:(NSUInteger)rating
+       withFeedback:(NSString *)feedback
+            forTrip: (ICTrip*)trip
+            success:(ICClientServiceSuccessBlock)success
+            failure:(ICClientServiceFailureBlock)failure;
+
 
 -(void)logOut;
 

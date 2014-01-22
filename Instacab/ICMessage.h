@@ -33,5 +33,6 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong, readonly) ICTrip *trip;
 @property (nonatomic, strong, readonly) ICNearbyVehicles *nearbyVehicles;
 @property (nonatomic, strong, readonly) ICApiResponse *apiResponse;
+@property (nonatomic, readonly) BOOL isOK;
 
 @end

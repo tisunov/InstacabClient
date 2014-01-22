@@ -157,7 +157,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 #pragma SRWebSocketDelegate
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSLog(@"Recevied: %@", message);
+    NSLog(@"Received: %@", message);
     NSError *error;
 
     // Convert string to JSON dictionary
