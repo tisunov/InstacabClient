@@ -164,11 +164,14 @@
 }
 
 - (IBAction)registerAction:(id)sender {
-    ICCreateAccountDialog *vc = [[ICCreateAccountDialog alloc] initWithNibName:nil bundle:nil];
-    vc.delegate = self;
-    
-    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.instacab.ru/users/sign_up"]];
+
+// TODO: Enable when we have PCI DSS
+//    ICCreateAccountDialog *vc = [[ICCreateAccountDialog alloc] initWithNibName:nil bundle:nil];
+//    vc.delegate = self;
+//    
+//    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
+//    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
 }
 
 -(void)cancelDialog:(UIViewController *)dialogController {
