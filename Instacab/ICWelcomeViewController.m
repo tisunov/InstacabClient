@@ -139,7 +139,6 @@
     if (!dispatcher.connected) {
         [self stopLoading];
         
-        
         if (self.navigationController.visibleViewController != self) {
             [self hideHUD];
             

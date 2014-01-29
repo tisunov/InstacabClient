@@ -494,7 +494,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)hudWasCancelled {
     [UIAlertView presentWithTitle:@"Отмена Заказа"
-                          message:@"Вы уверены что хотите отменить вызов? Водитель уже выехал к вам."
+                          message:@"Вы уверены что хотите отменить вызов?"
                           buttons:@[ @"Нет", @"Да" ]
                     buttonHandler:^(NSUInteger index) {
                         /* ДА */
@@ -696,7 +696,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             break;
             
         case SVClientStateDispatching:
-            [self showProgressWithMessage:kProgressWaitingConfirmation allowCancel:YES];
+            [self showProgressWithMessage:kProgressWaitingConfirmation allowCancel:NO];
             break;
             
         case SVClientStateWaitingForPickup:
