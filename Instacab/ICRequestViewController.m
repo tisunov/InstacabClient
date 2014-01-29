@@ -493,8 +493,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)hudWasCancelled {
-    [UIAlertView presentWithTitle:@"Вы уверены что хотите отменить вызов?"
-                          message:@""
+    [UIAlertView presentWithTitle:@"Отмена Заказа"
+                          message:@"Вы уверены что хотите отменить вызов? Водитель уже выехал к вам."
                           buttons:@[ @"Нет", @"Да" ]
                     buttonHandler:^(NSUInteger index) {
                         /* ДА */

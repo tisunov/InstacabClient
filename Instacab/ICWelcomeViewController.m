@@ -19,6 +19,7 @@
 #import "UIAlertView+Additions.h"
 #import "TSMessageView.h"
 #import "TSMessage.h"
+#import "MBProgressHUD.h"
 
 @interface ICWelcomeViewController ()
 
@@ -127,16 +128,26 @@
                                        duration:TSMessageNotificationDurationAutomatic];
 }
 
+- (void)hideHUD {
+    MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
+    if (hud)
+        [hud hide:NO];
+}
+
 -(void)dispatcherDidConnectionChange:(NSNotification*)note {
     ICDispatchServer *dispatcher = [note object];
     if (!dispatcher.connected) {
         [self stopLoading];
         
-        if (self.navigationController.visibleViewController != self)
+        
+        if (self.navigationController.visibleViewController != self) {
+            [self hideHUD];
+            
             // Pop to root view controller and show error notification
             [self.navigationController slideLayerAndPopToRootInDirection:kCATransitionFromTop completion:^{
                 [self showNotification];
             }];
+        }
         else
             [self showNotification];
     }
