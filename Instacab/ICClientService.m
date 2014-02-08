@@ -233,7 +233,11 @@ NSString * const kFieldPassword = @"password";
     ICMessage *msg = [MTLJSONAdapter modelOfClass:ICMessage.class
                                     fromJSONDictionary:responseMessage
                                                  error:&error];
+
+    // Update client state from server
+    [[ICClient sharedInstance] update:msg.client];
     
+    // Let someone handle the message
     [[NSNotificationCenter defaultCenter] postNotificationName:kClientServiceMessageNotification object:self userInfo:@{@"message":msg}];
     
     if (_successBlock != nil) {

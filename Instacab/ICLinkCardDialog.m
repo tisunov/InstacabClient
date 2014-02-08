@@ -73,8 +73,6 @@
 }
 
 - (void)signupComplete:(ICMessage *)message {
-    // Update Client model with new data
-    [[ICClient sharedInstance] update:message.client];
     // Save email and password for login
     [[ICClient sharedInstance] save];
     // Close registration modal dialog

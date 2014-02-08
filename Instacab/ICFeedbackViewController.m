@@ -85,8 +85,6 @@ NSString * const kFeedbackPlaceholder = @"Дополнительные комм�
                                                [self dismissProgress];
                                                
                                                if (message.isOK) {
-                                                   [[ICClient sharedInstance] update:message.client];
-                                                   
                                                    // 0 - WelcomeController
                                                    // 1 - RequestController
                                                    UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];

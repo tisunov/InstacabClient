@@ -225,8 +225,6 @@
     switch (message.messageType) {
         case SVMessageTypeOK:
         {
-            [[ICClient sharedInstance] update:message.client];
-            
             if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
                 [self.navigationController slideLayerInDirection:kCATransitionFromBottom andSetViewControllers:[self viewControllers]];
             }

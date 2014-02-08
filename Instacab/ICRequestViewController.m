@@ -746,7 +746,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICMessage *message = [[note userInfo] objectForKey:@"message"];
     
     [[ICTrip sharedInstance] update:message.trip];
-    [[ICClient sharedInstance] update:message.client];
     
     [self presentDriverState];
     
