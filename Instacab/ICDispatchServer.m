@@ -18,7 +18,6 @@
 #import "UIDevice+FCUtilities.h"
 
 @interface ICDispatchServer ()
-@property (nonatomic) BOOL connected;
 
 @end
 
@@ -31,8 +30,8 @@
     int _reconnectAttempts;
     NSString *_jsonPendingSend;
     
-    SRWebSocket *_webSocket;
-    AFHTTPRequestOperationManager *_httpClient;
+    SRWebSocket *_websocket;
+//    AFHTTPRequestOperationManager *_httpClient;
 }
 
 NSUInteger const kMaxReconnectAttemps = 2;
@@ -61,10 +60,10 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
         _deviceModelHuman = UIDevice.currentDevice.fc_modelHumanIdentifier;
         
         // Initialize HTTP library to send event logs
-        NSURL *URL = [NSURL URLWithString:kDispatchServerUrl];
-        _httpClient = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:URL];
-        _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
-        _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
+//        NSURL *URL = [NSURL URLWithString:kDispatchServerUrl];
+//        _httpClient = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:URL];
+//        _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
+//        _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
     }
     return self;
 }
@@ -118,25 +117,25 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 
 - (void)sendMessage: (NSDictionary *) message withCoordinates: (CLLocationCoordinate2D) coordinates {
     NSMutableDictionary *data =
-        [self buildGenericDataWithLatitude: coordinates.latitude
-                                 longitude: coordinates.longitude];
+        [self buildGenericDataWithLatitude:coordinates.latitude
+                                 longitude:coordinates.longitude];
     
     [data addEntriesFromDictionary:message];
     
     NSAssert(_jsonPendingSend == nil, @"Overwriting data waiting to be sent");
     
-    _jsonPendingSend = [self _serializeToJSON:data];
+    _jsonPendingSend = [self internalSerializeToJSON:data];
     if (self.connected) {
-        [_webSocket send:_jsonPendingSend];
+        [self internalSend:_jsonPendingSend];
         _jsonPendingSend = nil;
     }
     else {
-        NSLog(@"Save data and send it later");
+        NSLog(@"Can't send message right now, connecting to server instead");
         [self connect];
     }
 }
 
-- (NSString *)_serializeToJSON: (NSDictionary *)message {
+- (NSString *)internalSerializeToJSON: (NSDictionary *)message {
     NSError *error;
     NSData *jsonData =
         [NSJSONSerialization dataWithJSONObject:message
@@ -177,18 +176,28 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     NSLog(@"Connected to dispatch server");
     _reconnectAttempts = kMaxReconnectAttemps;
     
-    self.connected = YES;
     if (_jsonPendingSend) {
         NSLog(@"Sending pending data %@", _jsonPendingSend);
-        [_webSocket send:_jsonPendingSend];
-        _jsonPendingSend = nil;
+        if ([self internalSend:_jsonPendingSend]) {
+            _jsonPendingSend = nil;
+        }
+        else {
+            NSLog(@"Failed to send pending data");
+        }
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
 }
 
+- (BOOL)internalSend:(id)data {
+    if (!self.connected) return NO;
+    
+    [_websocket send:data];
+    
+    return YES;
+}
+
 -(void)handleDisconnect {
-    self.connected = NO;
     _jsonPendingSend = nil;
     
     if (_reconnectAttempts == 0) {
@@ -221,21 +230,27 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 }
 
 - (void)connect {
-    NSLog(@"Connecting to dispatch server");
+    if (_websocket && _websocket.readyState == SR_CONNECTING) {
+        NSLog(@"Already establishing connection to dispatch server...");
+        return;
+    }
     
-    NSURL *dispatchServerUrl = [NSURL URLWithString:kDispatchServerUrl];
-    _webSocket = [[SRWebSocket alloc] initWithURL:dispatchServerUrl];
-    _webSocket.delegate = self;
-    [_webSocket open];
+    NSLog(@"Initiating connection to dispatch server");
+    
+    _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:kDispatchServerUrl]];
+    _websocket.delegate = self;
+    [_websocket open];
 }
 
 -(void)disconnect {
     NSLog(@"Close connection to dispatch server");
     
-    [_webSocket closeWithCode:1000 reason:@"Graceful disconnect"];
-    _webSocket = nil;
-    
-    self.connected = NO;
+    [_websocket closeWithCode:1000 reason:@"Graceful disconnect"];
+    _websocket = nil;
+}
+
+-(BOOL)connected {
+    return _websocket.readyState == SR_OPEN;
 }
 
 @end
