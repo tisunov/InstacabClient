@@ -172,9 +172,42 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     [self.delegate didReceiveMessage:jsonDictionary];
 }
 
+- (BOOL)internalSend:(id)data {
+    if (!self.connected) return NO;
+    
+    [_websocket send:data];
+    
+    return YES;
+}
+
+-(void)handleDisconnect {
+    _jsonPendingSend = nil;
+    _websocket = nil;
+    
+    if (_reconnectAttempts == 0) {
+        [self.delegate didDisconnect];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
+        _reconnectAttempts = kMaxReconnectAttemps;
+        return;
+    }
+    
+    double delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        _reconnectAttempts--;
+        NSLog(@"Restoring connection, attemps left %d", _reconnectAttempts);
+        [self connect];
+    });
+}
+
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     NSLog(@"Connected to dispatch server");
     _reconnectAttempts = kMaxReconnectAttemps;
+    
+    if ([self.delegate respondsToSelector:@selector(didConnect)]) {
+        [self.delegate didConnect];
+    }
     
     if (_jsonPendingSend) {
         NSLog(@"Sending pending data %@", _jsonPendingSend);
@@ -189,34 +222,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
 }
 
-- (BOOL)internalSend:(id)data {
-    if (!self.connected) return NO;
-    
-    [_websocket send:data];
-    
-    return YES;
-}
-
--(void)handleDisconnect {
-    _jsonPendingSend = nil;
-    
-    if (_reconnectAttempts == 0) {
-        [self.delegate didDisconnect];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
-        _reconnectAttempts = kMaxReconnectAttemps;
-        return;
-    }
-    
-    double delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self connect];
-        _reconnectAttempts--;
-        NSLog(@"Restoring connection, attemps left %d", _reconnectAttempts);
-    });
-}
-
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
     NSLog(@"Dispatch server connection closed with code %ld, reason %@", (long)code, reason);
     
@@ -224,7 +229,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@"Dispatch server connection failed with error %@", error);
+    NSLog(@"Dispatch server connection failed with %@", error);
 
     [self handleDisconnect];
 }

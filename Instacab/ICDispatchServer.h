@@ -15,6 +15,7 @@ extern NSString *const kDispatchServerConnectionChangeNotification;
 
 @protocol ICDispatchServerDelegate <NSObject>
 - (void)didReceiveMessage:(NSDictionary *)jsonDictionary;
+- (void)didConnect;
 - (void)didDisconnect;
 @end
 
