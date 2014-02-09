@@ -119,6 +119,10 @@
     
 }
 
+- (void)locationWasFixed:(CLLocationCoordinate2D)location {
+    
+}
+
 - (void)showNotification {
     [TSMessage showNotificationInViewController:self
                                           title:@"Нет Сетевого Соединения"

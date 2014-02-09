@@ -247,6 +247,9 @@ NSString * const kFieldPassword = @"password";
     }
 }
 
+- (void)didConnect {
+}
+
 - (void)didDisconnect {
     if (_failureBlock != nil) {
         _failureBlock();

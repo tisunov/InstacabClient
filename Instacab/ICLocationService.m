@@ -13,7 +13,10 @@
     
     struct {
         unsigned int didUpdateLocation:1;
+        unsigned int didFixLocation:1;
     } delegateRespondsTo;
+    
+    BOOL _locationFixed;
 }
 
 @synthesize delegate;
@@ -32,17 +35,27 @@
     return self;
 }
 
+// locations: This array always contains at least one object representing the current location.
+// The most recent location update is at the end of the array.
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-    CLLocationCoordinate2D lastCoordinate = [[locations lastObject] coordinate];
+    CLLocation *location = [locations lastObject];
+
+    if (!_locationFixed && location.horizontalAccuracy > 0 && location.horizontalAccuracy < 100) {
+        if (delegateRespondsTo.didFixLocation) {
+            [delegate locationWasFixed:location.coordinate];
+        }
+        _locationFixed = YES;
+    }
+    
     if (delegateRespondsTo.didUpdateLocation) {
-        [delegate locationWasUpdated:lastCoordinate];
+        [delegate locationWasUpdated:location.coordinate];
     }
 }
 
 - (void)locationManager:(CLLocationManager*)manager
        didFailWithError:(NSError*)error
 {
-    NSLog(@"locationManager:didFailWithError: %@, code %d", error, error.code);
+    NSLog(@"locationManager:didFailWithError: %@, code %ld", error, (long)error.code);
     
     switch (error.code) {
         case kCLErrorLocationUnknown:
@@ -63,6 +76,7 @@
         delegate = aDelegate;
         
         delegateRespondsTo.didUpdateLocation = [delegate respondsToSelector:@selector(locationWasUpdated:)];
+        delegateRespondsTo.didFixLocation = [delegate respondsToSelector:@selector(locationWasFixed:)];
     }
 }
 

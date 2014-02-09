@@ -12,6 +12,7 @@
 
 @protocol ICLocationServiceDelegate <NSObject>
 - (void)locationWasUpdated:(CLLocationCoordinate2D)location;
+- (void)locationWasFixed:(CLLocationCoordinate2D)location;
 @end
 
 @interface ICLocationService : ICSingleton<CLLocationManagerDelegate>

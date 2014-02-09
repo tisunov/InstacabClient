@@ -229,6 +229,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 //    [self moveMapToPosition:location];
 }
 
+- (void)locationWasFixed:(CLLocationCoordinate2D)location {
+    
+}
+
 - (void)setupAddressBar {
     _addressTitleLabel.textColor = [UIColor colorFromHexString:@"#2980B9"];
     _addressLabel.text = kGoToMarker;
