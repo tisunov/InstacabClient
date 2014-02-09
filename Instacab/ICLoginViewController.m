@@ -70,8 +70,6 @@
     next.tintColor = [UIColor colorFromHexString:@"#27AE60"];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
-    
-    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);    
 }
 
 -(void)viewWillAppear:(BOOL)animated {

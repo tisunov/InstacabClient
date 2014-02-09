@@ -93,7 +93,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     
     self.titleText = @"СОЗДАТЬ АККАУНТ";
     
-    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
+//    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
     
     UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     self.navigationItem.leftBarButtonItem = back;
