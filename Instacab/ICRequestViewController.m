@@ -487,6 +487,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
     
 	hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
+    hud.dimBackground = YES;
     hud.graceTime = 0.1; // 100 msec grace period
     hud.labelText = [message uppercaseString];
     hud.taskInProgress = YES;

@@ -25,7 +25,8 @@
 
 -(void)hideProgress {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
-    [hud hide:YES];
+    if (hud)
+        [hud hide:YES];
 }
 
 @end
