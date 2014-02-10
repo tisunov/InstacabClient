@@ -135,6 +135,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     
     [data addEntriesFromDictionary:message];
     
+    // TODO: Опасно то что если сообщение завершения поездки не дойдет потому что в этот момент порвется соединение, то следующий Ping который придет затрет его и оно никогда не будет отправлено.
     NSAssert(_jsonPendingSend == nil, @"Overwriting data waiting to be sent");
     
     _jsonPendingSend = [self internalSerializeToJSON:data];
