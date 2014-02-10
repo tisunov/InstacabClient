@@ -26,8 +26,11 @@ NSString * const kFieldPassword = @"password";
 {
     self = [super init];
     if (self) {
-        _dispatchServer = [ICDispatchServer sharedInstance];
+        _dispatchServer = [[ICDispatchServer alloc] init];
+        _dispatchServer.appType = @"client";
+        _dispatchServer.tryReconnectBeforeReportingDisconnect = YES;
         _dispatchServer.delegate = self;
+        
     }
     return self;
 }

@@ -55,10 +55,6 @@
     // Google Maps key
     [GMSServices provideAPIKey:@"AIzaSyDcikveiQmWRQ8Qv-gPofHuMHgYhjCpsqQ"];
     
-    // Configure default app type (we share code with Driver app)
-    ICDispatchServer *dispatchServer = [ICDispatchServer sharedInstance];
-    dispatchServer.appType = @"client";
-    
     if([CLLocationManager locationServicesEnabled]) {
         if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted )
         {

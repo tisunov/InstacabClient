@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AE07F330A31646F1B6AEFF7D /* libPods-Instacab.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAA71C8A26847CBB29B2EF5 /* libPods-Instacab.a */; };
+		D906B11B18A924230065E256 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D906B11A18A924230065E256 /* libsqlite3.dylib */; };
 		D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE121884306600E03F3E /* ICWelcomeViewController.m */; };
 		D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */; };
 		D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */; };
@@ -92,6 +93,7 @@
 
 /* Begin PBXFileReference section */
 		6FAA71C8A26847CBB29B2EF5 /* libPods-Instacab.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Instacab.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D906B11A18A924230065E256 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		D90BAE111884306600E03F3E /* ICWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICWelcomeViewController.h; sourceTree = "<group>"; };
 		D90BAE121884306600E03F3E /* ICWelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICWelcomeViewController.m; sourceTree = "<group>"; };
 		D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICWelcomeViewController.xib; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D906B11B18A924230065E256 /* libsqlite3.dylib in Frameworks */,
 				D967F913184208C200085B2F /* GoogleMaps.framework in Frameworks */,
 				D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */,
 				D9EFF9A61805867700A68AED /* SystemConfiguration.framework in Frameworks */,
@@ -373,6 +376,7 @@
 		D9B03237180572B400F7AF69 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D906B11A18A924230065E256 /* libsqlite3.dylib */,
 				D967F912184208C200085B2F /* GoogleMaps.framework */,
 				D97B7AE618083E2A00B8315D /* AdSupport.framework */,
 				D9EFF9A51805867700A68AED /* SystemConfiguration.framework */,

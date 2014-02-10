@@ -16,7 +16,6 @@
 #import "AFURLRequestSerialization.h"
 #import "TargetConditionals.h"
 #import "UIDevice+FCUtilities.h"
-#import "FCReachability.h"
 
 @interface ICDispatchServer ()
 
@@ -31,14 +30,12 @@
     int _reconnectAttempts;
     NSString *_jsonPendingSend;
     
-    SRWebSocket *_websocket;
-    FCReachability *_reachability;
-//    AFHTTPRequestOperationManager *_httpClient;
+    SRWebSocket *_socket;
 }
 
 NSUInteger const kMaxReconnectAttemps = 2;
 NSString * const kDevice = @"iphone";
-NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServerConnectionChangeNotification";
+NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
 
 #if !(TARGET_IPHONE_SIMULATOR)
     // @"http://192.168.1.36.xip.io:9000/"
@@ -51,8 +48,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 
 - (id)init
 {
-    self = [super init];
-    if (self) {
+    if ((self = [super initWithReachabilityHostname:kDispatchServerHostName allowCellular:YES launchDelay:2.0]))
+    {
         _reconnectAttempts = kMaxReconnectAttemps;
         
         // Initialize often used instance variables
@@ -61,39 +58,9 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
         _deviceOS = UIDevice.currentDevice.systemVersion;
         _deviceModel = UIDevice.currentDevice.fc_modelIdentifier;
         _deviceModelHuman = UIDevice.currentDevice.fc_modelHumanIdentifier;
-        
-        _reachability = [[FCReachability alloc] initWithHostname:kDispatchServerHostName allowCellular:YES];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryToResume:) name:FCReachabilityOnlineNotification object:_reachability];
-        
-        // Initialize HTTP library to send event logs
-//        NSURL *URL = [NSURL URLWithString:kDispatchServerUrl];
-//        _httpClient = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:URL];
-//        _httpClient.responseSerializer = [AFJSONResponseSerializer serializer];
-//        _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
     }
     return self;
 }
-
-- (void)tryToResume:(NSNotification *)n {
-    // TODO: Здесь я могу попытаться заново установить соединение и начать отсылку сообщений из очереди сообщений FCOfflineQueue (https://github.com/marcoarment/FCOfflineQueue) которые сохраняются между перезапусками в SQLite базе.
-    // Причем модели можно хранить в sqlite и работать с ними с удобствами FCModel
-    // http://www.objc.io/issue-4/SQLite-instead-of-core-data.html https://github.com/marcoarment/FCModel
-}
-
-//- (NSString *)deviceModel{
-//    size_t len;
-//    char *machine;
-//    
-//    int mib[] = {CTL_HW, HW_MACHINE};
-//    sysctl(mib, 2, NULL, &len, NULL, 0);
-//    machine = malloc(len);
-//    sysctl(mib, 2, machine, &len, NULL, 0);
-//    
-//    NSString *platform = [NSString stringWithCString:machine encoding:NSASCIIStringEncoding];
-//    free(machine);
-//    return platform;
-//}
 
 - (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude {
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
@@ -128,6 +95,11 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 //    return timeStamp;
 //}
 
+- (BOOL)executeOperation:(int64_t)opcode userInfo:(NSDictionary *)userInfo
+{
+    return [self _sendData:userInfo];
+}
+
 - (void)sendMessage:(NSDictionary *)message withCoordinates:(CLLocationCoordinate2D)coordinates {
     NSMutableDictionary *data =
         [self buildGenericDataWithLatitude:coordinates.latitude
@@ -135,21 +107,14 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     
     [data addEntriesFromDictionary:message];
     
-    // TODO: Опасно то что если сообщение завершения поездки не дойдет потому что в этот момент порвется соединение, то следующий Ping который придет затрет его и оно никогда не будет отправлено.
-    NSAssert(_jsonPendingSend == nil, @"Overwriting data waiting to be sent");
+    [self enqueueOfflineOperation:0 userInfo:data];
     
-    _jsonPendingSend = [self internalSerializeToJSON:data];
-    if (self.connected) {
-        [self internalSend:_jsonPendingSend];
-        _jsonPendingSend = nil;
-    }
-    else {
-        NSLog(@"Can't send message right now, connecting to server instead");
+    if (!self.connected) {
         [self connect];
     }
 }
 
-- (NSString *)internalSerializeToJSON: (NSDictionary *)message {
+- (NSString *)_serializeToJSON: (NSDictionary *)message {
     NSError *error;
     NSData *jsonData =
         [NSJSONSerialization dataWithJSONObject:message
@@ -177,19 +142,18 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
     [self.delegate didReceiveMessage:jsonDictionary];
 }
 
-- (BOOL)internalSend:(id)data {
+- (BOOL)_sendData:(NSDictionary *)data {
     if (!self.connected) return NO;
-    
-    [_websocket send:data];
-    
+
+    NSLog(@"Sending message %@", data);
+    [_socket send:[self _serializeToJSON:data]];
     return YES;
 }
 
 -(void)handleDisconnect {
-    _jsonPendingSend = nil;
-    _websocket = nil;
+    _socket = nil;
     
-    if (_reconnectAttempts == 0) {
+    if (_reconnectAttempts == 0 || !self.tryReconnectBeforeReportingDisconnect) {
         [self.delegate didDisconnect];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
@@ -207,24 +171,18 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 }
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    NSLog(@"Connected to dispatch server");
+    NSLog(@"Connected to dispatch server %@", kDispatchServerHostName);
     _reconnectAttempts = kMaxReconnectAttemps;
     
+    // Resume message queue
+    [self setSuspended:NO];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
+    
+    // we always call this last, to prevent a race condition if the delegate calls 'send' and overrides data
     if ([self.delegate respondsToSelector:@selector(didConnect)]) {
         [self.delegate didConnect];
     }
-    
-    if (_jsonPendingSend) {
-        NSLog(@"Sending pending data %@", _jsonPendingSend);
-        if ([self internalSend:_jsonPendingSend]) {
-            _jsonPendingSend = nil;
-        }
-        else {
-            NSLog(@"Failed to send pending data");
-        }
-    }
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
@@ -240,27 +198,27 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 }
 
 - (void)connect {
-    if (_websocket && _websocket.readyState == SR_CONNECTING) {
+    if (_socket && _socket.readyState == SR_CONNECTING) {
         NSLog(@"Already establishing connection to dispatch server...");
         return;
     }
     
     NSLog(@"Initiating connection to dispatch server");
     
-    _websocket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:kDispatchServerUrl]];
-    _websocket.delegate = self;
-    [_websocket open];
+    _socket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:kDispatchServerUrl]];
+    _socket.delegate = self;
+    [_socket open];
 }
 
 -(void)disconnect {
     NSLog(@"Close connection to dispatch server");
     
-    [_websocket closeWithCode:1000 reason:@"Graceful disconnect"];
-    _websocket = nil;
+    [_socket closeWithCode:1000 reason:@"Graceful disconnect"];
+    _socket = nil;
 }
 
 -(BOOL)connected {
-    return _websocket.readyState == SR_OPEN;
+    return _socket.readyState == SR_OPEN;
 }
 
 @end

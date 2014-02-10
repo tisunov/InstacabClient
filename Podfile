@@ -20,6 +20,8 @@ target 'Instacab' do
     pod 'PaymentKit', :git => 'https://github.com/lmcd/PaymentKit.git'
     pod 'FCUtilities', :git => 'https://github.com/marcoarment/FCUtilities.git'
     pod 'iOSBlocks', :git => 'https://github.com/dzenbot/iOSBlocks.git', :inhibit_warnings => true
+    pod 'FCOfflineQueue', :git => 'https://github.com/marcoarment/FCOfflineQueue.git'
+    pod 'FMDB'
 
     xcodeproj 'Instacab.xcodeproj'
 end
