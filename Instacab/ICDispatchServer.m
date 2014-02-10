@@ -16,6 +16,7 @@
 #import "AFURLRequestSerialization.h"
 #import "TargetConditionals.h"
 #import "UIDevice+FCUtilities.h"
+#import "FCReachability.h"
 
 @interface ICDispatchServer ()
 
@@ -31,6 +32,7 @@
     NSString *_jsonPendingSend;
     
     SRWebSocket *_websocket;
+    FCReachability *_reachability;
 //    AFHTTPRequestOperationManager *_httpClient;
 }
 
@@ -41,9 +43,10 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 #if !(TARGET_IPHONE_SIMULATOR)
     // @"http://192.168.1.36.xip.io:9000/"
     NSString * const kDispatchServerUrl = @"http://node.instacab.ru";
+    NSString * const kDispatchServerHostName = @"node.instacab.ru";
 #else
-    // @"http://localhost:9000";
     NSString * const kDispatchServerUrl = @"http://localhost:9000";
+    NSString * const kDispatchServerHostName = @"localhost:9000";
 #endif
 
 - (id)init
@@ -59,6 +62,10 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
         _deviceModel = UIDevice.currentDevice.fc_modelIdentifier;
         _deviceModelHuman = UIDevice.currentDevice.fc_modelHumanIdentifier;
         
+        _reachability = [[FCReachability alloc] initWithHostname:kDispatchServerHostName allowCellular:YES];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tryToResume:) name:FCReachabilityOnlineNotification object:_reachability];
+        
         // Initialize HTTP library to send event logs
 //        NSURL *URL = [NSURL URLWithString:kDispatchServerUrl];
 //        _httpClient = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:URL];
@@ -66,6 +73,12 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 //        _httpClient.requestSerializer = [AFJSONRequestSerializer serializer];
     }
     return self;
+}
+
+- (void)tryToResume:(NSNotification *)n {
+    // TODO: Здесь я могу попытаться заново установить соединение и начать отсылку сообщений из очереди сообщений FCOfflineQueue (https://github.com/marcoarment/FCOfflineQueue) которые сохраняются между перезапусками в SQLite базе.
+    // Причем модели можно хранить в sqlite и работать с ними с удобствами FCModel
+    // http://www.objc.io/issue-4/SQLite-instead-of-core-data.html https://github.com/marcoarment/FCModel
 }
 
 //- (NSString *)deviceModel{
