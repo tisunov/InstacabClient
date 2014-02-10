@@ -128,7 +128,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 //    return timeStamp;
 //}
 
-- (void)sendMessage: (NSDictionary *) message withCoordinates: (CLLocationCoordinate2D) coordinates {
+- (void)sendMessage:(NSDictionary *)message withCoordinates:(CLLocationCoordinate2D)coordinates {
     NSMutableDictionary *data =
         [self buildGenericDataWithLatitude:coordinates.latitude
                                  longitude:coordinates.longitude];
@@ -155,16 +155,9 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
         [NSJSONSerialization dataWithJSONObject:message
                                         options:NSJSONWritingPrettyPrinted
                                          error:&error];
-
-    NSString *json = @"";
-    if (!jsonData) {
-        NSLog(@"Got an error converting to JSON: %@", error);
-        NSAssert(NO, @"Got an error converting to JSON: %@", error);
-    } else {
-        json = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    }
+    NSAssert(jsonData, @"Got an error converting to JSON: %@", error);
     
-    return json;
+    return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
 #pragma SRWebSocketDelegate
@@ -175,13 +168,11 @@ NSString * const kDispatchServerConnectionChangeNotification = @"kDispatchServer
 
     // Convert string to JSON dictionary
     NSDictionary *jsonDictionary =
-        [NSJSONSerialization JSONObjectWithData: [message dataUsingEncoding:NSUTF8StringEncoding]
-                                        options: NSJSONReadingMutableContainers
-                                          error: &error];
+        [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding]
+                                        options:NSJSONReadingMutableContainers
+                                          error:&error];
     
-    if (!jsonDictionary) {
-        NSAssert(NO, @"Got an error converting string to JSON dictionary: %@", error);
-    }
+    NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
     
     [self.delegate didReceiveMessage:jsonDictionary];
 }
