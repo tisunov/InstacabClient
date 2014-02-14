@@ -11,7 +11,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
+#import <GoogleMaps/GMSAddress.h>
+#import <GoogleMaps/GMSCALayer.h>
 #import <GoogleMaps/GMSCameraPosition.h>
 #import <GoogleMaps/GMSCameraUpdate.h>
 #import <GoogleMaps/GMSCircle.h>
@@ -24,7 +25,6 @@
 #import <GoogleMaps/GMSIndoorLevel.h>
 #import <GoogleMaps/GMSMapLayer.h>
 #import <GoogleMaps/GMSMapView+Animation.h>
-#import <GoogleMaps/GMSMapView+Overlays.h>
 #import <GoogleMaps/GMSMapView.h>
 #import <GoogleMaps/GMSMarker.h>
 #import <GoogleMaps/GMSMarkerLayer.h>
@@ -42,7 +42,6 @@
 #import <GoogleMaps/GMSPolygon.h>
 #import <GoogleMaps/GMSPolyline.h>
 #import <GoogleMaps/GMSProjection.h>
-#import <GoogleMaps/GMSReverseGeocodeOutput.h>
 #import <GoogleMaps/GMSServices.h>
 #import <GoogleMaps/GMSSyncTileLayer.h>
 #import <GoogleMaps/GMSTileLayer.h>

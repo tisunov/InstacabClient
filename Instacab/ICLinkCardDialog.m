@@ -150,12 +150,12 @@
 
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)info inPaymentViewController:(CardIOPaymentViewController *)scanViewController {
     // The full card number is available as info.cardNumber, but don't log that!
-    NSLog(@"Received card info. Number: %@, expiry: %02i/%i, cvv: %@.", info.redactedCardNumber, info.expiryMonth, info.expiryYear, info.cvv);
+    NSLog(@"Received card info. Number: %@, expiry: %02lu/%lu, cvv: %@.", info.redactedCardNumber, (unsigned long)info.expiryMonth, (unsigned long)info.expiryYear, info.cvv);
     
     _cardio = YES;
     
     self.paymentView.cardNumberField.text = info.cardNumber;
-    self.paymentView.cardExpiryField.text = [NSString stringWithFormat:@"%d/%d", info.expiryMonth, info.expiryYear];
+    self.paymentView.cardExpiryField.text = [NSString stringWithFormat:@"%lu/%lu", (unsigned long)info.expiryMonth, (unsigned long)info.expiryYear];
     self.paymentView.cardCVCField.text = info.cvv;
     
     // Use the card info...

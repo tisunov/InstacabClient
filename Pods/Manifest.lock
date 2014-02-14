@@ -1,27 +1,24 @@
 PODS:
-  - AFNetworking (2.0.0):
+  - AFNetworking (2.1.0):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.0.0):
+  - AFNetworking/NSURLConnection (2.1.0):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.0.0):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.0.0)
-  - AFNetworking/Security (2.0.0)
-  - AFNetworking/Serialization (2.0.0)
-  - AFNetworking/UIKit (2.0.0):
+  - AFNetworking/NSURLSession (2.1.0):
+    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (2.1.0)
+  - AFNetworking/Security (2.1.0)
+  - AFNetworking/Serialization (2.1.0)
+  - AFNetworking/UIKit (2.1.0):
     - AFNetworking/NSURLConnection
   - AKNumericFormatter (0.0.1)
-  - Bugsnag (3.1.0):
-    - Reachability
+  - Bugsnag (3.1.1)
   - Colours (2.0)
   - EDStarRating (1.1)
   - FCOfflineQueue (0.1.0):
@@ -44,13 +41,12 @@ PODS:
   - QuickDialog (0.9.1):
     - QuickDialog/Core
   - QuickDialog/Core (0.9.1)
-  - Reachability (3.1.1)
-  - ReactiveCocoa (2.1.7):
+  - ReactiveCocoa (2.1.8):
     - ReactiveCocoa/Core
     - ReactiveCocoa/no-arc
-  - ReactiveCocoa/Core (2.1.7):
+  - ReactiveCocoa/Core (2.1.8):
     - ReactiveCocoa/no-arc
-  - ReactiveCocoa/no-arc (2.1.7)
+  - ReactiveCocoa/no-arc (2.1.8)
   - SLScrollViewKeyboardSupport (1.1.2)
   - SocketRocket (0.3.1-beta2)
   - TSMessages (0.9.4):
@@ -73,7 +69,7 @@ DEPENDENCIES:
   - QuickDialog (from `https://github.com/escoz/QuickDialog.git`)
   - ReactiveCocoa (~> 2.1.7)
   - SLScrollViewKeyboardSupport (from `https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git`)
-  - SocketRocket (~> 0.3.1-beta2)
+  - SocketRocket (from `git@github.com:tisunov/SocketRocket.git`)
   - TSMessages (from `https://github.com/tisunov/TSMessages.git`)
 
 EXTERNAL SOURCES:
@@ -94,13 +90,15 @@ EXTERNAL SOURCES:
     :git: https://github.com/escoz/QuickDialog.git
   SLScrollViewKeyboardSupport:
     :git: https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git
+  SocketRocket:
+    :git: git@github.com:tisunov/SocketRocket.git
   TSMessages:
     :git: https://github.com/tisunov/TSMessages.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 3fa983b1beaba69566a3374612511e2a6e3fe845
+  AFNetworking: c7d7901a83f631414c7eda1737261f696101a5cd
   AKNumericFormatter: 49e215306b97d774bff72d16ffe9951ebcd11931
-  Bugsnag: 7a61040b4be9fa2b51a34e87e1da2007b6640637
+  Bugsnag: 877ad8c9d632397b0685994c93a3e8e76bedc482
   Colours: f0700c9b392177f1089e7744c43f46e42777280b
   EDStarRating: 6761f41fd040f1cde155e2885dddc96461620f67
   FCOfflineQueue: f6a0016fa69fd5641ec1a5fd626944fc57074941
@@ -113,10 +111,9 @@ SPEC CHECKSUMS:
   ObjectiveSugar: fed588577bcf9733546aeaa089de444e4bab9a52
   PaymentKit: 40e5673a9a0960d7ef111d66d0604af245caf635
   QuickDialog: dc1dfabc55ab72d02356e1a908a091cdc90ce477
-  Reachability: be4883bb93f31e38266ae3365e5600a317aae735
-  ReactiveCocoa: 1117f7968c8667d2ca00b5aa47156fabcb56af75
+  ReactiveCocoa: 0db710a0afa1c627a64470e5c912a3870d4854ae
   SLScrollViewKeyboardSupport: 8e59a8af41cc29a8b63b7adf8de3da09d523cc2c
-  SocketRocket: 7ac946bcce46287a791dfff3c1f8daa692821dae
+  SocketRocket: 9cbe08469513356cddc0afcab1ff160bd190296a
   TSMessages: de3fecb312d44078128add86d4347307669d0af2
 
 COCOAPODS: 0.29.0

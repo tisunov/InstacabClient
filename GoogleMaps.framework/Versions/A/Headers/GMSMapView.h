@@ -14,6 +14,10 @@
 #import <GoogleMaps/GMSMapLayer.h>
 #import <GoogleMaps/GMSUISettings.h>
 
+#ifndef __GMS_AVAILABLE_BUT_DEPRECATED
+#define __GMS_AVAILABLE_BUT_DEPRECATED __deprecated
+#endif
+
 @class GMSCameraPosition;
 @class GMSCameraUpdate;
 @class GMSCoordinateBounds;
@@ -129,6 +133,15 @@
  */
 - (void)mapView:(GMSMapView *)mapView didDragMarker:(GMSMarker *)marker;
 
+/**
+ * Called when the My Location button is tapped.
+ *
+ * @return YES if the listener has consumed the event (i.e., the default behavior should not occur),
+ *         NO otherwise (i.e., the default behavior should occur). The default behavior is for the
+ *         camera to move such that it is centered on the user location.
+ */
+- (BOOL)didTapMyLocationButtonForMapView:(GMSMapView *)mapView;
+
 @end
 
 /**
@@ -174,7 +187,7 @@ typedef enum {
  * Controls the camera, which defines how the map is oriented. Modification of
  * this property is instantaneous.
  */
-@property(nonatomic, strong) GMSCameraPosition *camera;
+@property(nonatomic, copy) GMSCameraPosition *camera;
 
 /**
  * Returns a GMSProjection object that you can use to convert between screen
@@ -219,6 +232,18 @@ typedef enum {
  * kGMSTypeNormal.
  */
 @property(nonatomic, assign) GMSMapViewType mapType;
+
+/**
+ * Minimum zoom (the farthest the camera may be zoomed out). Defaults to
+ * kGMSMinZoomLevel. Modified with -setMinZoom:maxZoom:.
+ */
+@property(nonatomic, assign, readonly) float minZoom;
+
+/**
+ * Maximum zoom (the closest the camera may be to the Earth). Defaults to
+ * kGMSMaxZoomLevel. Modified with -setMinZoom:maxZoom:.
+ */
+@property(nonatomic, assign, readonly) float maxZoom;
 
 /**
  * If set, 3D buildings will be shown where available.  Defaults to YES.
@@ -284,18 +309,14 @@ typedef enum {
 + (instancetype)mapWithFrame:(CGRect)frame camera:(GMSCameraPosition *)camera;
 
 /**
- * Tells this map to power up its renderer.  This is optional- GMSMapView will
- * automatically invoke this method when added to a window.  It is safe to call
- * this method more than once.
+ * Tells this map to power up its renderer. This is optional and idempotent.
  */
-- (void)startRendering;
+- (void)startRendering __GMS_AVAILABLE_BUT_DEPRECATED;
 
 /**
- * Tells this map to power down its renderer, releasing its resources.  This is
- * optional- GMSMapView will automatically invoke this method when removed from
- * a window.  It is safe to call this method more than once.
+ * Tells this map to power down its renderer. This is optional and idempotent.
  */
-- (void)stopRendering;
+- (void)stopRendering __GMS_AVAILABLE_BUT_DEPRECATED;
 
 /**
  * Clears all markup that has been added to the map, including markers,
@@ -303,6 +324,13 @@ typedef enum {
  * or reset the current mapType.
  */
 - (void)clear;
+
+/**
+ * Sets |minZoom| and |maxZoom|. This method expects the minimum to be less than
+ * or equal to the maximum, and will throw an exception with name
+ * NSRangeException otherwise.
+ */
+- (void)setMinZoom:(float)minZoom maxZoom:(float)maxZoom;
 
 /**
  * Build a GMSCameraPosition that presents |bounds| with |padding|. The camera
@@ -321,3 +349,13 @@ typedef enum {
 - (void)moveCamera:(GMSCameraUpdate *)update;
 
 @end
+
+/**
+ * Accessibility identifier for the compass button.
+ */
+extern NSString *const kGMSAccessibilityCompass;
+
+/**
+ * Accessibility identifier for the "my location" button.
+ */
+extern NSString *const kGMSAccessibilityMyLocation;

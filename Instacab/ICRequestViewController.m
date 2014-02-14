@@ -30,6 +30,7 @@
 
 @implementation ICRequestViewController{
     GMSMapView *_mapView;
+    NSMutableArray *_addedMarkers;
     GMSMarker *_dispatchedVehicleMarker;
     GMSMarker *_pickupLocationMarker;
     BOOL _controlsHidden;
@@ -178,7 +179,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                        [self cancelTrip];
                    }
                  onClickedButton:^(UIActionSheet *actionSheet, NSUInteger index) {
-                     NSLog(@"Selected button at index %d", index);
+                     NSLog(@"Selected button at index %lu", (unsigned long)index);
                  }];
 }
 
@@ -196,7 +197,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                        [self logout];
                    }
                  onClickedButton:^(UIActionSheet *actionSheet, NSUInteger index) {
-                     NSLog(@"Selected button at index %d", index);
+                     NSLog(@"Selected button at index %lu", (unsigned long)index);
                  }];
     
 }
@@ -387,13 +388,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self ping:_mapView.camera.target];
 }
 
+- (void)clearMap {
+    [_mapView clear];
+    [_addedMarkers removeAllObjects];
+}
+
 - (void)showNearbyVehicles: (ICNearbyVehicles *) nearbyVehicles {
     if (!nearbyVehicles || [ICClient sharedInstance].state != SVClientStateLooking) return;
     
     if ([nearbyVehicles zeroVehicles]) {
         _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
         _pickupBtn.enabled = NO;
-        [_mapView clear];
+        [self clearMap];
         return;
     }
     
@@ -403,7 +409,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Add new vehicles and update existing vehicles' positions
     for (ICVehiclePoint *vehiclePoint in nearbyVehicles.vehiclePoints) {
         NSPredicate *filter = [NSPredicate predicateWithFormat:@"userData = %@", vehiclePoint.vehicleId];
-        GMSMarker *existingMarker = [[_mapView.markers filteredArrayUsingPredicate:filter] firstObject];
+        GMSMarker *existingMarker = [[_addedMarkers filteredArrayUsingPredicate:filter] firstObject];
         if (existingMarker != nil) {
             // Update existing vehicle's position if needed
             if (!CLCOORDINATES_EQUAL(vehiclePoint.coordinate, existingMarker.position)) {
@@ -416,11 +422,12 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             marker.icon = [UIImage imageNamed:@"car-lux"];
             marker.map = _mapView;
             marker.userData = vehiclePoint.vehicleId;
+            [_addedMarkers addObject:marker];
         }
     }
     
     // Remove missing vehicles
-    [_mapView.markers enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop){
+    [_addedMarkers enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop){
         GMSMarker *marker = (GMSMarker *) obj;
         // skip non-vehicle markers
         if (!marker.userData) return;
@@ -627,11 +634,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (_dispatchedVehicleMarker) return;
     
     // Remove nearby vehicle markers
-    [_mapView.markers enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop){
+    [_addedMarkers enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop){
         GMSMarker *marker = (GMSMarker *) obj;
-        if (marker.userData) {
-            marker.map = nil;
-        }
+        marker.map = nil;
     }];
     
     ICTrip *trip = [ICTrip sharedInstance];
@@ -662,7 +667,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICDriver *driver = [ICTrip sharedInstance].driver;
     if (!driver) return;
 
-    NSLog(@"Present Driver state: %d", driver.state);
+    NSLog(@"Present Driver state: %lu", (unsigned long)driver.state);
     
     [self showDispatchedVehicle];
     
@@ -691,7 +696,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)presentClientState:(ICClientState)clientState {
-    NSLog(@"Present Client state: %d", clientState);
+    NSLog(@"Present Client state: %lu", (unsigned long)clientState);
     
     switch (clientState) {
         case SVClientStateLooking:
