@@ -41,9 +41,9 @@
     return YES;
 }
 
-// TODO: Что делать когда сети нету и невозможно достучаться до сервера
+// Что делать когда сети нету и невозможно достучаться до сервера
 // http://stackoverflow.com/questions/1290260/reachability-best-practice-before-showing-webview
-// TODO: Если соединение с сервером теряется или доступ в сеть пропадает, то сделать еще 3 попытки установить соединение с интервалом в 1 секунду и если не удалось то показать ошибку пользователю и выйти на LoginView
+// Если соединение с сервером теряется или доступ в сеть пропадает, то сделать еще 3 попытки установить соединение с интервалом в 1 секунду и если не удалось то показать ошибку пользователю и выйти на LoginView
 // Из LoginView пользователь будет пробовать еще раз ввести пароль и пытаться войти и если интернета нету то не сможет войти, если есть то войдет и снова продолжит работу с прерванного места.
 
 // Еще мудрые советы от Apple Engineer http://stackoverflow.com/questions/12490578/should-i-listen-for-reachability-updates-in-each-uiviewcontroller
@@ -54,24 +54,8 @@
 - (void)setupServices:(UIApplication *)application {
     // Google Maps key
     [GMSServices provideAPIKey:@"AIzaSyDcikveiQmWRQ8Qv-gPofHuMHgYhjCpsqQ"];
-    
-    if([CLLocationManager locationServicesEnabled]) {
-        if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted )
-        {
-            [application showAlertWithTitle:@"Warning" message:@"Determining your current location cannot be performed at this time because location services are enabled but restricted"];
-            
-            NSLog(@"Determining your current location cannot be performed at this time because location services are enabled but restricted");
-        }
-        else {
-            // Start updating location
-            [[ICLocationService sharedInstance] start];
-        }
-    }
-    else {
-        [application showAlertWithTitle:@"Error" message:@"Determining your current location cannot be performed at this time because location services are not enabled."];
-        
-        NSLog(@"Location services are OFF!");
-    }
+
+    [[ICLocationService sharedInstance] start];
 }
 
 - (void)setupBugTracking {
@@ -86,7 +70,6 @@
 - (void)setupLogging {
 // CocoaLumberJack which makes it snappy to put log statements in your code, direct the output to multiple loggers, leave in the code without worrying about #ifdef statements to prevent it seeping through into the production code. This framework is used by both Spotify and Facebook apps.
 //    https://github.com/robbiehanson/CocoaLumberjack
-    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

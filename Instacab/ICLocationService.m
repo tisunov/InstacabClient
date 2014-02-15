@@ -31,6 +31,14 @@
         // Use the highest-level of accuracy.
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.delegate = self;
+        
+        if (!self.isEnabled) {
+            NSLog(@"Location services are OFF!");            
+        }
+        
+        if (self.isEnabled && self.isRestricted) {
+            NSLog(@"Determining your current location cannot be performed at this time because location services are enabled but restricted");
+        }
     }
     return self;
 }
@@ -94,6 +102,18 @@
 
 -(void)start {
     [_locationManager startUpdatingLocation];
+}
+
+- (BOOL)isAvailable {
+    return self.isEnabled && !self.isRestricted;
+}
+
+- (BOOL)isEnabled {
+    return [CLLocationManager locationServicesEnabled];
+}
+
+- (BOOL)isRestricted {
+    return ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusRestricted);
 }
 
 @end

@@ -83,8 +83,6 @@
                                                  name:kDispatchServerConnectionChangeNotification
                                                object:nil];
     
-    [[ICClient sharedInstance] load];
-    
     if ([[ICClient sharedInstance] isSignedIn]) {
         self.signinButton.hidden = YES;
         self.signupButton.hidden = YES;

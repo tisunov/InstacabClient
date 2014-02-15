@@ -13,5 +13,51 @@
             stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Pods/FCOfflineQueue/FCOfflineQueue/FCOfflineQueue.m"
+            timestampString = "414101337.935444"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "-enqueueOfflineOperation:userInfo:highPriority:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[FCOfflineQueue enqueueOfflineOperation:userInfo:highPriority:]"
+                  moduleName = "Instacab"
+                  urlString = "file:///Users/tisunov/InstacabApp/Pods/FCOfflineQueue/FCOfflineQueue/FCOfflineQueue.m"
+                  timestampString = "414137191.712926"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "102"
+                  endingLineNumber = "102"
+                  offsetFromSymbolStart = "176">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__64-[FCOfflineQueue enqueueOfflineOperation:userInfo:highPriority:]_block_invoke"
+                  moduleName = "Instacab"
+                  urlString = "file:///Users/tisunov/InstacabApp/Pods/FCOfflineQueue/FCOfflineQueue/FCOfflineQueue.m"
+                  timestampString = "414137191.713246"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "102"
+                  endingLineNumber = "102"
+                  offsetFromSymbolStart = "56">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

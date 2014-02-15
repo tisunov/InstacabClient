@@ -31,11 +31,14 @@ NSString * const kFieldPassword = @"password";
         _dispatchServer.maintainConnection = YES;
         _dispatchServer.delegate = self;
         
+        if (![ICLocationService sharedInstance].isAvailable) {
+            [[ICClient sharedInstance] logout];
+        }
     }
     return self;
 }
 
--(void)ping: (CLLocationCoordinate2D)location
+-(void)ping:(CLLocationCoordinate2D)location
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure
 {
@@ -126,9 +129,9 @@ NSString * const kFieldPassword = @"password";
         [weakDispatchServer disconnect];
     };
     
-    [self sendMessage:message];
+    [[ICClient sharedInstance] logout];
     
-    [[ICClient sharedInstance] clear];
+    [self sendMessage:message];
 }
 
 -(void)submitRating:(NSUInteger)rating

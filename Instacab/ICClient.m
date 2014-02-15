@@ -19,6 +19,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedClient = [[self alloc] init];
+        [sharedClient load];
     });
     return sharedClient;
 }
@@ -62,14 +63,12 @@
     [self mergeValuesForKeysFromModel:client];
 }
 
--(ICClient *)load {
+-(void)load {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     self.email = [defaults objectForKey:@"client.email"];
     self.password = [defaults objectForKey:@"client.password"];
     self.token = [defaults objectForKey:@"client.token"];
     self.uID = [defaults objectForKey:@"client.id"];
-    
-    return self;
 }
 
 -(void)save {
@@ -78,9 +77,11 @@
     [defaults setObject:self.password forKey:@"client.password"];
     [defaults setObject:self.token forKey:@"client.token"];
     [defaults setObject:self.uID forKey:@"client.id"];
+    
+    [defaults synchronize];
 }
 
--(void)clear {
+-(void)logout {
     [super clear];
     _token = nil;
     

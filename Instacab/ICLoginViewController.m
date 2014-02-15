@@ -32,7 +32,7 @@
         self.root = [[QRootElement alloc] init];
         self.root.grouped = YES;
         
-        ICClient *client = [[ICClient sharedInstance] load];
+        ICClient *client = [ICClient sharedInstance];
 
         QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:client.email Placeholder:@"email@domain.ru"];
         email.keyboardType = UIKeyboardTypeEmailAddress;
@@ -66,14 +66,10 @@
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPressed)];
     self.navigationItem.leftBarButtonItem = cancel;
     
-    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Вход" style:UIBarButtonItemStyleDone target:self action:@selector(next)];
+    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Вход" style:UIBarButtonItemStyleDone target:self action:@selector(login)];
     next.tintColor = [UIColor colorFromHexString:@"#27AE60"];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
-}
-
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -93,13 +89,19 @@
              }];
 }
 
--(void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 -(void)login {
+    if (![ICLocationService sharedInstance].isEnabled) {
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Службы геолокации выключены. Включите их пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
+        return;
+    }
+
+    if ([ICLocationService sharedInstance].isRestricted) {
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Доступ к вашей геопозиции ограничен. Разрешите Instacab доступ пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
+        return;
+    }
+
+    [self showProgress];
+    
     // Take keyboard shortcuts into account: em, @@
     NSString *email = [[self textForElementKey:@"email"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
@@ -166,15 +168,10 @@
 - (BOOL)QEntryShouldReturnForElement:(QEntryElement *)element andCell:(QEntryTableViewCell *)cell
 {
     if ([element.key isEqualToString:@"password"]) {
-        [self performSelector:@selector(next)];
+        [self performSelector:@selector(login)];
     }
 
     return YES;
-}
-
--(void)next {
-    [self showProgress];
-    [self login];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -25,10 +25,10 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) ICClientState state;
 @property (nonatomic, strong, readonly) ICTrip *tripPendingRating;
 
+-(void)logout;
 -(BOOL)isSignedIn;
 -(void)update: (ICClient *)client;
 -(void)save;
--(ICClient *)load;
 +(instancetype)sharedInstance;
 
 @end
