@@ -109,7 +109,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
     
-    [self updateLocationOnce];
+//    [self updateLocationOnce];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -219,14 +219,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)updateLocationOnce {
-    if (_justStarted) {
-        [_googleService reverseGeocodeLocation:_locationService.coordinates];
-        _justStarted = NO;
-    }
+//    if (_justStarted) {
+//        [_googleService reverseGeocodeLocation:_locationService.coordinates];
+//        _justStarted = NO;
+//    }
 }
 
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
-    [self updateLocationOnce];
+//    [self updateLocationOnce];
 //    [self moveMapToPosition:location];
 }
 

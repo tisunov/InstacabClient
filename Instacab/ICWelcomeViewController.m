@@ -151,8 +151,10 @@
                 [self showNotification];
             }];
         }
-        else
+        // Show alert only when we lost connection unexpectedly
+        else if ([ICClient sharedInstance].isSignedIn) {
             [self showNotification];
+        }
     }
 }
 
