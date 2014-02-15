@@ -29,11 +29,15 @@
     NSString *_deviceModelHuman;
     int _reconnectAttempts;
     NSString *_jsonPendingSend;
+    NSMutableArray *_offlineQueue;
     
     SRWebSocket *_socket;
+    NSTimer *_pingTimer;
 }
 
-NSUInteger const kMaxReconnectAttemps = 2;
+NSUInteger const kMaxReconnectAttemps = 1;
+NSUInteger const kPingIntervalInSeconds = 20;
+
 NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
 
@@ -48,9 +52,10 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 - (id)init
 {
-    if ((self = [super initWithReachabilityHostname:kDispatchServerHostName allowCellular:YES launchDelay:2.0]))
+    if ((self = [super init]))
     {
         _reconnectAttempts = kMaxReconnectAttemps;
+        _offlineQueue = [[NSMutableArray alloc] init];
         
         // Initialize often used instance variables
         _appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -95,11 +100,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 //    return timeStamp;
 //}
 
-- (BOOL)executeOperation:(int64_t)opcode userInfo:(NSDictionary *)userInfo
-{
-    return [self _sendData:userInfo];
-}
-
 - (void)sendMessage:(NSDictionary *)message withCoordinates:(CLLocationCoordinate2D)coordinates {
     NSMutableDictionary *data =
         [self buildGenericDataWithLatitude:coordinates.latitude
@@ -107,14 +107,16 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     
     [data addEntriesFromDictionary:message];
     
-    [self enqueueOfflineOperation:0 userInfo:data];
-    
     if (!self.connected) {
+        [self _enqueueOfflineMessage:data];
         [self connect];
+    }
+    else {
+        [self _sendData:data];
     }
 }
 
-- (NSString *)_serializeToJSON: (NSDictionary *)message {
+- (NSString *)_serializeToJSON:(NSDictionary *)message {
     NSError *error;
     NSData *jsonData =
         [NSJSONSerialization dataWithJSONObject:message
@@ -125,22 +127,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     return [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
 }
 
-#pragma SRWebSocketDelegate
-
-- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSLog(@"Received: %@", message);
-    NSError *error;
-
-    // Convert string to JSON dictionary
-    NSDictionary *jsonDictionary =
-        [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding]
-                                        options:NSJSONReadingMutableContainers
-                                          error:&error];
-    
-    NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
-    
-    [self.delegate didReceiveMessage:jsonDictionary];
-}
 
 - (BOOL)_sendData:(NSDictionary *)data {
     if (!self.connected) return NO;
@@ -152,15 +138,24 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 -(void)handleDisconnect {
     _socket = nil;
+    [self stopPingTimer];
     
-    if (_reconnectAttempts == 0 || !self.tryReconnectBeforeReportingDisconnect) {
+    // Notify about disconnect
+    if (_reconnectAttempts <= 0 || !self.maintainConnection) {
+        // We are interested in messages only while we trying to reconnect,
+        // after that messages are gone forever
+        [self _clearOfflineMessages];
+        
+        // Someone knows what to do in that case
         [self.delegate didDisconnect];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
+
         _reconnectAttempts = kMaxReconnectAttemps;
         return;
     }
     
+    // Reconnect every 2 secs
     double delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -170,12 +165,80 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     });
 }
 
+- (void)connect {
+    if (_socket && _socket.readyState == SR_CONNECTING) {
+        NSLog(@"Already establishing connection to dispatch server...");
+        return;
+    }
+    
+    NSLog(@"Initiating connection to dispatch server");
+    NSLog(@"Have %lu messages in offline queue", (unsigned long)_offlineQueue.count);
+    
+    _socket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:kDispatchServerUrl]];
+    _socket.delegate = self;
+    [_socket open];
+}
+
+-(void)disconnect {
+    NSLog(@"Close connection to dispatch server");
+    
+    [self stopPingTimer];
+    [_socket closeWithCode:1000 reason:@"Graceful disconnect"];
+    _socket = nil;
+}
+
+-(BOOL)connected {
+    return _socket.readyState == SR_OPEN;
+}
+
+#pragma mark - Offline Queue
+
+- (void)_enqueueOfflineMessage:(NSDictionary *)message {
+    [_offlineQueue addObject:message];
+}
+
+- (void)_resendOfflineMessages {
+    NSArray *messages = [NSArray arrayWithArray:_offlineQueue];
+    [self _clearOfflineMessages];
+    
+    [messages enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        NSDictionary *message = (NSDictionary *)obj;
+        if (![self _sendData:message])
+            [_offlineQueue addObject:message];
+    }];
+}
+
+- (void)_clearOfflineMessages {
+    [_offlineQueue removeAllObjects];
+}
+
+#pragma mark - SRWebSocketDelegate
+
+- (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
+    NSLog(@"Received: %@", message);
+    NSError *error;
+    
+    [self resetPingTimer];
+    
+    // Convert string to JSON dictionary
+    NSDictionary *jsonDictionary =
+    [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding]
+                                    options:NSJSONReadingMutableContainers
+                                      error:&error];
+    
+    NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
+    
+    [self.delegate didReceiveMessage:jsonDictionary];
+}
+
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     NSLog(@"Connected to dispatch server %@", kDispatchServerHostName);
+    NSLog(@"Have %lu messages in offline queue", (unsigned long)_offlineQueue.count);
     _reconnectAttempts = kMaxReconnectAttemps;
     
-    // Resume message queue
-    [self setSuspended:NO];
+    // Resend all messages that were queued while we were offline
+    [self _resendOfflineMessages];
+    [self startPingTimer];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
     
@@ -197,28 +260,45 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     [self handleDisconnect];
 }
 
-- (void)connect {
-    if (_socket && _socket.readyState == SR_CONNECTING) {
-        NSLog(@"Already establishing connection to dispatch server...");
-        return;
-    }
+#pragma mark - Ping/Pong Timer
+
+// start sending WebSocket ping/pong message every 20 seconds
+// and reset timer every time we receive data from server
+-(void)startPingTimer {
+    if(_pingTimer) return;
     
-    NSLog(@"Initiating connection to dispatch server");
+    NSLog(@"Start Ping timer with interval of %lu seconds", (unsigned long)kPingIntervalInSeconds);
     
-    _socket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:kDispatchServerUrl]];
-    _socket.delegate = self;
-    [_socket open];
+    [self schedulePingTimer];
 }
 
--(void)disconnect {
-    NSLog(@"Close connection to dispatch server");
-    
-    [_socket closeWithCode:1000 reason:@"Graceful disconnect"];
-    _socket = nil;
+-(void)schedulePingTimer {
+    _pingTimer =
+        [NSTimer scheduledTimerWithTimeInterval:kPingIntervalInSeconds
+                                         target:self
+                                       selector:@selector(performPing)
+                                       userInfo:nil
+                                        repeats:YES];
 }
 
--(BOOL)connected {
-    return _socket.readyState == SR_OPEN;
+-(void)resetPingTimer {
+    if (!_pingTimer) return;
+    NSLog(@"Reset Ping timer");
+    
+    [_pingTimer invalidate];
+    [self schedulePingTimer];
+}
+
+-(void)performPing {
+    if (self.connected) [_socket sendPing];
+}
+
+-(void)stopPingTimer {
+    if (!_pingTimer) return;
+    NSLog(@"Stop Ping timer");
+    
+    [_pingTimer invalidate];
+    _pingTimer = nil;
 }
 
 @end

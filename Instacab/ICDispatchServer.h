@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "SRWebSocket.h"
-#import "FCOfflineQueue.h"
 
 extern NSString *const kDispatchServerConnectionChangeNotification;
 
@@ -19,13 +18,13 @@ extern NSString *const kDispatchServerConnectionChangeNotification;
 - (void)didDisconnect;
 @end
 
-@interface ICDispatchServer : FCOfflineQueue<SRWebSocketDelegate>
+@interface ICDispatchServer : NSObject<SRWebSocketDelegate>
 - (void)sendMessage:(NSDictionary *)message withCoordinates:(CLLocationCoordinate2D)coordinates;
 - (void)connect;
 - (void)disconnect;
 
 @property (nonatomic, readonly) BOOL connected;
-@property (nonatomic) BOOL tryReconnectBeforeReportingDisconnect;
+@property (nonatomic) BOOL maintainConnection;
 @property (nonatomic, copy) NSString *appType;
 @property (nonatomic, weak) id <ICDispatchServerDelegate> delegate;
 

@@ -28,7 +28,7 @@ NSString * const kFieldPassword = @"password";
     if (self) {
         _dispatchServer = [[ICDispatchServer alloc] init];
         _dispatchServer.appType = @"client";
-        _dispatchServer.tryReconnectBeforeReportingDisconnect = YES;
+        _dispatchServer.maintainConnection = YES;
         _dispatchServer.delegate = self;
         
     }
@@ -98,6 +98,9 @@ NSString * const kFieldPassword = @"password";
 {
     _successBlock = [success copy];
     _failureBlock = [failure copy];
+
+    // Always reconnect after sending login
+    _dispatchServer.maintainConnection = YES;
     
     // init Login message
     NSDictionary *message = @{
@@ -115,7 +118,15 @@ NSString * const kFieldPassword = @"password";
         @"token": [ICClient sharedInstance].token,
         @"id": [ICClient sharedInstance].uID
     };
-    [self sendMessage: message];
+    
+    // Don't reconnect after dispatcher reports success
+    __weak typeof(_dispatchServer) weakDispatchServer = _dispatchServer;
+    _successBlock = ^(ICMessage *message) {
+        weakDispatchServer.maintainConnection = NO;
+        [weakDispatchServer disconnect];
+    };
+    
+    [self sendMessage:message];
     
     [[ICClient sharedInstance] clear];
 }
@@ -251,6 +262,7 @@ NSString * const kFieldPassword = @"password";
 }
 
 - (void)didConnect {
+    
 }
 
 - (void)didDisconnect {
