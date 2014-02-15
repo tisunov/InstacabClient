@@ -89,18 +89,7 @@
         self.loadingIndicator.hidden = NO;
         self.loadingLabel.hidden = NO;
         [self.loadingIndicator startAnimating];
-        
-        [_clientService ping:_locationService.coordinates
-                     success:^(ICMessage *message) {
-                         [self didReceiveMessage:message];
-                     }
-                     failure:^{
-                         [self stopLoading];
-                     }];
     }
-//    else {
-//        [self performSelector:@selector(registerAction:)];
-//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -118,7 +107,17 @@
 }
 
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
+    NSLog(@"[Welcome] Got location fix");
     
+    if ([[ICClient sharedInstance] isSignedIn]) {
+        [_clientService ping:_locationService.coordinates
+                     success:^(ICMessage *message) {
+                         [self didReceiveMessage:message];
+                     }
+                     failure:^{
+                         [self stopLoading];
+                     }];
+    }
 }
 
 - (void)showNotification {

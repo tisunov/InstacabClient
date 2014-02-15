@@ -85,6 +85,14 @@
         
         delegateRespondsTo.didUpdateLocation = [delegate respondsToSelector:@selector(locationWasUpdated:)];
         delegateRespondsTo.didFixLocation = [delegate respondsToSelector:@selector(locationWasFixed:)];
+        
+        if (delegateRespondsTo.didUpdateLocation) {
+            [delegate locationWasUpdated:self.coordinates];
+        }
+        
+        if (delegateRespondsTo.didFixLocation && _locationFixed) {
+            [delegate locationWasFixed:self.coordinates];
+        }
     }
 }
 

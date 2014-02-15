@@ -18,6 +18,6 @@
 - (void)closeLoginViewController:(ICLoginViewController *)vc andSignIn:(BOOL)signIn;
 @end
 
-@interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate>
+@interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate, ICLocationServiceDelegate>
 @property (nonatomic, weak) id <ICLoginViewControllerDelegate> delegate;
 @end

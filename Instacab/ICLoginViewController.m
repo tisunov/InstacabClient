@@ -21,40 +21,49 @@
 
 @implementation ICLoginViewController {
     ICClientService *_clientService;
+    ICLocationService *_locationService;
+    BOOL _loginAfterLocationFix;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        _clientService = [ICClientService sharedInstance];
+        _locationService = [ICLocationService sharedInstance];
+        _locationService.delegate = self;
         
-        self.root = [[QRootElement alloc] init];
-        self.root.grouped = YES;
-        
-        ICClient *client = [ICClient sharedInstance];
-
-        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:client.email Placeholder:@"email@domain.ru"];
-        email.keyboardType = UIKeyboardTypeEmailAddress;
-        email.enablesReturnKeyAutomatically = YES;
-        email.hiddenToolbar = YES;
-        email.key = @"email";
-        email.delegate = self;
-        
-        QEntryElement *password = [[QEntryElement alloc] initWithTitle:@"Пароль" Value:client.password Placeholder:nil];
-        password.secureTextEntry = YES;
-        password.enablesReturnKeyAutomatically = YES;
-        password.hiddenToolbar = YES;
-        password.key = @"password";
-        password.delegate = self;
-        
-        QSection *section = [[QSection alloc] init];
-        [section addElement:email];
-        [section addElement:password];
-        
-        [self.root addSection:section];
+        [self buildLoginForm];
     }
     return self;
+}
+
+- (void)buildLoginForm {
+    _clientService = [ICClientService sharedInstance];
+    
+    self.root = [[QRootElement alloc] init];
+    self.root.grouped = YES;
+    
+    ICClient *client = [ICClient sharedInstance];
+    
+    QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:client.email Placeholder:@"email@domain.ru"];
+    email.keyboardType = UIKeyboardTypeEmailAddress;
+    email.enablesReturnKeyAutomatically = YES;
+    email.hiddenToolbar = YES;
+    email.key = @"email";
+    email.delegate = self;
+    
+    QEntryElement *password = [[QEntryElement alloc] initWithTitle:@"Пароль" Value:client.password Placeholder:nil];
+    password.secureTextEntry = YES;
+    password.enablesReturnKeyAutomatically = YES;
+    password.hiddenToolbar = YES;
+    password.key = @"password";
+    password.delegate = self;
+    
+    QSection *section = [[QSection alloc] init];
+    [section addElement:email];
+    [section addElement:password];
+    
+    [self.root addSection:section];
 }
 
 - (void)viewDidLoad
@@ -89,6 +98,19 @@
              }];
 }
 
+- (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates
+{
+    
+}
+
+- (void)locationWasFixed:(CLLocationCoordinate2D)location
+{
+    NSLog(@"[Login] Got location fix");
+    if (_loginAfterLocationFix) {
+        [self performLogin];
+    }
+}
+
 -(void)login {
     if (![ICLocationService sharedInstance].isEnabled) {
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Службы геолокации выключены. Включите их пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
@@ -102,17 +124,28 @@
 
     [self showProgress];
     
-    // Take keyboard shortcuts into account: em, @@
-    NSString *email = [[self textForElementKey:@"email"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
-    [_clientService loginWithEmail:email
+    if (_locationService.locationFixed) {
+        [self performLogin];
+    }
+    else {
+        _loginAfterLocationFix = YES;
+    }
+}
+
+- (void)performLogin {
+    [_clientService loginWithEmail:[self clientEmail]
                           password:[self textForElementKey:@"password"]
-                          success:^(ICMessage *message) {
-                              [self clientDidReceiveMessage:message];
-                          } failure:^{
-                              [self dismissProgress];
-                              [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
-                          }];
+                           success:^(ICMessage *message) {
+                               [self clientDidReceiveMessage:message];
+                           } failure:^{
+                               [self dismissProgress];
+                               [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
+                           }];
+}
+
+- (NSString *)clientEmail {
+    // Take keyboard shortcuts into account: em, @@
+    return [[self textForElementKey:@"email"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 }
 
 - (void)showProgress {

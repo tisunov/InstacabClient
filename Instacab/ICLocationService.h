@@ -20,6 +20,7 @@
 @property (nonatomic, readonly) CLLocation* location;
 @property (nonatomic, assign) CLActivityType activityType;
 @property (nonatomic, weak) id <ICLocationServiceDelegate> delegate;
+@property (nonatomic, readonly) BOOL locationFixed;
 @property (nonatomic, readonly) BOOL isEnabled;
 @property (nonatomic, readonly) BOOL isAvailable;
 @property (nonatomic, readonly) BOOL isRestricted;

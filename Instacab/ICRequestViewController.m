@@ -67,10 +67,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    // Custom initializationj
+    // Custom initialization
     if (self) {
-        _justStarted = YES;
-        
         _googleService = [ICGoogleService sharedInstance];
         _googleService.delegate = self;
         
@@ -108,8 +106,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
     
     _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
-    
-//    [self updateLocationOnce];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -218,15 +214,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.navigationController slideLayerAndPopInDirection:kCATransitionFromTop];
 }
 
-- (void)updateLocationOnce {
-//    if (_justStarted) {
-//        [_googleService reverseGeocodeLocation:_locationService.coordinates];
-//        _justStarted = NO;
-//    }
-}
-
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
-//    [self updateLocationOnce];
 //    [self moveMapToPosition:location];
 }
 
@@ -276,7 +264,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // to account for address view
     _mapView.padding = UIEdgeInsetsMake(kMapPaddingY, 0, _pickupView.frame.size.height, 0);
     _mapView.myLocationEnabled = YES;
+    _mapView.indoorEnabled = NO;
     _mapView.settings.myLocationButton = YES;
+    _mapView.settings.indoorPicker = NO;
     [self.view insertSubview:_mapView atIndex:0];
     
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeTapOnMap:)];
