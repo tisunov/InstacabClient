@@ -133,6 +133,8 @@
 }
 
 - (void)performLogin {
+    [self.view endEditing:YES];
+    
     [_clientService loginWithEmail:[self clientEmail]
                           password:[self textForElementKey:@"password"]
                            success:^(ICMessage *message) {

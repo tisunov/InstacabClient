@@ -35,12 +35,12 @@
                   symbolName = "-[FCOfflineQueue enqueueOfflineOperation:userInfo:highPriority:]"
                   moduleName = "Instacab"
                   urlString = "file:///Users/tisunov/InstacabApp/Pods/FCOfflineQueue/FCOfflineQueue/FCOfflineQueue.m"
-                  timestampString = "414137191.712926"
+                  timestampString = "414157394.52294"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "102"
                   endingLineNumber = "102"
-                  offsetFromSymbolStart = "176">
+                  offsetFromSymbolStart = "222">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -49,14 +49,46 @@
                   symbolName = "__64-[FCOfflineQueue enqueueOfflineOperation:userInfo:highPriority:]_block_invoke"
                   moduleName = "Instacab"
                   urlString = "file:///Users/tisunov/InstacabApp/Pods/FCOfflineQueue/FCOfflineQueue/FCOfflineQueue.m"
-                  timestampString = "414137191.713246"
+                  timestampString = "414157394.523255"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "102"
-                  endingLineNumber = "102"
-                  offsetFromSymbolStart = "56">
+                  startingLineNumber = "103"
+                  endingLineNumber = "103"
+                  offsetFromSymbolStart = "61">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Instacab/ICRequestViewController.m"
+            timestampString = "414156690.29491"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "376"
+            endingLineNumber = "376"
+            landmarkName = "-clearMap"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Instacab/ICRequestViewController.m"
+            timestampString = "414156690.29491"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "385"
+            endingLineNumber = "385"
+            landmarkName = "-showNearbyVehicles:"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

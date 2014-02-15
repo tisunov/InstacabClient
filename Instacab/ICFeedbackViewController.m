@@ -19,7 +19,7 @@
 
 @end
 
-NSString * const kFeedbackPlaceholder = @"Дополнительные комментарии";
+NSString * const kFeedbackPlaceholder = @"Комментарии";
 
 @implementation ICFeedbackViewController {
     SLScrollViewKeyboardSupport *_keybdSupport;
@@ -48,7 +48,7 @@ NSString * const kFeedbackPlaceholder = @"Дополнительные комм�
     self.submitButton.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
     self.submitButton.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
     self.submitButton.layer.cornerRadius = 3.0f;
-    
+        
     _feedbackTextView.text = kFeedbackPlaceholder;
     _feedbackTextView.delegate = self;
     _feedbackTextView.textColor = [UIColor lightGrayColor];
@@ -65,7 +65,7 @@ NSString * const kFeedbackPlaceholder = @"Дополнительные комм�
     _starRating.displayMode = EDStarRatingDisplayFull;
     [_starRating setNeedsDisplay];
     
-    _keybdSupport = [[SLScrollViewKeyboardSupport alloc] initWithScrollView:(UIScrollView *)self.view];
+//    _keybdSupport = [[SLScrollViewKeyboardSupport alloc] initWithScrollView:(UIScrollView *)self.view];
 }
 
 -(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating

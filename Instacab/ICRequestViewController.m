@@ -76,6 +76,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         
         _locationService = [ICLocationService sharedInstance];
         _locationService.delegate = self;
+        
+        _addedMarkers = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -139,13 +141,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-// Unsubscribe from notifications before releasing view from memory
--(void)dealloc {
-    NSLog(@"+ ICRequestViewController::dealloc()");
-    
-    NSLog(@"- ICRequestViewController::dealloc()");
-}
-
 -(void)showTripCancelButton {
     if (self.navigationItem.rightBarButtonItem) return;
     
@@ -168,14 +163,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                destructiveButton:@"Отменить Заказ"
                     otherButtons:nil
                         onCancel:^(UIActionSheet *actionSheet) {
-                            NSLog(@"Touched cancel button");
                         }
                    onDestructive:^(UIActionSheet *actionSheet) {
-                       NSLog(@"Touched destructive button");
                        [self cancelTrip];
                    }
                  onClickedButton:^(UIActionSheet *actionSheet, NSUInteger index) {
-                     NSLog(@"Selected button at index %lu", (unsigned long)index);
                  }];
 }
 
@@ -186,14 +178,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                destructiveButton:@"Выйти"
                     otherButtons:nil
                         onCancel:^(UIActionSheet *actionSheet) {
-                            NSLog(@"Touched cancel button");
                         }
                    onDestructive:^(UIActionSheet *actionSheet) {
-                       NSLog(@"Touched destructive button");
                        [self logout];
                    }
                  onClickedButton:^(UIActionSheet *actionSheet, NSUInteger index) {
-                     NSLog(@"Selected button at index %lu", (unsigned long)index);
                  }];
     
 }
@@ -246,8 +235,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)addPickupPositionPin {
     UIImage *pinGreen = [UIImage imageNamed:@"pin_green.png"];
     
-    int pinX = self.view.frame.size.width / 2 - pinGreen.size.width / 2;
-    int pinY = self.view.frame.size.height / 2 - pinGreen.size.height;
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    int pinX = screenBounds.size.width / 2 - pinGreen.size.width / 2;
+    int pinY = screenBounds.size.height / 2 - pinGreen.size.height;
     
     _greenPinView = [[UIImageView alloc] initWithFrame:CGRectMake(pinX, pinY, pinGreen.size.width, pinGreen.size.height)];
     _greenPinView.image = pinGreen;
@@ -260,7 +250,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:51.683448
                                                             longitude:39.122151
                                                                  zoom:kDefaultMapZoom];
-    _mapView = [GMSMapView mapWithFrame:self.view.bounds camera:camera];
+    _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
     // to account for address view
     _mapView.padding = UIEdgeInsetsMake(kMapPaddingY, 0, _pickupView.frame.size.height, 0);
     _mapView.myLocationEnabled = YES;
@@ -315,12 +305,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)setControlsHidden: (BOOL)hidden {
     _controlsHidden = hidden;
     _mapView.settings.myLocationButton = !hidden;
+    
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    
     if (hidden) {
         [UIView animateWithDuration:0.20 animations:^(void){
             // Slide up
             _addressView.frame = CGRectSetY(_addressView.frame, 0.0);
             // Slide down
-            _pickupView.frame = CGRectSetY(_pickupView.frame, self.view.frame.size.height);
+            _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height);
             
             _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
             [self setNeedsStatusBarAppearanceUpdate];
@@ -332,7 +325,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             // Slide down
             _addressView.frame = CGRectSetY(_addressView.frame, kMapPaddingY);
             // Slide up
-            _pickupView.frame = CGRectSetY(_pickupView.frame, self.view.frame.size.height - _pickupView.frame.size.height);
+            _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height - _pickupView.frame.size.height);
             
             _mapView.padding = UIEdgeInsetsMake(kMapPaddingY, 0, _pickupView.frame.size.height, 0);
             [self setNeedsStatusBarAppearanceUpdate];
@@ -427,6 +420,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         BOOL isVehicleMissing = [[nearbyVehicles.vehiclePoints filteredArrayUsingPredicate:filter] count] == 0;
         if (isVehicleMissing) {
             marker.map = nil;
+            [_addedMarkers removeObject:obj];
         }
     }];
 }
@@ -568,7 +562,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)showDriverPanel {
-    float driverPanelY = self.view.bounds.size.height - kDriverInfoPanelHeight;
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    float driverPanelY = screenBounds.size.height - kDriverInfoPanelHeight;
 
     // if already shown
     if (driverPanelY == _driverView.frame.origin.y) return;
@@ -577,7 +572,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [UIView animateWithDuration:0.35 animations:^(void){
         // Slide down
-        _pickupView.frame = CGRectSetY(_pickupView.frame, self.view.bounds.size.height);
+        _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height);
         // Slide up
         _driverView.frame = CGRectSetY(_driverView.frame, driverPanelY);
     }];
@@ -628,6 +623,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         GMSMarker *marker = (GMSMarker *) obj;
         marker.map = nil;
     }];
+    [_addedMarkers removeAllObjects];
     
     ICTrip *trip = [ICTrip sharedInstance];
     // Show dispatched vehicle
@@ -782,11 +778,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)showPickupPanel {
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    
     [UIView animateWithDuration:0.35 animations:^(void){
         // Slide up
-        _pickupView.frame = CGRectSetY(_pickupView.frame, self.view.bounds.size.height - _pickupView.frame.size.height);
+        _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height - _pickupView.frame.size.height);
         // Slide down
-        _driverView.frame = CGRectSetY(_driverView.frame, self.view.bounds.size.height);
+        _driverView.frame = CGRectSetY(_driverView.frame, screenBounds.size.height);
     }];
 }
 
