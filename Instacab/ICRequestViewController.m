@@ -247,8 +247,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)addGoogleMapView {
     // Create a GMSCameraPosition that tells the map to display the
     // coordinate at zoom level.
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:51.683448
-                                                            longitude:39.122151
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:51.673889
+                                                            longitude:39.211667
                                                                  zoom:kDefaultMapZoom];
     _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
     // to account for address view
@@ -386,7 +386,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         return;
     }
     
-    _pickupTimeLabel.text = [self eta:nearbyVehicles.minEta withFormat:kRequestMinimumEtaTemplate];
+    _pickupTimeLabel.text = [self nearbyEta:nearbyVehicles.minEta withFormat:kRequestMinimumEtaTemplate];
     _pickupBtn.enabled = YES;
     
     // Add new vehicles and update existing vehicles' positions
@@ -831,6 +831,20 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if(d == 0 || d > 4 || d == 11 || d == 12 || d == 13 || d == 14) minute = @"минут";
     if(d != 1 && d < 5) minute = @"минуты";
     if(d == 1) minute = @"минуту";
+    
+    return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
+}
+
+- (NSString *)nearbyEta:(NSNumber *)etaValue withFormat:(NSString *)format
+{
+    int eta = [etaValue intValue];
+    int d = (int)floor(eta) % 10;
+    
+    NSString *minute = @"минуте";
+    
+    if(d == 0 || d > 4 || d == 11 || d == 12 || d == 13 || d == 14) minute = @"минуте";
+    if(d != 1 && d < 5) minute = @"минутах";
+    if(d == 1) minute = @"минуте";
     
     return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 }

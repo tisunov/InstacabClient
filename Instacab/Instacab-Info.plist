@@ -48,7 +48,9 @@
 	</array>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>wifi</string>
+		<string>gps</string>
+		<string>location-services</string>
 	</array>
 	<key>UIStatusBarHidden</key>
 	<true/>

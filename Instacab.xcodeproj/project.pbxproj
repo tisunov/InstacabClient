@@ -37,6 +37,7 @@
 		D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D99833D11820E89A00A7DA8E /* Images.xcassets */; };
 		D99833D5182159C600A7DA8E /* ICVehicle.m in Sources */ = {isa = PBXBuildFile; fileRef = D99833D4182159C600A7DA8E /* ICVehicle.m */; };
 		D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D9A10705185F329C00350A17 /* 9yanvarya.gpx */; };
+		D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D9A63CCD18B0843C00F9577E /* Skver.gpx */; };
 		D9AD51571817B74C00692E7E /* ICGoogleService.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AD51561817B74C00692E7E /* ICGoogleService.m */; };
 		D9AD515B1817C7A200692E7E /* ICClientService.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AD515A1817C7A200692E7E /* ICClientService.m */; };
 		D9AD515F1817D17C00692E7E /* ICLocationService.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AD515E1817D17C00692E7E /* ICLocationService.m */; };
@@ -142,6 +143,7 @@
 		D99833D3182159C600A7DA8E /* ICVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVehicle.h; sourceTree = "<group>"; };
 		D99833D4182159C600A7DA8E /* ICVehicle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVehicle.m; sourceTree = "<group>"; };
 		D9A10705185F329C00350A17 /* 9yanvarya.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = 9yanvarya.gpx; path = ../9yanvarya.gpx; sourceTree = "<group>"; };
+		D9A63CCD18B0843C00F9577E /* Skver.gpx */ = {isa = PBXFileReference; lastKnownFileType = file; name = Skver.gpx; path = ../Skver.gpx; sourceTree = "<group>"; };
 		D9AD51551817B74C00692E7E /* ICGoogleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICGoogleService.h; sourceTree = "<group>"; };
 		D9AD51561817B74C00692E7E /* ICGoogleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICGoogleService.m; sourceTree = "<group>"; };
 		D9AD51591817C7A200692E7E /* ICClientService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICClientService.h; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 		D9B0323F180572B400F7AF69 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D9A63CCD18B0843C00F9577E /* Skver.gpx */,
 				D9A10705185F329C00350A17 /* 9yanvarya.gpx */,
 				D9B03240180572B400F7AF69 /* Instacab-Info.plist */,
 				D9B03241180572B400F7AF69 /* InfoPlist.strings */,
@@ -570,6 +573,7 @@
 				D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */,
 				D9B03243180572B400F7AF69 /* InfoPlist.strings in Resources */,
 				D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */,
+				D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */,
 				D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */,
 				D9CD0E4D1829A55400A02619 /* ICRatingViewController.xib in Resources */,
 				D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */,
@@ -825,6 +829,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
@@ -858,6 +863,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s arm64";
 				WRAPPER_EXTENSION = app;
 			};
