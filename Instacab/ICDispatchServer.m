@@ -301,4 +301,10 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     _pingTimer = nil;
 }
 
+#pragma mark - Misc
+
+- (NSString *)hostname {
+    return kDispatchServerHostName;
+}
+
 @end

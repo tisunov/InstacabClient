@@ -121,8 +121,11 @@
 }
 
 - (void)showNotification {
+    // Show alert only when we lost connection unexpectedly: When user explicitly logged out
+    if (![ICClient sharedInstance].isSignedIn) return;
+    
     [TSMessage showNotificationInViewController:self
-                                          title:@"Нет Сетевого Соединения"
+                                          title:@"Нет Сетевого Подключения"
                                        subtitle:@"Немогу подключиться к серверу."
                                           image:[UIImage imageNamed:@"server-alert"]
                                            type:TSMessageNotificationTypeError
@@ -148,10 +151,8 @@
                 [self showNotification];
             }];
         }
-        // Show alert only when we lost connection unexpectedly
-        else if ([ICClient sharedInstance].isSignedIn) {
+        else
             [self showNotification];
-        }
     }
 }
 

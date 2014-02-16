@@ -14,7 +14,7 @@
 #import "ICLocationService.h"
 #import "UIColor+Colours.h"
 #import "UIApplication+Alerts.h"
-#include "TargetConditionals.h"
+#import "TargetConditionals.h"
 #import "Bugsnag.h"
 //#import <Crashlytics/Crashlytics.h>
 

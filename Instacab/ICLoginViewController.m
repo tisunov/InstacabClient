@@ -122,6 +122,11 @@
         return;
     }
 
+    if (![ICClientService sharedInstance].isOnline) {
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Сети" message:@"Нет сетевого подключения." cancelButtonTitle:@"OK"];        
+        return;
+    }
+    
     [self showProgress];
     
     if (_locationService.locationFixed) {

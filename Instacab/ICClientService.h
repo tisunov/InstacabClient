@@ -51,4 +51,6 @@ typedef void (^ICClientServiceFailureBlock)();
          withSuccess:(ICClientServiceSuccessBlock)success
              failure:(ICClientServiceFailureBlock)failure;
 
+@property (nonatomic, readonly) BOOL isOnline;
+
 @end

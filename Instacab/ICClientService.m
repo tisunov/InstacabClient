@@ -10,11 +10,13 @@
 #import "ICLocationService.h"
 #import "ICSingleton.h"
 #import "ICClient.h"
+#import "FCReachability.h"
 
 @implementation ICClientService {
     ICDispatchServer *_dispatchServer;
     ICClientServiceSuccessBlock _successBlock;
     ICClientServiceFailureBlock _failureBlock;
+    FCReachability *_reachability;
 }
 
 NSString * const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
@@ -30,6 +32,8 @@ NSString * const kFieldPassword = @"password";
         _dispatchServer.appType = @"client";
         _dispatchServer.maintainConnection = YES;
         _dispatchServer.delegate = self;
+        
+        _reachability = [[FCReachability alloc] initWithHostname:_dispatchServer.hostname allowCellular:YES];
         
         if (![ICLocationService sharedInstance].isAvailable) {
             [[ICClient sharedInstance] logout];
@@ -274,6 +278,11 @@ NSString * const kFieldPassword = @"password";
         _failureBlock = nil;
         _successBlock = nil;
     }
+}
+
+#pragma mark - Misc
+- (BOOL)isOnline {
+    return _reachability.isOnline;
 }
 
 @end
