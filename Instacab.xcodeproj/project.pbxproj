@@ -53,7 +53,6 @@
 		D9B0325D180572B400F7AF69 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B0323C180572B400F7AF69 /* UIKit.framework */; };
 		D9B03265180572B400F7AF69 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D9B03263180572B400F7AF69 /* InfoPlist.strings */; };
 		D9B03267180572B400F7AF69 /* InstacabTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B03266180572B400F7AF69 /* InstacabTests.m */; };
-		D9B03271180572C100F7AF69 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B03270180572C100F7AF69 /* MapKit.framework */; };
 		D9B0327A1805860400F7AF69 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B032791805860400F7AF69 /* AVFoundation.framework */; };
 		D9B0327C1805861300F7AF69 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B0327B1805861300F7AF69 /* CoreData.framework */; };
 		D9B0327E1805862000F7AF69 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B0327D1805862000F7AF69 /* CoreLocation.framework */; };
@@ -143,7 +142,7 @@
 		D99833D3182159C600A7DA8E /* ICVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVehicle.h; sourceTree = "<group>"; };
 		D99833D4182159C600A7DA8E /* ICVehicle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVehicle.m; sourceTree = "<group>"; };
 		D9A10705185F329C00350A17 /* 9yanvarya.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = 9yanvarya.gpx; path = ../9yanvarya.gpx; sourceTree = "<group>"; };
-		D9A63CCD18B0843C00F9577E /* Skver.gpx */ = {isa = PBXFileReference; lastKnownFileType = file; name = Skver.gpx; path = ../Skver.gpx; sourceTree = "<group>"; };
+		D9A63CCD18B0843C00F9577E /* Skver.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Skver.gpx; path = ../Skver.gpx; sourceTree = "<group>"; };
 		D9AD51551817B74C00692E7E /* ICGoogleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICGoogleService.h; sourceTree = "<group>"; };
 		D9AD51561817B74C00692E7E /* ICGoogleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICGoogleService.m; sourceTree = "<group>"; };
 		D9AD51591817C7A200692E7E /* ICClientService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICClientService.h; sourceTree = "<group>"; };
@@ -152,22 +151,21 @@
 		D9AD515E1817D17C00692E7E /* ICLocationService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICLocationService.m; sourceTree = "<group>"; };
 		D9AD51601817EE1E00692E7E /* ICLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICLocation.h; sourceTree = "<group>"; };
 		D9AD51611817EE1E00692E7E /* ICLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICLocation.m; sourceTree = "<group>"; };
-		D9B03235180572B400F7AF69 /* Instacab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Instacab.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9B03235180572B400F7AF69 /* InstaCab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstaCab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B03238180572B400F7AF69 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D9B0323A180572B400F7AF69 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		D9B0323C180572B400F7AF69 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		D9B03240180572B400F7AF69 /* Instacab-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Instacab-Info.plist"; sourceTree = "<group>"; };
+		D9B03240180572B400F7AF69 /* InstaCab-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InstaCab-Info.plist"; sourceTree = "<group>"; };
 		D9B03242180572B400F7AF69 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D9B03244180572B400F7AF69 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		D9B03246180572B400F7AF69 /* Instacab-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Instacab-Prefix.pch"; sourceTree = "<group>"; };
+		D9B03246180572B400F7AF69 /* InstaCab-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "InstaCab-Prefix.pch"; sourceTree = "<group>"; };
 		D9B03247180572B400F7AF69 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		D9B03248180572B400F7AF69 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		D9B03259180572B400F7AF69 /* InstacabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InstacabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9B03259180572B400F7AF69 /* InstaCabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InstaCabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9B0325A180572B400F7AF69 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		D9B03262180572B400F7AF69 /* InstacabTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InstacabTests-Info.plist"; sourceTree = "<group>"; };
+		D9B03262180572B400F7AF69 /* InstaCabTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "InstaCabTests-Info.plist"; sourceTree = "<group>"; };
 		D9B03264180572B400F7AF69 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D9B03266180572B400F7AF69 /* InstacabTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InstacabTests.m; sourceTree = "<group>"; };
-		D9B03270180572C100F7AF69 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		D9B0327218057E2C00F7AF69 /* ICRequestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICRequestViewController.h; sourceTree = "<group>"; };
 		D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICRequestViewController.m; sourceTree = "<group>"; };
 		D9B032791805860400F7AF69 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -237,7 +235,6 @@
 				D90A9C9E18AE5CEB002B80F4 /* GoogleMaps.framework in Frameworks */,
 				D9B0323B180572B400F7AF69 /* CoreGraphics.framework in Frameworks */,
 				D9B0323D180572B400F7AF69 /* UIKit.framework in Frameworks */,
-				D9B03271180572C100F7AF69 /* MapKit.framework in Frameworks */,
 				D9B03239180572B400F7AF69 /* Foundation.framework in Frameworks */,
 				AE07F330A31646F1B6AEFF7D /* libPods-Instacab.a in Frameworks */,
 			);
@@ -369,8 +366,8 @@
 		D9B03236180572B400F7AF69 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D9B03235180572B400F7AF69 /* Instacab.app */,
-				D9B03259180572B400F7AF69 /* InstacabTests.xctest */,
+				D9B03235180572B400F7AF69 /* InstaCab.app */,
+				D9B03259180572B400F7AF69 /* InstaCabTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -394,7 +391,6 @@
 				D9B0327D1805862000F7AF69 /* CoreLocation.framework */,
 				D9B0327B1805861300F7AF69 /* CoreData.framework */,
 				D9B032791805860400F7AF69 /* AVFoundation.framework */,
-				D9B03270180572C100F7AF69 /* MapKit.framework */,
 				D9B03238180572B400F7AF69 /* Foundation.framework */,
 				D9B0323A180572B400F7AF69 /* CoreGraphics.framework */,
 				D9B0323C180572B400F7AF69 /* UIKit.framework */,
@@ -423,10 +419,10 @@
 			children = (
 				D9A63CCD18B0843C00F9577E /* Skver.gpx */,
 				D9A10705185F329C00350A17 /* 9yanvarya.gpx */,
-				D9B03240180572B400F7AF69 /* Instacab-Info.plist */,
+				D9B03240180572B400F7AF69 /* InstaCab-Info.plist */,
 				D9B03241180572B400F7AF69 /* InfoPlist.strings */,
 				D9B03244180572B400F7AF69 /* main.m */,
-				D9B03246180572B400F7AF69 /* Instacab-Prefix.pch */,
+				D9B03246180572B400F7AF69 /* InstaCab-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -443,7 +439,7 @@
 		D9B03261180572B400F7AF69 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				D9B03262180572B400F7AF69 /* InstacabTests-Info.plist */,
+				D9B03262180572B400F7AF69 /* InstaCabTests-Info.plist */,
 				D9B03263180572B400F7AF69 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -480,9 +476,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D9B03234180572B400F7AF69 /* Instacab */ = {
+		D9B03234180572B400F7AF69 /* InstaCab */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D9B0326A180572B400F7AF69 /* Build configuration list for PBXNativeTarget "Instacab" */;
+			buildConfigurationList = D9B0326A180572B400F7AF69 /* Build configuration list for PBXNativeTarget "InstaCab" */;
 			buildPhases = (
 				59AFB8193D2D4B02A91DA12E /* Check Pods Manifest.lock */,
 				D9B03231180572B400F7AF69 /* Sources */,
@@ -495,14 +491,14 @@
 			);
 			dependencies = (
 			);
-			name = Instacab;
+			name = InstaCab;
 			productName = Instacab;
-			productReference = D9B03235180572B400F7AF69 /* Instacab.app */;
+			productReference = D9B03235180572B400F7AF69 /* InstaCab.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D9B03258180572B400F7AF69 /* InstacabTests */ = {
+		D9B03258180572B400F7AF69 /* InstaCabTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D9B0326D180572B400F7AF69 /* Build configuration list for PBXNativeTarget "InstacabTests" */;
+			buildConfigurationList = D9B0326D180572B400F7AF69 /* Build configuration list for PBXNativeTarget "InstaCabTests" */;
 			buildPhases = (
 				D9B03255180572B400F7AF69 /* Sources */,
 				D9B03256180572B400F7AF69 /* Frameworks */,
@@ -513,9 +509,9 @@
 			dependencies = (
 				D9B0325F180572B400F7AF69 /* PBXTargetDependency */,
 			);
-			name = InstacabTests;
+			name = InstaCabTests;
 			productName = InstacabTests;
-			productReference = D9B03259180572B400F7AF69 /* InstacabTests.xctest */;
+			productReference = D9B03259180572B400F7AF69 /* InstaCabTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -535,7 +531,7 @@
 								enabled = 1;
 							};
 							com.apple.iOS = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -544,7 +540,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D9B03230180572B400F7AF69 /* Build configuration list for PBXProject "Instacab" */;
+			buildConfigurationList = D9B03230180572B400F7AF69 /* Build configuration list for PBXProject "InstaCab" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -557,8 +553,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D9B03234180572B400F7AF69 /* Instacab */,
-				D9B03258180572B400F7AF69 /* InstacabTests */,
+				D9B03234180572B400F7AF69 /* InstaCab */,
+				D9B03258180572B400F7AF69 /* InstaCabTests */,
 			);
 		};
 /* End PBXProject section */
@@ -697,7 +693,7 @@
 /* Begin PBXTargetDependency section */
 		D9B0325F180572B400F7AF69 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D9B03234180572B400F7AF69 /* Instacab */;
+			target = D9B03234180572B400F7AF69 /* InstaCab */;
 			targetProxy = D9B0325E180572B400F7AF69 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -816,8 +812,8 @@
 					/Users/tisunov/InstacabApp,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Instacab/Instacab-Prefix.pch";
-				INFOPLIST_FILE = "Instacab/Instacab-Info.plist";
+				GCC_PREFIX_HEADER = "Instacab/InstaCab-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/Instacab/InstaCab-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -827,7 +823,7 @@
 					"-all_load",
 					"-ObjC",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = InstaCab;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -849,9 +845,9 @@
 					/Users/tisunov/InstacabApp,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Instacab/Instacab-Prefix.pch";
+				GCC_PREFIX_HEADER = "Instacab/InstaCab-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
-				INFOPLIST_FILE = "Instacab/Instacab-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Instacab/InstaCab-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -861,7 +857,7 @@
 					"-all_load",
 					"-ObjC",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = InstaCab;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -885,8 +881,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "InstacabTests/InstacabTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "InstacabTests/InstaCabTests-Info.plist";
+				PRODUCT_NAME = InstaCabTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -904,8 +900,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Instacab/Instacab-Prefix.pch";
-				INFOPLIST_FILE = "InstacabTests/InstacabTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "InstacabTests/InstaCabTests-Info.plist";
+				PRODUCT_NAME = InstaCabTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -914,7 +910,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D9B03230180572B400F7AF69 /* Build configuration list for PBXProject "Instacab" */ = {
+		D9B03230180572B400F7AF69 /* Build configuration list for PBXProject "InstaCab" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D9B03268180572B400F7AF69 /* Debug */,
@@ -923,7 +919,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D9B0326A180572B400F7AF69 /* Build configuration list for PBXNativeTarget "Instacab" */ = {
+		D9B0326A180572B400F7AF69 /* Build configuration list for PBXNativeTarget "InstaCab" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D9B0326B180572B400F7AF69 /* Debug */,
@@ -932,7 +928,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D9B0326D180572B400F7AF69 /* Build configuration list for PBXNativeTarget "InstacabTests" */ = {
+		D9B0326D180572B400F7AF69 /* Build configuration list for PBXNativeTarget "InstaCabTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D9B0326E180572B400F7AF69 /* Debug */,

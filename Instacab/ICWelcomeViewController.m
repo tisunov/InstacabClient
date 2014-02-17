@@ -67,9 +67,9 @@
     _signinButton.highlightedColor = [UIColor colorFromHexString:@"#2980B9"];
     
     _signupButton.layer.cornerRadius = 3.0f;
-    _signupButton.tintColor = [UIColor whiteColor];
-    _signupButton.normalColor = [UIColor colorFromHexString:@"#3498DB"];
-    _signupButton.highlightedColor = [UIColor colorFromHexString:@"#2980B9"];
+    [_signupButton setTitleColor:[UIColor colorFromHexString:@"#3498DB"] forState:UIControlStateNormal];
+    _signupButton.normalColor = [UIColor whiteColor];
+    _signupButton.highlightedColor = [UIColor colorWithWhite:0.949 alpha:1.0]; //[UIColor colorFromHexString:@"#2980B9"];
     
 
     // Uncomment to take LaunchImage screenshot

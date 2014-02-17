@@ -60,6 +60,7 @@
     
     NSNumber *fare = [NSNumber numberWithDouble:[trip.fareBilledToCard doubleValue]];
     _fareLabel.text = [NSString stringWithFormat:@"%@ р.", [formatter stringFromNumber:fare]];
+//    _fareLabel.text = @"270 р.";
     
     // Display timestamp
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -71,6 +72,7 @@
     NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:epochTime];
     
     _timestampLabel.text = [[dateFormatter stringFromDate:date] uppercaseString];
+//    _timestampLabel.text = @"16 ФЕВРАЛЯ 2014, 14:07";
 }
 
 -(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating

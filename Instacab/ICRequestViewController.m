@@ -216,12 +216,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _addressLabel.text = kGoToMarker;
     _addressLabel.textColor = [UIColor colorFromHexString:@"#2C3E50"];
     
-    // Add a bottom border to address panel
-//    CALayer *bottomBorder = [CALayer layer];
-//    bottomBorder.frame = CGRectMake(0.0f, self.addressView.frame.size.height - 1, self.addressView.frame.size.width, 1.0f);
-//    bottomBorder.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
-//    [self.addressView.layer addSublayer:bottomBorder];
-    
     [self setViewBottomShadow:_addressView];
  
     // Location label text transition
@@ -234,6 +228,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)addPickupPositionPin {
     UIImage *pinGreen = [UIImage imageNamed:@"pin_green.png"];
+//    UIImage *pinGreen = [UIImage imageNamed:@"pin_red"];
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     int pinX = screenBounds.size.width / 2 - pinGreen.size.width / 2;
@@ -327,7 +322,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             // Slide up
             _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height - _pickupView.frame.size.height);
             
-            _mapView.padding = UIEdgeInsetsMake(kMapPaddingY, 0, _pickupView.frame.size.height, 0);
+            _mapView.padding = UIEdgeInsetsMake(kMapPaddingY, 0, 75.0, 0);
             [self setNeedsStatusBarAppearanceUpdate];
         }];
         [self.navigationController setNavigationBarHidden:NO animated:YES];
@@ -539,7 +534,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)setupDriverPanel {
-    _driverNameLabel.textColor = [UIColor coolGrayColor];
+    _driverNameLabel.textColor = [UIColor black25PercentColor];
     _vehicleLabel.textColor = [UIColor black50PercentColor];
     _vehicleLicenseLabel.textColor = [UIColor black50PercentColor];
     
@@ -659,7 +654,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     switch (driver.state) {
         case SVDriverStateArrived:
-            [self updateStatusLabel:@"Ваш InstaCab прибыл" withETA:NO];
+            [self updateStatusLabel:@"Водитель прибыл" withETA:NO];
             [self showDriverPanel];
             [self updateVehiclePosition];
             break;
@@ -837,14 +832,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (NSString *)nearbyEta:(NSNumber *)etaValue withFormat:(NSString *)format
 {
+    // Uncomment to take App Store screenshots
+    etaValue = [NSNumber numberWithInt:1];
     int eta = [etaValue intValue];
     int d = (int)floor(eta) % 10;
     
-    NSString *minute = @"минуте";
-    
-    if(d == 0 || d > 4 || d == 11 || d == 12 || d == 13 || d == 14) minute = @"минуте";
-    if(d != 1 && d < 5) minute = @"минутах";
-    if(d == 1) minute = @"минуте";
+    NSString *minute = @"минутах";
+    if(d == 1 || eta == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минуте";
     
     return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 }

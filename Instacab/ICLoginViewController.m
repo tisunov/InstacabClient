@@ -49,6 +49,8 @@
     email.keyboardType = UIKeyboardTypeEmailAddress;
     email.enablesReturnKeyAutomatically = YES;
     email.hiddenToolbar = YES;
+    email.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    email.autocorrectionType = UITextAutocorrectionTypeNo;
     email.key = @"email";
     email.delegate = self;
     

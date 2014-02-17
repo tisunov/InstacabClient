@@ -19,7 +19,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg" translatesAutoresizingMaskIntoConstraints="NO" id="0AB-2K-URk">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg" translatesAutoresizingMaskIntoConstraints="NO" id="0AB-2K-URk">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
@@ -33,15 +33,15 @@
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ваш Персональный Водитель" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l16-H9-sit">
-                    <rect key="frame" x="26" y="220" width="269" height="22"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Поездки c Личным Водителем" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l16-H9-sit">
+                    <rect key="frame" x="24" y="220" width="273" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.89999999999999991" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вызовите с вашего телефона, получите удовольствие оплачивая поездки без суеты. Регистрируйтесь сейчас!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="269" translatesAutoresizingMaskIntoConstraints="NO" id="aa7-HN-NMu">
-                    <rect key="frame" x="26" y="244" width="269" height="77"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.89999999999999991" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вызовите машину с вашего телефона, получите удовольствие оплачивая поездки без суеты. Регистрируйтесь сейчас!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="268" translatesAutoresizingMaskIntoConstraints="NO" id="aa7-HN-NMu">
+                    <rect key="frame" x="24" y="244" width="268" height="77"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -95,7 +95,6 @@
             <constraints>
                 <constraint firstItem="tJ4-TX-KUy" firstAttribute="centerX" secondItem="1" secondAttribute="centerX" id="1PN-qg-kiH"/>
                 <constraint firstItem="tJ4-TX-KUy" firstAttribute="top" secondItem="1" secondAttribute="top" constant="80" id="44J-bK-nZm"/>
-                <constraint firstItem="0AB-2K-URk" firstAttribute="top" secondItem="1" secondAttribute="top" id="4cq-EO-spQ"/>
                 <constraint firstAttribute="bottom" secondItem="o2X-ng-ZqV" secondAttribute="bottom" constant="47" id="Br4-do-Xwh"/>
                 <constraint firstItem="aa7-HN-NMu" firstAttribute="top" secondItem="l16-H9-sit" secondAttribute="bottom" constant="2" id="CrV-4p-Xp7"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="9Jg-Yu-v26" secondAttribute="bottom" constant="131" id="DIo-k5-YlH"/>
@@ -108,7 +107,6 @@
                 <constraint firstItem="9Jg-Yu-v26" firstAttribute="top" secondItem="KOO-kU-Fm2" secondAttribute="bottom" constant="8" symbolic="YES" id="e1H-DE-7mV"/>
                 <constraint firstItem="o2X-ng-ZqV" firstAttribute="bottom" secondItem="gUc-uM-k3o" secondAttribute="bottom" id="ePf-y7-Zfx"/>
                 <constraint firstItem="o2X-ng-ZqV" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="15" id="hHn-gG-hXH"/>
-                <constraint firstItem="tJ4-TX-KUy" firstAttribute="centerX" secondItem="0AB-2K-URk" secondAttribute="centerX" id="iIw-4c-ada"/>
                 <constraint firstItem="tJ4-TX-KUy" firstAttribute="centerX" secondItem="KOO-kU-Fm2" secondAttribute="centerX" id="kLK-cV-bTB"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="o2X-ng-ZqV" secondAttribute="bottom" constant="47" id="kQk-1H-CC7"/>
                 <constraint firstItem="aa7-HN-NMu" firstAttribute="top" secondItem="l16-H9-sit" secondAttribute="bottom" constant="2" id="pzw-h8-u18"/>
@@ -121,6 +119,6 @@
         </view>
     </objects>
     <resources>
-        <image name="bg" width="320" height="568"/>
+        <image name="bg" width="640" height="1136"/>
     </resources>
 </document>

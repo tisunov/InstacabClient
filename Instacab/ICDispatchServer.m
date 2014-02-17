@@ -303,8 +303,4 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 #pragma mark - Misc
 
-- (NSString *)hostname {
-    return kDispatchServerHostName;
-}
-
 @end

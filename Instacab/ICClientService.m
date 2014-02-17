@@ -33,7 +33,7 @@ NSString * const kFieldPassword = @"password";
         _dispatchServer.maintainConnection = YES;
         _dispatchServer.delegate = self;
         
-        _reachability = [[FCReachability alloc] initWithHostname:_dispatchServer.hostname allowCellular:YES];
+        _reachability = [[FCReachability alloc] initWithHostname:@"www.google.com" allowCellular:YES];
         
         if (![ICLocationService sharedInstance].isAvailable) {
             [[ICClient sharedInstance] logout];

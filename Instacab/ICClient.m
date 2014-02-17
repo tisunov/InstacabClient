@@ -85,7 +85,6 @@
     [defaults setObject:self.password forKey:@"client.password"];
     [defaults setObject:self.token forKey:@"client.token"];
     [defaults setObject:self.uID forKey:@"client.id"];
-    
     [defaults synchronize];
 }
 
@@ -96,6 +95,7 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"client.token"];
     [defaults removeObjectForKey:@"client.id"];
+    [defaults synchronize];
 }
 
 -(BOOL)isSignedIn {

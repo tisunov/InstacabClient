@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D9B03234180572B400F7AF69"
-               BuildableName = "Instacab.app"
-               BlueprintName = "Instacab"
-               ReferencedContainer = "container:Instacab.xcodeproj">
+               BuildableName = "InstaCab.app"
+               BlueprintName = "InstaCab"
+               ReferencedContainer = "container:InstaCab.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "D9B03258180572B400F7AF69"
-               BuildableName = "InstacabTests.xctest"
-               BlueprintName = "InstacabTests"
-               ReferencedContainer = "container:Instacab.xcodeproj">
+               BuildableName = "InstaCabTests.xctest"
+               BlueprintName = "InstaCabTests"
+               ReferencedContainer = "container:InstaCab.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D9B03234180572B400F7AF69"
-            BuildableName = "Instacab.app"
-            BlueprintName = "Instacab"
-            ReferencedContainer = "container:Instacab.xcodeproj">
+            BuildableName = "InstaCab.app"
+            BlueprintName = "InstaCab"
+            ReferencedContainer = "container:InstaCab.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D9B03234180572B400F7AF69"
-            BuildableName = "Instacab.app"
-            BlueprintName = "Instacab"
-            ReferencedContainer = "container:Instacab.xcodeproj">
+            BuildableName = "InstaCab.app"
+            BlueprintName = "InstaCab"
+            ReferencedContainer = "container:InstaCab.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -84,9 +84,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "D9B03234180572B400F7AF69"
-            BuildableName = "Instacab.app"
-            BlueprintName = "Instacab"
-            ReferencedContainer = "container:Instacab.xcodeproj">
+            BuildableName = "InstaCab.app"
+            BlueprintName = "InstaCab"
+            ReferencedContainer = "container:InstaCab.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

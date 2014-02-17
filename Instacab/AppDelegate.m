@@ -53,7 +53,7 @@
 
 - (void)setupServices:(UIApplication *)application {
     // Google Maps key
-    [GMSServices provideAPIKey:@"AIzaSyDcikveiQmWRQ8Qv-gPofHuMHgYhjCpsqQ"];
+    [GMSServices provideAPIKey:@"AIzaSyCvlC3MQG4t2MFq92mxsYjFSynAJ-bGqfo"];
 
     [[ICLocationService sharedInstance] start];
 }
