@@ -654,7 +654,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     switch (driver.state) {
         case SVDriverStateArrived:
-            [self updateStatusLabel:@"Водитель прибыл" withETA:NO];
+            [self updateStatusLabel:@"Ваш InstaCab подъезжает" withETA:NO];
             [self showDriverPanel];
             [self updateVehiclePosition];
             break;
@@ -665,8 +665,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             [self updateVehiclePosition];
             break;
 
+        // TODO: Показать и скрыть статус через 6 секунд совсем alpha => 0
         case SVDriverStateDrivingClient:
-            [self updateStatusLabel:@"Приятной дороги!" withETA:NO];
+            [self updateStatusLabel:@"Бон Вояж" withETA:NO];
             [self showDriverPanel];
             [self updateVehiclePosition];
             break;

@@ -36,7 +36,7 @@
 }
 
 NSUInteger const kMaxReconnectAttemps = 1;
-NSUInteger const kPingIntervalInSeconds = 20;
+NSUInteger const kInternalPingIntervalInSeconds = 20;
 
 NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
@@ -267,14 +267,14 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 -(void)startPingTimer {
     if(_pingTimer) return;
     
-    NSLog(@"Start Ping timer with interval of %lu seconds", (unsigned long)kPingIntervalInSeconds);
+    NSLog(@"Start Ping timer with interval of %lu seconds", (unsigned long)kInternalPingIntervalInSeconds);
     
     [self schedulePingTimer];
 }
 
 -(void)schedulePingTimer {
     _pingTimer =
-        [NSTimer scheduledTimerWithTimeInterval:kPingIntervalInSeconds
+        [NSTimer scheduledTimerWithTimeInterval:kInternalPingIntervalInSeconds
                                          target:self
                                        selector:@selector(performPing)
                                        userInfo:nil
