@@ -45,6 +45,9 @@
     UIImageView *_greenPinView;
     UIView *_statusView;
     UILabel *_statusLabel;
+    
+    CGFloat _addressViewOriginY;
+    CGFloat _mapVerticalPadding;
 }
 
 NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
@@ -58,7 +61,6 @@ NSString * const kTripEtaTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
 NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина в %@ %@ от вас";
 
 CGFloat const kDefaultMapZoom = 15.0f;
-NSUInteger const kMapPaddingY = 64.0;
 CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 #define EPSILON 0.00000001
@@ -93,6 +95,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
              initWithBarButtonSystemItem:UIBarButtonSystemItemAction
              target:self
              action:@selector(showAccountActionSheet)];
+    
+    _addressViewOriginY = self.navigationController.navigationBar.frame.origin.x + self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    _mapVerticalPadding = _pickupView.frame.size.height;
     
     [self addGoogleMapView];
     [self addPickupPositionPin];
@@ -254,7 +259,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                                                  zoom:kDefaultMapZoom];
     _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
     // to account for address view
-    _mapView.padding = UIEdgeInsetsMake(kMapPaddingY, 0, _pickupView.frame.size.height, 0);
+    _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
     _mapView.myLocationEnabled = YES;
     _mapView.indoorEnabled = NO;
     _mapView.settings.myLocationButton = YES;
@@ -312,27 +317,29 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     if (hidden) {
         [UIView animateWithDuration:0.20 animations:^(void){
+            [self setNeedsStatusBarAppearanceUpdate];
+            [self.navigationController setNavigationBarHidden:YES animated:YES];
+            
             // Slide up
             _addressView.frame = CGRectSetY(_addressView.frame, 0.0);
             // Slide down
             _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height);
             
             _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
-            [self setNeedsStatusBarAppearanceUpdate];
         }];
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
     }
     else {
         [UIView animateWithDuration:0.20 animations:^(void){
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            [self setNeedsStatusBarAppearanceUpdate];
+            
             // Slide down
-            _addressView.frame = CGRectSetY(_addressView.frame, kMapPaddingY);
+            _addressView.frame = CGRectSetY(_addressView.frame, _addressViewOriginY);
             // Slide up
             _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height - _pickupView.frame.size.height);
             
-            _mapView.padding = UIEdgeInsetsMake(kMapPaddingY, 0, 75.0, 0);
-            [self setNeedsStatusBarAppearanceUpdate];
+            _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
         }];
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
     }
 }
 
@@ -611,7 +618,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (_statusView.hidden) return;
     
     [UIView animateWithDuration:0.25 animations:^(void) {
-        _addressView.frame = CGRectSetY(_addressView.frame, kMapPaddingY);
+        _addressView.frame = CGRectSetY(_addressView.frame, _addressViewOriginY);
         _addressView.alpha = 0.95;
         
         _statusView.alpha = 0.0;
