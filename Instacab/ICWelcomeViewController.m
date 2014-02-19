@@ -144,6 +144,8 @@
     [_clientService trackError:@{@"type": @"connection lost"}];    
 }
 
+// Hide any top level Progress HUD that happened to be visible
+// when we lost connection and returned to Welcome view
 - (void)hideHUD {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
     if (hud)
@@ -155,14 +157,16 @@
     if (!dispatcher.connected) {
         [self stopLoading];
         
-        if (self.navigationController.visibleViewController != self) {
+        BOOL isWelcomeVisible = self.navigationController.visibleViewController == self;
+        if (!isWelcomeVisible) {
             [self hideHUD];
             
-            // Pop to root view controller and show error notification
+            // Pop to WelcomeViewController and show error notification
             [self.navigationController slideLayerAndPopToRootInDirection:kCATransitionFromTop completion:^{
                 [self showNotification];
             }];
         }
+        // We're on visible, show error notification right away
         else
             [self showNotification];
     }
