@@ -112,8 +112,8 @@
 
 - (void)locationWasFixed:(CLLocationCoordinate2D)location
 {
-    NSLog(@"[Login] Got location fix");
     if (_loginAfterLocationFix) {
+        NSLog(@"[Login] Got location fix");
         [self performLogin];
     }
 }

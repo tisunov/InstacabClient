@@ -194,6 +194,10 @@
 }
 
 - (IBAction)registerAction:(id)sender {
+    // Analytics
+    [_clientService trackScreenView:@"Create Account"];
+    
+    // Open URL in Safari
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.instacab.ru/users/sign_up"]];
 
 // TODO: Enable when we have PCI DSS

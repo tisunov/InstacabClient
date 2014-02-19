@@ -64,7 +64,7 @@ NSString * const kFieldPassword = @"password";
     [_dispatchServer sendMessage:pingMessage withCoordinates:location];
     
     // Analytics
-    [self trackEvent:@"Cancel Trip" params:@{@"reason": aReason}];
+    [self trackEvent:@"Request Nearest Cabs" params:@{@"reason": aReason}];
 }
 
 -(void)signUp:(ICSignUpInfo *)info
@@ -131,6 +131,9 @@ NSString * const kFieldPassword = @"password";
     [self trackEvent:@"Log In" params:nil]; 
 }
 
+
+
+// TODO: Добавить (reason=initial ping failed), (reason=location services not available)
 -(void)logOut {
     NSDictionary *message = @{
         kFieldMessageType: @"LogoutClient",
