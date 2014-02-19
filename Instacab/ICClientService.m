@@ -20,6 +20,9 @@
 }
 
 NSString * const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
+NSString *const kNearestCabRequestReasonMovePin = @"movepin";
+NSString *const kNearestCabRequestReasonPing = @"ping";
+
 NSString * const kFieldMessageType = @"messageType";
 NSString * const kFieldEmail = @"email";
 NSString * const kFieldPassword = @"password";
@@ -43,6 +46,7 @@ NSString * const kFieldPassword = @"password";
 }
 
 -(void)ping:(CLLocationCoordinate2D)location
+     reason:(NSString *)aReason
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure
 {

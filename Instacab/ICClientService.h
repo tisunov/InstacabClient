@@ -14,6 +14,9 @@
 
 extern NSString *const kClientServiceMessageNotification;
 
+extern NSString *const kNearestCabRequestReasonMovePin;
+extern NSString *const kNearestCabRequestReasonPing;
+
 typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
 typedef void (^ICClientServiceFailureBlock)();
 
@@ -24,7 +27,8 @@ typedef void (^ICClientServiceFailureBlock)();
               failure:(ICClientServiceFailureBlock)failure;
 -(void)pickupAt: (ICLocation *)location;
 
--(void)ping: (CLLocationCoordinate2D)location
+-(void)ping:(CLLocationCoordinate2D)location
+     reason:(NSString *)aReason
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure;
 

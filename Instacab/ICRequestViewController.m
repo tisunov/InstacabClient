@@ -128,7 +128,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld | NSKeyValueObservingOptionInitial context:nil];
     
     [self presentDriverState];
-    [self ping:_locationService.coordinates];
+    [self requestNearestCabs:_locationService.coordinates reason:kNearestCabRequestReasonPing];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -363,7 +363,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Find street address
     [_googleService reverseGeocodeLocation:_mapView.camera.target];
     // Find nearby vehicles
-    [self ping:_mapView.camera.target];
+    [self requestNearestCabs:_mapView.camera.target reason:kNearestCabRequestReasonMovePin];
 }
 
 - (void)clearMap {
@@ -730,7 +730,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICDispatchServer *dispatcher = [note object];
     // Connection was lost, now it's online again
     if (dispatcher.connected) {
-        [self ping:_locationService.coordinates];
+        [self requestNearestCabs:_locationService.coordinates reason:kNearestCabRequestReasonPing];
     }
 }
 
@@ -769,8 +769,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)ping:(CLLocationCoordinate2D)coordinates {
-    [_clientService ping:coordinates success:nil failure:nil];
+-(void)requestNearestCabs:(CLLocationCoordinate2D)coordinates reason:(NSString *)aReason {
+    [_clientService ping:coordinates reason:aReason success:nil failure:nil];
 }
 
 - (void)showPickupPanel {
