@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ICRatingViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ICReceiptViewController">
             <connections>
                 <outlet property="fareLabel" destination="hTK-Y7-NU9" id="kh4-hZ-RAm"/>
                 <outlet property="fareSection" destination="5Uk-Wt-UD6" id="xlU-v7-3TD"/>

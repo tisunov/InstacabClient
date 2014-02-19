@@ -11,7 +11,7 @@
 #import <sys/sysctl.h>
 #import "ICVehiclePoint.h"
 #import "UIColor+Colours.h"
-#import "ICRatingViewController.h"
+#import "ICReceiptViewController.h"
 #import "MBProgressHUD.h"
 #import "TSMessageView.h"
 #import "TSMessage.h"
@@ -129,6 +129,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self presentDriverState];
     [self requestNearestCabs:_locationService.coordinates reason:kNearestCabRequestReasonPing];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [_clientService trackScreenView:@"Map"];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -428,6 +435,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)didFailToGeocodeWithError:(NSError*)error {
     NSLog(@"didFailToGeocodeWithError %@", error);
     [self updateAddressLabel:kGoToMarker];
+    
+    // Analytics
+    [_clientService trackError:@{@"type": @"google geocoder", @"description": [error localizedDescription]}];
 }
 
 - (void)updateAddressLabel: (NSString *)text {
@@ -640,7 +650,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)showFareAndRateDriver {
-    ICRatingViewController *vc = [[ICRatingViewController alloc] initWithNibName:@"ICRatingViewController" bundle:nil];
+    ICReceiptViewController *vc = [[ICReceiptViewController alloc] initWithNibName:@"ICReceiptViewController" bundle:nil];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -814,7 +824,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)callDriver{
-    [[ICTrip sharedInstance].driver call];
+    ICDriver *driver = [ICTrip sharedInstance].driver;
+    
+    // Analytics
+    [_clientService trackEvent:@"Call Driver"
+                        params:@{@"phone": driver.mobilePhone, @"name": driver.firstName, @"id": driver.uID}];
+    
+    [driver call];
 }
 
 - (NSString *)eta:(NSNumber *)etaValue withFormat:(NSString *)format

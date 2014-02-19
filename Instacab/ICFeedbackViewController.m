@@ -14,6 +14,7 @@
 #import "SLScrollViewKeyboardSupport.h"
 #import "MBProgressHUD.h"
 #import "UIApplication+Alerts.h"
+#import "ICClientService.h"
 
 @interface ICFeedbackViewController ()
 
@@ -66,6 +67,13 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
     [_starRating setNeedsDisplay];
     
 //    _keybdSupport = [[SLScrollViewKeyboardSupport alloc] initWithScrollView:(UIScrollView *)self.view];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [[ICClientService sharedInstance] trackScreenView:@"Feedback"];
 }
 
 -(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating

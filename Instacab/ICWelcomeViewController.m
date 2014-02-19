@@ -14,7 +14,7 @@
 #import "UINavigationController+Animation.h"
 #import "ICLinkCardDialog.h"
 #import "ICRequestViewController.h"
-#import "ICRatingViewController.h"
+#import "ICReceiptViewController.h"
 #import "UIApplication+Alerts.h"
 #import "UIAlertView+Additions.h"
 #import "TSMessageView.h"
@@ -102,6 +102,13 @@
     [TSMessage dismissActiveNotification];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [_clientService trackScreenView:@"Welcome"];
+}
+
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
     
 }
@@ -111,6 +118,7 @@
     
     if ([[ICClient sharedInstance] isSignedIn]) {
         [_clientService ping:_locationService.coordinates
+                      reason:kNearestCabRequestReasonPing
                      success:^(ICMessage *message) {
                          [self didReceiveMessage:message];
                      }
@@ -121,7 +129,8 @@
 }
 
 - (void)showNotification {
-    // Show alert only when we lost connection unexpectedly: When user explicitly logged out
+    // Show alert only when we lost connection unexpectedly.
+    // Don't show when we explicitly closed it, when user logged out
     if (![ICClient sharedInstance].isSignedIn) return;
     
     [TSMessage showNotificationInViewController:self
@@ -130,6 +139,9 @@
                                           image:[UIImage imageNamed:@"server-alert"]
                                            type:TSMessageNotificationTypeError
                                        duration:TSMessageNotificationDurationAutomatic];
+    
+    // Analytics
+    [_clientService trackError:@{@"type": @"connection lost"}];    
 }
 
 - (void)hideHUD {
@@ -220,7 +232,7 @@
 - (NSArray *)viewControllers {
     ICRequestViewController *vc1 = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
     
-    ICRatingViewController *vc2 = [[ICRatingViewController alloc] initWithNibName:@"ICRatingViewController" bundle:nil];
+    ICReceiptViewController *vc2 = [[ICReceiptViewController alloc] initWithNibName:@"ICReceiptViewController" bundle:nil];
     
     return @[self, vc1, vc2];
 }

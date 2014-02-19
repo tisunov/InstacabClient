@@ -16,7 +16,8 @@
 #import "UIApplication+Alerts.h"
 #import "TargetConditionals.h"
 #import "Bugsnag.h"
-//#import <Crashlytics/Crashlytics.h>
+#import "LocalyticsSession.h"
+#import "ICClient.h"
 
 @implementation AppDelegate
 
@@ -72,31 +73,61 @@
 //    https://github.com/robbiehanson/CocoaLumberjack
 }
 
+// Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
+// Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+#if !(TARGET_IPHONE_SIMULATOR)
+    [[LocalyticsSession shared] close];
+    [[LocalyticsSession shared] upload];
+#endif
 }
 
+// Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+// If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+#if !(TARGET_IPHONE_SIMULATOR)
+    [[LocalyticsSession shared] close];
+    [[LocalyticsSession shared] upload];
+#endif
 }
 
+// Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+#if !(TARGET_IPHONE_SIMULATOR)
+    [[LocalyticsSession shared] resume];
+    [[LocalyticsSession shared] upload];
+#endif
 }
 
+// Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+#if !(TARGET_IPHONE_SIMULATOR)
+    // Development Key: f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25
+    // Produciton Key:
+    [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
+    if ([ICClient sharedInstance].isSignedIn) {
+        ICClient *client = [ICClient sharedInstance];
+        [[LocalyticsSession shared] setCustomerName:client.firstName];
+        [[LocalyticsSession shared] setCustomerEmail:client.email];
+        [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
+    }
+    
+    [[LocalyticsSession shared] resume];
+    [[LocalyticsSession shared] upload];
+#endif
 }
 
+// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+#if !(TARGET_IPHONE_SIMULATOR)
+    [[LocalyticsSession shared] close];
+    [[LocalyticsSession shared] upload];
+#endif
 }
 
 @end

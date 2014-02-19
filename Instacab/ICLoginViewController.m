@@ -14,6 +14,7 @@
 #import "MBProgressHUD.h"
 #import "QuickDialogController+Additions.h"
 #import "UIApplication+Alerts.h"
+#import "LocalyticsSession.h"
 
 @interface ICLoginViewController ()
 
@@ -29,6 +30,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        _clientService = [ICClientService sharedInstance];
+        
         _locationService = [ICLocationService sharedInstance];
         _locationService.delegate = self;
         
@@ -38,8 +41,6 @@
 }
 
 - (void)buildLoginForm {
-    _clientService = [ICClientService sharedInstance];
-    
     self.root = [[QRootElement alloc] init];
     self.root.grouped = YES;
     
@@ -92,13 +93,17 @@
         [self textFieldForEntryElementWithKey:@"password"].rac_textSignal
     ];
     
+    // TODO: Избавиться от ReactiveCocoa, я не использую ее ни для чего серьезного
     RAC(self.navigationItem.rightBarButtonItem, enabled) =
         [RACSignal
              combineLatest:signals
              reduce:^(NSString *email, NSString *password) {
                  return @(email.length > 0 && password.length > 0);
              }];
+
+    [_clientService trackScreenView:@"Login"];
 }
+
 
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates
 {
@@ -116,16 +121,25 @@
 -(void)login {
     if (![ICLocationService sharedInstance].isEnabled) {
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Службы геолокации выключены. Включите их пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
+        
+        // Analytics
+        [_clientService trackError:@{@"type": @"location sevices are off"}];
         return;
     }
 
     if ([ICLocationService sharedInstance].isRestricted) {
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Доступ к вашей геопозиции ограничен. Разрешите Instacab доступ пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
+        
+        // Analytics
+        [_clientService trackError:@{@"type": @"location services are restricted"}];
         return;
     }
 
     if (![ICClientService sharedInstance].isOnline) {
-        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Сети" message:@"Нет сетевого подключения." cancelButtonTitle:@"OK"];        
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Сети" message:@"Нет сетевого подключения." cancelButtonTitle:@"OK"];
+        
+        // Analytics
+        [_clientService trackError:@{@"type": @"network offline"}];
         return;
     }
     
@@ -148,6 +162,10 @@
                                [self clientDidReceiveMessage:message];
                            } failure:^{
                                [self dismissProgress];
+                               
+                               // Analytics
+                               [_clientService trackError:@{@"type": @"network error"}];
+                               
                                [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
                            }];
 }
@@ -181,6 +199,7 @@
             client.password = [self textForElementKey:@"password"];
             [client save];
 
+            [self setupAnalyticsForClient:client];
             [self dismissProgress];
             
             if ([self.delegate respondsToSelector:@selector(closeLoginViewController:andSignIn:)]) {
@@ -191,13 +210,24 @@
         case SVMessageTypeError:
             // TODO: Сервер должен возвращать код ошибки чтобы я показал по коду сообщение
             // или возвращать на русском языке текст ошибки
+            
             [self dismissProgress];
+            
+            // Analytics
+            [_clientService trackError:@{@"type": @"bad credentials"}];
+            
             [[UIApplication sharedApplication] showAlertWithTitle:@"Неверные данные" message:message.errorDescription cancelButtonTitle:@"OK"];
             break;
             
         default:
             break;
     }
+}
+
+- (void)setupAnalyticsForClient:(ICClient *)client {
+    [[LocalyticsSession shared] setCustomerName:client.firstName];
+    [[LocalyticsSession shared] setCustomerEmail:client.email];
+    [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
 }
 
 -(void)cancelPressed {

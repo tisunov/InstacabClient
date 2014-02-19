@@ -41,7 +41,6 @@ typedef void (^ICClientServiceFailureBlock)();
             success:(ICClientServiceSuccessBlock)success
             failure:(ICClientServiceFailureBlock)failure;
 
-
 -(void)logOut;
 
 -(void)signUp:(ICSignUpInfo *)info
@@ -56,5 +55,11 @@ typedef void (^ICClientServiceFailureBlock)();
              failure:(ICClientServiceFailureBlock)failure;
 
 @property (nonatomic, readonly) BOOL isOnline;
+
+#pragma mark - Analytics
+
+- (void)trackScreenView:(NSString *)name;
+- (void)trackEvent:(NSString *)name params:(NSDictionary *)aParams;
+- (void)trackError:(NSDictionary *)attributes;
 
 @end

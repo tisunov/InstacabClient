@@ -6,16 +6,16 @@
 //  Copyright (c) 2013 Bright Stripe. All rights reserved.
 //
 
-#import "ICRatingViewController.h"
+#import "ICReceiptViewController.h"
 #import "ICClient.h"
 #import "ICClientService.h"
 #import "UIColor+Colours.h"
 #import "ICFeedbackViewController.h"
 
-@interface ICRatingViewController ()
+@interface ICReceiptViewController ()
 @end
 
-@implementation ICRatingViewController {
+@implementation ICReceiptViewController {
 
 }
 
@@ -73,6 +73,13 @@
     
     _timestampLabel.text = [[dateFormatter stringFromDate:date] uppercaseString];
 //    _timestampLabel.text = @"16 ФЕВРАЛЯ 2014, 14:07";
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [[ICClientService sharedInstance] trackScreenView:@"Receipt"];
 }
 
 -(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating

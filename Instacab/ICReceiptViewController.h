@@ -10,7 +10,7 @@
 #import "EDStarRating.h"
 #import "UIViewController+TitleLabelAttritbutes.h"
 
-@interface ICRatingViewController : UIViewController<EDStarRatingProtocol>
+@interface ICReceiptViewController : UIViewController<EDStarRatingProtocol>
 @property (strong, nonatomic) IBOutlet UILabel *timestampLabel;
 @property (strong, nonatomic) IBOutlet UILabel *fareLabel;
 @property (strong, nonatomic) IBOutlet EDStarRating *starRating;

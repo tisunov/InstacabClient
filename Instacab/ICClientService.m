@@ -11,6 +11,7 @@
 #import "ICSingleton.h"
 #import "ICClient.h"
 #import "FCReachability.h"
+#import "LocalyticsSession.h"
 
 @implementation ICClientService {
     ICDispatchServer *_dispatchServer;
@@ -38,6 +39,7 @@ NSString * const kFieldPassword = @"password";
         
         _reachability = [[FCReachability alloc] initWithHostname:@"www.google.com" allowCellular:YES];
         
+        // Don't allow automatic login on launch if Location Services access is disabled
         if (![ICLocationService sharedInstance].isAvailable) {
             [[ICClient sharedInstance] logout];
         }
@@ -60,6 +62,9 @@ NSString * const kFieldPassword = @"password";
     };
     
     [_dispatchServer sendMessage:pingMessage withCoordinates:location];
+    
+    // Analytics
+    [self trackEvent:@"Cancel Trip" params:@{@"reason": aReason}];
 }
 
 -(void)signUp:(ICSignUpInfo *)info
@@ -121,6 +126,9 @@ NSString * const kFieldPassword = @"password";
     };
     
     [self sendMessage:message];
+    
+    // Analytics
+    [self trackEvent:@"Log In" params:nil]; 
 }
 
 -(void)logOut {
@@ -140,6 +148,9 @@ NSString * const kFieldPassword = @"password";
     [[ICClient sharedInstance] logout];
     
     [self sendMessage:message];
+    
+    // Analytics
+    [self trackEvent:@"Log Out" params:nil];
 }
 
 -(void)submitRating:(NSUInteger)rating
@@ -185,6 +196,9 @@ NSString * const kFieldPassword = @"password";
     };
     
     [self sendMessage: message];
+    
+    // Analytics
+    [self trackEvent:@"Request Vehicle" params:nil];
 }
 
 -(void)cancelPickup {
@@ -207,15 +221,9 @@ NSString * const kFieldPassword = @"password";
     };
     
     [self sendMessage:message];
-}
-
-- (void)startPingTimer {
-    //    self.pingTimer =
-    //        [NSTimer scheduledTimerWithTimeInterval:4.0
-    //                                         target:self
-    //                                       selector:@selector(pingServer)
-    //                                       userInfo:nil
-    //                                        repeats:YES];
+    
+    // Analytics
+    [self trackEvent:@"Cancel Trip" params:nil];
 }
 
 // TODO: Посылать log event через HTTP POST
@@ -241,9 +249,9 @@ NSString * const kFieldPassword = @"password";
     [event setValue:@[longitude, latitude] forKey:@"location"];
     
     NSDictionary *parameters = @{
-        @"locationAltitude": [NSNumber numberWithFloat: location.altitude],
-        @"locationVerticalAccuracy": [NSNumber numberWithFloat: location.verticalAccuracy],
-        @"locationhorizontalAccuracy": [NSNumber numberWithFloat: location.horizontalAccuracy],
+        @"locationAltitude": [NSNumber numberWithFloat:location.altitude],
+        @"locationVerticalAccuracy": [NSNumber numberWithFloat:location.verticalAccuracy],
+        @"locationHorizontalAccuracy": [NSNumber numberWithFloat:location.horizontalAccuracy],
         @"requestGuid": [[NSUUID UUID] UUIDString]
     };
     [event setValue:parameters forKey:@"parameters"];
@@ -289,4 +297,39 @@ NSString * const kFieldPassword = @"password";
     return _reachability.isOnline;
 }
 
+#pragma mark - Analytics
+
+- (void)trackScreenView:(NSString *)name {
+    [[LocalyticsSession shared] tagScreen:name];
+}
+
+- (void)trackEvent:(NSString *)name params:(NSDictionary *)aParams {
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:aParams];
+    CLLocationAccuracy accuracy = [ICLocationService sharedInstance].location.horizontalAccuracy;
+    NSString *accuracyBucket = @"none";
+    
+    if (accuracy > 0 && accuracy <= 10) {
+        accuracyBucket = @"0-10";
+    }
+    else if (accuracy > 10 && accuracy <= 30) {
+        accuracyBucket = @"10-30";
+    }
+    else if (accuracy > 30 && accuracy <= 60) {
+        accuracyBucket = @"30-60";
+    }
+    else if (accuracy > 60 && accuracy <= 100) {
+        accuracyBucket = @"60-100";
+    }
+    else if (accuracy > 100) {
+        accuracyBucket = @"> 100";
+    }
+    
+    [params setObject:accuracyBucket forKey:@"location accuracy"];
+    
+    [[LocalyticsSession shared] tagEvent:name attributes:params];
+}
+
+- (void)trackError:(NSDictionary *)attributes {
+    [self trackEvent:@"Error" params:attributes];
+}
 @end

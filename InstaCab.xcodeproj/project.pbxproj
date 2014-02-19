@@ -70,8 +70,11 @@
 		D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9C193221888779200A889E4 /* ICAccountViewController.xib */; };
 		D9C1932C1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */; };
 		D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */; };
-		D9CD0E4C1829A55400A02619 /* ICRatingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */; };
-		D9CD0E4D1829A55400A02619 /* ICRatingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */; };
+		D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */; };
+		D9CD0E4D1829A55400A02619 /* ICReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */; };
+		D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */; };
+		D9D08D2918B4F6F300760327 /* libLocalyticsAMP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D08D2318B4F6F300760327 /* libLocalyticsAMP.a */; };
+		D9D08D2B18B4F6F300760327 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2518B4F6F300760327 /* LICENSE */; };
 		D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */; };
 		D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D4A27F1886629C00067879 /* libCardIO.a */; };
 		D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D4A28218866F2500067879 /* ICSignUpInfo.m */; };
@@ -190,9 +193,14 @@
 		D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+TitleLabelAttritbutes.m"; sourceTree = "<group>"; };
 		D9C27D911845B7A7007969EA /* UIApplication+Alerts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+Alerts.h"; sourceTree = "<group>"; };
 		D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Alerts.m"; sourceTree = "<group>"; };
-		D9CD0E491829A55400A02619 /* ICRatingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICRatingViewController.h; sourceTree = "<group>"; };
-		D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICRatingViewController.m; sourceTree = "<group>"; };
-		D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRatingViewController.xib; sourceTree = "<group>"; };
+		D9CD0E491829A55400A02619 /* ICReceiptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICReceiptViewController.h; sourceTree = "<group>"; };
+		D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICReceiptViewController.m; sourceTree = "<group>"; };
+		D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICReceiptViewController.xib; sourceTree = "<group>"; };
+		D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = iOSa_2.21.1.version; sourceTree = "<group>"; };
+		D9D08D2318B4F6F300760327 /* libLocalyticsAMP.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP.a; sourceTree = "<group>"; };
+		D9D08D2518B4F6F300760327 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		D9D08D2618B4F6F300760327 /* LocalyticsAmpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsAmpSession.h; sourceTree = "<group>"; };
+		D9D08D2718B4F6F300760327 /* LocalyticsSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsSession.h; sourceTree = "<group>"; };
 		D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICLinkCardDialog.xib; sourceTree = "<group>"; };
 		D9D4A2791886629C00067879 /* CardIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIO.h; sourceTree = "<group>"; };
 		D9D4A27A1886629C00067879 /* CardIOCreditCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOCreditCardInfo.h; sourceTree = "<group>"; };
@@ -223,6 +231,7 @@
 				D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */,
 				D9B0328C1805864D00F7AF69 /* OpenGLES.framework in Frameworks */,
 				D9B0328A1805864800F7AF69 /* libz.dylib in Frameworks */,
+				D9D08D2918B4F6F300760327 /* libLocalyticsAMP.a in Frameworks */,
 				D9B032881805863F00F7AF69 /* libicucore.dylib in Frameworks */,
 				D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */,
 				D9B032861805863900F7AF69 /* libc++.dylib in Frameworks */,
@@ -299,9 +308,9 @@
 				D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */,
 				D9B0327218057E2C00F7AF69 /* ICRequestViewController.h */,
 				D96EEB281805895B0048A669 /* ICRequestViewController.xib */,
-				D9CD0E4A1829A55400A02619 /* ICRatingViewController.m */,
-				D9CD0E491829A55400A02619 /* ICRatingViewController.h */,
-				D9CD0E4B1829A55400A02619 /* ICRatingViewController.xib */,
+				D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */,
+				D9CD0E491829A55400A02619 /* ICReceiptViewController.h */,
+				D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */,
 				D90BAE211884359500E03F3E /* ICFeedbackViewController.m */,
 				D90BAE201884359500E03F3E /* ICFeedbackViewController.h */,
 				D90BAE221884359500E03F3E /* ICFeedbackViewController.xib */,
@@ -403,6 +412,7 @@
 		D9B0323E180572B400F7AF69 /* Instacab */ = {
 			isa = PBXGroup;
 			children = (
+				D9D08D2118B4F6F300760327 /* Localytics */,
 				D92019361816FD9A00EEA47C /* Models */,
 				D9AD51581817C78100692E7E /* Services */,
 				D9532E1B1819A5510046E5EC /* Controllers */,
@@ -443,6 +453,18 @@
 				D9B03263180572B400F7AF69 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D9D08D2118B4F6F300760327 /* Localytics */ = {
+			isa = PBXGroup;
+			children = (
+				D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */,
+				D9D08D2318B4F6F300760327 /* libLocalyticsAMP.a */,
+				D9D08D2518B4F6F300760327 /* LICENSE */,
+				D9D08D2618B4F6F300760327 /* LocalyticsAmpSession.h */,
+				D9D08D2718B4F6F300760327 /* LocalyticsSession.h */,
+			);
+			path = Localytics;
 			sourceTree = "<group>";
 		};
 		D9D4A2781886629C00067879 /* CardIO */ = {
@@ -566,12 +588,14 @@
 			files = (
 				D90BAE241884359500E03F3E /* ICFeedbackViewController.xib in Resources */,
 				D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */,
+				D9D08D2B18B4F6F300760327 /* LICENSE in Resources */,
 				D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */,
 				D9B03243180572B400F7AF69 /* InfoPlist.strings in Resources */,
+				D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */,
 				D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */,
 				D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */,
 				D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */,
-				D9CD0E4D1829A55400A02619 /* ICRatingViewController.xib in Resources */,
+				D9CD0E4D1829A55400A02619 /* ICReceiptViewController.xib in Resources */,
 				D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */,
 				D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */,
 				D90A9CA018AE5CFE002B80F4 /* GoogleMaps.bundle in Resources */,
@@ -669,7 +693,7 @@
 				D9B03245180572B400F7AF69 /* main.m in Sources */,
 				D982840618878FF10014BBF7 /* ICError.m in Sources */,
 				D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */,
-				D9CD0E4C1829A55400A02619 /* ICRatingViewController.m in Sources */,
+				D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */,
 				D98058C0181A518700DD0BBF /* ICDriver.m in Sources */,
 				D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */,
 				D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */,
@@ -818,6 +842,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/tisunov/InstacabApp/Instacab/CardIO,
+					/Users/tisunov/InstacabApp/Instacab/Localytics,
 				);
 				OTHER_LDFLAGS = (
 					"-all_load",
@@ -852,6 +877,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/tisunov/InstacabApp/Instacab/CardIO,
+					/Users/tisunov/InstacabApp/Instacab/Localytics,
 				);
 				OTHER_LDFLAGS = (
 					"-all_load",
