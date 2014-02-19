@@ -857,7 +857,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (NSString *)nearbyEta:(NSNumber *)etaValue withFormat:(NSString *)format
 {
     // Uncomment to take App Store screenshots
-    etaValue = [NSNumber numberWithInt:1];
+//    etaValue = [NSNumber numberWithInt:1];
     int eta = [etaValue intValue];
     int d = (int)floor(eta) % 10;
     
