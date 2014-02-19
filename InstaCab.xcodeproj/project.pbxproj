@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AE07F330A31646F1B6AEFF7D /* libPods-Instacab.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FAA71C8A26847CBB29B2EF5 /* libPods-Instacab.a */; };
+		42C01CE1839A474A92880B69 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C3E0C195E5B34249863BF67D /* libPods.a */; };
 		D906B11B18A924230065E256 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D906B11A18A924230065E256 /* libsqlite3.dylib */; };
 		D90A9C9E18AE5CEB002B80F4 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */; };
 		D90A9CA018AE5CFE002B80F4 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */; };
@@ -95,7 +95,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3EA7016CD9354BF2998EC10F /* libPods-InstaCab.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InstaCab.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64DAF51829E1477696952EBB /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		6FAA71C8A26847CBB29B2EF5 /* libPods-Instacab.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Instacab.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3E0C195E5B34249863BF67D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D906B11A18A924230065E256 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
@@ -217,7 +220,6 @@
 		D9EF8ED518170B3500F9DD52 /* ICClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICClient.m; sourceTree = "<group>"; };
 		D9EFF9A31805867100A68AED /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D9EFF9A51805867700A68AED /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		FC2D0DF1706C44C8AC149DB0 /* Pods-Instacab.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instacab.xcconfig"; path = "Pods/Pods-Instacab.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,7 +247,7 @@
 				D9B0323B180572B400F7AF69 /* CoreGraphics.framework in Frameworks */,
 				D9B0323D180572B400F7AF69 /* UIKit.framework in Frameworks */,
 				D9B03239180572B400F7AF69 /* Foundation.framework in Frameworks */,
-				AE07F330A31646F1B6AEFF7D /* libPods-Instacab.a in Frameworks */,
+				42C01CE1839A474A92880B69 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,7 +370,7 @@
 				D9B03260180572B400F7AF69 /* InstacabTests */,
 				D9B03237180572B400F7AF69 /* Frameworks */,
 				D9B03236180572B400F7AF69 /* Products */,
-				FC2D0DF1706C44C8AC149DB0 /* Pods-Instacab.xcconfig */,
+				64DAF51829E1477696952EBB /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -405,6 +407,8 @@
 				D9B0323C180572B400F7AF69 /* UIKit.framework */,
 				D9B0325A180572B400F7AF69 /* XCTest.framework */,
 				6FAA71C8A26847CBB29B2EF5 /* libPods-Instacab.a */,
+				3EA7016CD9354BF2998EC10F /* libPods-InstaCab.a */,
+				C3E0C195E5B34249863BF67D /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -640,7 +644,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Pods-Instacab-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EBA14D7984DD48D5A1003053 /* Upload Bugsnag dSYM */ = {
@@ -824,7 +828,7 @@
 		};
 		D9B0326B180572B400F7AF69 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC2D0DF1706C44C8AC149DB0 /* Pods-Instacab.xcconfig */;
+			baseConfigurationReference = 64DAF51829E1477696952EBB /* Pods.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -847,6 +851,7 @@
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
+					"$(inherited)",
 				);
 				PRODUCT_NAME = InstaCab;
 				PROVISIONING_PROFILE = "";
@@ -858,7 +863,7 @@
 		};
 		D9B0326C180572B400F7AF69 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC2D0DF1706C44C8AC149DB0 /* Pods-Instacab.xcconfig */;
+			baseConfigurationReference = 64DAF51829E1477696952EBB /* Pods.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -882,6 +887,7 @@
 				OTHER_LDFLAGS = (
 					"-all_load",
 					"-ObjC",
+					"$(inherited)",
 				);
 				PRODUCT_NAME = InstaCab;
 				PROVISIONING_PROFILE = "";

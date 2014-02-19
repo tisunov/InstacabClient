@@ -37,6 +37,7 @@
 
 NSUInteger const kMaxReconnectAttemps = 1;
 NSUInteger const kInternalPingIntervalInSeconds = 20;
+NSUInteger const kConnectTimeoutSecs = 5;
 
 NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
@@ -176,6 +177,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     
     _socket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:kDispatchServerUrl]];
     _socket.delegate = self;
+    _socket.connectTimeout = kConnectTimeoutSecs;
     [_socket open];
 }
 
