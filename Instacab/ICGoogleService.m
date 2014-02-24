@@ -46,13 +46,13 @@ NSString * const kSensorParam = @"sensor=true";
             BOOL isStatusOk = [status isEqualToString:@"OK"];
             if (!isStatusOk || !results) {
                 NSLog(@"Google geocoder failed with status: %@", status);
-                [self.delegate didFailToGeocodeWithError: [NSError errorWithDomain:@"com.brightstripe.svoditelem" code:1000 userInfo:NULL]];
+                [self.delegate didFailToGeocodeWithError:[NSError errorWithDomain:@"com.brightstripe.instacab" code:1000 userInfo:NULL]];
                 return;
             }
             
             ICLocation *loc = [[ICLocation alloc] initWithGeocoderResults: results];
-            loc.latitude = [NSNumber numberWithDouble:location.latitude];
-            loc.longitude = [NSNumber numberWithDouble:location.longitude];
+            loc.latitude = @(location.latitude);
+            loc.longitude = @(location.longitude);
             [self.delegate didGeocodeLocation:loc];
         }
      

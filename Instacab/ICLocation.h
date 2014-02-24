@@ -11,6 +11,7 @@
 
 @interface ICLocation : MTLModel <MTLJSONSerializing>
 -(id)initWithGeocoderResults:(NSArray *)results;
+-(id)initWithCoordinate:(CLLocationCoordinate2D)coordinate;
 
 @property (nonatomic, copy, readonly) NSString *streetAddress;
 @property (nonatomic, copy, readonly) NSString *region;

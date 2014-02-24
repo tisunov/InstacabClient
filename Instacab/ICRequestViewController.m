@@ -371,6 +371,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     // First tap on the map returns to Pre-Request state
     if (_readyToRequest) {
+        NSLog(@"Return UI state to 'Looking'");
         [self setReadyToRequest:NO];
     }
 }
@@ -392,6 +393,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (gestureRecognizer.state != UIGestureRecognizerStateEnded) {
         return;
     }
+    
+    // Reset pickup location
+    _pickupLocation = nil;
 
     // Set pin address to blank, to make address change animation nicer
     [self updateAddressLabel:@""];
@@ -558,6 +562,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (IBAction)requestPickup:(id)sender {
     if (_readyToRequest) {
         [self showProgressWithMessage:kProgressLookingForDriver allowCancel:NO];
+
+        // Initialize pickup location with coordinates if it's empty
+        if (!_pickupLocation)
+            _pickupLocation = [[ICLocation alloc] initWithCoordinate:_locationService.coordinates];
+        
         // Request pickup
         [_clientService pickupAt:_pickupLocation];
     }

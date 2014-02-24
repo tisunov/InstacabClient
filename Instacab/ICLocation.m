@@ -31,6 +31,15 @@
     return self;
 }
 
+-(id)initWithCoordinate:(CLLocationCoordinate2D)coordinate {
+    self = [super init];
+    if (self) {
+        self.latitude = @(coordinate.latitude);
+        self.longitude = @(coordinate.longitude);
+    }
+    return self;
+}
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"streetAddress": @"streetAddress",
