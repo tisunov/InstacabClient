@@ -298,7 +298,6 @@
 		D9532E1B1819A5510046E5EC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D9D4A2781886629C00067879 /* CardIO */,
 				D9AD515C1817C80100692E7E /* UI Support */,
 				D9D88412188FE79E006BD004 /* SignUp */,
 				D90BAE121884306600E03F3E /* ICWelcomeViewController.m */,
@@ -321,6 +320,15 @@
 				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		D978D4F218B5F11500952BB7 /* 3rdParty */ = {
+			isa = PBXGroup;
+			children = (
+				D9D4A2781886629C00067879 /* CardIO */,
+				D9D08D2118B4F6F300760327 /* Localytics */,
+			);
+			name = 3rdParty;
 			sourceTree = "<group>";
 		};
 		D9AD51581817C78100692E7E /* Services */ = {
@@ -416,10 +424,10 @@
 		D9B0323E180572B400F7AF69 /* Instacab */ = {
 			isa = PBXGroup;
 			children = (
-				D9D08D2118B4F6F300760327 /* Localytics */,
 				D92019361816FD9A00EEA47C /* Models */,
 				D9AD51581817C78100692E7E /* Services */,
 				D9532E1B1819A5510046E5EC /* Controllers */,
+				D978D4F218B5F11500952BB7 /* 3rdParty */,
 				D9B03248180572B400F7AF69 /* AppDelegate.m */,
 				D9B03247180572B400F7AF69 /* AppDelegate.h */,
 				D9B0323F180572B400F7AF69 /* Supporting Files */,

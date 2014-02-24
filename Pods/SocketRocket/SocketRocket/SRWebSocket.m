@@ -355,12 +355,12 @@ static __strong NSData *CRLFCRLF;
     [self cancelConnectTimer];
 
     // PULL: block on dealloc until all work queue tasks are finished
-    dispatch_queue_t blockQueue = _workQueue;
-    
-    sr_dispatch_release(_workQueue);
-    _workQueue = NULL;
-    dispatch_sync( blockQueue, ^{} ); // block until the work queue is empty
-    sr_dispatch_release(blockQueue);
+    if (_workQueue) {
+        dispatch_queue_t blockQueue = _workQueue;
+        _workQueue = NULL;
+        dispatch_sync( blockQueue, ^{} ); // block until the work queue is empty
+        sr_dispatch_release(blockQueue);
+    }
     
     if (_receivedHTTPHeaders) {
         CFRelease(_receivedHTTPHeaders);

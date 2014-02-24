@@ -33,7 +33,7 @@
     NSMutableArray *_addedMarkers;
     GMSMarker *_dispatchedVehicleMarker;
     GMSMarker *_pickupLocationMarker;
-    BOOL _controlsHidden;
+    BOOL _draggingPin;
     BOOL _readyToRequest;
     BOOL _justStarted;
     CATransition *_animation;
@@ -63,8 +63,8 @@ NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина 
 CGFloat const kDefaultMapZoom = 15.0f;
 CGFloat const kDriverInfoPanelHeight = 75.0f;
 
-#define EPSILON 0.00000001
-#define CLCOORDINATES_EQUAL( coord1, coord2 ) (fabs(coord1.latitude - coord2.latitude) <= EPSILON && fabs(coord1.longitude - coord2.longitude) <= EPSILON)
+#define EPSILON 0.000001
+#define CLCOORDINATES_EQUAL( coord1, coord2 ) ((fabs(coord1.latitude - coord2.latitude) <= EPSILON) && (fabs(coord1.longitude - coord2.longitude) <= EPSILON))
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -133,6 +133,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld | NSKeyValueObservingOptionInitial context:nil];
     
     [self presentDriverState];
+    
+    // TODO: Лишний раз шлется, Welcome Controller уже посылал и получил ответ
     [self requestNearestCabs:_locationService.coordinates reason:kNearestCabRequestReasonPing];
 }
 
@@ -266,11 +268,27 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _mapView.settings.indoorPicker = NO;
     [self.view insertSubview:_mapView atIndex:0];
     
+    [self attachMyLocationButtonTapHandler];
+    
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeTapOnMap:)];
     
     // use own gesture recognizer to geocode location only once user stops panning
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeDragOnMap:)];
     _mapView.gestureRecognizers = @[panRecognizer, tapRecognizer];
+}
+
+- (void)attachMyLocationButtonTapHandler {
+    for (UIView *object in _mapView.subviews) {
+        if([[[object class] description] isEqualToString:@"GMSUISettingsView"] )
+        {
+            for(UIView *view in object.subviews) {
+                if([[[view class] description] isEqualToString:@"UIButton"] ) {
+                    [(UIButton *)view addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
+                    return;
+                }
+            }
+        }
+    };
 }
 
 - (void)setReadyToRequest: (BOOL)isReady {
@@ -303,19 +321,24 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [CATransaction commit];
 }
 
+- (void)myLocationTapped:(id)sender {
+    if (!CLCOORDINATES_EQUAL(_mapView.camera.target, _mapView.myLocation.coordinate))
+        [self findAddressAndNearbyCabsAtCameraTarget:NO];
+}
+
 // Control status bar visibility
 - (BOOL)prefersStatusBarHidden
 {
-    return _controlsHidden;
+    return _draggingPin;
 }
 
--(void)setControlsHidden: (BOOL)hidden {
-    _controlsHidden = hidden;
-    _mapView.settings.myLocationButton = !hidden;
+-(void)setDraggingPin: (BOOL)dragging {
+    _draggingPin = dragging;
+    _mapView.settings.myLocationButton = !dragging;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
-    if (hidden) {
+    if (dragging) {
         [UIView animateWithDuration:0.20 animations:^(void){
             [self setNeedsStatusBarAppearanceUpdate];
             [self.navigationController setNavigationBarHidden:YES animated:YES];
@@ -362,7 +385,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Hide UI controls when user starts map drag to show move of the map
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
         [self updateAddressLabel:kGoToMarker];
-        [self setControlsHidden:YES];
+        [self setDraggingPin:YES];
         return;
     }
     
@@ -373,11 +396,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Set pin address to blank, to make address change animation nicer
     [self updateAddressLabel:@""];
     // Show UI controls
-    [self setControlsHidden:NO];
+    [self setDraggingPin:NO];
+    
+    [self findAddressAndNearbyCabsAtCameraTarget:YES];
+}
+
+- (void)findAddressAndNearbyCabsAtCameraTarget:(BOOL)atCameraTarget {
+    CLLocationCoordinate2D coordinates = atCameraTarget ? _mapView.camera.target : _locationService.coordinates;
+    
     // Find street address
-    [_googleService reverseGeocodeLocation:_mapView.camera.target];
+    [_googleService reverseGeocodeLocation:coordinates];
     // Find nearby vehicles
-    [self requestNearestCabs:_mapView.camera.target reason:kNearestCabRequestReasonMovePin];
+    [self requestNearestCabs:coordinates reason:kNearestCabRequestReasonMovePin];
 }
 
 - (void)clearMap {
