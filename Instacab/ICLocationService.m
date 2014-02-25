@@ -27,7 +27,6 @@
     if (self) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.distanceFilter = 5;
-        _locationManager.activityType = CLActivityTypeAutomotiveNavigation;
         // Use the highest-level of accuracy.
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.delegate = self;

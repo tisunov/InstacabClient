@@ -22,6 +22,7 @@
 		D911228418094462006A49DA /* ICHighlightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D911228318094462006A49DA /* ICHighlightButton.m */; };
 		D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC0187552C000288448 /* UIAlertView+Additions.m */; };
 		D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */; };
+		D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = D948113E18BCB6720005D348 /* ICPaymentProfile.m */; };
 		D9532E1E1819B44E0046E5EC /* ICMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9532E1D1819B44E0046E5EC /* ICMessage.m */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
 		D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97B7AE618083E2A00B8315D /* AdSupport.framework */; };
@@ -122,6 +123,8 @@
 		D940FBC0187552C000288448 /* UIAlertView+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Additions.m"; sourceTree = "<group>"; };
 		D940FBC2187553E800288448 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
 		D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
+		D948113D18BCB6720005D348 /* ICPaymentProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICPaymentProfile.h; sourceTree = "<group>"; };
+		D948113E18BCB6720005D348 /* ICPaymentProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPaymentProfile.m; sourceTree = "<group>"; };
 		D9532E1C1819B44E0046E5EC /* ICMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICMessage.h; sourceTree = "<group>"; };
 		D9532E1D1819B44E0046E5EC /* ICMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICMessage.m; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
@@ -269,6 +272,8 @@
 			children = (
 				D9EF8ED518170B3500F9DD52 /* ICClient.m */,
 				D9EF8ED418170B3500F9DD52 /* ICClient.h */,
+				D948113E18BCB6720005D348 /* ICPaymentProfile.m */,
+				D948113D18BCB6720005D348 /* ICPaymentProfile.h */,
 				D9AD51611817EE1E00692E7E /* ICLocation.m */,
 				D9AD51601817EE1E00692E7E /* ICLocation.h */,
 				D98058BC181A4EE000DD0BBF /* ICTrip.m */,
@@ -562,7 +567,7 @@
 						DevelopmentTeam = R26YBUAHZX;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.iOS = {
 								enabled = 0;
@@ -687,6 +692,7 @@
 				D911228418094462006A49DA /* ICHighlightButton.m in Sources */,
 				D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */,
 				D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */,
+				D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */,
 				D9AD51621817EE1E00692E7E /* ICLocation.m in Sources */,
 				D9C114CE1813C00C002833FF /* ICRequestViewController.m in Sources */,
 				D99833D5182159C600A7DA8E /* ICVehicle.m in Sources */,

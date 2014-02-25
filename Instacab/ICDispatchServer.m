@@ -33,11 +33,13 @@
     
     SRWebSocket *_socket;
     NSTimer *_pingTimer;
+    BOOL _backgroundMode;
 }
 
 NSUInteger const kMaxReconnectAttemps = 1;
 NSUInteger const kInternalPingIntervalInSeconds = 20;
 NSUInteger const kConnectTimeoutSecs = 3;
+double const kReconnectInterval = 2.0; // Reconnect every 2 secs
 
 NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
@@ -64,8 +66,33 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         _deviceOS = UIDevice.currentDevice.systemVersion;
         _deviceModel = UIDevice.currentDevice.fc_modelIdentifier;
         _deviceModelHuman = UIDevice.currentDevice.fc_modelHumanIdentifier;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationDidEnterBackground:)
+                                                     name:UIApplicationDidEnterBackgroundNotification
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(applicationDidBecomeActive:)
+                                                     name:UIApplicationDidBecomeActiveNotification
+                                                   object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)n {
+    NSLog(@"+ ICDispatchServer::applicationDidEnterBackground");
+    
+    _backgroundMode = YES;
+    [self disconnect];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)n {
+    _backgroundMode = NO;
 }
 
 - (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude {
@@ -137,6 +164,11 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     return YES;
 }
 
+// A scheduled NSTimer won’t fire while your app is suspended in the background.
+// Tasks existing in pre-suspension GCD queues do not disappear upon resumption.
+// They never went away; they were only paused.
+// When we disconnect upon app backgrounding, we schedule reconnect attempt in dispatch queue which gets suspended
+// and after app resume it proceedes to execute reconnect
 -(void)handleDisconnect {
     _socket = nil;
     [self stopPingTimer];
@@ -156,12 +188,12 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         return;
     }
     
-    // Reconnect every 2 secs
-    double delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    NSLog(@"Schedule reconnect in %d seconds", (int)kReconnectInterval);
+    
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kReconnectInterval * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         _reconnectAttempts--;
-        NSLog(@"Restoring connection, attemps left %d", _reconnectAttempts);
+        NSLog(@"Restoring connection, attemps left %d of %d", _reconnectAttempts, kMaxReconnectAttemps);
         [self connect];
     });
 }
@@ -182,6 +214,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 }
 
 -(void)disconnect {
+    if (!_socket || _socket.readyState == SR_CLOSED || _socket.readyState == SR_CLOSING) return;
+    
     NSLog(@"Close connection to dispatch server");
     
     [self stopPingTimer];
@@ -217,16 +251,17 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 #pragma mark - SRWebSocketDelegate
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
-    NSLog(@"Received: %@", message);
     NSError *error;
     
     [self resetPingTimer];
     
     // Convert string to JSON dictionary
     NSDictionary *jsonDictionary =
-    [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding]
-                                    options:NSJSONReadingMutableContainers
-                                      error:&error];
+        [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding]
+                                        options:NSJSONReadingMutableContainers
+                                          error:&error];
+
+    NSLog(@"Received: %@", jsonDictionary);
     
     NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
     
@@ -235,7 +270,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
     NSLog(@"Connected to dispatch server %@", kDispatchServerHostName);
-    NSLog(@"Have %lu messages in offline queue", (unsigned long)_offlineQueue.count);
     _reconnectAttempts = kMaxReconnectAttemps;
     
     // Resend all messages that were queued while we were offline

@@ -37,6 +37,9 @@ NSString * const kFieldPassword = @"password";
         _dispatchServer.maintainConnection = YES;
         _dispatchServer.delegate = self;
         
+        // Pedestrian activity
+        [ICLocationService sharedInstance].activityType = CLActivityTypeFitness;
+        
         _reachability = [[FCReachability alloc] initWithHostname:@"www.google.com" allowCellular:YES];
         
         // Don't allow automatic login on launch if Location Services access is disabled
