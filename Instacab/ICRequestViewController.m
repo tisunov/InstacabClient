@@ -58,7 +58,7 @@ NSString * const kProgressLookingForDriver = @"Выбираю водителя";
 NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
 NSString * const kTripEtaTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
-NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина в %@ %@ от вас";
+NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина примерно в %@ %@ от вас";
 
 CGFloat const kDefaultMapZoom = 15.0f;
 CGFloat const kDriverInfoPanelHeight = 75.0f;
@@ -422,13 +422,22 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)showNearbyVehicles: (ICNearbyVehicles *) nearbyVehicles {
     if (!nearbyVehicles || [ICClient sharedInstance].state != SVClientStateLooking) return;
     
-    if ([nearbyVehicles zeroVehicles]) {
+    // No available vehicles
+    if (nearbyVehicles.isEmpty) {
         _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
         _pickupBtn.enabled = NO;
         [self clearMap];
         return;
     }
     
+    // Not supported area for pickup
+    if (nearbyVehicles.isRestrictedArea) {
+        _pickupTimeLabel.text = [nearbyVehicles.sorryMsg uppercaseString];
+        _pickupBtn.enabled = NO;
+        return;
+    }
+    
+    // Show ETA
     _pickupTimeLabel.text = [self nearbyEta:nearbyVehicles.minEta withFormat:kRequestMinimumEtaTemplate];
     _pickupBtn.enabled = YES;
     
@@ -500,7 +509,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     _etaLabel.hidden = !withEta;
     if (withEta) {
-        _etaLabel.text = [self eta:[ICTrip sharedInstance].eta withFormat:kTripEtaTemplate];
+        _etaLabel.text = [self pickupEta:[ICTrip sharedInstance].eta withFormat:kTripEtaTemplate];
         _statusView.frame = CGRectSetHeight(_statusView.frame, 50.0f);
     }
     else {
@@ -888,7 +897,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [driver call];
 }
 
-- (NSString *)eta:(NSNumber *)etaValue withFormat:(NSString *)format
+- (NSString *)pickupEta:(NSNumber *)etaValue withFormat:(NSString *)format
 {
     int eta = [etaValue intValue];
     int d = (int)floor(eta) % 10;
@@ -897,7 +906,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     if(d == 0 || d > 4 || d == 11 || d == 12 || d == 13 || d == 14) minute = @"минут";
     if(d != 1 && d < 5) minute = @"минуты";
-    if(d == 1) minute = @"минуту";
+    if(d == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минуту";
     
     return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 }

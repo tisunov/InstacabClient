@@ -98,7 +98,7 @@
                                 <action selector="requestPickup:" destination="-1" eventType="touchUpInside" id="OUY-w8-kPn"/>
                             </connections>
                         </button>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7tm-9b-PCc">
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="5" id="7tm-9b-PCc">
                             <rect key="frame" x="5" y="47" width="310" height="24"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
@@ -163,7 +163,7 @@
         </view>
     </objects>
     <resources>
-        <image name="driver_photo" width="1248" height="1170"/>
+        <image name="driver_photo" width="153" height="142"/>
         <image name="star" width="26" height="26"/>
     </resources>
 </document>
