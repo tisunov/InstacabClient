@@ -85,9 +85,14 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
 - (IBAction)submitPressed:(id)sender {
     [self showProgress];
     
+    NSString *feedback = nil;
+    if (![self.feedbackTextView.text isEqualToString:kFeedbackPlaceholder]) {
+        feedback = self.feedbackTextView.text;
+    }
+    
     ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
     [[ICClientService sharedInstance] submitRating:_driverRating
-                                      withFeedback:self.feedbackTextView.text
+                                      withFeedback:feedback
                                            forTrip:trip
                                            success:^(ICMessage *message) {
                                                [self dismissProgress];

@@ -307,7 +307,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         [self.pickupBtn setTitle:[kConfirmPickupLocation uppercaseString] forState:UIControlStateNormal];
     }
     else {
-        [self setTitle:@"INSTACAB"];
+        self.titleText = @"INSTACAB";
         [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
     }
 }
@@ -561,14 +561,23 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (IBAction)requestPickup:(id)sender {
     if (_readyToRequest) {
+        
+        // Check if card registered
+        if (![ICClient sharedInstance].cardPresent) {
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
+            return;
+        }
+        
         [self showProgressWithMessage:kProgressLookingForDriver allowCancel:NO];
 
-        // Initialize pickup location with coordinates if it's empty
+        // Initialize pickup location with pin coordinates
         if (!_pickupLocation)
-            _pickupLocation = [[ICLocation alloc] initWithCoordinate:_locationService.coordinates];
+            _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
         
         // Request pickup
         [_clientService pickupAt:_pickupLocation];
+        
+        _readyToRequest = NO;
     }
     else {
         [self setReadyToRequest:YES];
