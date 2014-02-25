@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ICPerson.h"
 #import "ICTrip.h"
+#import "ICPaymentProfile.h"
 
 typedef enum : NSUInteger {
     SVClientStateLooking,
@@ -22,8 +23,12 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy) NSString *email;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *token;
+@property (nonatomic, strong, readonly) ICPaymentProfile *paymentProfile;
 @property (nonatomic, assign) ICClientState state;
 @property (nonatomic, strong, readonly) ICTrip *tripPendingRating;
+
+// Computed properties
+@property (readonly) BOOL cardPresent;
 
 -(void)logout;
 -(BOOL)isSignedIn;

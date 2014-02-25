@@ -28,12 +28,17 @@
     return [super.JSONKeyPathsByPropertyKey mtl_dictionaryByAddingEntriesFromDictionary: @{
         @"token": @"token",
         @"state": @"state",
-        @"tripPendingRating": @"tripPendingRating"
+        @"tripPendingRating": @"tripPendingRating",
+        @"paymentProfile": @"paymentProfile"
     }];
 }
 
 + (NSValueTransformer *)tripPendingRatingJSONTransformer {
     return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICTrip.class];
+}
+
++ (NSValueTransformer *)paymentProfileJSONTransformer {
+    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICPaymentProfile.class];
 }
 
 + (NSValueTransformer *)stateJSONTransformer {
@@ -100,6 +105,10 @@
 
 -(BOOL)isSignedIn {
     return _token != NULL;
+}
+
+- (BOOL)cardPresent {
+    return self.paymentProfile && self.paymentProfile.cardActive;
 }
 
 @end
