@@ -198,10 +198,10 @@ NSString * const kFieldPassword = @"password";
         kFieldMessageType: @"Pickup",
         @"token": [ICClient sharedInstance].token,
         @"id": [ICClient sharedInstance].uID,
-        @"location": [MTLJSONAdapter JSONDictionaryFromModel:location]
+        @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:location]
     };
     
-    [self sendMessage: message];
+    [self sendMessage:message];
     
     // Analytics
     [self trackEvent:@"Request Vehicle" params:nil];
