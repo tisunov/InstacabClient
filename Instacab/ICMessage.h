@@ -24,7 +24,7 @@ typedef enum : NSUInteger {
     SVMessageTypeApiResponse,
 } ICMessageType;
 
-@interface ICMessage : MTLModel <MTLJSONSerializing>
+@interface ICMessage : MTLModel<MTLJSONSerializing>
 @property (nonatomic, assign, readonly) ICMessageType messageType;
 @property (nonatomic, copy, readonly) NSString *errorDescription;
 @property (nonatomic, copy, readonly) NSString *reason;

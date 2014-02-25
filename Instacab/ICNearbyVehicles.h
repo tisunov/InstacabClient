@@ -13,6 +13,6 @@
 @property (nonatomic, copy, readonly) NSArray *vehiclePoints;
 @property (nonatomic, copy, readonly) NSString *sorryMsg;
 @property (nonatomic, copy, readonly) NSString *noneAvailableString;
-
--(BOOL)zeroVehicles;
+@property (readonly) BOOL isEmpty;
+@property (readonly) BOOL isRestrictedArea;
 @end

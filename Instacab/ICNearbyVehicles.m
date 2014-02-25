@@ -24,8 +24,12 @@
     return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:ICVehiclePoint.class];
 }
 
--(BOOL)zeroVehicles {
-    return _sorryMsg != nil || _noneAvailableString != nil;
+-(BOOL)isEmpty {
+    return _noneAvailableString != nil;
+}
+
+-(BOOL)isRestrictedArea {
+    return _sorryMsg != nil;
 }
 
 @end
