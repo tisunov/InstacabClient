@@ -23,6 +23,7 @@
 		D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC0187552C000288448 /* UIAlertView+Additions.m */; };
 		D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */; };
 		D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = D948113E18BCB6720005D348 /* ICPaymentProfile.m */; };
+		D948114118BD3E680005D348 /* libLocalyticsAMP_x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */; };
 		D9532E1E1819B44E0046E5EC /* ICMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9532E1D1819B44E0046E5EC /* ICMessage.m */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
 		D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97B7AE618083E2A00B8315D /* AdSupport.framework */; };
@@ -74,7 +75,6 @@
 		D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */; };
 		D9CD0E4D1829A55400A02619 /* ICReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */; };
 		D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */; };
-		D9D08D2918B4F6F300760327 /* libLocalyticsAMP.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D08D2318B4F6F300760327 /* libLocalyticsAMP.a */; };
 		D9D08D2B18B4F6F300760327 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2518B4F6F300760327 /* LICENSE */; };
 		D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */; };
 		D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D4A27F1886629C00067879 /* libCardIO.a */; };
@@ -125,6 +125,7 @@
 		D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		D948113D18BCB6720005D348 /* ICPaymentProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICPaymentProfile.h; sourceTree = "<group>"; };
 		D948113E18BCB6720005D348 /* ICPaymentProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPaymentProfile.m; sourceTree = "<group>"; };
+		D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP_x64.a; sourceTree = "<group>"; };
 		D9532E1C1819B44E0046E5EC /* ICMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICMessage.h; sourceTree = "<group>"; };
 		D9532E1D1819B44E0046E5EC /* ICMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICMessage.m; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
@@ -203,7 +204,6 @@
 		D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICReceiptViewController.m; sourceTree = "<group>"; };
 		D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICReceiptViewController.xib; sourceTree = "<group>"; };
 		D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = iOSa_2.21.1.version; sourceTree = "<group>"; };
-		D9D08D2318B4F6F300760327 /* libLocalyticsAMP.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP.a; sourceTree = "<group>"; };
 		D9D08D2518B4F6F300760327 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		D9D08D2618B4F6F300760327 /* LocalyticsAmpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsAmpSession.h; sourceTree = "<group>"; };
 		D9D08D2718B4F6F300760327 /* LocalyticsSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsSession.h; sourceTree = "<group>"; };
@@ -234,9 +234,9 @@
 				D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */,
 				D9EFF9A61805867700A68AED /* SystemConfiguration.framework in Frameworks */,
 				D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */,
+				D948114118BD3E680005D348 /* libLocalyticsAMP_x64.a in Frameworks */,
 				D9B0328C1805864D00F7AF69 /* OpenGLES.framework in Frameworks */,
 				D9B0328A1805864800F7AF69 /* libz.dylib in Frameworks */,
-				D9D08D2918B4F6F300760327 /* libLocalyticsAMP.a in Frameworks */,
 				D9B032881805863F00F7AF69 /* libicucore.dylib in Frameworks */,
 				D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */,
 				D9B032861805863900F7AF69 /* libc++.dylib in Frameworks */,
@@ -475,8 +475,8 @@
 		D9D08D2118B4F6F300760327 /* Localytics */ = {
 			isa = PBXGroup;
 			children = (
+				D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */,
 				D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */,
-				D9D08D2318B4F6F300760327 /* libLocalyticsAMP.a */,
 				D9D08D2518B4F6F300760327 /* LICENSE */,
 				D9D08D2618B4F6F300760327 /* LocalyticsAmpSession.h */,
 				D9D08D2718B4F6F300760327 /* LocalyticsSession.h */,
