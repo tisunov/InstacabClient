@@ -16,6 +16,7 @@ extern NSString *const kClientServiceMessageNotification;
 
 extern NSString *const kNearestCabRequestReasonMovePin;
 extern NSString *const kNearestCabRequestReasonPing;
+extern NSString *const kNearestCabRequestReasonReconnect;
 
 typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
 typedef void (^ICClientServiceFailureBlock)();

@@ -102,7 +102,7 @@
                                              [self signupComplete:message];
                                          }
                                          else {
-                                             [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка создания аккаунта" message:message.errorDescription cancelButtonTitle:@"OK"];
+                                             [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка создания аккаунта" message:message.errorText cancelButtonTitle:@"OK"];
                                          }
                                      }
                                      failure:^{

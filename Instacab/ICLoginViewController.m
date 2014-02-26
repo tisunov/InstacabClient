@@ -216,7 +216,7 @@
             // Analytics
             [_clientService trackError:@{@"type": @"bad credentials"}];
             
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Неверные данные" message:message.errorDescription cancelButtonTitle:@"OK"];
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Неверные данные" message:message.errorText cancelButtonTitle:@"OK"];
             break;
             
         default:

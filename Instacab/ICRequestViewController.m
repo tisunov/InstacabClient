@@ -586,7 +586,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         // Request pickup
         [_clientService pickupAt:_pickupLocation];
         
-        _readyToRequest = NO;
+        [self setReadyToRequest:NO];
     }
     else {
         [self setReadyToRequest:YES];
@@ -804,7 +804,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICDispatchServer *dispatcher = [note object];
     // Connection was lost, now it's online again
     if (dispatcher.connected) {
-        [self requestNearestCabs:_locationService.coordinates reason:kNearestCabRequestReasonPing];
+        [self requestNearestCabs:_mapView.camera.target reason:kNearestCabRequestReasonReconnect];
     }
 }
 
@@ -830,12 +830,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             
         case SVMessageTypeError:
             [self hideProgress];
-            [TSMessage showNotificationInViewController:self.navigationController
-                                                  title:message.errorDescription
-                                               subtitle:@""
-                                                  image:[UIImage imageNamed:@"alert"]
-                                                   type:TSMessageNotificationTypeMessage
-                                               duration:TSMessageNotificationDurationAutomatic];
+            
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка" message:message.errorText cancelButtonTitle:@"OK"];
             break;
             
         default:

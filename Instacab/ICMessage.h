@@ -26,7 +26,7 @@ typedef enum : NSUInteger {
 
 @interface ICMessage : MTLModel<MTLJSONSerializing>
 @property (nonatomic, assign, readonly) ICMessageType messageType;
-@property (nonatomic, copy, readonly) NSString *errorDescription;
+@property (nonatomic, copy, readonly) NSString *errorText;
 @property (nonatomic, copy, readonly) NSString *reason;
 @property (nonatomic, strong, readonly) ICClient *client;
 @property (nonatomic, strong, readonly) ICTrip *trip;

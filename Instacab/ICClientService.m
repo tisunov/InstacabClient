@@ -23,6 +23,7 @@
 NSString * const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonMovePin = @"movepin";
 NSString *const kNearestCabRequestReasonPing = @"ping";
+NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
 
 NSString * const kFieldMessageType = @"messageType";
 NSString * const kFieldEmail = @"email";
