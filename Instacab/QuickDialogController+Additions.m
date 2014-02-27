@@ -23,7 +23,7 @@
     QEntryTableViewCell *cell = (QEntryTableViewCell *) [self.quickDialogTableView cellForElement:element];
     NSAssert(cell != nil, @"Cell not found");
     
-    return cell.textField;
+    return (QTextField *)cell.textField;
 }
 
 - (NSString *)textForElementKey:(NSString *)key {
