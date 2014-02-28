@@ -715,7 +715,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)showFareAndRateDriver {
     ICReceiptViewController *vc = [[ICReceiptViewController alloc] initWithNibName:@"ICReceiptViewController" bundle:nil];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self.navigationController pushViewController:vc animated:YES onCompletion:^{
+        [self prepareForNextTrip];
+    }];
 }
 
 -(void)presentDriverState {
