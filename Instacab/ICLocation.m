@@ -93,7 +93,7 @@
         }
     }
     
-    if (_streetNumber) {
+    if (_streetNumber.length > 0) {
         _streetAddress = [NSString stringWithFormat:@"%@, %@", _streetName, _streetNumber];
     }
     else {

@@ -12,6 +12,7 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
+        @"ID": @"id",
         @"exteriorColor": @"exteriorColor",
         @"interiorColor": @"interiorColor",
         @"licensePlate": @"licensePlate",

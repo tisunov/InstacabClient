@@ -10,6 +10,7 @@
 #import "ICVehiclePoint.h"
 
 @interface ICVehicle : MTLModel <MTLJSONSerializing>
+@property (nonatomic, copy, readonly) NSNumber *ID;
 @property (nonatomic, copy, readonly) NSString *exteriorColor;
 @property (nonatomic, copy, readonly) NSString *interiorColor;
 @property (nonatomic, copy, readonly) NSString *licensePlate;
