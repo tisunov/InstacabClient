@@ -54,8 +54,8 @@ NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
 NSString * const kConfirmPickupLocation = @"Вызвать машину сюда";
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
 
-NSString * const kProgressLookingForDriver = @"Выбираю водителя";
-NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя";
+NSString * const kProgressLookingForDriver = @"Выбираю водителя...";
+NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя...";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
 NSString * const kTripEtaTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
 NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина примерно в %@ %@ от вас";
@@ -520,7 +520,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)showProgressWithMessage:(NSString *)message allowCancel:(BOOL)cancelable {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
     if (hud) {
-        hud.labelText = [message uppercaseString];
+        hud.labelText = [message lowercaseString];
         if (cancelable) {
             hud.detailsLabelText = @"коснитесь для отмены";
             [hud setGestureRecognizers:@[_hudGesture]];
@@ -535,7 +535,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 	hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
     hud.dimBackground = YES;
     hud.graceTime = 0.1; // 100 msec grace period
-    hud.labelText = [message uppercaseString];
+    hud.labelText = [message lowercaseString];
     hud.taskInProgress = YES;
     hud.removeFromSuperViewOnHide = YES;
     
@@ -715,6 +715,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)showFareAndRateDriver {
     ICReceiptViewController *vc = [[ICReceiptViewController alloc] initWithNibName:@"ICReceiptViewController" bundle:nil];
+    
+    [self hideProgress];
+    
     [self.navigationController pushViewController:vc animated:YES onCompletion:^{
         [self prepareForNextTrip];
     }];
