@@ -51,7 +51,7 @@
 }
 
 NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
-NSString * const kConfirmPickupLocation = @"Вызвать машину сюда";
+NSString * const kConfirmPickupLocation = @"Заказать автомобиль";
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
 
 NSString * const kProgressLookingForDriver = @"Выбираю водителя...";

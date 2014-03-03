@@ -76,6 +76,7 @@
 		D9CD0E4D1829A55400A02619 /* ICReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */; };
 		D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */; };
 		D9D08D2B18B4F6F300760327 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2518B4F6F300760327 /* LICENSE */; };
+		D9D42FF518C4A84D004F761F /* UIView+Positioning.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D42FF418C4A84D004F761F /* UIView+Positioning.m */; };
 		D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */; };
 		D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D4A27F1886629C00067879 /* libCardIO.a */; };
 		D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D4A28218866F2500067879 /* ICSignUpInfo.m */; };
@@ -207,6 +208,8 @@
 		D9D08D2518B4F6F300760327 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		D9D08D2618B4F6F300760327 /* LocalyticsAmpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsAmpSession.h; sourceTree = "<group>"; };
 		D9D08D2718B4F6F300760327 /* LocalyticsSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsSession.h; sourceTree = "<group>"; };
+		D9D42FF318C4A84D004F761F /* UIView+Positioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Positioning.h"; sourceTree = "<group>"; };
+		D9D42FF418C4A84D004F761F /* UIView+Positioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Positioning.m"; sourceTree = "<group>"; };
 		D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICLinkCardDialog.xib; sourceTree = "<group>"; };
 		D9D4A2791886629C00067879 /* CardIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIO.h; sourceTree = "<group>"; };
 		D9D4A27A1886629C00067879 /* CardIOCreditCardInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CardIOCreditCardInfo.h; sourceTree = "<group>"; };
@@ -356,6 +359,8 @@
 		D9AD515C1817C80100692E7E /* UI Support */ = {
 			isa = PBXGroup;
 			children = (
+				D9D42FF318C4A84D004F761F /* UIView+Positioning.h */,
+				D9D42FF418C4A84D004F761F /* UIView+Positioning.m */,
 				D9C1932A1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.h */,
 				D9C1932B1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m */,
 				D940FBC2187553E800288448 /* UIActionSheet+Blocks.h */,
@@ -686,6 +691,7 @@
 				D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */,
 				D9B03249180572B400F7AF69 /* AppDelegate.m in Sources */,
 				D9AD51571817B74C00692E7E /* ICGoogleService.m in Sources */,
+				D9D42FF518C4A84D004F761F /* UIView+Positioning.m in Sources */,
 				D982840318878F4A0014BBF7 /* ICApiResponse.m in Sources */,
 				D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */,
 				D9AD515B1817C7A200692E7E /* ICClientService.m in Sources */,
