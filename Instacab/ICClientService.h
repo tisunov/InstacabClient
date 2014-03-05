@@ -18,6 +18,8 @@ extern NSString *const kNearestCabRequestReasonMovePin;
 extern NSString *const kNearestCabRequestReasonPing;
 extern NSString *const kNearestCabRequestReasonReconnect;
 
+extern NSString *const kRequestVehicleDeniedReasonNoCard;
+
 typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
 typedef void (^ICClientServiceFailureBlock)();
 

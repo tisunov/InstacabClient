@@ -573,6 +573,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         
         // Check if card registered
         if (![ICClient sharedInstance].cardPresent) {
+            [_clientService trackEvent:@"Request Vehicle Denied" params:@{ @"reason":kRequestVehicleDeniedReasonNoCard  }];
+            
             [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
             return;
         }
@@ -746,7 +748,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
         // TODO: Показать и скрыть статус через 6 секунд совсем alpha => 0
         case SVDriverStateDrivingClient:
-            [self updateStatusLabel:@"Бон Вояж" withETA:NO];
+            [self updateStatusLabel:@"Наслаждайтесь поездкой!" withETA:NO];
             [self showDriverPanel];
             [self updateVehiclePosition];
             break;

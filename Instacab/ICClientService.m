@@ -25,6 +25,8 @@ NSString *const kNearestCabRequestReasonMovePin = @"movepin";
 NSString *const kNearestCabRequestReasonPing = @"ping";
 NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
 
+NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
+
 NSString * const kFieldMessageType = @"messageType";
 NSString * const kFieldEmail = @"email";
 NSString * const kFieldPassword = @"password";
