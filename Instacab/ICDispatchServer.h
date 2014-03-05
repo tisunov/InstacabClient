@@ -25,6 +25,7 @@ extern NSString *const kDispatchServerConnectionChangeNotification;
 
 @property (nonatomic, readonly) BOOL connected;
 @property (nonatomic) BOOL maintainConnection;
+@property (nonatomic) BOOL enablePingPong;
 @property (nonatomic, copy) NSString *appType;
 @property (nonatomic, weak) id <ICDispatchServerDelegate> delegate;
 

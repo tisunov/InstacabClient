@@ -60,6 +60,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         _reconnectAttempts = kMaxReconnectAttemps;
         _offlineQueue = [[NSMutableArray alloc] init];
         
+        _enablePingPong = YES;
+        
         // Initialize often used instance variables
         _appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
         _deviceId = [ASIdentifierManager.sharedManager.advertisingIdentifier UUIDString];
@@ -301,9 +303,9 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 // start sending WebSocket ping/pong message every 20 seconds
 // and reset timer every time we receive data from server
 -(void)startPingTimer {
-    if(_pingTimer) return;
+    if(_pingTimer || !_enablePingPong) return;
     
-    NSLog(@"Start Ping timer with interval of %lu seconds", (unsigned long)kInternalPingIntervalInSeconds);
+    NSLog(@"Start Ping/Pong timer with interval of %lu seconds", (unsigned long)kInternalPingIntervalInSeconds);
     
     [self schedulePingTimer];
 }
@@ -319,7 +321,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 -(void)resetPingTimer {
     if (!_pingTimer) return;
-    NSLog(@"Reset Ping timer");
+    NSLog(@"Reset Ping/Pong timer");
     
     [_pingTimer invalidate];
     [self schedulePingTimer];
@@ -331,7 +333,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 -(void)stopPingTimer {
     if (!_pingTimer) return;
-    NSLog(@"Stop Ping timer");
+    NSLog(@"Stop Ping/Pong timer");
     
     [_pingTimer invalidate];
     _pingTimer = nil;
