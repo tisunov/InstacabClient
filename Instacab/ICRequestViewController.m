@@ -487,7 +487,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self updateAddressLabel:kGoToMarker];
     
     // Analytics
-    [_clientService trackError:@{@"type": @"google geocoder", @"description": [error localizedDescription]}];
+    [_clientService trackError:@{@"type": @"geocoder", @"description": [error localizedDescription]}];
 }
 
 - (void)updateAddressLabel: (NSString *)text {
@@ -498,7 +498,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         [_addressLabel.layer addAnimation:_animation forKey:@"kCATransitionFade"];
     }
     
-    _addressLabel.text = [text uppercaseString];
+    _addressLabel.text = text;//[text uppercaseString];
 }
 
 - (void)updateStatusLabel: (NSString *)text withETA:(BOOL)withEta {

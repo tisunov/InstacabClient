@@ -28,12 +28,12 @@
     NSString *_deviceOS;
     NSString *_deviceModelHuman;
     int _reconnectAttempts;
-    NSString *_jsonPendingSend;
     NSMutableArray *_offlineQueue;
     
     SRWebSocket *_socket;
     NSTimer *_pingTimer;
     BOOL _backgroundMode;
+    NSDateFormatter *_dateFormatter;
 }
 
 NSUInteger const kMaxReconnectAttemps = 1;
@@ -69,6 +69,15 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         _deviceModel = UIDevice.currentDevice.fc_modelIdentifier;
         _deviceModelHuman = UIDevice.currentDevice.fc_modelHumanIdentifier;
         
+        // Init human date formatter
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        _dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+
+        NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
+        [_dateFormatter setTimeZone:gmt];
+        
+        
+        // Subscribe to app events
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(applicationDidEnterBackground:)
                                                      name:UIApplicationDidEnterBackgroundNotification
@@ -97,40 +106,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     _backgroundMode = NO;
 }
 
-- (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude {
-    NSMutableDictionary *data = [NSMutableDictionary dictionary];
-    [data setValue:_deviceOS forKey:@"deviceOS"];
-    [data setValue:_deviceModel forKey:@"deviceModel"];
-    [data setValue:_deviceModelHuman forKey:@"deviceModelHuman"];
-    [data setValue:_appVersion forKey:@"appVersion"];
-    [data setValue:_appType forKey:@"app"];
-    [data setValue:kDevice forKey:@"device"];
-    // Unix epoch time
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    [data setValue:[NSNumber numberWithLong:timestamp] forKey:@"epoch"];
-    // Device id
-    [data setValue:_deviceId forKey:@"deviceId"];
-    // Location
-    [data setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
-    [data setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
-
-    return data;
-}
-
-// LATER: Initialize one time only
-//- (NSString *)timestampUTC{
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-//    
-//    NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-//    [dateFormatter setTimeZone:gmt];
-//    
-//    NSString *timeStamp = [dateFormatter stringFromDate:[NSDate date]];
-//    
-//    return timeStamp;
-//}
-
-- (void)sendMessage:(NSDictionary *)message withCoordinates:(CLLocationCoordinate2D)coordinates {
+- (void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates {
     NSMutableDictionary *data =
         [self buildGenericDataWithLatitude:coordinates.latitude
                                  longitude:coordinates.longitude];
@@ -340,5 +316,31 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 }
 
 #pragma mark - Misc
+
+- (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude {
+    NSMutableDictionary *data = [NSMutableDictionary dictionary];
+    [data setValue:_deviceOS forKey:@"deviceOS"];
+    [data setValue:_deviceModel forKey:@"deviceModel"];
+    [data setValue:_deviceModelHuman forKey:@"deviceModelHuman"];
+    [data setValue:_appVersion forKey:@"appVersion"];
+    [data setValue:_appType forKey:@"app"];
+    [data setValue:kDevice forKey:@"device"];
+    // Unix epoch time
+    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+    [data setValue:[NSNumber numberWithLong:timestamp] forKey:@"epoch"];
+    // Humand readable timestamp
+    [data setValue:[self timestampUTC] forKey:@"timestampUTC"];
+    // Device id
+    [data setValue:_deviceId forKey:@"deviceId"];
+    // Location
+    [data setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
+    [data setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
+    
+    return data;
+}
+
+- (NSString *)timestampUTC{
+    return [_dateFormatter stringFromDate:[NSDate date]];
+}
 
 @end

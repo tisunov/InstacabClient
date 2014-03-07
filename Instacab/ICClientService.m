@@ -13,13 +13,6 @@
 #import "FCReachability.h"
 #import "LocalyticsSession.h"
 
-@implementation ICClientService {
-    ICDispatchServer *_dispatchServer;
-    ICClientServiceSuccessBlock _successBlock;
-    ICClientServiceFailureBlock _failureBlock;
-    FCReachability *_reachability;
-}
-
 NSString * const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonMovePin = @"movepin";
 NSString *const kNearestCabRequestReasonPing = @"ping";
@@ -30,6 +23,17 @@ NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 NSString * const kFieldMessageType = @"messageType";
 NSString * const kFieldEmail = @"email";
 NSString * const kFieldPassword = @"password";
+
+NSTimeInterval const kRequestTimeoutSecs = 2;
+
+@implementation ICClientService {
+    ICDispatchServer *_dispatchServer;
+    ICClientServiceSuccessBlock _successBlock;
+    ICClientServiceFailureBlock _failureBlock;
+    FCReachability *_reachability;
+    NSTimer *_requestTimer;
+    NSDictionary *_pendingRequest;
+}
 
 - (id)init
 {
@@ -45,9 +49,11 @@ NSString * const kFieldPassword = @"password";
         
         _reachability = [[FCReachability alloc] initWithHostname:@"www.google.com" allowCellular:YES];
         
+        [[ICClient sharedInstance] addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
+        
         // Don't allow automatic login on launch if Location Services access is disabled
         if (![ICLocationService sharedInstance].isAvailable) {
-            [[ICClient sharedInstance] logout];
+            [self logOut];
         }
     }
     return self;
@@ -67,7 +73,7 @@ NSString * const kFieldPassword = @"password";
         @"id": [ICClient sharedInstance].uID
     };
     
-    [_dispatchServer sendMessage:pingMessage withCoordinates:location];
+    [self sendMessage:pingMessage coordinates:location];
     
     // Analytics
     [self trackEvent:@"Request Nearest Cabs" params:@{@"reason": aReason}];
@@ -137,9 +143,7 @@ NSString * const kFieldPassword = @"password";
     [self trackEvent:@"Log In" params:nil]; 
 }
 
-
-
-// TODO: Добавить (reason=initial ping failed), (reason=location services not available)
+// TODO: Добавить (reason=initialPingFailed), (reason=locationServicesDisabled)
 -(void)logOut {
     NSDictionary *message = @{
         kFieldMessageType: @"LogoutClient",
@@ -147,10 +151,11 @@ NSString * const kFieldPassword = @"password";
         @"id": [ICClient sharedInstance].uID
     };
     
-    // Don't reconnect after dispatcher reports success
+    // Don't reconnect after logout, and disconnect after message sent
+    _dispatchServer.maintainConnection = NO;
+    
     __weak typeof(_dispatchServer) weakDispatchServer = _dispatchServer;
     _successBlock = ^(ICMessage *message) {
-        weakDispatchServer.maintainConnection = NO;
         [weakDispatchServer disconnect];
     };
     
@@ -186,11 +191,15 @@ NSString * const kFieldPassword = @"password";
     [self sendMessage:message];
 }
 
--(void)sendMessage: (NSDictionary *)message {
-    // get current location
-    CLLocationCoordinate2D coordinates = [ICLocationService sharedInstance].coordinates;
+-(void)sendMessage:(NSDictionary *)message {
+    [self sendMessage:message coordinates:[ICLocationService sharedInstance].coordinates];
+}
+
+-(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates {
+    [self startRequestTimeout];
+    _pendingRequest = message;
     
-    [_dispatchServer sendMessage:message withCoordinates:coordinates];
+    [_dispatchServer sendMessage:message coordinates:coordinates];
 }
 
 -(void)pickupAt: (ICLocation*)location {
@@ -235,7 +244,7 @@ NSString * const kFieldPassword = @"password";
     [self trackEvent:@"Cancel Trip" params:nil];
 }
 
-// TODO: Посылать log event через HTTP POST
+// TODO: Посылать log event через HTTP POST в node-js/rails + mongodb из которой можно анализировать и делать визуализации
 // TODO: Log открытия каждой страницы приложения
 // TODO: Log посылки каждого сообщения на сервер
 - (void)logEvent: (NSDictionary *)event {
@@ -270,11 +279,14 @@ NSString * const kFieldPassword = @"password";
 
 - (void)didReceiveMessage:(NSDictionary *)responseMessage {
     NSError *error;
+
+    // Received some response or server initiated message
+    [self cancelRequestTimeout];
     
     // Deserialize to object instance
     ICMessage *msg = [MTLJSONAdapter modelOfClass:ICMessage.class
-                                    fromJSONDictionary:responseMessage
-                                                 error:&error];
+                               fromJSONDictionary:responseMessage
+                                            error:&error];
 
     // Update client state from server
     [[ICClient sharedInstance] update:msg.client];
@@ -294,6 +306,17 @@ NSString * const kFieldPassword = @"password";
 }
 
 - (void)didDisconnect {
+    [self cancelRequestTimeout];
+    [self triggerFailure];
+}
+
+#pragma mark - Misc
+
+- (BOOL)isOnline {
+    return _reachability.isOnline;
+}
+
+- (void)triggerFailure {
     if (_failureBlock != nil) {
         _failureBlock();
         _failureBlock = nil;
@@ -301,9 +324,26 @@ NSString * const kFieldPassword = @"password";
     }
 }
 
-#pragma mark - Misc
-- (BOOL)isOnline {
-    return _reachability.isOnline;
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    ICClientState newState = (ICClientState)[[change valueForKey:NSKeyValueChangeNewKey] intValue];
+    
+    switch (newState) {
+        case SVClientStateWaitingForPickup:
+        case SVClientStateOnTrip:
+        case SVClientStateDispatching:
+//            [self startPing];
+            break;
+            
+        default:
+//            [self stopPing];
+            break;
+    }
+}
+
+-(void)disconnectWithoutTryingToReconnect {
+    _dispatchServer.maintainConnection = NO;
+    [_dispatchServer disconnect];
 }
 
 #pragma mark - Analytics
@@ -341,4 +381,53 @@ NSString * const kFieldPassword = @"password";
 - (void)trackError:(NSDictionary *)attributes {
     [self trackEvent:@"Error" params:attributes];
 }
+
+#pragma mark - Request Timeout
+
+-(void)startRequestTimeout {
+    [_requestTimer invalidate];
+    
+    NSLog(@"Start Request timeout");
+    _requestTimer =
+        [NSTimer scheduledTimerWithTimeInterval:kRequestTimeoutSecs
+                                         target:self
+                                       selector:@selector(requestDidTimeOut:)
+                                       userInfo:nil
+                                        repeats:NO];
+}
+
+-(void)requestDidTimeOut:(NSTimer *)timer {
+    NSLog(@"Request timed out");
+
+    NSString *ms = [_pendingRequest objectForKey:kFieldMessageType];
+    if (ms) {
+        [self trackError:@{ @"type":@"requestTimeOut", @"messageType":ms }];
+    }
+    
+    // Resend one more time
+    if (_pendingRequest) {
+        // TODO: На сервер пошлются координаты не из _pendingRequest а новые
+        [self sendMessage:_pendingRequest];
+        _pendingRequest = nil;
+    }
+    else {
+        _requestTimer = nil;
+        [self triggerFailure];
+        
+        if ([self.delegate respondsToSelector:@selector(requestDidTimeout)])
+            [self.delegate requestDidTimeout];
+    }
+}
+
+-(void)cancelRequestTimeout {
+    if (!_requestTimer) return;
+    
+    NSLog(@"Cancel Request timeout");
+    
+    [_requestTimer invalidate];
+    _requestTimer = nil;
+    
+    _pendingRequest = nil;
+}
+
 @end

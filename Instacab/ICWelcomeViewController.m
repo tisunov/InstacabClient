@@ -35,6 +35,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _clientService = [ICClientService sharedInstance];
+        _clientService.delegate = self;
         
         _locationService = [ICLocationService sharedInstance];
         _locationService.delegate = self;
@@ -70,7 +71,6 @@
     [_signupButton setTitleColor:[UIColor colorFromHexString:@"#3498DB"] forState:UIControlStateNormal];
     _signupButton.normalColor = [UIColor whiteColor];
     _signupButton.highlightedColor = [UIColor colorWithWhite:0.949 alpha:1.0]; //[UIColor colorFromHexString:@"#2980B9"];
-    
 
     // Uncomment to take LaunchImage screenshot
 //    [self setNeedsStatusBarAppearanceUpdate];
@@ -130,7 +130,7 @@
 
 - (void)showNotification {
     // Show alert only when we lost connection unexpectedly.
-    // Don't show when we explicitly closed it, when user logged out
+    // Don't show when we explicitly closed it, i.e. when user logged out
     if (![ICClient sharedInstance].isSignedIn) return;
     
     [TSMessage showNotificationInViewController:self
@@ -141,7 +141,7 @@
                                        duration:TSMessageNotificationDurationAutomatic];
     
     // Analytics
-    [_clientService trackError:@{@"type": @"connection lost"}];    
+    [_clientService trackError:@{@"type": @"connectionLost"}];    
 }
 
 // Hide any top level Progress HUD that happened to be visible
@@ -266,6 +266,12 @@
         default:
             break;
     }
+}
+
+#pragma mark - ICClientServiceDelegate
+
+-(void)requestDidTimeout {
+    [_clientService disconnectWithoutTryingToReconnect];
 }
 
 - (void)didReceiveMemoryWarning

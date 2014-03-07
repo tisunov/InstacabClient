@@ -23,6 +23,10 @@ extern NSString *const kRequestVehicleDeniedReasonNoCard;
 typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
 typedef void (^ICClientServiceFailureBlock)();
 
+@protocol ICClientServiceDelegate <NSObject>
+- (void)requestDidTimeout;
+@end
+
 @interface ICClientService : ICSingleton<ICDispatchServerDelegate>
 -(void)loginWithEmail:(NSString *)email
              password: (NSString *)password
@@ -57,7 +61,10 @@ typedef void (^ICClientServiceFailureBlock)();
          withSuccess:(ICClientServiceSuccessBlock)success
              failure:(ICClientServiceFailureBlock)failure;
 
+-(void)disconnectWithoutTryingToReconnect;
+
 @property (nonatomic, readonly) BOOL isOnline;
+@property (nonatomic, weak) id <ICClientServiceDelegate> delegate;
 
 #pragma mark - Analytics
 

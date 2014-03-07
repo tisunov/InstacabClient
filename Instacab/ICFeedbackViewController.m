@@ -91,26 +91,27 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
     }
     
     ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
-    [[ICClientService sharedInstance] submitRating:_driverRating
-                                      withFeedback:feedback
-                                           forTrip:trip
-                                           success:^(ICMessage *message) {
-                                               [self dismissProgress];
-                                               
-                                               if (message.isOK) {
-                                                   // 0 - WelcomeController
-                                                   // 1 - RequestController
-                                                   UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];
-                                                   [self.navigationController popToViewController:requestViewController animated:YES];
-                                               }
-                                               else {
-                                                   NSLog(@"[Feedback] Can't submit feedback");
-                                               }
-                                           }
-                                           failure:^{
-                                               NSLog(@"[Feedback] Failed to submit feedback");
-                                               [self dismissProgress];
-                                           }
+    ICClientService *service = [ICClientService sharedInstance];
+    [service submitRating:_driverRating
+             withFeedback:feedback
+                  forTrip:trip
+                  success:^(ICMessage *message) {
+                       [self dismissProgress];
+                       
+                       if (message.isOK) {
+                           // 0 - WelcomeController
+                           // 1 - RequestController
+                           UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];
+                           [self.navigationController popToViewController:requestViewController animated:YES];
+                       }
+                       else {
+                           NSLog(@"[Feedback] Can't submit feedback");
+                       }
+                  }
+                  failure:^{
+                      NSLog(@"[Feedback] Failed to submit feedback");
+                      [self dismissProgress];
+                  }
      ];
 }
 

@@ -311,7 +311,6 @@
 				D90BAE121884306600E03F3E /* ICWelcomeViewController.m */,
 				D90BAE111884306600E03F3E /* ICWelcomeViewController.h */,
 				D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */,
-				D9BD7BB11887C087009351D6 /* ICCancelDialogDelegate.h */,
 				D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */,
 				D98EFDAF1842921C005A2BAA /* ICLoginViewController.h */,
 				D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */,
@@ -506,6 +505,7 @@
 		D9D88412188FE79E006BD004 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
+				D9BD7BB11887C087009351D6 /* ICCancelDialogDelegate.h */,
 				D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */,
 				D90BAE161884353300E03F3E /* ICCreateAccountDialog.h */,
 				D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */,

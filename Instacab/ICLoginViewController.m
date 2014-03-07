@@ -123,7 +123,7 @@
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Службы геолокации выключены. Включите их пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
         
         // Analytics
-        [_clientService trackError:@{@"type": @"location sevices are off"}];
+        [_clientService trackError:@{@"type": @"loginLocationSevicesDisabled"}];
         return;
     }
 
@@ -131,7 +131,7 @@
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Доступ к вашей геопозиции ограничен. Разрешите Instacab доступ пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
         
         // Analytics
-        [_clientService trackError:@{@"type": @"location services are restricted"}];
+        [_clientService trackError:@{@"type": @"loginLocationServicesRestricted"}];
         return;
     }
 
@@ -139,7 +139,7 @@
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Сети" message:@"Нет сетевого подключения." cancelButtonTitle:@"OK"];
         
         // Analytics
-        [_clientService trackError:@{@"type": @"network offline"}];
+        [_clientService trackError:@{@"type": @"loginNetworkOffline"}];
         return;
     }
     
@@ -164,7 +164,7 @@
                                [self dismissProgress];
                                
                                // Analytics
-                               [_clientService trackError:@{@"type": @"network error"}];
+                               [_clientService trackError:@{@"type": @"loginNetworkError"}];
                                
                                [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
                            }];
@@ -208,13 +208,10 @@
             break;
             
         case SVMessageTypeError:
-            // TODO: Сервер должен возвращать код ошибки чтобы я показал по коду сообщение
-            // или возвращать на русском языке текст ошибки
-            
             [self dismissProgress];
             
             // Analytics
-            [_clientService trackError:@{@"type": @"bad credentials"}];
+            [_clientService trackError:@{@"type": @"loginBadCredentials", @"errorText": message.errorText}];
             
             [[UIApplication sharedApplication] showAlertWithTitle:@"Неверные данные" message:message.errorText cancelButtonTitle:@"OK"];
             break;
