@@ -84,6 +84,7 @@
 		D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EF8ED518170B3500F9DD52 /* ICClient.m */; };
 		D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EFF9A31805867100A68AED /* QuartzCore.framework */; };
 		D9EFF9A61805867700A68AED /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EFF9A51805867700A68AED /* SystemConfiguration.framework */; };
+		D9F222AE18C9FA8500A6B02B /* MBProgressHud+UIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F222AD18C9FA8500A6B02B /* MBProgressHud+UIViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -226,6 +227,8 @@
 		D9EF8ED518170B3500F9DD52 /* ICClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICClient.m; sourceTree = "<group>"; };
 		D9EFF9A31805867100A68AED /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D9EFF9A51805867700A68AED /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		D9F222AC18C9FA8500A6B02B /* MBProgressHud+UIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHud+UIViewController.h"; sourceTree = "<group>"; };
+		D9F222AD18C9FA8500A6B02B /* MBProgressHud+UIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHud+UIViewController.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,7 +309,6 @@
 		D9532E1B1819A5510046E5EC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D9AD515C1817C80100692E7E /* UI Support */,
 				D9D88412188FE79E006BD004 /* SignUp */,
 				D90BAE121884306600E03F3E /* ICWelcomeViewController.m */,
 				D90BAE111884306600E03F3E /* ICWelcomeViewController.h */,
@@ -356,9 +358,11 @@
 			name = Services;
 			sourceTree = "<group>";
 		};
-		D9AD515C1817C80100692E7E /* UI Support */ = {
+		D9AD515C1817C80100692E7E /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				D9F222AC18C9FA8500A6B02B /* MBProgressHud+UIViewController.h */,
+				D9F222AD18C9FA8500A6B02B /* MBProgressHud+UIViewController.m */,
 				D9D42FF318C4A84D004F761F /* UIView+Positioning.h */,
 				D9D42FF418C4A84D004F761F /* UIView+Positioning.m */,
 				D9C1932A1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.h */,
@@ -378,7 +382,7 @@
 				D90BAE291885CB2200E03F3E /* QuickDialogController+Additions.h */,
 				D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */,
 			);
-			name = "UI Support";
+			name = Categories;
 			sourceTree = "<group>";
 		};
 		D9B0322C180572B400F7AF69 = {
@@ -437,9 +441,10 @@
 				D92019361816FD9A00EEA47C /* Models */,
 				D9AD51581817C78100692E7E /* Services */,
 				D9532E1B1819A5510046E5EC /* Controllers */,
+				D9AD515C1817C80100692E7E /* Categories */,
 				D978D4F218B5F11500952BB7 /* 3rdParty */,
-				D9B03248180572B400F7AF69 /* AppDelegate.m */,
 				D9B03247180572B400F7AF69 /* AppDelegate.h */,
+				D9B03248180572B400F7AF69 /* AppDelegate.m */,
 				D9B0323F180572B400F7AF69 /* Supporting Files */,
 				D99833D11820E89A00A7DA8E /* Images.xcassets */,
 			);
@@ -721,6 +726,7 @@
 				D98058C0181A518700DD0BBF /* ICDriver.m in Sources */,
 				D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */,
 				D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */,
+				D9F222AE18C9FA8500A6B02B /* MBProgressHud+UIViewController.m in Sources */,
 				D98058C3181A52F700DD0BBF /* ICPerson.m in Sources */,
 				D90BAE2B1885CB2200E03F3E /* QuickDialogController+Additions.m in Sources */,
 				D90BAE1E1884356B00E03F3E /* ICLinkCardDialog.m in Sources */,

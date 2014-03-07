@@ -21,9 +21,6 @@
 #import "UIActionSheet+Blocks.h"
 #import "UIAlertView+Additions.h"
 
-// HELPFUL: Меню для добавления действий пользователя во время поездки
-// https://github.com/rnystrom/RNGridMenu
-
 @interface ICRequestViewController ()
 
 @end
@@ -36,7 +33,7 @@
     BOOL _draggingPin;
     BOOL _readyToRequest;
     BOOL _justStarted;
-    CATransition *_animation;
+    CATransition *_textChangeAnimation;
     ICGoogleService *_googleService;
     ICClientService *_clientService;
     ICLocationService *_locationService;
@@ -233,11 +230,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self setViewBottomShadow:_addressView];
  
     // Location label text transition
-    _animation = [CATransition animation];
-    _animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    _animation.type = kCATransitionFade;
-    _animation.duration = 0.4;
-    _animation.fillMode = kCAFillModeBoth;
+    _textChangeAnimation = [CATransition animation];
+    _textChangeAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    _textChangeAnimation.type = kCATransitionFade;
+    _textChangeAnimation.duration = 0.4;
+    _textChangeAnimation.fillMode = kCAFillModeBoth;
 }
 
 - (void)addPickupPositionPin {
@@ -495,16 +492,16 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
     // Animate text change from blank to address
     if (![text isEqualToString:kGoToMarker]) {
-        [_addressLabel.layer addAnimation:_animation forKey:@"kCATransitionFade"];
+        [_addressLabel.layer addAnimation:_textChangeAnimation forKey:@"kCATransitionFade"];
     }
     
-    _addressLabel.text = [text uppercaseString];
+    _addressLabel.text = text;
 }
 
 - (void)updateStatusLabel: (NSString *)text withETA:(BOOL)withEta {
     [self showStatusBar];
     
-    [_statusLabel.layer addAnimation:_animation forKey:@"kCATransitionFade"];
+    [_statusLabel.layer addAnimation:_textChangeAnimation forKey:@"kCATransitionFade"];
     _statusLabel.text = [text uppercaseString];
     
     _etaLabel.hidden = !withEta;
@@ -925,12 +922,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if(d == 1 || eta == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минуте";
     
     return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
