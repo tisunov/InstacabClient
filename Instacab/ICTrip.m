@@ -27,7 +27,7 @@
         @"pickupLocation": @"pickupLocation",
         @"dropoffLocation": @"dropoffLocation",
         @"fareBilledToCard": @"fareBilledToCard",
-        @"dropoffTimestamp": @"dropoffTimestamp",
+        @"dropoffAt": @"dropoffAt",
         @"eta": @"eta"
     };
 }
@@ -65,7 +65,7 @@
     _fareBilledToCard = nil;
     _pickupLocation = nil;
     _dropoffLocation = nil;
-    _dropoffTimestamp = 0;
+    _dropoffAt = 0;
 }
 
 @end
