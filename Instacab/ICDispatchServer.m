@@ -53,7 +53,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     NSString * const kDispatchServerHostName = @"localhost:9000";
 #endif
 
-- (id)init
+-(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep;
 {
     if ((self = [super init]))
     {
@@ -61,6 +61,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         _offlineQueue = [[NSMutableArray alloc] init];
         
         _enablePingPong = YES;
+        _appType = appType;
+        _maintainConnection = keep;
         
         // Initialize often used instance variables
         _appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
@@ -137,7 +139,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 - (BOOL)_sendData:(NSDictionary *)data {
     if (!self.connected) return NO;
 
-    NSLog(@"Sending message %@", data);
+    NSLog(@"Sending: %@", [data objectForKey:@"messageType"]);
     [_socket send:[self _serializeToJSON:data]];
     return YES;
 }
@@ -231,7 +233,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     NSError *error;
     
-    [self resetPingTimer];
+    [self delayPingTimer];
     
     // Convert string to JSON dictionary
     NSDictionary *jsonDictionary =
@@ -239,7 +241,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
                                         options:NSJSONReadingMutableContainers
                                           error:&error];
 
-    NSLog(@"Received: %@", jsonDictionary);
+    NSLog(@"Received: %@", [jsonDictionary objectForKey:@"messageType"]);
     
     NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
     
@@ -295,9 +297,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
                                         repeats:YES];
 }
 
--(void)resetPingTimer {
+-(void)delayPingTimer {
     if (!_pingTimer) return;
-    NSLog(@"Reset Ping/Pong timer");
     
     [_pingTimer invalidate];
     [self schedulePingTimer];

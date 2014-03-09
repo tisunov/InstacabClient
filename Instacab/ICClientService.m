@@ -13,17 +13,19 @@
 #import "LocalyticsSession.h"
 #import "ICLocationService.h"
 
-NSString * const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
+NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonMovePin = @"movepin";
 NSString *const kNearestCabRequestReasonPing = @"ping";
 NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
-
 NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
+
+float const kPingIntervalInSeconds = 4.0;
 
 @implementation ICClientService {
     ICClientServiceSuccessBlock _successBlock;
     ICClientServiceFailureBlock _failureBlock;
     FCReachability *_reachability;
+    NSTimer *_pingTimer;
 }
 
 - (id)init
@@ -222,41 +224,43 @@ NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 // TODO: Посылать log event через HTTP POST в node-js/rails + mongodb из которой можно анализировать и делать визуализации
 // TODO: Log открытия каждой страницы приложения
 // TODO: Log посылки каждого сообщения на сервер
-- (void)logEvent: (NSDictionary *)event {
+//- (void)logEvent: (NSDictionary *)event {
     //    [self.httpClient POST:@"/mobile/event" parameters:event success:^(AFHTTPRequestOperation *operation, id responseObject) {
     //        NSLog(@"trackEvent JSON: %@", responseObject);
     //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     //        NSLog(@"trackEvent Error: %@", error);
     //    }];
-}
+//}
 
-- (NSDictionary *)createMapPageViewEvent {
-    NSDictionary *event;
-    [event setValue:@"MapPageView" forKey:@"eventName"];
-    
-    // location params
-    CLLocation *location = [ICLocationService sharedInstance].location;
-    
-    NSNumber* latitude = [NSNumber numberWithFloat:location.coordinate.latitude];
-    NSNumber* longitude = [NSNumber numberWithFloat:location.coordinate.longitude];
-    [event setValue:@[longitude, latitude] forKey:@"location"];
-    
-    NSDictionary *parameters = @{
-        @"locationAltitude": [NSNumber numberWithFloat:location.altitude],
-        @"locationVerticalAccuracy": [NSNumber numberWithFloat:location.verticalAccuracy],
-        @"locationHorizontalAccuracy": [NSNumber numberWithFloat:location.horizontalAccuracy],
-        @"requestGuid": [[NSUUID UUID] UUIDString]
-    };
-    [event setValue:parameters forKey:@"parameters"];
-    
-    return event;
-}
+//- (NSDictionary *)createMapPageViewEvent {
+//    NSDictionary *event;
+//    [event setValue:@"MapPageView" forKey:@"eventName"];
+//    
+//    // location params
+//    CLLocation *location = [ICLocationService sharedInstance].location;
+//    
+//    NSNumber* latitude = [NSNumber numberWithFloat:location.coordinate.latitude];
+//    NSNumber* longitude = [NSNumber numberWithFloat:location.coordinate.longitude];
+//    [event setValue:@[longitude, latitude] forKey:@"location"];
+//    
+//    NSDictionary *parameters = @{
+//        @"locationAltitude": [NSNumber numberWithFloat:location.altitude],
+//        @"locationVerticalAccuracy": [NSNumber numberWithFloat:location.verticalAccuracy],
+//        @"locationHorizontalAccuracy": [NSNumber numberWithFloat:location.horizontalAccuracy],
+//        @"requestGuid": [[NSUUID UUID] UUIDString]
+//    };
+//    [event setValue:parameters forKey:@"parameters"];
+//    
+//    return event;
+//}
 
 - (void)didReceiveMessage:(NSDictionary *)responseMessage {
     [super didReceiveMessage:responseMessage];
     
     NSError *error;
-        
+    
+    [self delayPing];
+    
     // Deserialize to object instance
     ICMessage *msg = [MTLJSONAdapter modelOfClass:ICMessage.class
                                fromJSONDictionary:responseMessage
@@ -275,7 +279,7 @@ NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
     }
 }
 
-#pragma mark - Misc
+#pragma mark - Utility Methods
 
 - (BOOL)isOnline {
     return _reachability.isOnline;
@@ -289,27 +293,71 @@ NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
     }
 }
 
+-(void)disconnectWithoutTryingToReconnect {
+    self.dispatchServer.maintainConnection = NO;
+    [self.dispatchServer disconnect];
+}
+
+#pragma mark - Regular Ping
+
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     ICClientState newState = (ICClientState)[[change valueForKey:NSKeyValueChangeNewKey] intValue];
     
     switch (newState) {
-        case SVClientStateWaitingForPickup:
-        case SVClientStateOnTrip:
-        case SVClientStateDispatching:
-//            [self startPing];
+        case SVClientStateLooking:
+            [self stopPing];
             break;
             
         default:
-//            [self stopPing];
+            [self startPing];
             break;
     }
 }
 
--(void)disconnectWithoutTryingToReconnect {
-    self.dispatchServer.maintainConnection = NO;
-    [self.dispatchServer disconnect];
+-(void)didConnect {
+    [self startPing];
 }
+
+-(void)didDisconnect {
+    [super didDisconnect];
+    [self stopPing];
+}
+
+// start sending Ping message every 4 seconds
+-(void)startPing {
+    if(_pingTimer || [ICClient sharedInstance].state == SVClientStateLooking) return;
+    
+    NSLog(@"Start Ping every %f seconds", kPingIntervalInSeconds);
+    [self delayPing];
+}
+
+-(void)delayPing {
+    if ([ICClient sharedInstance].state == SVClientStateLooking) return;
+    
+    [_pingTimer invalidate];
+    
+    _pingTimer =
+        [NSTimer scheduledTimerWithTimeInterval:kPingIntervalInSeconds
+                                         target:self
+                                       selector:@selector(sendPing)
+                                       userInfo:nil
+                                        repeats:YES];
+}
+
+-(void)sendPing {
+    [self ping:[ICLocationService sharedInstance].coordinates reason:kNearestCabRequestReasonPing success:nil failure:nil];
+}
+
+-(void)stopPing {
+    if (_pingTimer) {
+        NSLog(@"Stop Ping");
+        
+        [_pingTimer invalidate];
+        _pingTimer = nil;
+    }
+}
+
 
 #pragma mark - Analytics
 

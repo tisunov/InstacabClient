@@ -19,6 +19,8 @@ extern NSString *const kDispatchServerConnectionChangeNotification;
 @end
 
 @interface ICDispatchServer : NSObject<SRWebSocketDelegate>
+-(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep;
+
 - (void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates;
 - (void)connect;
 - (void)disconnect;

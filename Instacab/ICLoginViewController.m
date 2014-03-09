@@ -213,7 +213,7 @@
             // Analytics
             [_clientService trackError:@{@"type": @"loginBadCredentials", @"errorText": message.errorText}];
             
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Неверные данные" message:message.errorText cancelButtonTitle:@"OK"];
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Входа" message:message.errorText cancelButtonTitle:@"OK"];
             break;
             
         default:
