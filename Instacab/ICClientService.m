@@ -7,11 +7,11 @@
 //
 
 #import "ICClientService.h"
-#import "ICLocationService.h"
 #import "ICSingleton.h"
 #import "ICClient.h"
 #import "FCReachability.h"
 #import "LocalyticsSession.h"
+#import "ICLocationService.h"
 
 NSString * const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonMovePin = @"movepin";
@@ -20,30 +20,16 @@ NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
 
 NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 
-NSString * const kFieldMessageType = @"messageType";
-NSString * const kFieldEmail = @"email";
-NSString * const kFieldPassword = @"password";
-
-NSTimeInterval const kRequestTimeoutSecs = 2;
-
 @implementation ICClientService {
-    ICDispatchServer *_dispatchServer;
     ICClientServiceSuccessBlock _successBlock;
     ICClientServiceFailureBlock _failureBlock;
     FCReachability *_reachability;
-    NSTimer *_requestTimer;
-    NSDictionary *_pendingRequest;
 }
 
 - (id)init
 {
-    self = [super init];
+    self = [super initWithAppType:@"client" keepConnection:YES];
     if (self) {
-        _dispatchServer = [[ICDispatchServer alloc] init];
-        _dispatchServer.appType = @"client";
-        _dispatchServer.maintainConnection = YES;
-        _dispatchServer.delegate = self;
-        
         // Pedestrian activity
         [ICLocationService sharedInstance].activityType = CLActivityTypeFitness;
         
@@ -128,7 +114,7 @@ NSTimeInterval const kRequestTimeoutSecs = 2;
     _failureBlock = [failure copy];
 
     // Always reconnect after sending login
-    _dispatchServer.maintainConnection = YES;
+    self.dispatchServer.maintainConnection = YES;
     
     // init Login message
     NSDictionary *message = @{
@@ -152,9 +138,9 @@ NSTimeInterval const kRequestTimeoutSecs = 2;
     };
     
     // Don't reconnect after logout, and disconnect after message sent
-    _dispatchServer.maintainConnection = NO;
+    self.dispatchServer.maintainConnection = NO;
     
-    __weak typeof(_dispatchServer) weakDispatchServer = _dispatchServer;
+    __weak typeof(self.dispatchServer) weakDispatchServer = self.dispatchServer;
     _successBlock = ^(ICMessage *message) {
         [weakDispatchServer disconnect];
     };
@@ -189,17 +175,6 @@ NSTimeInterval const kRequestTimeoutSecs = 2;
     _failureBlock = [failure copy];
     
     [self sendMessage:message];
-}
-
--(void)sendMessage:(NSDictionary *)message {
-    [self sendMessage:message coordinates:[ICLocationService sharedInstance].coordinates];
-}
-
--(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates {
-    [self startRequestTimeout];
-    _pendingRequest = message;
-    
-    [_dispatchServer sendMessage:message coordinates:coordinates];
 }
 
 -(void)pickupAt: (ICLocation*)location {
@@ -278,11 +253,10 @@ NSTimeInterval const kRequestTimeoutSecs = 2;
 }
 
 - (void)didReceiveMessage:(NSDictionary *)responseMessage {
-    NSError *error;
-
-    // Received some response or server initiated message
-    [self cancelRequestTimeout];
+    [super didReceiveMessage:responseMessage];
     
+    NSError *error;
+        
     // Deserialize to object instance
     ICMessage *msg = [MTLJSONAdapter modelOfClass:ICMessage.class
                                fromJSONDictionary:responseMessage
@@ -299,15 +273,6 @@ NSTimeInterval const kRequestTimeoutSecs = 2;
         _successBlock = nil;
         _failureBlock = nil;
     }
-}
-
-- (void)didConnect {
-    
-}
-
-- (void)didDisconnect {
-    [self cancelRequestTimeout];
-    [self triggerFailure];
 }
 
 #pragma mark - Misc
@@ -342,8 +307,8 @@ NSTimeInterval const kRequestTimeoutSecs = 2;
 }
 
 -(void)disconnectWithoutTryingToReconnect {
-    _dispatchServer.maintainConnection = NO;
-    [_dispatchServer disconnect];
+    self.dispatchServer.maintainConnection = NO;
+    [self.dispatchServer disconnect];
 }
 
 #pragma mark - Analytics
@@ -380,54 +345,6 @@ NSTimeInterval const kRequestTimeoutSecs = 2;
 
 - (void)trackError:(NSDictionary *)attributes {
     [self trackEvent:@"Error" params:attributes];
-}
-
-#pragma mark - Request Timeout
-
--(void)startRequestTimeout {
-    [_requestTimer invalidate];
-    
-    NSLog(@"Start Request timeout");
-    _requestTimer =
-        [NSTimer scheduledTimerWithTimeInterval:kRequestTimeoutSecs
-                                         target:self
-                                       selector:@selector(requestDidTimeOut:)
-                                       userInfo:nil
-                                        repeats:NO];
-}
-
--(void)requestDidTimeOut:(NSTimer *)timer {
-    NSLog(@"Request timed out");
-
-    NSString *ms = [_pendingRequest objectForKey:kFieldMessageType];
-    if (ms) {
-        [self trackError:@{ @"type":@"requestTimeOut", @"messageType":ms }];
-    }
-    
-    // Resend one more time
-    if (_pendingRequest) {
-        // TODO: На сервер пошлются координаты не из _pendingRequest а новые
-        [self sendMessage:_pendingRequest];
-        _pendingRequest = nil;
-    }
-    else {
-        _requestTimer = nil;
-        [self triggerFailure];
-        
-        if ([self.delegate respondsToSelector:@selector(requestDidTimeout)])
-            [self.delegate requestDidTimeout];
-    }
-}
-
--(void)cancelRequestTimeout {
-    if (!_requestTimer) return;
-    
-    NSLog(@"Cancel Request timeout");
-    
-    [_requestTimer invalidate];
-    _requestTimer = nil;
-    
-    _pendingRequest = nil;
 }
 
 @end

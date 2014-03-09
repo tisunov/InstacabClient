@@ -6,9 +6,7 @@
 //  Copyright (c) 2013 Bright Stripe. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "ICDispatchServer.h"
-#import "ICSingleton.h"
+#import "BaseService.h"
 #import "ICMessage.h"
 #import "ICSignUpInfo.h"
 
@@ -23,11 +21,7 @@ extern NSString *const kRequestVehicleDeniedReasonNoCard;
 typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
 typedef void (^ICClientServiceFailureBlock)();
 
-@protocol ICClientServiceDelegate <NSObject>
-- (void)requestDidTimeout;
-@end
-
-@interface ICClientService : ICSingleton<ICDispatchServerDelegate>
+@interface ICClientService : BaseService
 -(void)loginWithEmail:(NSString *)email
              password: (NSString *)password
               success:(ICClientServiceSuccessBlock)success
@@ -64,7 +58,6 @@ typedef void (^ICClientServiceFailureBlock)();
 -(void)disconnectWithoutTryingToReconnect;
 
 @property (nonatomic, readonly) BOOL isOnline;
-@property (nonatomic, weak) id <ICClientServiceDelegate> delegate;
 
 #pragma mark - Analytics
 

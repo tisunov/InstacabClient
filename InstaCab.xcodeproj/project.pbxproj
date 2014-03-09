@@ -38,6 +38,7 @@
 		D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDC218435677005A2BAA /* CGRectUtils.c */; };
 		D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D99833D11820E89A00A7DA8E /* Images.xcassets */; };
 		D99833D5182159C600A7DA8E /* ICVehicle.m in Sources */ = {isa = PBXBuildFile; fileRef = D99833D4182159C600A7DA8E /* ICVehicle.m */; };
+		D99E792E18CA3D7000585A49 /* BaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = D99E792D18CA3D7000585A49 /* BaseService.m */; };
 		D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D9A10705185F329C00350A17 /* 9yanvarya.gpx */; };
 		D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D9A63CCD18B0843C00F9577E /* Skver.gpx */; };
 		D9AD51571817B74C00692E7E /* ICGoogleService.m in Sources */ = {isa = PBXBuildFile; fileRef = D9AD51561817B74C00692E7E /* ICGoogleService.m */; };
@@ -153,6 +154,8 @@
 		D99833D11820E89A00A7DA8E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D99833D3182159C600A7DA8E /* ICVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVehicle.h; sourceTree = "<group>"; };
 		D99833D4182159C600A7DA8E /* ICVehicle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVehicle.m; sourceTree = "<group>"; };
+		D99E792C18CA3D7000585A49 /* BaseService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseService.h; sourceTree = "<group>"; };
+		D99E792D18CA3D7000585A49 /* BaseService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseService.m; sourceTree = "<group>"; };
 		D9A10705185F329C00350A17 /* 9yanvarya.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = 9yanvarya.gpx; path = ../9yanvarya.gpx; sourceTree = "<group>"; };
 		D9A63CCD18B0843C00F9577E /* Skver.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Skver.gpx; path = ../Skver.gpx; sourceTree = "<group>"; };
 		D9AD51551817B74C00692E7E /* ICGoogleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICGoogleService.h; sourceTree = "<group>"; };
@@ -343,6 +346,8 @@
 		D9AD51581817C78100692E7E /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				D99E792D18CA3D7000585A49 /* BaseService.m */,
+				D99E792C18CA3D7000585A49 /* BaseService.h */,
 				D9AD515A1817C7A200692E7E /* ICClientService.m */,
 				D9AD51591817C7A200692E7E /* ICClientService.h */,
 				D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */,
@@ -696,6 +701,7 @@
 				D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */,
 				D9B03249180572B400F7AF69 /* AppDelegate.m in Sources */,
 				D9AD51571817B74C00692E7E /* ICGoogleService.m in Sources */,
+				D99E792E18CA3D7000585A49 /* BaseService.m in Sources */,
 				D9D42FF518C4A84D004F761F /* UIView+Positioning.m in Sources */,
 				D982840318878F4A0014BBF7 /* ICApiResponse.m in Sources */,
 				D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */,
