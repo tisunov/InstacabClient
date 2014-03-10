@@ -12,6 +12,7 @@
 #import "ICVehiclePoint.h"
 #import "UIColor+Colours.h"
 #import "ICReceiptViewController.h"
+#import "ICFeedbackViewController.h"
 #import "MBProgressHUD.h"
 #import "TSMessageView.h"
 #import "TSMessage.h"
@@ -713,7 +714,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)showFareAndRateDriver {
-    if ([self.navigationController.topViewController isKindOfClass:ICReceiptViewController.class]) return;
+    if (self.navigationController.topViewController != self) return;
     
     ICReceiptViewController *vc = [[ICReceiptViewController alloc] initWithNibName:@"ICReceiptViewController" bundle:nil];
     
