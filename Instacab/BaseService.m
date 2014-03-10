@@ -57,7 +57,7 @@ NSString * const kFieldPassword = @"password";
 -(void)startRequestTimeout {
     [_requestTimer invalidate];
     
-    NSLog(@"Start Request timeout");
+//    NSLog(@"Start Request timeout");
     _requestTimer =
         [NSTimer scheduledTimerWithTimeInterval:kRequestTimeoutSecs
                                          target:self
@@ -91,7 +91,7 @@ NSString * const kFieldPassword = @"password";
 -(void)cancelRequestTimeout {
     if (!_requestTimer) return;
     
-    NSLog(@"Cancel Request timeout");
+//    NSLog(@"Cancel Request timeout");
     
     [_requestTimer invalidate];
     _requestTimer = nil;
