@@ -15,7 +15,8 @@
 
 @implementation BaseService {
     NSTimer *_requestTimer;
-    NSDictionary *_pendingRequest;    
+    NSDictionary *_pendingRequest;
+    BOOL _infiniteResend;
 }
 
 NSTimeInterval const kRequestTimeoutSecs = 2;
@@ -24,11 +25,13 @@ NSString * const kFieldMessageType = @"messageType";
 NSString * const kFieldEmail = @"email";
 NSString * const kFieldPassword = @"password";
 
--(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep {
+-(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep infiniteResend:(BOOL)infiniteResend {
     self = [super init];
     if (self) {
-        self.dispatchServer = [[ICDispatchServer alloc] initWithAppType:@"client" keepConnection:YES];
+        self.dispatchServer = [[ICDispatchServer alloc] initWithAppType:@"client" keepConnection:keep];
         self.dispatchServer.delegate = self;
+        
+        _infiniteResend = infiniteResend;
     }
     return self;
 }
@@ -40,7 +43,8 @@ NSString * const kFieldPassword = @"password";
 -(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates {
     [self startRequestTimeout];
     _pendingRequest = message;
-    
+
+    // TODO: Рассчитывать Network Latency между посылкой запроса и получением ответа и посылать Latency на сервер
     [_dispatchServer sendMessage:message coordinates:coordinates];
 }
 
@@ -65,16 +69,15 @@ NSString * const kFieldPassword = @"password";
 -(void)requestDidTimeOut:(NSTimer *)timer {
     NSLog(@"Request timed out");
     
-    NSString *ms = [_pendingRequest objectForKey:kFieldMessageType];
-    if (ms) {
-        [self trackError:@{ @"type":@"requestTimeOut", @"messageType":ms }];
-    }
-    
     // Resend one more time
     if (_pendingRequest) {
-        // TODO: На сервер пошлются координаты не из _pendingRequest а новые
+        [self trackError:@{ @"type":@"requestTimeOut", @"messageType":[_pendingRequest objectForKey:kFieldMessageType] }];
+        
+        // TODO: На сервер пошлются координаты не из _pendingRequest, а новые
         [self sendMessage:_pendingRequest];
-        _pendingRequest = nil;
+        
+        if (!_infiniteResend)
+            _pendingRequest = nil;
     }
     else {
         _requestTimer = nil;
@@ -99,7 +102,6 @@ NSString * const kFieldPassword = @"password";
 #pragma mark - ICDispatchServerDelegate
 
 -(void)didConnect {
-    
 }
 
 -(void)didDisconnect {

@@ -19,7 +19,7 @@ NSString *const kNearestCabRequestReasonPing = @"ping";
 NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
 NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 
-float const kPingIntervalInSeconds = 4.0;
+float const kPingIntervalInSeconds = 6.0;
 
 @implementation ICClientService {
     ICClientServiceSuccessBlock _successBlock;
@@ -30,7 +30,7 @@ float const kPingIntervalInSeconds = 4.0;
 
 - (id)init
 {
-    self = [super initWithAppType:@"client" keepConnection:YES];
+    self = [super initWithAppType:@"client" keepConnection:YES infiniteResend:NO];
     if (self) {
         // Pedestrian activity
         [ICLocationService sharedInstance].activityType = CLActivityTypeFitness;
@@ -328,7 +328,7 @@ float const kPingIntervalInSeconds = 4.0;
 -(void)startPing {
     if(_pingTimer || [ICClient sharedInstance].state == SVClientStateLooking) return;
     
-    NSLog(@"Start Ping every %f seconds", kPingIntervalInSeconds);
+    NSLog(@"Start Ping every %d seconds", (int)kPingIntervalInSeconds);
     [self delayPing];
 }
 

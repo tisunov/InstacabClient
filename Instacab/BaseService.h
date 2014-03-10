@@ -18,7 +18,7 @@ extern NSString * const kFieldEmail;
 extern NSString * const kFieldPassword;
 
 @interface BaseService : ICSingleton<ICDispatchServerDelegate>
--(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep;
+-(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep infiniteResend:(BOOL)infiniteResend;
 -(void)sendMessage:(NSDictionary *)message;
 -(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates;
 -(void)trackError:(NSDictionary *)attributes;

@@ -38,8 +38,8 @@
 
 NSUInteger const kMaxReconnectAttemps = 1;
 NSUInteger const kInternalPingIntervalInSeconds = 20;
-NSUInteger const kConnectTimeoutSecs = 3;
-double const kReconnectInterval = 2.0; // Reconnect every 2 secs
+NSTimeInterval const kConnectTimeoutSecs = 2.0; // 2 seconds connect timeout
+NSTimeInterval const kReconnectInterval = 2.0; // 2 seconds reconnect interval
 
 NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
