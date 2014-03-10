@@ -62,6 +62,8 @@
     
     // Show progress while fare being billed to card
     if (fare == 0) {
+        [[ICClient sharedInstance] addObserver:self forKeyPath:@"tripPendingRating" options:NSKeyValueObservingOptionNew context:nil];
+        
         CATransition *transition = [CATransition animation];
         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         transition.type = kCATransitionFade;
@@ -79,8 +81,6 @@
     else {
         [self showFare:fare];
     }
-    
-    [[ICClient sharedInstance] addObserver:self forKeyPath:@"tripPendingRating" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)showFare:(double)fare {
@@ -102,12 +102,6 @@
     [[ICClientService sharedInstance] trackScreenView:@"Receipt"];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
-    [[ICClient sharedInstance] removeObserver:self forKeyPath:@"tripPendingRating"];
-}
-
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     ICTrip *trip = (ICTrip *)change[NSKeyValueChangeNewKey];
@@ -118,6 +112,8 @@
         _fareLabel.hidden = NO;
         
         [self showFare:fare];
+        
+        [[ICClient sharedInstance] removeObserver:self forKeyPath:@"tripPendingRating"];
     }
 }
 
