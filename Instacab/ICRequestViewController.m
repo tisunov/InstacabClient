@@ -215,8 +215,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.navigationController slideLayerAndPopInDirection:kCATransitionFromTop];
 }
 
+// Can happen when user switched apps and left us in background
+// moved to other location, then launched the app again, in this case
+// center map on current location if he is not dragging pin
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
-//    [self moveMapToPosition:location];
+    if (_draggingPin || [ICClient sharedInstance].state != SVClientStateLooking) return;
+    
+    [_mapView animateToLocation:coordinates];
 }
 
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
