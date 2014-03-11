@@ -55,7 +55,7 @@ NSString * const kSelectPickupLocation = @"Выбрать место посад�
 NSString * const kProgressLookingForDriver = @"Выбираю водителя...";
 NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя...";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
-NSString * const kTripEtaTemplate = @"ПРИБУДЕТ ЧЕРЕЗ %@ %@";
+NSString * const kTripEtaTemplate = @"ПРИЕДЕТ ПРИМЕРНО ЧЕРЕЗ %@ %@";
 NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина примерно в %@ %@ от вас";
 
 CGFloat const kDefaultMapZoom = 15.0f;
