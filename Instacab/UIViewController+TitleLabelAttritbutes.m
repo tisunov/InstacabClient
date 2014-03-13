@@ -15,7 +15,7 @@
     NSDictionary *attributes = @{
         NSForegroundColorAttributeName:[UIColor colorWithRed:0.25098 green:0.247059   blue:0.235294 alpha:1],
         NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:18.0],
-        NSKernAttributeName: @2.0f,
+        NSKernAttributeName: @1.0f,
     };
     UILabel *titleLabel = ((UILabel *)self.navigationItem.titleView);
     if (!titleLabel) {

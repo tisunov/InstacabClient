@@ -58,6 +58,10 @@
     return self.driver.location.coordinate;
 }
 
+-(BOOL)billingComplete {
+    return [_fareBilledToCard doubleValue] > -1;
+}
+
 -(void)clear {
     _tripId = nil;
     _driver = nil;

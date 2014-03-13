@@ -18,10 +18,11 @@
 @property (nonatomic, copy, readonly) NSString *fareBilledToCard;
 @property (nonatomic, strong) ICLocation *pickupLocation;
 @property (nonatomic, strong, readonly) ICLocation *dropoffLocation;
-@property (nonatomic, copy, readonly) NSNumber* dropoffAt;
+@property (nonatomic, copy, readonly) NSNumber *dropoffAt;
 @property (nonatomic, copy, readonly) NSNumber *eta;
 
 @property (nonatomic, readonly) CLLocationCoordinate2D driverCoordinate;
+@property (nonatomic, readonly) BOOL billingComplete;
 
 -(void)update: (ICTrip *)trip;
 -(void)clear;

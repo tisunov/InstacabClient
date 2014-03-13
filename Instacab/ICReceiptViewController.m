@@ -57,11 +57,10 @@
     _timestampLabel.text = [[dateFormatter stringFromDate:date] uppercaseString];
 //    _timestampLabel.text = @"16 ФЕВРАЛЯ 2014, 14:07";
     
-    double fare = [trip.fareBilledToCard doubleValue];
 //    _fareLabel.text = @"270 р.";
     
-    // Show progress while fare being billed to card
-    if (fare == 0) {
+    // Show progress while fare is being billed to card
+    if (!trip.billingComplete) {
         [[ICClient sharedInstance] addObserver:self forKeyPath:@"tripPendingRating" options:NSKeyValueObservingOptionNew context:nil];
         
         CATransition *transition = [CATransition animation];
@@ -79,7 +78,7 @@
         [_billingActivityView startAnimating];
     }
     else {
-        [self showFare:fare];
+        [self showFare:[trip.fareBilledToCard doubleValue]];
     }
 }
 
@@ -105,13 +104,11 @@
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     ICTrip *trip = (ICTrip *)change[NSKeyValueChangeNewKey];
-    double fare = [trip.fareBilledToCard doubleValue];
-    
-    if (fare > 0) {
+    if (trip.billingComplete) {
         [_billingActivityView stopAnimating];
         _fareLabel.hidden = NO;
         
-        [self showFare:fare];
+        [self showFare:[trip.fareBilledToCard doubleValue]];
         
         [[ICClient sharedInstance] removeObserver:self forKeyPath:@"tripPendingRating"];
     }

@@ -21,6 +21,7 @@
 #import "CGRectUtils.h"
 #import "UIActionSheet+Blocks.h"
 #import "UIAlertView+Additions.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface ICRequestViewController ()
 
@@ -56,7 +57,7 @@ NSString * const kProgressLookingForDriver = @"Выбираю водителя..
 NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя...";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
 NSString * const kTripEtaTemplate = @"ПРИЕДЕТ ПРИМЕРНО ЧЕРЕЗ %@ %@";
-NSString * const kRequestMinimumEtaTemplate = @"Ближайшая машина примерно в %@ %@ от вас";
+NSString * const kRequestMinimumEtaTemplate = @"примерно %@ %@ до приезда машины";
 
 CGFloat const kDefaultMapZoom = 15.0f;
 CGFloat const kDriverInfoPanelHeight = 75.0f;
@@ -146,6 +147,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
+    // Cancel driver's photo loading
+    [_driverImageView cancelImageRequestOperation];
+    
     // Unsubscribe from client state notifications
     ICClient *client = [ICClient sharedInstance];
     [client removeObserver:self forKeyPath:@"state"];
@@ -221,6 +225,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
     if (_draggingPin || [ICClient sharedInstance].state != SVClientStateLooking) return;
     
+    // TODO: Если расстояние между центром карты _mapView и текущей координатой > 10 м
+    // тогда смещать карту (человек сдвинулся на существенное расстояние при закрытом приложении или открытом) CLLocation::distanceFromLocation
+    // ИЛИ: Следить за активацией приложения (после фонового режима) и ставить флаг что возможен автоматический сдвиг карты (при отсутствии in flight drag gesture)
     [_mapView animateToLocation:coordinates];
 }
 
@@ -429,6 +436,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (nearbyVehicles.isEmpty) {
         _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
         _pickupBtn.enabled = NO;
+        [self setReadyToRequest:NO];
         [self clearMap];
         return;
     }
@@ -437,6 +445,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (nearbyVehicles.isRestrictedArea) {
         _pickupTimeLabel.text = [nearbyVehicles.sorryMsg uppercaseString];
         _pickupBtn.enabled = NO;
+        [self setReadyToRequest:NO];
         return;
     }
     
@@ -516,7 +525,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         _statusView.frame = CGRectSetHeight(_statusView.frame, 50.0f);
     }
     else {
-        _statusView.frame = CGRectSetHeight(_statusView.frame, 33.0f);
+        _statusView.frame = CGRectSetHeight(_statusView.frame, 30.0f);
     }
 }
 
@@ -633,6 +642,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _driverRatingLabel.text = trip.driver.rating;
     _vehicleLabel.text = trip.vehicle.makeAndModel;
     _vehicleLicenseLabel.text = trip.vehicle.licensePlate;
+    
+    NSLog(@"Load driver's photo from %@", trip.driver.photoUrl);
+    [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl]];
 }
 
 - (void)showDriverPanel {
@@ -843,7 +855,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         case SVMessageTypeError:
             [self hideProgress];
             
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка" message:message.errorText cancelButtonTitle:@"OK"];
+            if (message.errorCode == ICErrorTypeNoAvailableDrivers) {
+                [[UIApplication sharedApplication] showAlertWithTitle:@"Нет Водителей" message:message.errorText cancelButtonTitle:@"OK"];
+            }
+            else {
+                [self popViewController];
+                
+                [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка" message:message.errorText cancelButtonTitle:@"OK"];
+            }
             break;
             
         default:
@@ -926,8 +945,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     int eta = [etaValue intValue];
     int d = (int)floor(eta) % 10;
     
-    NSString *minute = @"минутах";
-    if(d == 1 || eta == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минуте";
+    NSString *minute = @"минут";
+    if(d == 1 || eta == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минута";
     
     return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 }

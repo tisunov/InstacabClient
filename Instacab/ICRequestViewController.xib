@@ -10,6 +10,7 @@
                 <outlet property="addressTitleLabel" destination="gHA-hD-WQ1" id="1lr-pt-MyK"/>
                 <outlet property="addressView" destination="sVe-Pv-ovU" id="g4s-oY-X2Y"/>
                 <outlet property="callDriverButton" destination="gPu-de-iHu" id="VSK-cI-7Rc"/>
+                <outlet property="driverImageView" destination="8sm-Nx-73L" id="RqD-0j-74L"/>
                 <outlet property="driverNameLabel" destination="rb0-MO-89J" id="Hby-x7-FW2"/>
                 <outlet property="driverRatingLabel" destination="pfy-cl-tfc" id="XWr-wg-ax5"/>
                 <outlet property="driverView" destination="tGL-uD-7oP" id="fzq-hZ-OpB"/>
@@ -112,7 +113,7 @@
                     <rect key="frame" x="0.0" y="480" width="320" height="75"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="driver_photo" id="8sm-Nx-73L">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="8sm-Nx-73L" userLabel="DriverImageView">
                             <rect key="frame" x="5" y="5" width="70" height="65"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
@@ -163,7 +164,6 @@
         </view>
     </objects>
     <resources>
-        <image name="driver_photo" width="153" height="142"/>
         <image name="star" width="26" height="26"/>
     </resources>
 </document>

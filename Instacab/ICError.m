@@ -13,7 +13,7 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"message": @"message",
-        @"statusCode": @"statusCode",
+        @"statusCode": @"statusCode"
     };
 }
 

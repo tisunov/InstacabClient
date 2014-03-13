@@ -14,6 +14,7 @@
     return @{
         @"messageType": @"messageType",
         @"errorText": @"errorText",
+        @"errorCode": @"errorCode",
         @"reason": @"reason",
         @"client": @"client",
         @"trip": @"trip",
@@ -55,6 +56,19 @@
         return messageTypes[str];
     } reverseBlock:^(NSNumber *messageType) {
         return [messageTypes allKeysForObject:messageType].lastObject;
+    }];
+}
+
++ (NSValueTransformer *)errorCodeJSONTransformer {
+    NSDictionary *states = @{
+        @(1): @(ICErrorTypeInvalidToken),
+        @(2): @(ICErrorTypeNoAvailableDrivers),
+    };
+    
+    return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSNumber *str) {
+        return states[str];
+    } reverseBlock:^(NSNumber *state) {
+        return [states allKeysForObject:state].lastObject;
     }];
 }
 

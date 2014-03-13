@@ -173,7 +173,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kReconnectInterval * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         _reconnectAttempts--;
-        NSLog(@"Restoring connection, attemps left %d of %d", _reconnectAttempts, kMaxReconnectAttemps);
+        NSLog(@"Restoring connection, attemps left %d of %lu", _reconnectAttempts, (unsigned long)kMaxReconnectAttemps);
         [self connect];
     });
 }
@@ -241,7 +241,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
                                         options:NSJSONReadingMutableContainers
                                           error:&error];
 
-    NSLog(@"Received: %@", [jsonDictionary objectForKey:@"messageType"]);
+    NSLog(@"Received: %@", jsonDictionary);
+//    NSLog(@"Received: %@", [jsonDictionary objectForKey:@"messageType"]);
     
     NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
     

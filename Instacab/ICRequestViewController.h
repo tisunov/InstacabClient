@@ -33,6 +33,7 @@
 @property (strong, nonatomic) IBOutlet ICHighlightButton *callDriverButton;
 @property (strong, nonatomic) IBOutlet UILabel *driverNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *driverRatingLabel;
+@property (strong, nonatomic) IBOutlet UIImageView *driverImageView;
 @property (strong, nonatomic) IBOutlet UILabel *vehicleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *vehicleLicenseLabel;
 

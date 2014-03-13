@@ -11,6 +11,7 @@
 #import "ICTrip.h"
 #import "ICNearbyVehicles.h"
 #import "ICApiResponse.h"
+#import "ICError.h"
 
 typedef enum : NSUInteger {
     SVMessageTypeOK,
@@ -24,9 +25,15 @@ typedef enum : NSUInteger {
     SVMessageTypeApiResponse,
 } ICMessageType;
 
+typedef enum : NSUInteger {
+    ICErrorTypeInvalidToken,
+    ICErrorTypeNoAvailableDrivers,
+} ICErrorCode;
+
 @interface ICMessage : MTLModel<MTLJSONSerializing>
 @property (nonatomic, assign, readonly) ICMessageType messageType;
 @property (nonatomic, copy, readonly) NSString *errorText;
+@property (nonatomic, assign) ICErrorCode errorCode;
 @property (nonatomic, copy, readonly) NSString *reason;
 @property (nonatomic, strong, readonly) ICClient *client;
 @property (nonatomic, strong, readonly) ICTrip *trip;

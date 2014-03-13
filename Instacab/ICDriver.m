@@ -8,14 +8,13 @@
 
 #import "ICDriver.h"
 
-//NSString * const kDriverStateChangeNotification = @"kDriverStateChangeNotification";
-
 @implementation ICDriver
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return [super.JSONKeyPathsByPropertyKey mtl_dictionaryByAddingEntriesFromDictionary: @{
         @"state": @"state",
         @"location": @"location",
+        @"photoUrl": @"photoUrl"
     }];
 }
 
@@ -27,6 +26,7 @@
     NSDictionary *states = @{
         @"OffDuty": @(SVDriverStateOffDuty),
         @"Available": @(SVDriverStateAvailable),
+        @"Reserved": @(SVDriverStateReserved),
         @"Dispatching": @(SVDriverStateDispatching),
         @"Accepted": @(SVDriverStateAccepted),
         @"Arrived": @(SVDriverStateArrived),

@@ -12,6 +12,7 @@
 typedef enum : NSUInteger {
     SVDriverStateOffDuty,
     SVDriverStateAvailable,
+    SVDriverStateReserved,
     SVDriverStateDispatching,
     SVDriverStateAccepted,
     SVDriverStateArrived,
@@ -19,11 +20,10 @@ typedef enum : NSUInteger {
     SVDriverStatePendingRating
 } SVDriverState;
 
-//extern NSString *const kDriverStateChangeNotification;
-
 @interface ICDriver : ICPerson
 @property (nonatomic, strong, readonly) ICLocation *location;
 @property (nonatomic, assign, readonly) SVDriverState state;
+@property (nonatomic, copy, readonly) NSString *photoUrl;
 
 -(void)call;
 
