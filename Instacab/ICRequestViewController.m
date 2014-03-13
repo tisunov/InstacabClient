@@ -644,7 +644,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _vehicleLicenseLabel.text = trip.vehicle.licensePlate;
     
     NSLog(@"Load driver's photo from %@", trip.driver.photoUrl);
-    [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl]];
+    [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl] placeholderImage:[UIImage imageNamed:@"driver_placeholder"]];
 }
 
 - (void)showDriverPanel {
