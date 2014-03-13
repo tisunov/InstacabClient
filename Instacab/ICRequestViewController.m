@@ -642,9 +642,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _driverRatingLabel.text = trip.driver.rating;
     _vehicleLabel.text = trip.vehicle.makeAndModel;
     _vehicleLicenseLabel.text = trip.vehicle.licensePlate;
+    _driverImageView.image = [UIImage imageNamed:@"driver_placeholder"];
+    
+    // Image change fade animation
+    CATransition *transition = [CATransition animation];
+    transition.duration = 0.35f;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionFade;
+    
+    [_driverImageView.layer addAnimation:transition forKey:nil];
     
     NSLog(@"Load driver's photo from %@", trip.driver.photoUrl);
-    [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl] placeholderImage:[UIImage imageNamed:@"driver_placeholder"]];
+    [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl]];
 }
 
 - (void)showDriverPanel {
