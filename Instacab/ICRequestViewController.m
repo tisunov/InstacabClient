@@ -119,6 +119,12 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [_clientService logMapPageView];
     
+    ICClient *client = [ICClient sharedInstance];
+    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionInitial context:nil];
+    
+    [self presentDriverState];
+    [self showNearbyVehicles:[ICNearbyVehicles sharedInstance]];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveMessage:)
                                                  name:kClientServiceMessageNotification
@@ -128,14 +134,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                              selector:@selector(dispatcherDidConnectionChange:)
                                                  name:kDispatchServerConnectionChangeNotification
                                                object:nil];
-    
-    ICClient *client = [ICClient sharedInstance];
-    // Use initial value of client state
-    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionOld | NSKeyValueObservingOptionInitial context:nil];
-    
-    [self presentDriverState];
-    
-    [self showNearbyVehicles:[ICNearbyVehicles sharedInstance]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -824,14 +822,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([[change valueForKey:NSKeyValueChangeKindKey] intValue] == NSKeyValueChangeSetting) {
-        ICClientState newClientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
-        ICClientState oldClientState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
-        
-        if (newClientState != oldClientState || !change[NSKeyValueChangeOldKey]) {
-            [self presentClientState:newClientState];
-        }
-    }
+    ICClientState clientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
+    [self presentClientState:clientState];
 }
 
 -(void)dispatcherDidConnectionChange:(NSNotification*)note {
@@ -844,9 +836,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)didReceiveMessage:(NSNotification *)note {
     ICMessage *message = [[note userInfo] objectForKey:@"message"];
-    
-    [[ICTrip sharedInstance] update:message.trip];
-    
+        
     [self presentDriverState];
     
     switch (message.messageType) {
@@ -928,8 +918,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICDriver *driver = [ICTrip sharedInstance].driver;
     
     // Analytics
-    [_clientService trackEvent:@"Call Driver"
-                        params:@{@"phone": driver.mobilePhone, @"name": driver.firstName, @"id": driver.uID}];
+    [_clientService trackEvent:@"Call Driver" params:nil];
     
     [driver call];
 }

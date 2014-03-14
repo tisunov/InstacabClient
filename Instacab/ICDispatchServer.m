@@ -350,7 +350,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
       @"deviceModel":_deviceModel,
       @"deviceModelHuman":_deviceModelHuman,
       @"deviceId": _deviceId,
-      @"epoch": @([[NSDate date] timeIntervalSince1970]),
+      @"epoch": [self timestampEpoch],
     }];
     
     CLLocationCoordinate2D coordinates = [ICLocationService sharedInstance].coordinates;
@@ -382,8 +382,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     [data setValue:_appType forKey:@"app"];
     [data setValue:kDevice forKey:@"device"];
     // Unix epoch time
-    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-    [data setValue:[NSNumber numberWithLong:timestamp] forKey:@"epoch"];
+    [data setValue:[self timestampEpoch] forKey:@"epoch"];
     // Humand readable timestamp
     [data setValue:[self timestampWithSpace] forKey:@"timestampUTC"];
     // Device id
@@ -393,6 +392,11 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     [data setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
     
     return data;
+}
+
+- (NSNumber *)timestampEpoch{
+    NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
+    return [NSNumber numberWithLong:timestamp];
 }
 
 - (NSString *)timestampWithSpace{

@@ -108,7 +108,7 @@
 #if !(TARGET_IPHONE_SIMULATOR)
     // Development Key: f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25
     // Production Key: 80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25
-    [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
+    [[LocalyticsSession shared] LocalyticsSession:@"80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25"];
     if ([ICClient sharedInstance].isSignedIn) {
         ICClient *client = [ICClient sharedInstance];
         [[LocalyticsSession shared] setCustomerName:client.firstName];

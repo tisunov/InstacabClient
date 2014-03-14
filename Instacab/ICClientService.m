@@ -257,6 +257,7 @@ float const kPingIntervalInSeconds = 6.0;
                                             error:&error];
     
     // Update client state from server
+    [[ICTrip sharedInstance] update:msg.trip];
     [[ICClient sharedInstance] update:msg.client];
     [[ICNearbyVehicles sharedInstance] update:msg.nearbyVehicles];
     
