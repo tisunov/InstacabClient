@@ -16,6 +16,7 @@
 #import "AFURLRequestSerialization.h"
 #import "TargetConditionals.h"
 #import "UIDevice+FCUtilities.h"
+#import "ICLocationService.h"
 
 @interface ICDispatchServer ()
 
@@ -34,6 +35,7 @@
     NSTimer *_pingTimer;
     BOOL _backgroundMode;
     NSDateFormatter *_dateFormatter;
+    NSDateFormatter *_dateFormatterWithT;
 }
 
 NSUInteger const kMaxReconnectAttemps = 1;
@@ -47,9 +49,11 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 #if !(TARGET_IPHONE_SIMULATOR)
     // @"http://192.168.1.36.xip.io:9000/"
     NSString * const kDispatchServerUrl = @"http://node.instacab.ru";
+    NSString * const kDispatchServerEventsUrl = @"http://node.instacab.ru/mobile/event";
     NSString * const kDispatchServerHostName = @"node.instacab.ru";
 #else
     NSString * const kDispatchServerUrl = @"http://localhost:9000";
+    NSString * const kDispatchServerEventsUrl = @"http://localhost:9000/mobile/event";
     NSString * const kDispatchServerHostName = @"localhost:9000";
 #endif
 
@@ -75,8 +79,12 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         _dateFormatter = [[NSDateFormatter alloc] init];
         _dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
 
+        _dateFormatterWithT = [[NSDateFormatter alloc] init];
+        _dateFormatterWithT.dateFormat = @"yyyy-MM-dd'T'HH:mm:ssZ";
+        
         NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
-        [_dateFormatter setTimeZone:gmt];
+        _dateFormatter.timeZone = gmt;
+        _dateFormatterWithT.timeZone = gmt;
         
         
         // Subscribe to app events
@@ -317,9 +325,55 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     _pingTimer = nil;
 }
 
+#pragma mark - Log Events
+
+- (void)sendLogEvent:(NSString *)eventName clientId:(NSNumber *)clientId parameters:(NSDictionary *)params
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.requestSerializer = [AFJSONRequestSerializer serializer];
+    
+    NSDictionary *eventData = [self buildLogEventWithName:eventName clientId:clientId parameters:params];
+    [manager POST:kDispatchServerEventsUrl parameters:eventData success:nil failure:nil];
+}
+
+// TODO: Добавить отправку identifierForVendor (меняется при удалении всех приложений от моего имени с устройства)
+- (NSDictionary *)buildLogEventWithName:(NSString *)eventName
+                           clientId:(NSNumber *)clientId
+                         parameters:(NSDictionary *)params
+{
+    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:@{
+      @"eventName": eventName,
+      @"app":_appType,
+      @"device":kDevice,
+      @"appVersion":_appVersion,
+      @"deviceOS":_deviceOS,
+      @"deviceModel":_deviceModel,
+      @"deviceModelHuman":_deviceModelHuman,
+      @"deviceId": _deviceId,
+      @"epoch": @([[NSDate date] timeIntervalSince1970]),
+    }];
+    
+    CLLocationCoordinate2D coordinates = [ICLocationService sharedInstance].coordinates;
+    [data setValue:@[@(coordinates.longitude), @(coordinates.latitude)] forKey:@"location"];
+
+    // Parameters
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:params];
+    
+    CLLocation *location = [ICLocationService sharedInstance].location;
+    [parameters setObject:@(location.altitude) forKey:@"locationAltitude"];
+    [parameters setObject:@(location.verticalAccuracy) forKey:@"locationVerticalAccuracy"];
+    [parameters setObject:@(location.horizontalAccuracy) forKey:@"locationHorizontalAccuracy"];
+    
+    if (clientId) [parameters setObject:clientId forKey:@"clientId"];
+    [data setObject:parameters forKey:@"parameters"];
+    
+    return data;
+}
+
 #pragma mark - Misc
 
-- (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude {
+- (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude
+{
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     [data setValue:_deviceOS forKey:@"deviceOS"];
     [data setValue:_deviceModel forKey:@"deviceModel"];
@@ -331,7 +385,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
     [data setValue:[NSNumber numberWithLong:timestamp] forKey:@"epoch"];
     // Humand readable timestamp
-    [data setValue:[self timestampUTC] forKey:@"timestampUTC"];
+    [data setValue:[self timestampWithSpace] forKey:@"timestampUTC"];
     // Device id
     [data setValue:_deviceId forKey:@"deviceId"];
     // Location
@@ -341,8 +395,12 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     return data;
 }
 
-- (NSString *)timestampUTC{
+- (NSString *)timestampWithSpace{
     return [_dateFormatter stringFromDate:[NSDate date]];
+}
+
+- (NSString *)timestampWithT{
+    return [_dateFormatterWithT stringFromDate:[NSDate date]];
 }
 
 @end

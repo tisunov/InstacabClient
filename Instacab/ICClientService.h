@@ -26,7 +26,7 @@ typedef void (^ICClientServiceFailureBlock)();
              password: (NSString *)password
               success:(ICClientServiceSuccessBlock)success
               failure:(ICClientServiceFailureBlock)failure;
--(void)pickupAt: (ICLocation *)location;
+-(void)requestPickupAt: (ICLocation *)location;
 
 -(void)ping:(CLLocationCoordinate2D)location
      reason:(NSString *)aReason
@@ -64,5 +64,9 @@ typedef void (^ICClientServiceFailureBlock)();
 - (void)trackScreenView:(NSString *)name;
 - (void)trackEvent:(NSString *)name params:(NSDictionary *)aParams;
 - (void)trackError:(NSDictionary *)attributes;
+
+#pragma mark - Events
+
+- (void)logMapPageView;
 
 @end

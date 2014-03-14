@@ -14,6 +14,8 @@
 
 @implementation ICClient
 
+@synthesize uID;
+
 + (instancetype)sharedInstance {
     static ICClient *sharedClient = nil;
     static dispatch_once_t onceToken;

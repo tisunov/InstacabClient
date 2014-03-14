@@ -13,6 +13,11 @@
 @property (nonatomic, copy, readonly) NSArray *vehiclePoints;
 @property (nonatomic, copy, readonly) NSString *sorryMsg;
 @property (nonatomic, copy, readonly) NSString *noneAvailableString;
+
 @property (readonly) BOOL isEmpty;
 @property (readonly) BOOL isRestrictedArea;
+
+-(void)update:(ICNearbyVehicles *)nearbyVehicles;
+
++(instancetype)sharedInstance;
 @end

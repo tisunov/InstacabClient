@@ -22,6 +22,7 @@ extern NSString *const kDispatchServerConnectionChangeNotification;
 -(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep;
 
 - (void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates;
+- (void)sendLogEvent:(NSString *)eventName clientId:(NSNumber *)clientId parameters:(NSDictionary *)params;
 - (void)connect;
 - (void)disconnect;
 

@@ -12,6 +12,7 @@
 #import "FCReachability.h"
 #import "LocalyticsSession.h"
 #import "ICLocationService.h"
+#import "ICNearbyVehicles.h"
 
 NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonMovePin = @"movepin";
@@ -47,6 +48,8 @@ float const kPingIntervalInSeconds = 6.0;
     return self;
 }
 
+#pragma mark - Remote Commands
+
 -(void)ping:(CLLocationCoordinate2D)location
      reason:(NSString *)aReason
     success:(ICClientServiceSuccessBlock)success
@@ -55,16 +58,130 @@ float const kPingIntervalInSeconds = 6.0;
     _successBlock = [success copy];
     _failureBlock = [failure copy];
     
+    // TODO: Посылать текущий vehicleViewId
     NSDictionary *pingMessage = @{
         kFieldMessageType: @"PingClient",
         @"token": [ICClient sharedInstance].token,
         @"id": [ICClient sharedInstance].uID
     };
-    
+
+    // TODO: Посылать vehicleViewId (текущий тип автомобилей), vehicleViewIds (все доступные, так как они могут быть динамическими ото дня ко дню)
+    [self.dispatchServer sendLogEvent:@"NearestCabRequest" clientId:[ICClient sharedInstance].uID parameters:@{@"reason": aReason}];
+
     [self sendMessage:pingMessage coordinates:location];
     
     // Analytics
     [self trackEvent:@"Request Nearest Cabs" params:@{@"reason": aReason}];
+}
+
+-(void)loginWithEmail:(NSString *)email
+             password: (NSString *)password
+              success:(ICClientServiceSuccessBlock)success
+              failure:(ICClientServiceFailureBlock)failure
+{
+    _successBlock = [success copy];
+    _failureBlock = [failure copy];
+
+    // Always reconnect after sending login
+    self.dispatchServer.maintainConnection = YES;
+    
+    // init Login message
+    NSDictionary *message = @{
+        kFieldEmail: email,
+        kFieldPassword: password,
+        kFieldMessageType: @"Login"
+    };
+    
+    [self.dispatchServer sendLogEvent:@"SignInRequest" clientId:nil parameters:nil];
+    
+    [self sendMessage:message];
+    
+    // Analytics
+    [self trackEvent:@"Log In" params:nil]; 
+}
+
+// TODO: Добавить (reason=initialPingFailed), (reason=locationServicesDisabled)
+-(void)logOut {
+    // Don't reconnect after logout
+    self.dispatchServer.maintainConnection = NO;
+    [self.dispatchServer disconnect];
+
+    [self.dispatchServer sendLogEvent:@"SignOut" clientId:[ICClient sharedInstance].uID parameters:nil];
+
+    [[ICClient sharedInstance] logout];
+    
+    // Analytics
+    [self trackEvent:@"Sign Out" params:nil];
+}
+
+-(void)submitRating:(NSUInteger)rating
+       withFeedback:(NSString *)feedback
+            forTrip: (ICTrip*)trip
+            success:(ICClientServiceSuccessBlock)success
+            failure:(ICClientServiceFailureBlock)failure
+{
+    NSMutableDictionary *message = [NSMutableDictionary dictionaryWithDictionary: @{
+        kFieldMessageType: @"RatingDriver",
+        @"token": [ICClient sharedInstance].token,
+        @"id": [ICClient sharedInstance].uID,
+        @"tripId": trip.tripId,
+        @"rating": [NSNumber numberWithInteger:rating],
+    }];
+    
+    if (feedback.length > 0) {
+        [message setObject:feedback forKey:@"feedback"];
+    }
+    
+    _successBlock = [success copy];
+    _failureBlock = [failure copy];
+    
+    [self sendMessage:message];
+}
+
+-(void)requestPickupAt: (ICLocation*)location {
+    NSAssert([[ICClient sharedInstance] isSignedIn], @"Can't pickup until sign in");
+    NSAssert(location != nil, @"Pickup location is nil");
+    
+    NSDictionary *message = @{
+        kFieldMessageType: @"Pickup",
+        @"token": [ICClient sharedInstance].token,
+        @"id": [ICClient sharedInstance].uID,
+        @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:location]
+    };
+    
+    [self.dispatchServer sendLogEvent:@"PickupRequest" clientId:[ICClient sharedInstance].uID parameters:nil];
+    
+    [self sendMessage:message];
+    
+    // Analytics
+    [self trackEvent:@"Request Vehicle" params:nil];
+}
+
+-(void)cancelPickup {
+    NSDictionary *message = @{
+        kFieldMessageType: @"CancelPickup",
+        @"token": [ICClient sharedInstance].token,
+        @"id": [ICClient sharedInstance].uID,
+        @"tripId": [ICTrip sharedInstance].tripId
+    };
+    
+    [self sendMessage:message];
+}
+
+-(void)cancelTrip {
+    NSDictionary *message = @{
+        kFieldMessageType: @"CancelTripClient",
+        @"token": [ICClient sharedInstance].token,
+        @"id": [ICClient sharedInstance].uID,
+        @"tripId": [ICTrip sharedInstance].tripId
+    };
+
+    [self.dispatchServer sendLogEvent:@"CancelTripRequest" clientId:[ICClient sharedInstance].uID parameters:nil];
+    
+    [self sendMessage:message];
+    
+    // Analytics
+    [self trackEvent:@"Cancel Trip" params:nil];
 }
 
 -(void)signUp:(ICSignUpInfo *)info
@@ -80,6 +197,8 @@ float const kPingIntervalInSeconds = 6.0;
         @"cardio": @(cardio),
         kFieldMessageType: @"SignUpClient"
     };
+    
+    [self.dispatchServer sendLogEvent:@"SignUpRequest" clientId:nil parameters:nil];
     
     [self sendMessage:message];
 }
@@ -107,152 +226,23 @@ float const kPingIntervalInSeconds = 6.0;
     [self sendMessage:message];
 }
 
--(void)loginWithEmail:(NSString *)email
-             password: (NSString *)password
-              success:(ICClientServiceSuccessBlock)success
-              failure:(ICClientServiceFailureBlock)failure
-{
-    _successBlock = [success copy];
-    _failureBlock = [failure copy];
-
-    // Always reconnect after sending login
-    self.dispatchServer.maintainConnection = YES;
+// TODO: Реализовать оплату задолженности за поездки из приложения
+// Просто набор неоплаченных счетов за поездки, каждую из которых можно оплатить прежде
+// чем начать следующую поездку
+// ApiCommand
+// apiParameters: payment_profile_id, token, apiMethod=PUT, apiUrl=/client_bills/%d
+- (void)payBill {
     
-    // init Login message
-    NSDictionary *message = @{
-        kFieldEmail: email,
-        kFieldPassword: password,
-        kFieldMessageType: @"Login"
-    };
-    
-    [self sendMessage:message];
-    
-    // Analytics
-    [self trackEvent:@"Log In" params:nil]; 
 }
 
-// TODO: Добавить (reason=initialPingFailed), (reason=locationServicesDisabled)
--(void)logOut {
-    NSDictionary *message = @{
-        kFieldMessageType: @"LogoutClient",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID
-    };
+// TODO: Реализовать requestMobileConfirmation
+// ApiCommand
+// apiParameters: token, apiMethod=PUT, apiUrl=/clients/%d/request_mobile_confirmation
+- (void)requestMobileConfirmation {
     
-    // Don't reconnect after logout, and disconnect after message sent
-    self.dispatchServer.maintainConnection = NO;
-    
-    __weak typeof(self.dispatchServer) weakDispatchServer = self.dispatchServer;
-    _successBlock = ^(ICMessage *message) {
-        [weakDispatchServer disconnect];
-    };
-    
-    [[ICClient sharedInstance] logout];
-    
-    [self sendMessage:message];
-    
-    // Analytics
-    [self trackEvent:@"Log Out" params:nil];
 }
 
--(void)submitRating:(NSUInteger)rating
-       withFeedback:(NSString *)feedback
-            forTrip: (ICTrip*)trip
-            success:(ICClientServiceSuccessBlock)success
-            failure:(ICClientServiceFailureBlock)failure
-{
-    NSMutableDictionary *message = [NSMutableDictionary dictionaryWithDictionary: @{
-        kFieldMessageType: @"RatingDriver",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID,
-        @"tripId": trip.tripId,
-        @"rating": [NSNumber numberWithInteger:rating],
-    }];
-    
-    if (feedback.length > 0) {
-        [message setObject:feedback forKey:@"feedback"];
-    }
-    
-    _successBlock = [success copy];
-    _failureBlock = [failure copy];
-    
-    [self sendMessage:message];
-}
-
--(void)pickupAt: (ICLocation*)location {
-    NSAssert([[ICClient sharedInstance] isSignedIn], @"Can't pickup until sign in");
-    NSAssert(location != nil, @"Pickup location is nil");
-    
-    NSDictionary *message = @{
-        kFieldMessageType: @"Pickup",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID,
-        @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:location]
-    };
-    
-    [self sendMessage:message];
-    
-    // Analytics
-    [self trackEvent:@"Request Vehicle" params:nil];
-}
-
--(void)cancelPickup {
-    NSDictionary *message = @{
-        kFieldMessageType: @"CancelPickup",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID,
-        @"tripId": [ICTrip sharedInstance].tripId
-    };
-    
-    [self sendMessage:message];
-}
-
--(void)cancelTrip {
-    NSDictionary *message = @{
-        kFieldMessageType: @"CancelTripClient",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID,
-        @"tripId": [ICTrip sharedInstance].tripId
-    };
-    
-    [self sendMessage:message];
-    
-    // Analytics
-    [self trackEvent:@"Cancel Trip" params:nil];
-}
-
-// TODO: Посылать log event через HTTP POST в node-js/rails + mongodb из которой можно анализировать и делать визуализации
-// TODO: Log открытия каждой страницы приложения
-// TODO: Log посылки каждого сообщения на сервер
-//- (void)logEvent: (NSDictionary *)event {
-    //    [self.httpClient POST:@"/mobile/event" parameters:event success:^(AFHTTPRequestOperation *operation, id responseObject) {
-    //        NSLog(@"trackEvent JSON: %@", responseObject);
-    //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    //        NSLog(@"trackEvent Error: %@", error);
-    //    }];
-//}
-
-//- (NSDictionary *)createMapPageViewEvent {
-//    NSDictionary *event;
-//    [event setValue:@"MapPageView" forKey:@"eventName"];
-//    
-//    // location params
-//    CLLocation *location = [ICLocationService sharedInstance].location;
-//    
-//    NSNumber* latitude = [NSNumber numberWithFloat:location.coordinate.latitude];
-//    NSNumber* longitude = [NSNumber numberWithFloat:location.coordinate.longitude];
-//    [event setValue:@[longitude, latitude] forKey:@"location"];
-//    
-//    NSDictionary *parameters = @{
-//        @"locationAltitude": [NSNumber numberWithFloat:location.altitude],
-//        @"locationVerticalAccuracy": [NSNumber numberWithFloat:location.verticalAccuracy],
-//        @"locationHorizontalAccuracy": [NSNumber numberWithFloat:location.horizontalAccuracy],
-//        @"requestGuid": [[NSUUID UUID] UUIDString]
-//    };
-//    [event setValue:parameters forKey:@"parameters"];
-//    
-//    return event;
-//}
+#pragma mark - Utility Methods
 
 - (void)didReceiveMessage:(NSDictionary *)responseMessage {
     [super didReceiveMessage:responseMessage];
@@ -265,9 +255,10 @@ float const kPingIntervalInSeconds = 6.0;
     ICMessage *msg = [MTLJSONAdapter modelOfClass:ICMessage.class
                                fromJSONDictionary:responseMessage
                                             error:&error];
-
+    
     // Update client state from server
     [[ICClient sharedInstance] update:msg.client];
+    [[ICNearbyVehicles sharedInstance] update:msg.nearbyVehicles];
     
     // Let someone handle the message
     [[NSNotificationCenter defaultCenter] postNotificationName:kClientServiceMessageNotification object:self userInfo:@{@"message":msg}];
@@ -278,8 +269,6 @@ float const kPingIntervalInSeconds = 6.0;
         _failureBlock = nil;
     }
 }
-
-#pragma mark - Utility Methods
 
 - (BOOL)isOnline {
     return _reachability.isOnline;
@@ -393,6 +382,16 @@ float const kPingIntervalInSeconds = 6.0;
 
 - (void)trackError:(NSDictionary *)attributes {
     [self trackEvent:@"Error" params:attributes];
+}
+
+#pragma mark - Log Events
+
+// TODO: Track SignUpCancel event
+// TODO: При SignUpCancel учитывать какие поля были заполнены при отмене регистрации
+// firstName, lastName, email, password, mobile, card_number,
+// card_expiration_month, card_expiration_year, card_code
+- (void)logMapPageView {
+    [self.dispatchServer sendLogEvent:@"MapPageView" clientId:[ICClient sharedInstance].uID parameters:nil];
 }
 
 @end

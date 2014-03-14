@@ -35,7 +35,8 @@ NSString * const kSensorParam = @"sensor=true";
     NSLog(@"Reverse geocode lat=%f, lon=%f", location.latitude, location.longitude);
     
     NSURL *url = [NSURL URLWithString:geocodeUrl];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    request.timeoutInterval = 5.0f;
     
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
     operation.responseSerializer = [AFJSONResponseSerializer serializer];

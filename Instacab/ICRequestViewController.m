@@ -117,6 +117,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [_clientService logMapPageView];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveMessage:)
                                                  name:kClientServiceMessageNotification
@@ -133,8 +135,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self presentDriverState];
     
-    // TODO: Лишний раз шлется, Welcome Controller уже посылал и получил ответ
-    [self requestNearestCabs:_locationService.coordinates reason:kNearestCabRequestReasonPing];
+    [self showNearbyVehicles:[ICNearbyVehicles sharedInstance]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -228,7 +229,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // TODO: Если расстояние между центром карты _mapView и текущей координатой > 10 м
     // тогда смещать карту (человек сдвинулся на существенное расстояние при закрытом приложении или открытом) CLLocation::distanceFromLocation
     // ИЛИ: Следить за активацией приложения (после фонового режима) и ставить флаг что возможен автоматический сдвиг карты (при отсутствии in flight drag gesture)
-    [_mapView animateToLocation:coordinates];
+//    [_mapView animateToLocation:coordinates];
 }
 
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
@@ -598,7 +599,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
         
         // Request pickup
-        [_clientService pickupAt:_pickupLocation];
+        [_clientService requestPickupAt:_pickupLocation];
         
         [self setReadyToRequest:NO];
     }

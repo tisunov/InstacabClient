@@ -11,6 +11,15 @@
 
 @implementation ICNearbyVehicles
 
++ (instancetype)sharedInstance {
+    static ICNearbyVehicles *shared = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = [[self alloc] init];
+    });
+    return shared;
+}
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"minEta": @"minEta",
@@ -22,6 +31,11 @@
 
 + (NSValueTransformer *)vehiclePointsJSONTransformer {
     return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:ICVehiclePoint.class];
+}
+
+-(void)update:(ICNearbyVehicles *)nearbyVehicles {
+    if (nearbyVehicles)
+        [self mergeValuesForKeysFromModel:nearbyVehicles];
 }
 
 -(BOOL)isEmpty {
