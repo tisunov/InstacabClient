@@ -36,6 +36,8 @@
     BOOL _backgroundMode;
     NSDateFormatter *_dateFormatter;
     NSDateFormatter *_dateFormatterWithT;
+    
+    AFHTTPRequestOperationManager *_httpManager;
 }
 
 NSUInteger const kMaxReconnectAttemps = 1;
@@ -86,6 +88,9 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         _dateFormatter.timeZone = gmt;
         _dateFormatterWithT.timeZone = gmt;
         
+        
+        _httpManager = [AFHTTPRequestOperationManager manager];
+        _httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
         
         // Subscribe to app events
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -329,11 +334,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 - (void)sendLogEvent:(NSString *)eventName clientId:(NSNumber *)clientId parameters:(NSDictionary *)params
 {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    manager.requestSerializer = [AFJSONRequestSerializer serializer];
-    
     NSDictionary *eventData = [self buildLogEventWithName:eventName clientId:clientId parameters:params];
-    [manager POST:kDispatchServerEventsUrl parameters:eventData success:nil failure:nil];
+    [_httpManager POST:kDispatchServerEventsUrl parameters:eventData success:nil failure:nil];
 }
 
 // TODO: Добавить отправку identifierForVendor (меняется при удалении всех приложений от моего имени с устройства)
