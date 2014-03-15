@@ -824,11 +824,34 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    ICClientState clientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
-    ICClientState oldState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
-    if (oldState != clientState || !change[NSKeyValueChangeOldKey]) {
-        [self presentClientState:clientState];
+    if ([object isKindOfClass:ICClient.class]) {
+        ICClientState clientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
+        ICClientState oldState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
+        if (oldState != clientState || !change[NSKeyValueChangeOldKey]) {
+            [self presentClientState:clientState];
+        }
     }
+//    else if ([object isKindOfClass:ICNearbyVehicles.class]) {
+//        CGFloat offset = _pickupBtn.y + _pickupBtn.height;
+//        
+//        [UIView animateWithDuration:0.25f animations:^(void){
+//            // Hide request pickup button
+//            if ([ICNearbyVehicles sharedInstance].isEmpty) {
+//                _pickupBtn.alpha = 0.0f;
+//                _pickupBtn.height = 0.0;
+//                _pickupView.y += offset;
+//                _pickupView.height -= offset;
+//                _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding - offset, 0, _mapVerticalPadding - offset, 0);
+//            }
+//            else {
+//                _pickupBtn.alpha = 1.f;
+//                _pickupBtn.height = 40.0f;
+//                _pickupView.height = 75.f;
+//                _pickupView.y = [UIScreen mainScreen].bounds.size.height - _pickupView.height;
+//                _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
+//            }
+//        }];
+//    }
 }
 
 -(void)dispatcherDidConnectionChange:(NSNotification*)note {
