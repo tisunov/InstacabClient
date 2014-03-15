@@ -19,6 +19,7 @@
 #import "UINavigationController+Animation.h"
 #import "UIApplication+Alerts.h"
 #import "CGRectUtils.h"
+#import "UIView+Positioning.h"
 #import "UIActionSheet+Blocks.h"
 #import "UIAlertView+Additions.h"
 #import "UIImageView+AFNetworking.h"
@@ -120,7 +121,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_clientService logMapPageView];
     
     ICClient *client = [ICClient sharedInstance];
-    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionInitial context:nil];
+    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionOld context:nil];
     
     [self presentDriverState];
     [self showNearbyVehicles:[ICNearbyVehicles sharedInstance]];
@@ -134,6 +135,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                              selector:@selector(dispatcherDidConnectionChange:)
                                                  name:kDispatchServerConnectionChangeNotification
                                                object:nil];
+    
+//    [[ICNearbyVehicles sharedInstance] addObserver:self forKeyPath:@"noneAvailableString" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -353,9 +356,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             [self.navigationController setNavigationBarHidden:YES animated:YES];
             
             // Slide up
-            _addressView.frame = CGRectSetY(_addressView.frame, 0.0);
+            _addressView.y = 0.0;
             // Slide down
-            _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height);
+            _pickupView.y = screenBounds.size.height;
             
             _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
         }];
@@ -366,9 +369,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             [self setNeedsStatusBarAppearanceUpdate];
             
             // Slide down
-            _addressView.frame = CGRectSetY(_addressView.frame, _addressViewOriginY);
+            _addressView.y = _addressViewOriginY;
             // Slide up
-            _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height - _pickupView.frame.size.height);
+            _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
             
             _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
         }];
@@ -641,7 +644,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _driverRatingLabel.text = trip.driver.rating;
     _vehicleLabel.text = trip.vehicle.makeAndModel;
     _vehicleLicenseLabel.text = trip.vehicle.licensePlate;
-    _driverImageView.image = [UIImage imageNamed:@"driver_placeholder"];
     
     // Image change fade animation
     CATransition *transition = [CATransition animation];
@@ -652,7 +654,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_driverImageView.layer addAnimation:transition forKey:nil];
     
     NSLog(@"Load driver's photo from %@", trip.driver.photoUrl);
-    [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl]];
+    [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl] placeholderImage:[UIImage imageNamed:@"driver_placeholder"]];
 }
 
 - (void)showDriverPanel {
@@ -666,9 +668,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [UIView animateWithDuration:0.35 animations:^(void){
         // Slide down
-        _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height);
+        _pickupView.y = screenBounds.size.height;
         // Slide up
-        _driverView.frame = CGRectSetY(_driverView.frame, driverPanelY);
+        _driverView.y = driverPanelY;
     }];
 }
 
@@ -689,7 +691,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _statusView.hidden = NO;
     
     [UIView animateWithDuration:0.25 animations:^(void) {
-        _addressView.frame = CGRectSetY(_addressView.frame, _addressView.frame.origin.y - _addressView.frame.size.height);
+        _addressView.y = _addressView.frame.origin.y - _addressView.frame.size.height;
         _addressView.alpha = 0.0;
         
         _statusView.alpha = 0.95;
@@ -700,7 +702,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (_statusView.hidden) return;
     
     [UIView animateWithDuration:0.25 animations:^(void) {
-        _addressView.frame = CGRectSetY(_addressView.frame, _addressViewOriginY);
+        _addressView.y = _addressViewOriginY;
         _addressView.alpha = 0.95;
         
         _statusView.alpha = 0.0;
@@ -823,7 +825,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     ICClientState clientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
-    [self presentClientState:clientState];
+    ICClientState oldState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
+    if (oldState != clientState || !change[NSKeyValueChangeOldKey]) {
+        [self presentClientState:clientState];
+    }
 }
 
 -(void)dispatcherDidConnectionChange:(NSNotification*)note {
@@ -879,9 +884,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [UIView animateWithDuration:0.35 animations:^(void){
         // Slide up
-        _pickupView.frame = CGRectSetY(_pickupView.frame, screenBounds.size.height - _pickupView.frame.size.height);
+        _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
         // Slide down
-        _driverView.frame = CGRectSetY(_driverView.frame, screenBounds.size.height);
+        _driverView.y = screenBounds.size.height;
     }];
 }
 
