@@ -90,14 +90,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.titleText = @"INSTACAB";
     self.navigationController.navigationBarHidden = NO;
     
-    self.navigationItem.leftBarButtonItem =
-        [[UIBarButtonItem alloc]
-             initWithBarButtonSystemItem:UIBarButtonSystemItemAction
-             target:self
-             action:@selector(showAccountActionSheet)];
-    
     _addressViewOriginY = self.navigationController.navigationBar.frame.origin.x + self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
     _mapVerticalPadding = _pickupView.frame.size.height;
+    
+    [self showExitNavbarButton];
     
     [self addGoogleMapView];
     [self addPickupPositionPin];
@@ -112,7 +108,17 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
     [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
     
-    _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
+//    _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
+}
+
+- (void)showExitNavbarButton {
+    self.navigationItem.leftBarButtonItem =
+        [[UIBarButtonItem alloc] initWithTitle:@"Выход" style:UIBarButtonItemStylePlain target:self action:@selector(showAccountActionSheet)];
+}
+
+- (void)showCancelConfirmationNavbarButton {
+    self.navigationItem.leftBarButtonItem =
+        [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPickupRequesConfirmation)];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -172,6 +178,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)hideTripCancelButton {
     self.navigationItem.rightBarButtonItem = nil;
+}
+
+-(void)cancelPickupRequesConfirmation {
+    [self setReadyToRequest:NO];
 }
 
 -(void)showTripActionSheet {
@@ -314,13 +324,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                       perPoints:self.view.frame.size.width];
         
         // zoom map to pinpoint pickup location
-        [_mapView animateToZoom: zoomLevel];
+        [_mapView animateToZoom:zoomLevel];
         
         [self.pickupBtn setTitle:[kConfirmPickupLocation uppercaseString] forState:UIControlStateNormal];
+        
+        [self showCancelConfirmationNavbarButton];
     }
     else {
         self.titleText = @"INSTACAB";
         [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
+        
+        [_mapView animateToZoom:kDefaultMapZoom];
+        [self showExitNavbarButton];
     }
 }
 
@@ -388,9 +403,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
-// TODO: В "ICClientStateLooking" нужно отменить все запросы к google geocoder
-//    UBGoogleService.sharedGoogleService().cancelAllRequests();
-//    UBPickupLocation.sharedPickupLocation().clear();
 -(void)recognizeDragOnMap:(id)sender {
     if ([ICClient sharedInstance].state != SVClientStateLooking) return;
     
@@ -557,17 +569,17 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 	[hud show:YES];
 }
 
-- (void)hudWasCancelled {
-    [UIAlertView presentWithTitle:@"Отмена Заказа"
-                          message:@"Вы уверены что хотите отменить вызов?"
-                          buttons:@[ @"Нет", @"Да" ]
-                    buttonHandler:^(NSUInteger index) {
-                        /* ДА */
-                        if (index == 1) {
-                            [self cancelPickup];
-                        }
-                    }];
-}
+//- (void)hudWasCancelled {
+//    [UIAlertView presentWithTitle:@"Отмена Заказа"
+//                          message:@"Вы уверены что хотите отменить вызов?"
+//                          buttons:@[ @"Нет", @"Да" ]
+//                    buttonHandler:^(NSUInteger index) {
+//                        /* ДА */
+//                        if (index == 1) {
+//                            [self cancelPickup];
+//                        }
+//                    }];
+//}
 
 -(void)hideProgress {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
@@ -579,7 +591,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)cancelPickup {
     [_clientService cancelPickup];
-    [self showProgressWithMessage:@"Отсылаю..." allowCancel:NO];
+    [self showProgressWithMessage:@"Отправляю..." allowCancel:NO];
 }
 
 - (IBAction)requestPickup:(id)sender {
