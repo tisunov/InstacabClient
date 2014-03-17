@@ -58,7 +58,7 @@ NSString * const kProgressLookingForDriver = @"Выбираю водителя..
 NSString * const kProgressWaitingConfirmation = @"Запрашиваю водителя...";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
 NSString * const kTripEtaTemplate = @"ПРИЕДЕТ ПРИМЕРНО ЧЕРЕЗ %@ %@";
-NSString * const kRequestMinimumEtaTemplate = @"примерно %@ %@ до приезда машины";
+NSString * const kRequestMinimumEtaTemplate = @"примерно %@ до приезда машины";
 
 CGFloat const kDefaultMapZoom = 15.0f;
 CGFloat const kDriverInfoPanelHeight = 75.0f;
@@ -464,7 +464,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
     
     // Show ETA
-    _pickupTimeLabel.text = [self nearbyEta:nearbyVehicles.minEta withFormat:kRequestMinimumEtaTemplate];
+    _pickupTimeLabel.text = [[NSString stringWithFormat:kRequestMinimumEtaTemplate, nearbyVehicles.minEtaString] uppercaseString];
     _pickupBtn.enabled = YES;
     
     // Add new vehicles and update existing vehicles' positions
@@ -843,6 +843,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             [self presentClientState:clientState];
         }
     }
+// TODO: Проще прятать целиком PickupView когда нет машин и показывать новый View    
 //    else if ([object isKindOfClass:ICNearbyVehicles.class]) {
 //        CGFloat offset = _pickupBtn.y + _pickupBtn.height;
 //        
@@ -977,17 +978,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 }
 
-- (NSString *)nearbyEta:(NSNumber *)etaValue withFormat:(NSString *)format
-{
-    // Uncomment to take App Store screenshots
-//    etaValue = [NSNumber numberWithInt:1];
-    int eta = [etaValue intValue];
-    int d = (int)floor(eta) % 10;
-    
-    NSString *minute = @"минут";
-    if(d == 1 || eta == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минута";
-    
-    return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
-}
+//- (NSString *)nearbyEta:(NSNumber *)etaValue withFormat:(NSString *)format
+//{
+//    // Uncomment to take App Store screenshots
+////    etaValue = [NSNumber numberWithInt:1];
+//    int eta = [etaValue intValue];
+//    int d = (int)floor(eta) % 10;
+//    
+//    NSString *minute = @"минут";
+//    if(eta == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минута";
+//    if(eta > 1 && eta < 5) minute = @"минуты";
+//    
+//    return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
+//}
 
 @end

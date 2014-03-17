@@ -23,6 +23,7 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"minEta": @"minEta",
+        @"minEtaString": @"minEtaString",
         @"vehiclePoints": @"vehiclePoints",
         @"sorryMsg": @"sorryMsg",
         @"noneAvailableString": @"noneAvailableString"
