@@ -843,7 +843,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             [self presentClientState:clientState];
         }
     }
-// TODO: Проще прятать целиком PickupView когда нет машин и показывать новый View    
+// TODO: Проще прятать целиком PickupView когда нет машин и показывать новый View
 //    else if ([object isKindOfClass:ICNearbyVehicles.class]) {
 //        CGFloat offset = _pickupBtn.y + _pickupBtn.height;
 //        
