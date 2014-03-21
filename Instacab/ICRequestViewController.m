@@ -107,8 +107,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
     self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
     [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
-    
-//    _hudGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hudWasCancelled)];
+
+    // Should be sent only once when view is created to track open-to-order ratio
+    // Even if user opens app and gets straight to ReceiptView, that method should be called
+    [_clientService logMapPageView];
 }
 
 - (void)showExitNavbarButton {
@@ -123,8 +125,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [_clientService logMapPageView];
     
     ICClient *client = [ICClient sharedInstance];
     [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionOld context:nil];

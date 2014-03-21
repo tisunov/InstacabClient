@@ -59,6 +59,8 @@
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_tile"]];
+    
     self.loadingIndicator.hidesWhenStopped = YES;
     [self setNeedsStatusBarAppearanceUpdate];
     
@@ -68,9 +70,12 @@
     _signinButton.highlightedColor = [UIColor colorFromHexString:@"#2980B9"];
     
     _signupButton.layer.cornerRadius = 3.0f;
-    [_signupButton setTitleColor:[UIColor colorFromHexString:@"#3498DB"] forState:UIControlStateNormal];
-    _signupButton.normalColor = [UIColor whiteColor];
-    _signupButton.highlightedColor = [UIColor colorWithWhite:0.949 alpha:1.0]; //[UIColor colorFromHexString:@"#2980B9"];
+    _signupButton.normalColor = _signinButton.normalColor;
+    _signupButton.highlightedColor = _signinButton.highlightedColor;
+    
+//    [_signupButton setTitleColor:[UIColor colorFromHexString:@"#3498DB"] forState:UIControlStateNormal];
+//    _signupButton.normalColor = [UIColor whiteColor];
+//    _signupButton.highlightedColor = [UIColor colorWithWhite:0.949 alpha:1.0];
 
     // Uncomment to take LaunchImage screenshot
 //    [self setNeedsStatusBarAppearanceUpdate];

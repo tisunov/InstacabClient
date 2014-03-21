@@ -90,6 +90,9 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
         feedback = self.feedbackTextView.text;
     }
     
+    // BUG: Если рейтинг не был получен сервером, то Клиент пошлет его еще раз
+    // и не получив ответа, успокоится. Дальше продолжит слать регулярный Ping и никогда не выйдет с
+    // Receipt View
     ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
     ICClientService *service = [ICClientService sharedInstance];
     [service submitRating:_driverRating

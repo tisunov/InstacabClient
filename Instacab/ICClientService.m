@@ -295,6 +295,7 @@ float const kPingIntervalInSeconds = 6.0;
     ICClientState newState = (ICClientState)[[change valueForKey:NSKeyValueChangeNewKey] intValue];
     
     switch (newState) {
+        case SVClientStatePendingRating:
         case SVClientStateLooking:
             [self stopPing];
             break;
@@ -314,16 +315,19 @@ float const kPingIntervalInSeconds = 6.0;
     [self stopPing];
 }
 
-// start sending Ping message every 4 seconds
+// start sending Ping message every 6 seconds
 -(void)startPing {
-    if(_pingTimer || [ICClient sharedInstance].state == SVClientStateLooking) return;
+    BOOL shouldNotPing = [ICClient sharedInstance].state == SVClientStateLooking || [ICClient sharedInstance].state == SVClientStatePendingRating;
+    if(_pingTimer || shouldNotPing) return;
     
     NSLog(@"Start Ping every %d seconds", (int)kPingIntervalInSeconds);
     [self delayPing];
 }
 
 -(void)delayPing {
-    if ([ICClient sharedInstance].state == SVClientStateLooking) return;
+    BOOL shouldNotPing = [ICClient sharedInstance].state == SVClientStateLooking || [ICClient sharedInstance].state == SVClientStatePendingRating;
+    
+    if (shouldNotPing) return;
     
     [_pingTimer invalidate];
     
