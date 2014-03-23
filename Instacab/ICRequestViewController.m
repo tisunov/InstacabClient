@@ -892,6 +892,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         case SVMessageTypeTripCanceled:
             [[UIApplication sharedApplication] showAlertWithTitle:@"Заказ Отменен" message:message.reason cancelButtonTitle:@"OK"];
             break;
+
+        case SVMessageTypePickupCanceled:
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Заказ Отменен" message:message.reason cancelButtonTitle:@"OK"];
+            break;
             
         case SVMessageTypeError:
             [self hideProgress];
