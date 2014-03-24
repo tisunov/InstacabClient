@@ -23,6 +23,9 @@
 // TODO: При Login происходит посылка Ping, который записывается в очередь, затем выполняется Connect
 // на который также отводится timeout 2 секунды, из-за этого на медленном соединении
 // посылка 1st Ping отваливается, и пробуются еще раз, соединение все еще не установилось, и Ping снова пишется в очередь, пробуя выполнить еще один connect
+
+// TODO: Неправильно что Connect timeout управляется в DispatchServer, а Request timeout в BaseService
+// Кто то один обязан заниматься Timeout
 NSTimeInterval const kRequestTimeoutSecs = 3;
 
 NSString * const kFieldMessageType = @"messageType";
@@ -47,6 +50,8 @@ NSString * const kFieldPassword = @"password";
 
 -(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates {
     [self startRequestTimeout];
+    
+    // TODO: Замерять нужно в момент посылки в сеть. А мы можем еще соединяться
     _requestTimestamp = [[NSDate date] timeIntervalSince1970];
     
     _pendingRequest = message;
@@ -63,9 +68,12 @@ NSString * const kFieldPassword = @"password";
 -(void)startRequestTimeout {
     [_requestTimer invalidate];
     
-//    NSLog(@"Start Request timeout");
+    // Give first request some time, because we need to connect first
+    NSTimeInterval timeout = _dispatchServer.connected ? kRequestTimeoutSecs : kRequestTimeoutSecs + kConnectTimeoutSecs;
+    
+    NSLog(@"Start Request timeout: %f seconds, connected: %d", timeout, _dispatchServer.connected);
     _requestTimer =
-        [NSTimer scheduledTimerWithTimeInterval:kRequestTimeoutSecs
+        [NSTimer scheduledTimerWithTimeInterval:timeout
                                          target:self
                                        selector:@selector(requestDidTimeOut:)
                                        userInfo:nil
@@ -73,7 +81,9 @@ NSString * const kFieldPassword = @"password";
 }
 
 -(void)requestDidTimeOut:(NSTimer *)timer {
-    NSLog(@"Request timed out");
+    if (_pendingRequest) {
+        NSLog(@"%@ Request timed out", [_pendingRequest objectForKey:@"messageType"]);
+    }
     
     // Resend one more time
     if (_pendingRequest) {

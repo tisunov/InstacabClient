@@ -11,6 +11,7 @@
 #import "SRWebSocket.h"
 
 extern NSString *const kDispatchServerConnectionChangeNotification;
+extern NSTimeInterval const kConnectTimeoutSecs;
 
 @protocol ICDispatchServerDelegate <NSObject>
 - (void)didReceiveMessage:(NSDictionary *)jsonDictionary;

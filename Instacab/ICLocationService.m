@@ -47,7 +47,8 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     CLLocation *location = [locations lastObject];
 
-    if (!_locationFixed && location.horizontalAccuracy > 0 && location.horizontalAccuracy < 100) {
+    bool disiredAccuracy = location.horizontalAccuracy > 0;
+    if (!_locationFixed && disiredAccuracy) {
         if (delegateRespondsTo.didFixLocation) {
             [delegate locationWasFixed:location.coordinate];
         }
