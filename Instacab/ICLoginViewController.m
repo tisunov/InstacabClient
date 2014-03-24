@@ -110,6 +110,16 @@
     
 }
 
+- (void)didFailToAcquireLocationWithErrorMsg:(NSString *)errorMsg {
+    NSLog(@"%@", errorMsg);
+
+    [_clientService trackError:@{@"type": @"didNotAcquireLocation"}];
+    
+    [self dismissProgress];
+    
+    [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Определения Местоположения" message:errorMsg cancelButtonTitle:@"OK"];
+}
+
 - (void)locationWasFixed:(CLLocationCoordinate2D)location
 {
     if (_loginAfterLocationFix) {
@@ -149,6 +159,7 @@
         [self performLogin];
     }
     else {
+        [_locationService startUpdatingLocation];
         _loginAfterLocationFix = YES;
     }
 }
@@ -241,11 +252,6 @@
     }
 
     return YES;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

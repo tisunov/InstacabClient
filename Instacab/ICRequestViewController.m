@@ -243,6 +243,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 //    [_mapView animateToLocation:coordinates];
 }
 
+- (void)didFailToAcquireLocationWithErrorMsg:(NSString *)errorMsg {
+    
+}
+
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
     
 }

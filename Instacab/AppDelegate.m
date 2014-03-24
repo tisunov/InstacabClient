@@ -56,7 +56,7 @@
     // Google Maps key
     [GMSServices provideAPIKey:@"AIzaSyCvlC3MQG4t2MFq92mxsYjFSynAJ-bGqfo"];
 
-    [[ICLocationService sharedInstance] start];
+    [[ICLocationService sharedInstance] startUpdatingLocation];
 }
 
 - (void)setupBugTracking {

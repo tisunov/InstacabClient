@@ -20,6 +20,7 @@
 #import "TSMessageView.h"
 #import "TSMessage.h"
 #import "MBProgressHUD.h"
+#import "OpenInChromeController.h"
 
 @interface ICWelcomeViewController ()
 
@@ -168,6 +169,16 @@
     
 }
 
+- (void)didFailToAcquireLocationWithErrorMsg:(NSString *)errorMsg {
+    NSLog(@"%@", errorMsg);
+
+    [_clientService trackError:@{@"type": @"didNotAcquireLocation"}];
+    
+    [self stopLoading];
+    
+    [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Определения Местоположения" message:errorMsg cancelButtonTitle:@"OK"];
+}
+
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
     NSLog(@"[Welcome] Got location fix");
     
@@ -187,7 +198,7 @@
                                        duration:TSMessageNotificationDurationAutomatic];
     
     // Analytics
-    [_clientService trackError:@{@"type": @"connectionLost"}];    
+    [_clientService trackError:@{@"type": @"connectionLost"}];
 }
 
 // Hide any top level Progress HUD that happened to be visible
@@ -243,9 +254,18 @@
     // Analytics
     [_clientService trackScreenView:@"Create Account"];
     
-    // Open URL in Safari
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://www.instacab.ru/users/sign_up"]];
-
+    NSURL *signUpUrl = [NSURL URLWithString:@"http://www.instacab.ru/users/sign_up"];
+    
+    if ([[OpenInChromeController sharedInstance] isChromeInstalled]) {
+        [[OpenInChromeController sharedInstance] openInChrome:signUpUrl
+                        withCallbackURL:nil
+                           createNewTab:YES];
+    }
+    else {
+        // Open URL in Safari
+        [[UIApplication sharedApplication] openURL:signUpUrl];
+    }
+    
 // TODO: Enable when we have PCI DSS
 //    ICCreateAccountDialog *vc = [[ICCreateAccountDialog alloc] initWithNibName:nil bundle:nil];
 //    vc.delegate = self;

@@ -25,6 +25,7 @@
 		D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = D948113E18BCB6720005D348 /* ICPaymentProfile.m */; };
 		D948114118BD3E680005D348 /* libLocalyticsAMP_x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */; };
 		D9532E1E1819B44E0046E5EC /* ICMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9532E1D1819B44E0046E5EC /* ICMessage.m */; };
+		D95A145018E0C8FB006D1245 /* OpenInChromeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D95A144F18E0C8FB006D1245 /* OpenInChromeController.m */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
 		D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97B7AE618083E2A00B8315D /* AdSupport.framework */; };
 		D98058BD181A4EE000DD0BBF /* ICTrip.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058BC181A4EE000DD0BBF /* ICTrip.m */; };
@@ -131,6 +132,8 @@
 		D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP_x64.a; sourceTree = "<group>"; };
 		D9532E1C1819B44E0046E5EC /* ICMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICMessage.h; sourceTree = "<group>"; };
 		D9532E1D1819B44E0046E5EC /* ICMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICMessage.m; sourceTree = "<group>"; };
+		D95A144E18E0C8FB006D1245 /* OpenInChromeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenInChromeController.h; sourceTree = "<group>"; };
+		D95A144F18E0C8FB006D1245 /* OpenInChromeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenInChromeController.m; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
 		D97B7AE618083E2A00B8315D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D98058BB181A4EE000DD0BBF /* ICTrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICTrip.h; sourceTree = "<group>"; };
@@ -523,6 +526,8 @@
 				D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */,
 				D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */,
 				D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */,
+				D95A144E18E0C8FB006D1245 /* OpenInChromeController.h */,
+				D95A144F18E0C8FB006D1245 /* OpenInChromeController.m */,
 			);
 			name = SignUp;
 			sourceTree = "<group>";
@@ -709,6 +714,7 @@
 				D911228418094462006A49DA /* ICHighlightButton.m in Sources */,
 				D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */,
 				D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */,
+				D95A145018E0C8FB006D1245 /* OpenInChromeController.m in Sources */,
 				D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */,
 				D9AD51621817EE1E00692E7E /* ICLocation.m in Sources */,
 				D9C114CE1813C00C002833FF /* ICRequestViewController.m in Sources */,
