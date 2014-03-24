@@ -23,6 +23,8 @@ extern NSString * const kFieldPassword;
 -(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates;
 -(void)trackError:(NSDictionary *)attributes;
 
+-(void)cancelRequestTimeout;
+
 @property (nonatomic, readonly, strong) ICDispatchServer *dispatchServer;
 @property (nonatomic, weak) id <BaseServiceDelegate> delegate;
 @end

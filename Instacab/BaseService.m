@@ -17,9 +17,13 @@
     NSTimer *_requestTimer;
     NSDictionary *_pendingRequest;
     BOOL _infiniteResend;
+    NSTimeInterval _requestTimestamp;
 }
 
-NSTimeInterval const kRequestTimeoutSecs = 2;
+// TODO: При Login происходит посылка Ping, который записывается в очередь, затем выполняется Connect
+// на который также отводится timeout 2 секунды, из-за этого на медленном соединении
+// посылка 1st Ping отваливается, и пробуются еще раз, соединение все еще не установилось, и Ping снова пишется в очередь, пробуя выполнить еще один connect
+NSTimeInterval const kRequestTimeoutSecs = 3;
 
 NSString * const kFieldMessageType = @"messageType";
 NSString * const kFieldEmail = @"email";
@@ -32,6 +36,7 @@ NSString * const kFieldPassword = @"password";
         self.dispatchServer.delegate = self;
         
         _infiniteResend = infiniteResend;
+        _requestTimestamp = 0;
     }
     return self;
 }
@@ -42,9 +47,10 @@ NSString * const kFieldPassword = @"password";
 
 -(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates {
     [self startRequestTimeout];
+    _requestTimestamp = [[NSDate date] timeIntervalSince1970];
+    
     _pendingRequest = message;
-
-    // TODO: Рассчитывать Network Latency между посылкой запроса и получением ответа и посылать Latency на сервер
+    
     [_dispatchServer sendMessage:message coordinates:coordinates];
 }
 
@@ -115,6 +121,14 @@ NSString * const kFieldPassword = @"password";
 }
 
 -(void)didReceiveMessage:(NSDictionary *)jsonDictionary {
+    if (_requestTimestamp > 0) {
+        NSLog(@"Network latency %0.0f ms", ([[NSDate date] timeIntervalSince1970] - _requestTimestamp) * 1000);
+        
+        // TODO: Отправлять Latency на сервер: SignInResponse, CancelTripResponse, RequestVehicleResponse, SignUpResponse
+        // TODO: Чтобы можно было оценивать прием в разных частях города, и узнавать мертвые зоны.
+        // TODO: А чтобы не посылать полные данные (координаты, параметры устройства) снова, можно сделать как в Uber, присвоить каждому mobile event UUID и посылать его в SignInRequest event + в SignInResponse event
+    }
+    
     // Received some response or server initiated message
     [self cancelRequestTimeout];
 }

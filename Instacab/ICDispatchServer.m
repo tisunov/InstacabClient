@@ -33,7 +33,6 @@
     
     SRWebSocket *_socket;
     NSTimer *_pingTimer;
-    BOOL _backgroundMode;
     NSDateFormatter *_dateFormatter;
     NSDateFormatter *_dateFormatterWithT;
     
@@ -42,7 +41,7 @@
 
 NSUInteger const kMaxReconnectAttemps = 1;
 NSUInteger const kInternalPingIntervalInSeconds = 20;
-NSTimeInterval const kConnectTimeoutSecs = 2.0; // 2 seconds connect timeout
+NSTimeInterval const kConnectTimeoutSecs = 5.0; // 2 seconds connect timeout
 NSTimeInterval const kReconnectInterval = 2.0; // 2 seconds reconnect interval
 
 NSString * const kDevice = @"iphone";
@@ -90,35 +89,13 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         
         
         _httpManager = [AFHTTPRequestOperationManager manager];
-        _httpManager.requestSerializer = [AFJSONRequestSerializer serializer];
-        
-        // Subscribe to app events
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationDidEnterBackground:)
-                                                     name:UIApplicationDidEnterBackgroundNotification
-                                                   object:nil];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(applicationDidBecomeActive:)
-                                                     name:UIApplicationDidBecomeActiveNotification
-                                                   object:nil];
+        _httpManager.requestSerializer = [AFJSONRequestSerializer serializer];        
     }
     return self;
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)applicationDidEnterBackground:(NSNotification *)n {
-    NSLog(@"+ ICDispatchServer::applicationDidEnterBackground");
-    
-    _backgroundMode = YES;
-    [self disconnect];
-}
-
-- (void)applicationDidBecomeActive:(NSNotification *)n {
-    _backgroundMode = NO;
 }
 
 - (void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates {
@@ -192,7 +169,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 }
 
 - (void)connect {
-    if (_socket && _socket.readyState == SR_CONNECTING) {
+    if (_socket) {
         NSLog(@"Already establishing connection to dispatch server...");
         return;
     }

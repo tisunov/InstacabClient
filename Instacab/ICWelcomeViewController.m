@@ -28,6 +28,8 @@
 @implementation ICWelcomeViewController {
     ICClientService *_clientService;
     ICLocationService *_locationService;
+    BOOL _firstLoad;
+    BOOL _inBackground;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -39,6 +41,8 @@
         
         _locationService = [ICLocationService sharedInstance];
         _locationService.delegate = self;
+        
+        _firstLoad = YES;
     }
     return self;
 }
@@ -87,14 +91,59 @@
                                              selector:@selector(dispatcherDidConnectionChange:)
                                                  name:kDispatchServerConnectionChangeNotification
                                                object:nil];
+    // Subscribe to app events
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidEnterBackground:)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
     
-    if ([[ICClient sharedInstance] isSignedIn]) {
-        self.signinButton.hidden = YES;
-        self.signupButton.hidden = YES;
-        self.loadingIndicator.hidden = NO;
-        self.loadingLabel.hidden = NO;
-        [self.loadingIndicator startAnimating];
-    }
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+    [self beginLoading];
+}
+
+- (void)beginLoading {
+    if (![[ICClient sharedInstance] isSignedIn]) return;
+    
+    self.signinButton.hidden = YES;
+    self.signupButton.hidden = YES;
+    self.loadingIndicator.hidden = NO;
+    self.loadingLabel.hidden = NO;
+    [self.loadingIndicator startAnimating];
+}
+
+- (void)pingToRestoreState {
+    if (![[ICClient sharedInstance] isSignedIn]) return;
+    
+    [_clientService ping:_locationService.coordinates
+                  reason:kNearestCabRequestReasonPing
+                 success:^(ICMessage *message) {
+                     [self didReceiveMessage:message];
+                 }
+                 failure:^{
+                     [self stopLoading];
+                 }];
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)n {
+    NSLog(@"+ Enter background");
+    
+    _inBackground = YES;
+    [_clientService disconnectWithoutTryingToReconnect];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)n {
+    if (_firstLoad || !_inBackground) return;
+    
+    NSLog(@"+ Become active");
+    
+    [self beginLoading];
+    [self pingToRestoreState];
+    
+    _inBackground = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -107,9 +156,10 @@
     [TSMessage dismissActiveNotification];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    _firstLoad = NO;
     
     [_clientService trackScreenView:@"Welcome"];
 }
@@ -121,22 +171,13 @@
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
     NSLog(@"[Welcome] Got location fix");
     
-    if ([[ICClient sharedInstance] isSignedIn]) {
-        [_clientService ping:_locationService.coordinates
-                      reason:kNearestCabRequestReasonPing
-                     success:^(ICMessage *message) {
-                         [self didReceiveMessage:message];
-                     }
-                     failure:^{
-                         [self stopLoading];
-                     }];
-    }
+    [self pingToRestoreState];
 }
 
 - (void)showNotification {
     // Show alert only when we lost connection unexpectedly.
     // Don't show when we explicitly closed it, i.e. when user logged out
-    if (![ICClient sharedInstance].isSignedIn) return;
+    if (![ICClient sharedInstance].isSignedIn || _inBackground) return;
     
     [TSMessage showNotificationInViewController:self
                                           title:@"Нет Сетевого Подключения"

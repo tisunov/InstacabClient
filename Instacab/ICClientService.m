@@ -286,6 +286,8 @@ float const kPingIntervalInSeconds = 6.0;
 }
 
 -(void)disconnectWithoutTryingToReconnect {
+    [self cancelRequestTimeout];
+    
     self.dispatchServer.maintainConnection = NO;
     [self.dispatchServer disconnect];
 }
