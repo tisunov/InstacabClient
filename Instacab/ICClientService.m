@@ -38,8 +38,6 @@ float const kPingIntervalInSeconds = 6.0;
         
         _reachability = [[FCReachability alloc] initWithHostname:@"www.google.com" allowCellular:YES];
         
-        [[ICClient sharedInstance] addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
-        
         // Don't allow automatic login on launch if Location Services access is disabled
         if (![ICLocationService sharedInstance].isAvailable) {
             [self logOut];
@@ -55,8 +53,12 @@ float const kPingIntervalInSeconds = 6.0;
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure
 {
-    _successBlock = [success copy];
-    _failureBlock = [failure copy];
+    if (success) {
+        _successBlock = [success copy];
+    }
+    if (failure) {
+        _failureBlock = [failure copy];
+    }
     
     // TODO: Посылать текущий vehicleViewId
     NSDictionary *pingMessage = @{
@@ -290,22 +292,6 @@ float const kPingIntervalInSeconds = 6.0;
 
 #pragma mark - Regular Ping
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    ICClientState newState = (ICClientState)[[change valueForKey:NSKeyValueChangeNewKey] intValue];
-    
-    switch (newState) {
-        case SVClientStatePendingRating:
-        case SVClientStateLooking:
-            [self stopPing];
-            break;
-            
-        default:
-            [self startPing];
-            break;
-    }
-}
-
 -(void)didConnect {
     [self startPing];
 }
@@ -317,18 +303,13 @@ float const kPingIntervalInSeconds = 6.0;
 
 // start sending Ping message every 6 seconds
 -(void)startPing {
-    BOOL shouldNotPing = [ICClient sharedInstance].state == SVClientStateLooking || [ICClient sharedInstance].state == SVClientStatePendingRating;
-    if(_pingTimer || shouldNotPing) return;
+    if(_pingTimer) return;
     
     NSLog(@"Start Ping every %d seconds", (int)kPingIntervalInSeconds);
     [self delayPing];
 }
 
 -(void)delayPing {
-    BOOL shouldNotPing = [ICClient sharedInstance].state == SVClientStateLooking || [ICClient sharedInstance].state == SVClientStatePendingRating;
-    
-    if (shouldNotPing) return;
-    
     [_pingTimer invalidate];
     
     _pingTimer =

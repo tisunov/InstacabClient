@@ -90,26 +90,23 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
         feedback = self.feedbackTextView.text;
     }
     
-    // BUG: Если рейтинг не был получен сервером, то Клиент пошлет его еще раз
-    // и не получив ответа, успокоится. Дальше продолжит слать регулярный Ping и никогда не выйдет с
-    // Receipt View
     ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
     ICClientService *service = [ICClientService sharedInstance];
     [service submitRating:_driverRating
              withFeedback:feedback
                   forTrip:trip
                   success:^(ICMessage *message) {
-                       [self dismissProgress];
-                       
-                       if (message.isOK) {
-                           // 0 - WelcomeController
-                           // 1 - RequestController
-                           UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];
-                           [self.navigationController popToViewController:requestViewController animated:YES];
-                       }
-                       else {
-                           NSLog(@"[Feedback] Can't submit feedback");
-                       }
+                      [self dismissProgress];
+
+                      // Keep trying to submit feedback
+                      if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
+                          [self submitPressed:nil];
+                      }
+                      else {
+                          // Pop to RequestView
+                          UIViewController *requestViewController = [self.navigationController.viewControllers objectAtIndex:1];
+                          [self.navigationController popToViewController:requestViewController animated:YES];
+                      }
                   }
                   failure:^{
                       NSLog(@"[Feedback] Failed to submit feedback");

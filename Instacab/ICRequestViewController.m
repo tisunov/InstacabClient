@@ -607,9 +607,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         
         [self showProgressWithMessage:kProgressLookingForDriver allowCancel:NO];
 
+        // TODO: Диспетчер нуждает в этом адресе чтобы показать водителю
+        // Я могу запустить reverse geocoding и после его окончания, посылать заказ машины!
+        
         // Initialize pickup location with pin coordinates
-        if (!_pickupLocation)
+        if (!_pickupLocation) {
             _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
+        }
         
         // Request pickup
         [_clientService requestPickupAt:_pickupLocation];
