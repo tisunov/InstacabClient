@@ -312,6 +312,8 @@ float const kPingIntervalInSeconds = 6.0;
 }
 
 -(void)delayPing {
+    if (![ICClient sharedInstance].isSignedIn) return;
+    
     [_pingTimer invalidate];
     
     _pingTimer =

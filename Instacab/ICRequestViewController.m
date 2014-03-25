@@ -343,14 +343,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
-- (void)moveMapToPosition: (CLLocationCoordinate2D) coordinate {
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    _mapView.camera = [GMSCameraPosition cameraWithLatitude:coordinate.latitude
-                                                  longitude:coordinate.longitude
-                                                       zoom:_mapView.camera.zoom];
-    [CATransaction commit];
-}
+//- (void)moveMapToPosition: (CLLocationCoordinate2D) coordinate {
+//    [CATransaction begin];
+//    [CATransaction setDisableActions:YES];
+//    _mapView.camera = [GMSCameraPosition cameraWithLatitude:coordinate.latitude
+//                                                 cu longitude:coordinate.longitude
+//                                                       zoom:_mapView.camera.zoom];
+//    [CATransaction commit];
+//}
 
 - (void)myLocationTapped:(id)sender {
     if (!CLCOORDINATES_EQUAL(_mapView.camera.target, _mapView.myLocation.coordinate))
@@ -963,6 +963,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)zoomMapOnLocation:(CLLocationCoordinate2D)coordinates {
+    NSLog(@"+ zoomMapOnLocation");
+    
     GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinates zoom:kDefaultMapZoom];
     [_mapView animateWithCameraUpdate:update];
 }
