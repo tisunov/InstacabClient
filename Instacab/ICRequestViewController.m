@@ -181,7 +181,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)cancelPickupRequesConfirmation {
-    [self setReadyToRequest:NO];
+    [self setReadyToRequest:NO resetZoom:YES];
 }
 
 -(void)showTripActionSheet {
@@ -317,7 +317,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     };
 }
 
-- (void)setReadyToRequest: (BOOL)isReady {
+- (void)setReadyToRequest: (BOOL)isReady resetZoom:(BOOL)resetZoom {
     _readyToRequest = isReady;
     if (isReady) {
         self.titleText = @"ПОДТВЕРЖДЕНИЕ";
@@ -338,7 +338,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         self.titleText = @"INSTACAB";
         [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
         
-        [_mapView animateToZoom:kDefaultMapZoom];
+        if (resetZoom) {
+            [_mapView animateToZoom:kDefaultMapZoom];
+        }
         [self showExitNavbarButton];
     }
 }
@@ -403,7 +405,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // First tap on the map returns to Pre-Request state
     if (_readyToRequest) {
         NSLog(@"Return UI state to 'Looking'");
-        [self setReadyToRequest:NO];
+        [self setReadyToRequest:NO resetZoom:YES];
     }
 }
 
@@ -454,7 +456,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (nearbyVehicles.isEmpty) {
         _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
         _pickupBtn.enabled = NO;
-        [self setReadyToRequest:NO];
+        [self setReadyToRequest:NO resetZoom:NO];
         [self clearMap];
         return;
     }
@@ -463,7 +465,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (nearbyVehicles.isRestrictedArea) {
         _pickupTimeLabel.text = [nearbyVehicles.sorryMsg uppercaseString];
         _pickupBtn.enabled = NO;
-        [self setReadyToRequest:NO];
+        [self setReadyToRequest:NO resetZoom:NO];
         return;
     }
     
@@ -622,10 +624,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         // Request pickup
         [_clientService requestPickupAt:_pickupLocation];
         
-        [self setReadyToRequest:NO];
+        [self setReadyToRequest:NO resetZoom:NO];
     }
     else {
-        [self setReadyToRequest:YES];
+        [self setReadyToRequest:YES resetZoom:NO];
     }
 }
 
@@ -963,8 +965,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)zoomMapOnLocation:(CLLocationCoordinate2D)coordinates {
-    NSLog(@"+ zoomMapOnLocation");
-    
     GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinates zoom:kDefaultMapZoom];
     [_mapView animateWithCameraUpdate:update];
 }
