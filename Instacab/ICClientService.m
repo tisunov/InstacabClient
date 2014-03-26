@@ -15,6 +15,7 @@
 #import "ICNearbyVehicles.h"
 
 NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
+NSString *const kNearestCabRequestReasonOpenApp = @"openApp";
 NSString *const kNearestCabRequestReasonMovePin = @"movepin";
 NSString *const kNearestCabRequestReasonPing = @"ping";
 NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
@@ -382,6 +383,10 @@ float const kPingIntervalInSeconds = 6.0;
 // card_expiration_month, card_expiration_year, card_code
 - (void)logMapPageView {
     [self.dispatchServer sendLogEvent:@"MapPageView" clientId:[ICClient sharedInstance].uID parameters:nil];
+}
+
+- (void)logSignInPageView {
+    [self.dispatchServer sendLogEvent:@"SignInPageView" clientId:[ICClient sharedInstance].uID parameters:nil];
 }
 
 @end

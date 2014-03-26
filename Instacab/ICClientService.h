@@ -12,6 +12,7 @@
 
 extern NSString *const kClientServiceMessageNotification;
 
+extern NSString *const kNearestCabRequestReasonOpenApp;
 extern NSString *const kNearestCabRequestReasonMovePin;
 extern NSString *const kNearestCabRequestReasonPing;
 extern NSString *const kNearestCabRequestReasonReconnect;
@@ -68,5 +69,6 @@ typedef void (^ICClientServiceFailureBlock)();
 #pragma mark - Events
 
 - (void)logMapPageView;
+- (void)logSignInPageView;
 
 @end

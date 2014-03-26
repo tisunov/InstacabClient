@@ -82,6 +82,8 @@
     next.tintColor = [UIColor colorFromHexString:@"#27AE60"];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
+    
+    [_clientService logSignInPageView];
 }
 
 -(void)viewDidAppear:(BOOL)animated {

@@ -116,11 +116,11 @@
     [self.loadingIndicator startAnimating];
 }
 
-- (void)pingToRestoreState {
+- (void)pingToRestoreStateReason:(NSString *)reason {
     if (![[ICClient sharedInstance] isSignedIn]) return;
     
     [_clientService ping:_locationService.coordinates
-                  reason:kNearestCabRequestReasonPing
+                  reason:reason
                  success:^(ICMessage *message) {
                      [self didReceiveMessage:message];
                  }
@@ -142,7 +142,7 @@
     NSLog(@"+ Become active");
     
     [self beginLoading];
-    [self pingToRestoreState];
+    [self pingToRestoreStateReason:kNearestCabRequestReasonPing];
     
     _inBackground = NO;
 }
@@ -182,7 +182,7 @@
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
     NSLog(@"[Welcome] Got location fix");
     
-    [self pingToRestoreState];
+    [self pingToRestoreStateReason:kNearestCabRequestReasonOpenApp];
 }
 
 - (void)showNotification {
