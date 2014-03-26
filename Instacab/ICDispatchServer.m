@@ -309,15 +309,14 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 #pragma mark - Log Events
 
-- (void)sendLogEvent:(NSString *)eventName clientId:(NSNumber *)clientId parameters:(NSDictionary *)params
+- (void)sendLogEvent:(NSString *)eventName parameters:(NSDictionary *)params
 {
-    NSDictionary *eventData = [self buildLogEventWithName:eventName clientId:clientId parameters:params];
+    NSDictionary *eventData = [self buildLogEventWithName:eventName parameters:params];
     [_httpManager POST:kDispatchServerEventsUrl parameters:eventData success:nil failure:nil];
 }
 
 // TODO: Добавить отправку identifierForVendor (меняется при удалении всех приложений от моего имени с устройства)
 - (NSDictionary *)buildLogEventWithName:(NSString *)eventName
-                           clientId:(NSNumber *)clientId
                          parameters:(NSDictionary *)params
 {
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:@{
@@ -343,7 +342,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     [parameters setObject:@(location.verticalAccuracy) forKey:@"locationVerticalAccuracy"];
     [parameters setObject:@(location.horizontalAccuracy) forKey:@"locationHorizontalAccuracy"];
     
-    if (clientId) [parameters setObject:clientId forKey:@"clientId"];
     [data setObject:parameters forKey:@"parameters"];
     
     return data;

@@ -69,7 +69,7 @@ float const kPingIntervalInSeconds = 6.0;
     };
 
     // TODO: Посылать vehicleViewId (текущий тип автомобилей), vehicleViewIds (все доступные, так как они могут быть динамическими ото дня ко дню)
-    [self.dispatchServer sendLogEvent:@"NearestCabRequest" clientId:[ICClient sharedInstance].uID parameters:@{@"reason": aReason}];
+    [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": aReason, @"clientId":[ICClient sharedInstance].uID}];
 
     [self sendMessage:pingMessage coordinates:location];
     
@@ -95,7 +95,7 @@ float const kPingIntervalInSeconds = 6.0;
         kFieldMessageType: @"Login"
     };
     
-    [self.dispatchServer sendLogEvent:@"SignInRequest" clientId:nil parameters:nil];
+    [self.dispatchServer sendLogEvent:@"SignInRequest" parameters:nil];
     
     [self sendMessage:message];
     
@@ -109,7 +109,7 @@ float const kPingIntervalInSeconds = 6.0;
     self.dispatchServer.maintainConnection = NO;
     [self.dispatchServer disconnect];
 
-    [self.dispatchServer sendLogEvent:@"SignOut" clientId:[ICClient sharedInstance].uID parameters:nil];
+    [self.dispatchServer sendLogEvent:@"SignOut" parameters:@{@"clientId":[ICClient sharedInstance].uID} ];
 
     [[ICClient sharedInstance] logout];
     
@@ -152,7 +152,7 @@ float const kPingIntervalInSeconds = 6.0;
         @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:location]
     };
     
-    [self.dispatchServer sendLogEvent:@"PickupRequest" clientId:[ICClient sharedInstance].uID parameters:nil];
+    [self.dispatchServer sendLogEvent:@"PickupRequest" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
     
     [self sendMessage:message];
     
@@ -179,7 +179,7 @@ float const kPingIntervalInSeconds = 6.0;
         @"tripId": [ICTrip sharedInstance].tripId
     };
 
-    [self.dispatchServer sendLogEvent:@"CancelTripRequest" clientId:[ICClient sharedInstance].uID parameters:nil];
+    [self.dispatchServer sendLogEvent:@"CancelTripRequest" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
     
     [self sendMessage:message];
     
@@ -201,7 +201,7 @@ float const kPingIntervalInSeconds = 6.0;
         kFieldMessageType: @"SignUpClient"
     };
     
-    [self.dispatchServer sendLogEvent:@"SignUpRequest" clientId:nil parameters:nil];
+    [self.dispatchServer sendLogEvent:@"SignUpRequest" parameters:nil];
     
     [self sendMessage:message];
 }
@@ -382,11 +382,11 @@ float const kPingIntervalInSeconds = 6.0;
 // firstName, lastName, email, password, mobile, card_number,
 // card_expiration_month, card_expiration_year, card_code
 - (void)logMapPageView {
-    [self.dispatchServer sendLogEvent:@"MapPageView" clientId:[ICClient sharedInstance].uID parameters:nil];
+    [self.dispatchServer sendLogEvent:@"MapPageView" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
 }
 
 - (void)logSignInPageView {
-    [self.dispatchServer sendLogEvent:@"SignInPageView" clientId:[ICClient sharedInstance].uID parameters:nil];
+    [self.dispatchServer sendLogEvent:@"SignInPageView" parameters:nil];
 }
 
 @end

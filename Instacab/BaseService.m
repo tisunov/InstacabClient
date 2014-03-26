@@ -35,7 +35,7 @@ NSString * const kFieldPassword = @"password";
 -(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep infiniteResend:(BOOL)infiniteResend {
     self = [super init];
     if (self) {
-        self.dispatchServer = [[ICDispatchServer alloc] initWithAppType:@"client" keepConnection:keep];
+        self.dispatchServer = [[ICDispatchServer alloc] initWithAppType:appType keepConnection:keep];
         self.dispatchServer.delegate = self;
         
         _infiniteResend = infiniteResend;
