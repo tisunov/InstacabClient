@@ -45,6 +45,8 @@ typedef void (^ICClientServiceFailureBlock)();
 
 -(void)logOut;
 
+#pragma mark - Signup Flow
+
 -(void)signUp:(ICSignUpInfo *)info
    withCardIo:(BOOL)cardio
       success:(ICClientServiceSuccessBlock)success
@@ -55,6 +57,14 @@ typedef void (^ICClientServiceFailureBlock)();
               mobile:(NSString *)mobile
          withSuccess:(ICClientServiceSuccessBlock)success
              failure:(ICClientServiceFailureBlock)failure;
+
+- (void)createCardNumber:(NSString *)cardNumber
+              cardHolder:(NSString *)cardHolder
+         expirationMonth:(NSNumber *)month
+          expirationYear:(NSNumber *)year
+              secureCode:(NSString *)cvv
+                 success:(ICClientServiceSuccessBlock)success
+                 failure:(ICClientServiceFailureBlock)failure;
 
 -(void)disconnectWithoutTryingToReconnect;
 

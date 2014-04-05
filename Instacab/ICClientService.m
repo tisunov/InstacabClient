@@ -13,6 +13,8 @@
 #import "LocalyticsSession.h"
 #import "ICLocationService.h"
 #import "ICNearbyVehicles.h"
+#import "AFHTTPRequestOperationManager.h"
+#import "AFHTTPRequestOperation.h"
 
 NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonOpenApp = @"openApp";
@@ -22,6 +24,23 @@ NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
 NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 
 float const kPingIntervalInSeconds = 6.0;
+float const kCheckPaymentProfileIntervalInSeconds = 2.0;
+
+@implementation AFHTTPRequestOperationManager (EnableCookies)
+
+- (AFHTTPRequestOperation *)GET:(NSString *)URLString
+                        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+                        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
+{
+    NSMutableURLRequest *request = [self.requestSerializer requestWithMethod:@"GET" URLString:[[NSURL URLWithString:URLString relativeToURL:self.baseURL] absoluteString] parameters:nil error:nil];
+    [request setHTTPShouldHandleCookies:YES];
+    AFHTTPRequestOperation *operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
+    [self.operationQueue addOperation:operation];
+    
+    return operation;
+}
+
+@end
 
 @implementation ICClientService {
     ICClientServiceSuccessBlock _successBlock;
@@ -187,6 +206,8 @@ float const kPingIntervalInSeconds = 6.0;
     [self trackEvent:@"Cancel Trip" params:nil];
 }
 
+#pragma mark - Signup Flow
+
 -(void)signUp:(ICSignUpInfo *)info
    withCardIo:(BOOL)cardio
       success:(ICClientServiceSuccessBlock)success
@@ -206,11 +227,151 @@ float const kPingIntervalInSeconds = 6.0;
     [self sendMessage:message];
 }
 
--(void)validateEmail:(NSString *)email
-            password:(NSString *)password
-              mobile:(NSString *)mobile
-         withSuccess:(ICClientServiceSuccessBlock)success
-             failure:(ICClientServiceFailureBlock)failure
+- (void)createCardSessionSuccess:(ICClientServiceSuccessBlock)success
+{
+    _successBlock = [success copy];
+    
+    NSDictionary *message = @{
+        kFieldMessageType: @"ApiCommand",
+        @"apiUrl": [NSString stringWithFormat:@"/clients/%@/create_card_session", [ICClient sharedInstance].uID],
+        @"apiMethod": @"GET"
+    };
+    
+    [self sendMessage:message];
+}
+
+- (void)createCardNumber:(NSString *)cardNumber
+              cardHolder:(NSString *)cardHolder
+         expirationMonth:(NSNumber *)expirationMonth
+          expirationYear:(NSNumber *)expirationYear
+              secureCode:(NSString *)secureCode
+                 success:(ICClientServiceSuccessBlock)success
+                 failure:(ICClientServiceFailureBlock)failure
+
+{
+    NSString *cardData = [NSString stringWithFormat:@"CardNumber=%@;EMonth=%@;EYear=%@;CardHolder=%@;SecureCode=%@", cardNumber, expirationMonth, expirationYear, cardHolder, secureCode];
+
+    [[ICClientService sharedInstance] createCardSessionSuccess:^(ICMessage *message) {
+        if (message.apiResponse.isSuccess) {
+            [self downloadAddCardPage:message.apiResponse.addCardUrl
+                       submitCardData:cardData
+                                toUrl:message.apiResponse.submitCardUrl
+                              success:success
+                              failure:failure];
+        }
+        // Should not happen in production
+        else {
+            NSLog(@"Error: Failed to create add card session, statusCode %@", message.apiResponse.error.statusCode);
+        }
+    }];
+}
+
+- (void)isPaymentProfilePresentSuccess:(ICClientServiceSuccessBlock)success
+                               failure:(ICClientServiceFailureBlock)failure
+{
+    NSDictionary *message = @{
+        kFieldMessageType: @"ApiCommand",
+        @"apiUrl": [NSString stringWithFormat:@"/clients/%@/payment_profile", [ICClient sharedInstance].uID],
+        @"apiMethod": @"GET"
+    };
+
+    [self sendMessage:message];
+}
+
+- (void)downloadAddCardPage:(NSString *)addCardUrl
+             submitCardData:(NSString *)cardData
+                      toUrl:(NSString *)submitUrl
+                    success:(ICClientServiceSuccessBlock)successBlock
+                    failure:(ICClientServiceFailureBlock)failureBlock
+
+{
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    manager.responseSerializer = [AFHTTPResponseSerializer serializer];
+    
+    AFHTTPRequestSerializer *requestSerializer = [AFHTTPRequestSerializer serializer];
+    [requestSerializer setValue:@"http://www.instacab.ru" forHTTPHeaderField:@"Referer"];
+    [requestSerializer setValue:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36" forHTTPHeaderField:@"User-Agent"];
+    
+    manager.requestSerializer = requestSerializer;
+    
+    [manager GET:addCardUrl
+         success:^(AFHTTPRequestOperation *operation, id responseObject) {
+             NSString *htmlPage = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+             
+             NSString *key = [self parseSessionKeyFromHTML:htmlPage];
+             NSString *dataParam = [NSString stringWithFormat:@"Key=%@;%@", key, cardData];
+             
+             [manager POST:submitUrl
+                parameters:@{ @"Data": dataParam}
+                   success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                       NSString *content = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+                       NSLog(@"AddSubmit Response: %@, %@", content, operation.response);
+                       
+                       // TODO: SignUpClient должна быть API командой. Вернуть ID и Token
+                       // TODO: Далее завести NSTimer с интервалом 2 секунды. И дать ему тикать 5 раз (10 секунд timeout)
+                       // TODO: Сообщить об ошибке или успехе пользователю
+                       
+                       if ([self submitWasSuccessful:content]) {
+                           // TODO: Ждать (переодически опрашивая) когда DispatchServer скажет что карта добавлена
+                           // ApiCommand has_payment_profile
+                           [self beginPaymentProfilePolling:]
+                           dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kCheckPaymentProfileIntervalInSeconds * NSEC_PER_SEC));
+                           dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                               [self isPaymentProfilePresentSuccess]
+                           });
+                           
+                       }
+                       else {
+                           NSLog(@"Error: Submit failed. Try again");
+                           failureBlock();
+                           // TODO: Уведомить человека чтобы проверил данные карты или ввел другую карту
+                       }
+                   }
+                   failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                       NSLog(@"Error: %@", error);
+                       failureBlock();
+                       // TODO: Уведомить человека что произошла ошибка при попытке добавить карту, попробовать еще раз
+                   }
+              ];
+         }
+         failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+             NSLog(@"Error: %@", error);
+             failureBlock();
+             // TODO: Уведомить человека что произошла ошибка при попытке добавить карту, попробовать еще раз
+         }
+     ];
+}
+
+- (BOOL)submitWasSuccessful:(NSString *)content {
+    return content && [content rangeOfString:@"Операция успешно завершена"].location != NSNotFound;
+}
+
+- (NSString *)parseSessionKeyFromHTML:(NSString *)html {
+    NSRange divRange = [html rangeOfString:@"<input name='Key' type='hidden' value='" options:NSCaseInsensitiveSearch];
+    if (divRange.location != NSNotFound)
+    {
+        NSRange endDivRange;
+        
+        endDivRange.location = divRange.length + divRange.location;
+        endDivRange.length   = [html length] - endDivRange.location;
+        endDivRange = [html rangeOfString:@"'>" options:NSCaseInsensitiveSearch range:endDivRange];
+        
+        if (endDivRange.location != NSNotFound)
+        {
+            divRange.location += divRange.length;
+            divRange.length = endDivRange.location - divRange.location;
+            
+            return [html substringWithRange:divRange];
+        }
+    }
+    return nil;
+}
+
+- (void)validateEmail:(NSString *)email
+             password:(NSString *)password
+               mobile:(NSString *)mobile
+          withSuccess:(ICClientServiceSuccessBlock)success
+              failure:(ICClientServiceFailureBlock)failure
 {
     _successBlock = [success copy];
     _failureBlock = [failure copy];
@@ -229,19 +390,35 @@ float const kPingIntervalInSeconds = 6.0;
     [self sendMessage:message];
 }
 
+- (void)requestMobileConfirmation {
+    NSDictionary *message = @{
+        kFieldMessageType: @"ApiCommand",
+        @"apiUrl": [NSString stringWithFormat:@"/clients/%@/request_mobile_confirmation", [ICClient sharedInstance].uID],
+        @"apiMethod": @"PUT"
+    };
+    
+    [self sendMessage:message];
+}
+
+- (void)confirmMobileToken:(NSString *)token {
+    NSDictionary *message = @{
+        kFieldMessageType: @"ApiCommand",
+        @"apiUrl": [NSString stringWithFormat:@"/clients/%@/confirm_mobile", [ICClient sharedInstance].uID],
+        @"apiMethod": @"PUT",
+        @"apiParameters": @{
+            @"mobile_token": token
+        }
+    };
+    
+    [self sendMessage:message];
+}
+
 // TODO: Реализовать оплату задолженности за поездки из приложения
 // Просто набор неоплаченных счетов за поездки, каждую из которых можно оплатить прежде
 // чем начать следующую поездку
 // ApiCommand
 // apiParameters: payment_profile_id, token, apiMethod=PUT, apiUrl=/client_bills/%d
 - (void)payBill {
-    
-}
-
-// TODO: Реализовать requestMobileConfirmation
-// ApiCommand
-// apiParameters: token, apiMethod=PUT, apiUrl=/clients/%d/request_mobile_confirmation
-- (void)requestMobileConfirmation {
     
 }
 

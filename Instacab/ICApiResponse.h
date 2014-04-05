@@ -12,5 +12,8 @@
 @interface ICApiResponse : MTLModel <MTLJSONSerializing>
 @property (nonatomic, strong) ICError *error;
 @property (nonatomic, copy) NSDictionary *validationErrors;
+@property (nonatomic, copy) NSString *addCardUrl;
+@property (nonatomic, copy) NSString *submitCardUrl;
 
+@property (nonatomic, readonly) BOOL isSuccess;
 @end

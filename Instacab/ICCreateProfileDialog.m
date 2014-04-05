@@ -10,6 +10,9 @@
 #import "QuickDialogController+Additions.h"
 #import "ReactiveCocoa/ReactiveCocoa.h"
 #import "ICLinkCardDialog.h"
+#import "ICClientService.h"
+#import "MBProgressHud+UIViewController.h"
+#import "UIApplication+Alerts.h"
 
 @interface ICCreateProfileDialog ()
 
@@ -35,7 +38,7 @@
         lastName.hiddenToolbar = YES;
         
         QSection *section = [[QSection alloc] init];
-        section.footer = @"Ваше имя поможет водителю узнать вас при подаче машины.";
+        section.footer = @"Ваше имя поможет водителю узнать вас при встрече у машины.";
         [section addElement:firstName];
         [section addElement:lastName];
         
@@ -93,19 +96,47 @@
 }
 
 -(void)next {
-    ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
-    controller.delegate = self.delegate;
-    controller.signupInfo = self.signupInfo;
-    controller.signupInfo.firstName = [self textForElementKey:@"firstName"];
-    controller.signupInfo.lastName = [self textForElementKey:@"lastName"];
+    [self showHUDWithText:@"Создаю аккаунт"];
     
-    [self.navigationController pushViewController:controller animated:YES];
+    self.signupInfo.firstName = [self textForElementKey:@"firstName"];
+    self.signupInfo.lastName = [self textForElementKey:@"lastName"];
+    
+    [[ICClientService sharedInstance] signUp:self.signupInfo
+                                  withCardIo:NO
+                                     success:^(ICMessage *message) {
+                                         [self hideHUD];
+                                         
+                                         if (message.messageType == SVMessageTypeOK) {
+                                             [self signupComplete:message];
+                                         }
+                                         else {
+                                             [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка создания аккаунта" message:message.errorText cancelButtonTitle:@"OK"];
+                                         }
+                                     }
+                                     failure:^{
+                                         [self hideHUD];
+                                         
+                                         [[UIApplication sharedApplication] showAlertWithTitle:@"Сервер недоступен" message:@"Не могу создать аккаунт." cancelButtonTitle:@"OK"];
+                                     }
+     ];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+// TODO: Сервер должен вернуть либо в ответ на команду регистрации
+// либо в ответ на прямой запрос: URL страницы добавления карты
+
+// TODO: Передать контролеру добавления карты ссылку на Payture страницу добавления карты
+// 1. Он загрузит страницу, извлечет key, сделает POST данных карты в AddSubmit
+// 2. Если Payture ответит 200 OK и вернет страницу снова то показать ошибку человеку чтобы он проверил данные карты и попробовал снова
+// 3. Если Payture ответит HTTP Redirect значит карта была принята или Payture устал добавлять карту и направляет меня на instacab. Завести таймер на 10 секунд получения положительного ответа с сервера что карта добавлена, если нет, то показываем ошибку пользователю и говорим что карту не удалось добавить.
+- (void)signupComplete:(ICMessage *)message {
+    // Save email and password for login
+    [[ICClient sharedInstance] save];
+    
+    ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
+    controller.signupInfo = self.signupInfo;
+    controller.delegate = self.delegate;
+    
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 @end

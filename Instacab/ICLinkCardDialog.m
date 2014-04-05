@@ -35,13 +35,13 @@
 {
     [super viewDidLoad];
     
-    self.titleText = @"РЕГИСТРАЦИЯ";
+    self.titleText = @"ДОБАВИТЬ КАРТУ";
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancel;
     
     UIBarButtonItem *signUp = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(saveCard:)];
-    signUp.enabled = NO;
+//    signUp.enabled = NO; TODO
     self.navigationItem.rightBarButtonItem = signUp;
     
     self.view.backgroundColor = [UIColor colorFromHexString:@"#efeff4"];
@@ -49,34 +49,13 @@
     self.paymentView.delegate = self;
 	[self.paymentView becomeFirstResponder];
     
-    self.paymentView.cardNumberField.text = @"5543863342017229";
-    self.paymentView.cardExpiryField.text = @"03/15";
-    self.paymentView.cardCVCField.text = @"666";
+//    self.paymentView.cardNumberField.text = @"4111111111111112";
+//    self.paymentView.cardExpiryField.text = @"12/15";
+//    self.paymentView.cardCVCField.text = @"123";
 }
 
 -(void)cancel:(id)sender {
     [self.delegate cancelDialog:self];
-}
-
-- (void)showProgress {
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
-    hud.labelText = @"Создаю аккаунт";
-    hud.removeFromSuperViewOnHide = YES;
-    
-    [[UIApplication sharedApplication].keyWindow addSubview:hud];
-    [hud show:YES];
-}
-
--(void)dismissProgress {
-    MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
-    [hud hide:YES];
-}
-
-- (void)signupComplete:(ICMessage *)message {
-    // Save email and password for login
-    [[ICClient sharedInstance] save];
-    // Close registration modal dialog
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(void)saveCard:(id)sender {
@@ -84,33 +63,16 @@
     
     NSLog(@"Card last4: %@", card.last4);
     NSLog(@"Card expiry: %lu/%lu", (unsigned long)card.expMonth, (unsigned long)card.expYear);
-    NSLog(@"Card cvc: %@", card.cvc);
     
-    self.signupInfo.cardNumber = card.number;
-    self.signupInfo.cardExpirationMonth = [NSNumber numberWithUnsignedLong:card.expMonth];
-    self.signupInfo.cardExpirationYear = [NSNumber numberWithUnsignedLong:card.expYear];
-    self.signupInfo.cardCode = card.cvc;
-
-    [self showProgress];
-    
-    [[ICClientService sharedInstance] signUp:self.signupInfo
-                                  withCardIo:_cardio
-                                     success:^(ICMessage *message) {
-                                         [self dismissProgress];
-                                         
-                                         if (message.messageType == SVMessageTypeOK) {
-                                             [self signupComplete:message];
-                                         }
-                                         else {
-                                             [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка создания аккаунта" message:message.errorText cancelButtonTitle:@"OK"];
-                                         }
-                                     }
-                                     failure:^{
-                                         [self dismissProgress];
-                                         
-                                         [[UIApplication sharedApplication] showAlertWithTitle:@"Сервер недоступен" message:@"Не могу создать аккаунт." cancelButtonTitle:@"OK"];                                         
-                                     }
-     ];
+    [[ICClientService sharedInstance] createCardNumber:card.number
+                                            cardHolder:self.signupInfo.cardHolder
+                                       expirationMonth:[NSNumber numberWithUnsignedLong:card.expMonth]
+                                        expirationYear:[NSNumber numberWithUnsignedLong:card.expYear]
+                                            secureCode:card.cvc success:^(ICMessage *message) {
+                                                // TODO: 
+                                            } failure:^{
+                                                [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка добавления карты" message:@"Пожалуйста убедитесь в правильности введенных данных или попробуйте ввести новую карту." cancelButtonTitle:@"OK"];
+                                            }];
 }
 
 - (void)paymentView:(PKView *)paymentView withCard:(PKCard *)card isValid:(BOOL)valid
@@ -150,7 +112,7 @@
 
 - (void)userDidProvideCreditCardInfo:(CardIOCreditCardInfo *)info inPaymentViewController:(CardIOPaymentViewController *)scanViewController {
     // The full card number is available as info.cardNumber, but don't log that!
-    NSLog(@"Received card info. Number: %@, expiry: %02lu/%lu, cvv: %@.", info.redactedCardNumber, (unsigned long)info.expiryMonth, (unsigned long)info.expiryYear, info.cvv);
+    NSLog(@"Received card info. Number: %@, expiry: %02lu/%lu", info.redactedCardNumber, (unsigned long)info.expiryMonth, (unsigned long)info.expiryYear);
     
     _cardio = YES;
     
@@ -160,12 +122,6 @@
     
     // Use the card info...
     [scanViewController dismissViewControllerAnimated:YES completion:NULL];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

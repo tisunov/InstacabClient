@@ -19,4 +19,5 @@
 @property (nonatomic, copy) NSNumber *cardExpirationYear;
 @property (nonatomic, copy) NSString *cardCode;
 
+@property (nonatomic, readonly) NSString *cardHolder;
 @end

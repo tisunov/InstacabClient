@@ -13,12 +13,18 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"error": @"error",
-        @"validationErrors": @"data.errors"
+        @"validationErrors": @"data.errors",
+        @"addCardUrl": @"data.add_card_page_url",
+        @"submitCardUrl": @"data.submit_url"
     };
 }
 
 + (NSValueTransformer *)errorJSONTransformer {
     return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICError.class];
+}
+
+-(BOOL)isSuccess {
+    return !self.error;
 }
 
 @end

@@ -54,14 +54,14 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
         self.root.grouped = YES;
         self.root.appearance = [QCustomAppearance new];
         
-        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:@"tisunov.pavel1@gmail.com" Placeholder:@"email@domain.ru"];
+        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:@"tisunov.pavel2@gmail.com" Placeholder:@"email@domain.ru"];
         email.keyboardType = UIKeyboardTypeEmailAddress;
         email.autocapitalizationType = UITextAutocapitalizationTypeNone;
         email.enablesReturnKeyAutomatically = YES;
         email.hiddenToolbar = YES;
         email.key = @"email";
         
-        QEntryElement *mobile = [[QEntryElement alloc] initWithTitle:@"Мобильный" Value:@"+7 (920) 213-30-56" Placeholder:@"+7 (555) 555-55-55"];
+        QEntryElement *mobile = [[QEntryElement alloc] initWithTitle:@"Мобильный" Value:@"+7 (920) 213-30-59" Placeholder:@"+7 (555) 555-55-55"];
         mobile.keyboardType = UIKeyboardTypePhonePad;
         mobile.key = @"mobile";
         mobile.enablesReturnKeyAutomatically = YES;
@@ -101,6 +101,8 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(next)];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
+    
+    [_clientService trackScreenView:@"Create Account"];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -202,6 +204,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
                           [message.apiResponse.validationErrors.allKeys each:^(id errorKey) {
                               [self highlightElementWithKey:errorKey];
                               alertMessage = [alertMessage stringByAppendingString:message.apiResponse.validationErrors[errorKey]];
+                              alertMessage = [alertMessage stringByAppendingString:@".\r\n"];
                           }];
                           
                           if (message.apiResponse.validationErrors.count > 0) {

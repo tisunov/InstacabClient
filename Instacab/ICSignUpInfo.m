@@ -17,11 +17,21 @@
         @"email": @"email",
         @"mobile": @"mobile",
         @"password": @"password",
-        @"cardNumber": @"card_number",
-        @"cardExpirationMonth": @"card_expiration_month",
-        @"cardExpirationYear": @"card_expiration_year",
-        @"cardCode": @"card_code"
+//        @"cardNumber": @"card_number",
+//        @"cardExpirationMonth": @"card_expiration_month",
+//        @"cardExpirationYear": @"card_expiration_year",
+//        @"cardCode": @"card_code"
     };
+}
+
+-(NSString *)cardHolder {
+    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+    NSMutableString *buffer = [fullName mutableCopy];
+    CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)buffer;
+    CFStringTransform(bufferRef, NULL, kCFStringTransformToLatin, false);
+    CFStringTransform(bufferRef, NULL, kCFStringTransformStripCombiningMarks, false);
+    
+    return buffer;
 }
 
 @end

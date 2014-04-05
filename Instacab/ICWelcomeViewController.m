@@ -251,27 +251,25 @@
 }
 
 - (IBAction)registerAction:(id)sender {
-    // Analytics
-    [_clientService trackScreenView:@"Create Account"];
-    
-    NSURL *signUpUrl = [NSURL URLWithString:@"http://www.instacab.ru/users/sign_up"];
-    
-    if ([[OpenInChromeController sharedInstance] isChromeInstalled]) {
-        [[OpenInChromeController sharedInstance] openInChrome:signUpUrl
-                        withCallbackURL:nil
-                           createNewTab:YES];
-    }
-    else {
-        // Open URL in Safari
-        [[UIApplication sharedApplication] openURL:signUpUrl];
-    }
-    
-// TODO: Enable when we have PCI DSS
-//    ICCreateAccountDialog *vc = [[ICCreateAccountDialog alloc] initWithNibName:nil bundle:nil];
-//    vc.delegate = self;
+//    [_clientService trackScreenView:@"Create Account"];
 //    
-//    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
-//    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+//    NSURL *signUpUrl = [NSURL URLWithString:@"http://www.instacab.ru/users/sign_up"];
+//    
+//    if ([[OpenInChromeController sharedInstance] isChromeInstalled]) {
+//        [[OpenInChromeController sharedInstance] openInChrome:signUpUrl
+//                        withCallbackURL:nil
+//                           createNewTab:YES];
+//    }
+//    else {
+//        // Open URL in Safari
+//        [[UIApplication sharedApplication] openURL:signUpUrl];
+//    }
+    
+    ICCreateAccountDialog *vc = [[ICCreateAccountDialog alloc] initWithNibName:nil bundle:nil];
+    vc.delegate = self;
+    
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
 }
 
 -(void)cancelDialog:(UIViewController *)dialogController {
