@@ -20,7 +20,9 @@
 #import "TSMessageView.h"
 #import "TSMessage.h"
 #import "MBProgressHUD.h"
-#import "OpenInChromeController.h"
+#import "ICLinkCardDialog.h"
+#import "LocalyticsSession.h"
+#import "ICVerifyMobileViewController.h"
 
 @interface ICWelcomeViewController ()
 
@@ -71,17 +73,13 @@
     
     _signinButton.layer.cornerRadius = 3.0f;
     _signinButton.tintColor = [UIColor whiteColor];
-    _signinButton.normalColor = [UIColor colorFromHexString:@"#3498DB"];
-    _signinButton.highlightedColor = [UIColor colorFromHexString:@"#2980B9"];
+    _signinButton.normalColor = [UIColor denimColor];
+    _signinButton.highlightedColor = [UIColor colorFromHexString:@"#3c6698"];
     
     _signupButton.layer.cornerRadius = 3.0f;
     _signupButton.normalColor = _signinButton.normalColor;
     _signupButton.highlightedColor = _signinButton.highlightedColor;
     
-//    [_signupButton setTitleColor:[UIColor colorFromHexString:@"#3498DB"] forState:UIControlStateNormal];
-//    _signupButton.normalColor = [UIColor whiteColor];
-//    _signupButton.highlightedColor = [UIColor colorWithWhite:0.949 alpha:1.0];
-
     // Uncomment to take LaunchImage screenshot
 //    [self setNeedsStatusBarAppearanceUpdate];
 //    _signinButton.hidden = YES;
@@ -107,13 +105,23 @@
 }
 
 - (void)beginLoading {
-    if (![[ICClient sharedInstance] isSignedIn]) return;
-    
+    if ([[ICClient sharedInstance] isSignedIn])
+        [self beginSignIn];
+}
+
+- (void)beginSignIn {
     self.signinButton.hidden = YES;
     self.signupButton.hidden = YES;
     self.loadingIndicator.hidden = NO;
     self.loadingLabel.hidden = NO;
     [self.loadingIndicator startAnimating];
+}
+
+- (void)stopLoading {
+    self.signinButton.hidden = NO;
+    self.signupButton.hidden = NO;
+    self.loadingLabel.hidden = YES;
+    [self.loadingIndicator stopAnimating];
 }
 
 - (void)pingToRestoreStateReason:(NSString *)reason {
@@ -122,7 +130,7 @@
     [_clientService ping:_locationService.coordinates
                   reason:reason
                  success:^(ICMessage *message) {
-                     [self didReceiveMessage:message];
+                     [self pingResponseReceived:message];
                  }
                  failure:^{
                      [self stopLoading];
@@ -238,33 +246,32 @@
     [self.navigationController presentViewController:navigation animated:YES completion:NULL];
 }
 
-- (void)closeLoginViewController:(ICLoginViewController *)vc andSignIn:(BOOL)signIn {
+- (void)closeLoginViewController:(ICLoginViewController *)vc signIn:(BOOL)signIn client:(ICClient *)client {
     if (signIn) {
-        if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
-            self.navigationController.viewControllers = [self viewControllers];
-        }
-        else {
-            [self pushRequestViewControllerAnimated:NO];
-        }
+        [self signInClient:client];
     }
     [vc.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (IBAction)registerAction:(id)sender {
-//    [_clientService trackScreenView:@"Create Account"];
-//    
-//    NSURL *signUpUrl = [NSURL URLWithString:@"http://www.instacab.ru/users/sign_up"];
-//    
-//    if ([[OpenInChromeController sharedInstance] isChromeInstalled]) {
-//        [[OpenInChromeController sharedInstance] openInChrome:signUpUrl
-//                        withCallbackURL:nil
-//                           createNewTab:YES];
-//    }
-//    else {
-//        // Open URL in Safari
-//        [[UIApplication sharedApplication] openURL:signUpUrl];
-//    }
+- (void)setupAnalyticsForClient:(ICClient *)client {
+    [[LocalyticsSession shared] setCustomerName:client.firstName];
+    [[LocalyticsSession shared] setCustomerEmail:client.email];
+    [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
+}
+
+- (void)signInClient:(ICClient *)client {
+    if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
+        self.navigationController.viewControllers = [self viewControllers];
+    }
+    else {
+        [self pushRequestViewControllerAnimated:NO];
+    }
     
+    [self setupAnalyticsForClient:client];
+}
+
+- (IBAction)signup:(id)sender
+{
     ICCreateAccountDialog *vc = [[ICCreateAccountDialog alloc] initWithNibName:nil bundle:nil];
     vc.delegate = self;
     
@@ -272,16 +279,61 @@
     [self.navigationController presentViewController:navigation animated:YES completion:NULL];
 }
 
--(void)cancelDialog:(UIViewController *)dialogController {
+-(void)cancelSignUp:(UIViewController *)controller signUpInfo:(ICSignUpInfo *)info {
+    if (![info accountDataPresent]) {
+        [_clientService logSignUpCancel:info];
+        [controller.navigationController dismissViewControllerAnimated:YES completion:NULL];
+        return;
+    }
+    
     [UIAlertView presentWithTitle:@"Отменить создание аккаунта"
                           message:@"Вы уверены что хотите прекратить регистрацию? Вы потеряете введенные данные."
                           buttons:@[ @"Нет", @"Да" ]
                     buttonHandler:^(NSUInteger index) {
                         /* ДА */
                         if (index == 1) {
-                            [dialogController.navigationController dismissViewControllerAnimated:YES completion:NULL];
+                            [_clientService logSignUpCancel:info];
+                            [controller.navigationController dismissViewControllerAnimated:YES completion:NULL];
                         }
                     }];
+}
+
+- (void)clientDidSignUp {
+    [self beginSignIn];
+    
+    ICClient *client = [ICClient sharedInstance];
+    
+    [_clientService loginWithEmail:client.email
+                          password:client.password
+                           success:^(ICMessage *message) {
+                               [self stopLoading];
+                               
+                               if (message.messageType == SVMessageTypeError) {
+                                   [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка входа" message:message.errorText cancelButtonTitle:@"OK"];
+                                   return;
+                               }
+                               
+                               [self signInClient:message.client];
+                               
+                               [_clientService requestMobileConfirmation];
+                               
+                               [self performSelector:@selector(confirmMobile) withObject:nil afterDelay:9.0f];
+                           } failure:^{
+                               [self stopLoading];
+                               
+                               // Analytics
+                               [_clientService trackError:@{@"type": @"loginNetworkError"}];
+                               
+                               [[UIApplication sharedApplication] showAlertWithTitle:@"Отсутствует сетевое соединение" message:@"Не удалось выполнить вход." cancelButtonTitle:@"OK"];
+                           }];
+}
+
+- (void)confirmMobile {
+    ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
+
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
 }
 
 - (void)pushRequestViewControllerAnimated:(BOOL)animate {
@@ -294,13 +346,6 @@
     }
 }
 
-- (void)stopLoading {
-    self.signinButton.hidden = NO;
-    self.signupButton.hidden = NO;
-    self.loadingLabel.hidden = YES;
-    [self.loadingIndicator stopAnimating];
-}
-
 - (NSArray *)viewControllers {
     ICRequestViewController *vc1 = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
     
@@ -309,7 +354,7 @@
     return @[self, vc1, vc2];
 }
 
-- (void)didReceiveMessage:(ICMessage *)message {
+- (void)pingResponseReceived:(ICMessage *)message {
     switch (message.messageType) {
         case SVMessageTypeOK:
         {

@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ICSignUpInfo.h"
 
-@protocol ICCancelDialogDelegate <NSObject>
--(void)cancelDialog: (UIViewController *)dialogController;
-
+@protocol ICSignUpFlowDelegate <NSObject>
+-(void)cancelSignUp: (UIViewController *)controller signUpInfo:(ICSignUpInfo *)info;
+-(void)clientDidSignUp;
 @end

@@ -29,7 +29,7 @@ PODS:
   - Mantle/extobjc (1.3.1)
   - MBProgressHUD (0.8)
   - ObjectiveSugar (1.1.0)
-  - PaymentKit (1.0.0)
+  - PaymentKit (1.0.5)
   - QuickDialog (0.9.1):
     - QuickDialog/Core
   - QuickDialog/Core (0.9.1)
@@ -55,7 +55,7 @@ DEPENDENCIES:
   - Mantle (~> 1.3.1)
   - MBProgressHUD (from `https://github.com/dannybabiy/MBProgressHUD.git`, branch `ios7`)
   - ObjectiveSugar
-  - PaymentKit (from `https://github.com/lmcd/PaymentKit.git`)
+  - PaymentKit (from `https://github.com/stripe/PaymentKit.git`)
   - QuickDialog (from `https://github.com/escoz/QuickDialog.git`)
   - ReactiveCocoa (~> 2.1.7)
   - SLScrollViewKeyboardSupport (from `https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git`)
@@ -73,7 +73,7 @@ EXTERNAL SOURCES:
     :branch: ios7
     :git: https://github.com/dannybabiy/MBProgressHUD.git
   PaymentKit:
-    :git: https://github.com/lmcd/PaymentKit.git
+    :git: https://github.com/stripe/PaymentKit.git
   QuickDialog:
     :git: https://github.com/escoz/QuickDialog.git
   SLScrollViewKeyboardSupport:
@@ -95,7 +95,7 @@ SPEC CHECKSUMS:
   Mantle: abc3b0c81bc66eb624cf9cebb8640e377d5a44ae
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
   ObjectiveSugar: fed588577bcf9733546aeaa089de444e4bab9a52
-  PaymentKit: 40e5673a9a0960d7ef111d66d0604af245caf635
+  PaymentKit: 92df7c2fb4fb3b4e0c3f5fb8c8e75cc528025126
   QuickDialog: dc1dfabc55ab72d02356e1a908a091cdc90ce477
   ReactiveCocoa: 0db710a0afa1c627a64470e5c912a3870d4854ae
   SLScrollViewKeyboardSupport: 8e59a8af41cc29a8b63b7adf8de3da09d523cc2c

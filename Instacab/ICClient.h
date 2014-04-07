@@ -29,6 +29,7 @@ typedef enum : NSUInteger {
 
 // Computed properties
 @property (readonly) BOOL cardPresent;
+@property (nonatomic, readonly) NSString *cardHolder;
 
 -(void)logout;
 -(BOOL)isSignedIn;

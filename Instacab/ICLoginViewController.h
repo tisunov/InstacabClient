@@ -15,7 +15,7 @@
 @class ICLoginViewController;
 
 @protocol ICLoginViewControllerDelegate <NSObject>
-- (void)closeLoginViewController:(ICLoginViewController *)vc andSignIn:(BOOL)signIn;
+- (void)closeLoginViewController:(ICLoginViewController *)vc signIn:(BOOL)signIn client:(ICClient *)client;
 @end
 
 @interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate, ICLocationServiceDelegate>

@@ -20,20 +20,21 @@
 		D90BAE271885C89900E03F3E /* ICCreateProfileDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */; };
 		D90BAE2B1885CB2200E03F3E /* QuickDialogController+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */; };
 		D911228418094462006A49DA /* ICHighlightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D911228318094462006A49DA /* ICHighlightButton.m */; };
+		D92D430F18F11D720052B245 /* MBProgressHud+Global.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D430E18F11D720052B245 /* MBProgressHud+Global.m */; };
 		D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC0187552C000288448 /* UIAlertView+Additions.m */; };
 		D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */; };
 		D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = D948113E18BCB6720005D348 /* ICPaymentProfile.m */; };
 		D948114118BD3E680005D348 /* libLocalyticsAMP_x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */; };
 		D9532E1E1819B44E0046E5EC /* ICMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9532E1D1819B44E0046E5EC /* ICMessage.m */; };
-		D95A145018E0C8FB006D1245 /* OpenInChromeController.m in Sources */ = {isa = PBXBuildFile; fileRef = D95A144F18E0C8FB006D1245 /* OpenInChromeController.m */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
+		D97A48D318F03FCB0095B4BC /* ICVerifyMobileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */; };
+		D97A48D418F03FCB0095B4BC /* ICVerifyMobileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */; };
 		D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97B7AE618083E2A00B8315D /* AdSupport.framework */; };
 		D98058BD181A4EE000DD0BBF /* ICTrip.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058BC181A4EE000DD0BBF /* ICTrip.m */; };
 		D98058C0181A518700DD0BBF /* ICDriver.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058BF181A518700DD0BBF /* ICDriver.m */; };
 		D98058C3181A52F700DD0BBF /* ICPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058C2181A52F700DD0BBF /* ICPerson.m */; };
 		D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = D98058C5181A5A1800DD0BBF /* ICSingleton.m */; };
 		D982840318878F4A0014BBF7 /* ICApiResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = D982840218878F4A0014BBF7 /* ICApiResponse.m */; };
-		D982840618878FF10014BBF7 /* ICError.m in Sources */ = {isa = PBXBuildFile; fileRef = D982840518878FF10014BBF7 /* ICError.m */; };
 		D98EFDB11842921C005A2BAA /* ICLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */; };
 		D98EFDC118429BA8005A2BAA /* UINavigationController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDC018429BA8005A2BAA /* UINavigationController+Animation.m */; };
 		D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDC218435677005A2BAA /* CGRectUtils.c */; };
@@ -82,6 +83,9 @@
 		D9D4A277188655FA00067879 /* ICLinkCardDialog.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */; };
 		D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D4A27F1886629C00067879 /* libCardIO.a */; };
 		D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D4A28218866F2500067879 /* ICSignUpInfo.m */; };
+		D9D5FAC618F24B12006AB0A8 /* AKTransliteration.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D5FAC218F24B12006AB0A8 /* AKTransliteration.m */; };
+		D9D5FAC718F24B12006AB0A8 /* EnRuRules.plist in Resources */ = {isa = PBXBuildFile; fileRef = D9D5FAC318F24B12006AB0A8 /* EnRuRules.plist */; };
+		D9D5FAC818F24B12006AB0A8 /* RuEnRules.plist in Resources */ = {isa = PBXBuildFile; fileRef = D9D5FAC418F24B12006AB0A8 /* RuEnRules.plist */; };
 		D9EF8ED318170AEB00F9DD52 /* ICDispatchServer.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */; };
 		D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EF8ED518170B3500F9DD52 /* ICClient.m */; };
 		D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EFF9A31805867100A68AED /* QuartzCore.framework */; };
@@ -123,6 +127,8 @@
 		D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "QuickDialogController+Additions.m"; sourceTree = "<group>"; };
 		D911228218094462006A49DA /* ICHighlightButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICHighlightButton.h; sourceTree = "<group>"; };
 		D911228318094462006A49DA /* ICHighlightButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICHighlightButton.m; sourceTree = "<group>"; };
+		D92D430D18F11D720052B245 /* MBProgressHud+Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHud+Global.h"; sourceTree = "<group>"; };
+		D92D430E18F11D720052B245 /* MBProgressHud+Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHud+Global.m"; sourceTree = "<group>"; };
 		D940FBBF187552C000288448 /* UIAlertView+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Additions.h"; sourceTree = "<group>"; };
 		D940FBC0187552C000288448 /* UIAlertView+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Additions.m"; sourceTree = "<group>"; };
 		D940FBC2187553E800288448 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
@@ -132,9 +138,10 @@
 		D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP_x64.a; sourceTree = "<group>"; };
 		D9532E1C1819B44E0046E5EC /* ICMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICMessage.h; sourceTree = "<group>"; };
 		D9532E1D1819B44E0046E5EC /* ICMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICMessage.m; sourceTree = "<group>"; };
-		D95A144E18E0C8FB006D1245 /* OpenInChromeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenInChromeController.h; sourceTree = "<group>"; };
-		D95A144F18E0C8FB006D1245 /* OpenInChromeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenInChromeController.m; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
+		D97A48D018F03FCB0095B4BC /* ICVerifyMobileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVerifyMobileViewController.h; sourceTree = "<group>"; };
+		D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVerifyMobileViewController.m; sourceTree = "<group>"; };
+		D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICVerifyMobileViewController.xib; sourceTree = "<group>"; };
 		D97B7AE618083E2A00B8315D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		D98058BB181A4EE000DD0BBF /* ICTrip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICTrip.h; sourceTree = "<group>"; };
 		D98058BC181A4EE000DD0BBF /* ICTrip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICTrip.m; sourceTree = "<group>"; };
@@ -146,8 +153,6 @@
 		D98058C5181A5A1800DD0BBF /* ICSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICSingleton.m; sourceTree = "<group>"; };
 		D982840118878F4A0014BBF7 /* ICApiResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICApiResponse.h; sourceTree = "<group>"; };
 		D982840218878F4A0014BBF7 /* ICApiResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICApiResponse.m; sourceTree = "<group>"; };
-		D982840418878FF10014BBF7 /* ICError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICError.h; sourceTree = "<group>"; };
-		D982840518878FF10014BBF7 /* ICError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICError.m; sourceTree = "<group>"; };
 		D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICLoginViewController.m; sourceTree = "<group>"; };
 		D98EFDAF1842921C005A2BAA /* ICLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICLoginViewController.h; sourceTree = "<group>"; };
 		D98EFDBF18429BA8005A2BAA /* UINavigationController+Animation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Animation.h"; sourceTree = "<group>"; };
@@ -200,7 +205,7 @@
 		D9BA28AE181D4FF2009584D1 /* ICNearbyVehicles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICNearbyVehicles.m; sourceTree = "<group>"; };
 		D9BA28B0181D50E0009584D1 /* ICVehiclePoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVehiclePoint.h; sourceTree = "<group>"; };
 		D9BA28B1181D50E0009584D1 /* ICVehiclePoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVehiclePoint.m; sourceTree = "<group>"; };
-		D9BD7BB11887C087009351D6 /* ICCancelDialogDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICCancelDialogDelegate.h; sourceTree = "<group>"; };
+		D9BD7BB11887C087009351D6 /* ICSignUpFlowDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ICSignUpFlowDelegate.h; sourceTree = "<group>"; };
 		D9C193201888779200A889E4 /* ICAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICAccountViewController.h; sourceTree = "<group>"; };
 		D9C193211888779200A889E4 /* ICAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICAccountViewController.m; sourceTree = "<group>"; };
 		D9C193221888779200A889E4 /* ICAccountViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICAccountViewController.xib; sourceTree = "<group>"; };
@@ -227,6 +232,10 @@
 		D9D4A27F1886629C00067879 /* libCardIO.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCardIO.a; sourceTree = "<group>"; };
 		D9D4A28118866F2500067879 /* ICSignUpInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICSignUpInfo.h; sourceTree = "<group>"; };
 		D9D4A28218866F2500067879 /* ICSignUpInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICSignUpInfo.m; sourceTree = "<group>"; };
+		D9D5FAC118F24B12006AB0A8 /* AKTransliteration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AKTransliteration.h; sourceTree = "<group>"; };
+		D9D5FAC218F24B12006AB0A8 /* AKTransliteration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKTransliteration.m; sourceTree = "<group>"; };
+		D9D5FAC318F24B12006AB0A8 /* EnRuRules.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = EnRuRules.plist; sourceTree = "<group>"; };
+		D9D5FAC418F24B12006AB0A8 /* RuEnRules.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RuEnRules.plist; sourceTree = "<group>"; };
 		D9EF8ED118170AEB00F9DD52 /* ICDispatchServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICDispatchServer.h; sourceTree = "<group>"; };
 		D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICDispatchServer.m; sourceTree = "<group>"; };
 		D9EF8ED418170B3500F9DD52 /* ICClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICClient.h; sourceTree = "<group>"; };
@@ -306,8 +315,6 @@
 				D9D4A28118866F2500067879 /* ICSignUpInfo.h */,
 				D982840218878F4A0014BBF7 /* ICApiResponse.m */,
 				D982840118878F4A0014BBF7 /* ICApiResponse.h */,
-				D982840518878FF10014BBF7 /* ICError.m */,
-				D982840418878FF10014BBF7 /* ICError.h */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -333,6 +340,9 @@
 				D9C193201888779200A889E4 /* ICAccountViewController.h */,
 				D9C193211888779200A889E4 /* ICAccountViewController.m */,
 				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
+				D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */,
+				D97A48D018F03FCB0095B4BC /* ICVerifyMobileViewController.h */,
+				D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -340,6 +350,7 @@
 		D978D4F218B5F11500952BB7 /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				D9D5FABF18F24B12006AB0A8 /* AKTransliteration */,
 				D9D4A2781886629C00067879 /* CardIO */,
 				D9D08D2118B4F6F300760327 /* Localytics */,
 			);
@@ -388,6 +399,8 @@
 				D98EFDC318435677005A2BAA /* CGRectUtils.h */,
 				D90BAE291885CB2200E03F3E /* QuickDialogController+Additions.h */,
 				D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */,
+				D92D430D18F11D720052B245 /* MBProgressHud+Global.h */,
+				D92D430E18F11D720052B245 /* MBProgressHud+Global.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -515,10 +528,20 @@
 			path = CardIO;
 			sourceTree = "<group>";
 		};
+		D9D5FABF18F24B12006AB0A8 /* AKTransliteration */ = {
+			isa = PBXGroup;
+			children = (
+				D9D5FAC118F24B12006AB0A8 /* AKTransliteration.h */,
+				D9D5FAC218F24B12006AB0A8 /* AKTransliteration.m */,
+				D9D5FAC318F24B12006AB0A8 /* EnRuRules.plist */,
+				D9D5FAC418F24B12006AB0A8 /* RuEnRules.plist */,
+			);
+			path = AKTransliteration;
+			sourceTree = "<group>";
+		};
 		D9D88412188FE79E006BD004 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
-				D9BD7BB11887C087009351D6 /* ICCancelDialogDelegate.h */,
 				D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */,
 				D90BAE161884353300E03F3E /* ICCreateAccountDialog.h */,
 				D90BAE261885C89900E03F3E /* ICCreateProfileDialog.m */,
@@ -526,8 +549,7 @@
 				D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */,
 				D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */,
 				D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */,
-				D95A144E18E0C8FB006D1245 /* OpenInChromeController.h */,
-				D95A144F18E0C8FB006D1245 /* OpenInChromeController.m */,
+				D9BD7BB11887C087009351D6 /* ICSignUpFlowDelegate.h */,
 			);
 			name = SignUp;
 			sourceTree = "<group>";
@@ -631,10 +653,13 @@
 				D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */,
 				D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */,
 				D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */,
+				D97A48D418F03FCB0095B4BC /* ICVerifyMobileViewController.xib in Resources */,
 				D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */,
 				D9CD0E4D1829A55400A02619 /* ICReceiptViewController.xib in Resources */,
 				D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */,
 				D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */,
+				D9D5FAC718F24B12006AB0A8 /* EnRuRules.plist in Resources */,
+				D9D5FAC818F24B12006AB0A8 /* RuEnRules.plist in Resources */,
 				D90A9CA018AE5CFE002B80F4 /* GoogleMaps.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -714,7 +739,7 @@
 				D911228418094462006A49DA /* ICHighlightButton.m in Sources */,
 				D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */,
 				D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */,
-				D95A145018E0C8FB006D1245 /* OpenInChromeController.m in Sources */,
+				D97A48D318F03FCB0095B4BC /* ICVerifyMobileViewController.m in Sources */,
 				D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */,
 				D9AD51621817EE1E00692E7E /* ICLocation.m in Sources */,
 				D9C114CE1813C00C002833FF /* ICRequestViewController.m in Sources */,
@@ -725,14 +750,15 @@
 				D90BAE271885C89900E03F3E /* ICCreateProfileDialog.m in Sources */,
 				D9BA28B2181D50E0009584D1 /* ICVehiclePoint.m in Sources */,
 				D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */,
+				D9D5FAC618F24B12006AB0A8 /* AKTransliteration.m in Sources */,
 				D9C193231888779200A889E4 /* ICAccountViewController.m in Sources */,
+				D92D430F18F11D720052B245 /* MBProgressHud+Global.m in Sources */,
 				D9532E1E1819B44E0046E5EC /* ICMessage.m in Sources */,
 				D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */,
 				D9BA28AF181D4FF2009584D1 /* ICNearbyVehicles.m in Sources */,
 				D9AD515F1817D17C00692E7E /* ICLocationService.m in Sources */,
 				D9C1932C1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m in Sources */,
 				D9B03245180572B400F7AF69 /* main.m in Sources */,
-				D982840618878FF10014BBF7 /* ICError.m in Sources */,
 				D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */,
 				D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */,
 				D98058C0181A518700DD0BBF /* ICDriver.m in Sources */,

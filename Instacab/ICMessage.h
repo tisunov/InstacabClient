@@ -11,7 +11,6 @@
 #import "ICTrip.h"
 #import "ICNearbyVehicles.h"
 #import "ICApiResponse.h"
-#import "ICError.h"
 
 typedef enum : NSUInteger {
     SVMessageTypeOK,

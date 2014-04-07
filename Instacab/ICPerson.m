@@ -21,6 +21,7 @@
     return @{
         @"uID": @"id",
         @"firstName": @"firstName",
+        @"lastName": @"lastName",
         @"mobilePhone": @"mobile",
         @"rating": @"rating"
     };

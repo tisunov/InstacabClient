@@ -14,7 +14,6 @@
 #import "MBProgressHUD.h"
 #import "QuickDialogController+Additions.h"
 #import "UIApplication+Alerts.h"
-#import "LocalyticsSession.h"
 
 @interface ICLoginViewController ()
 
@@ -172,7 +171,7 @@
     [_clientService loginWithEmail:[self clientEmail]
                           password:[self textForElementKey:@"password"]
                            success:^(ICMessage *message) {
-                               [self clientDidReceiveMessage:message];
+                               [self loginResponseReceived:message];
                            } failure:^{
                                [self dismissProgress];
                                
@@ -190,7 +189,7 @@
 
 - (void)showProgress {
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
-    hud.labelText = @"Проверяю";
+    hud.labelText = @"Проверка";
     hud.removeFromSuperViewOnHide = YES;
     
     [[UIApplication sharedApplication].keyWindow addSubview:hud];
@@ -202,7 +201,7 @@
     [hud hide:YES];
 }
 
-- (void)clientDidReceiveMessage:(ICMessage *)message {
+- (void)loginResponseReceived:(ICMessage *)message {
     ICClient *client = [ICClient sharedInstance];
      
     switch (message.messageType) {
@@ -212,11 +211,10 @@
             client.password = [self textForElementKey:@"password"];
             [client save];
 
-            [self setupAnalyticsForClient:client];
             [self dismissProgress];
             
-            if ([self.delegate respondsToSelector:@selector(closeLoginViewController:andSignIn:)]) {
-                [self.delegate closeLoginViewController:self andSignIn:YES];
+            if ([self.delegate respondsToSelector:@selector(closeLoginViewController:signIn:client:)]) {
+                [self.delegate closeLoginViewController:self signIn:YES client:client];
             }
             break;
             
@@ -234,15 +232,9 @@
     }
 }
 
-- (void)setupAnalyticsForClient:(ICClient *)client {
-    [[LocalyticsSession shared] setCustomerName:client.firstName];
-    [[LocalyticsSession shared] setCustomerEmail:client.email];
-    [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
-}
-
 -(void)cancelPressed {
-    if ([self.delegate respondsToSelector:@selector(closeLoginViewController:andSignIn:)]) {
-        [self.delegate closeLoginViewController:self andSignIn:NO];
+    if ([self.delegate respondsToSelector:@selector(closeLoginViewController:signIn:client:)]) {
+        [self.delegate closeLoginViewController:self signIn:NO client:nil];
     }
 }
 

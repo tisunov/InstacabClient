@@ -15,7 +15,7 @@
 #import "ICSignUpInfo.h"
 #import "ICClientService.h"
 #import "UIApplication+Alerts.h"
-#import "MBProgressHUD.h"
+#import "MBProgressHud+Global.h"
 #import "UIColor+Colours.h"
 #import <ObjectiveSugar/ObjectiveSugar.h>
 
@@ -54,27 +54,29 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
         self.root.grouped = YES;
         self.root.appearance = [QCustomAppearance new];
         
-        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:@"tisunov.pavel2@gmail.com" Placeholder:@"email@domain.ru"];
+        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"Эл.почта" Value:nil Placeholder:@"email@sample.ru"];
         email.keyboardType = UIKeyboardTypeEmailAddress;
         email.autocapitalizationType = UITextAutocapitalizationTypeNone;
+        email.autocorrectionType = UITextAutocorrectionTypeNo;
         email.enablesReturnKeyAutomatically = YES;
         email.hiddenToolbar = YES;
         email.key = @"email";
         
-        QEntryElement *mobile = [[QEntryElement alloc] initWithTitle:@"Мобильный" Value:@"+7 (920) 213-30-59" Placeholder:@"+7 (555) 555-55-55"];
+        QEntryElement *mobile = [[QEntryElement alloc] initWithTitle:@"Мобильный" Value:nil Placeholder:@"+7 (555) 555-55-55"];
         mobile.keyboardType = UIKeyboardTypePhonePad;
         mobile.key = @"mobile";
         mobile.enablesReturnKeyAutomatically = YES;
         mobile.hiddenToolbar = YES;
         
-        QEntryElement *password = [[QEntryElement alloc] initWithTitle:@"Пароль" Value:@"qwertyui" Placeholder:@"6 и больше символов"];
+        QEntryElement *password = [[QEntryElement alloc] initWithTitle:@"Пароль" Value:nil Placeholder:@"6 и больше символов"];
         password.secureTextEntry = YES;
         password.enablesReturnKeyAutomatically = YES;
         password.hiddenToolbar = YES;
         password.key = @"password";
         
         QSection *section = [[QSection alloc] init];
-        section.footer = @"Ваш e-mail и номер мобильного телефона нужен чтобы отправлять вам СМС извещения и квитанции.";
+        section.footer = @"Ваша эл.почта нужна для отправления квитанций за поездки. Номер мобильного нужен для отправления вам извещений о ходе заказа.";
+
         [self.root addSection:section];
         [section addElement:email];
         [section addElement:mobile];
@@ -93,7 +95,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     
     self.titleText = @"СОЗДАТЬ АККАУНТ";
     
-//    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
+//    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-15, 0, 0, 0);
     
     UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     self.navigationItem.leftBarButtonItem = back;
@@ -103,6 +105,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     self.navigationItem.rightBarButtonItem = next;
     
     [_clientService trackScreenView:@"Create Account"];
+    [_clientService logSignUpPageView];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -134,7 +137,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
 }
 
 -(void)back {
-    [self.delegate cancelDialog:self];
+    [self.delegate cancelSignUp:self signUpInfo:[self signUpInfo]];
 }
 
 - (BOOL)validPhone:(NSString*) phoneString {
@@ -143,20 +146,6 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     } else {
         return NO;
     }
-}
-
-- (void)showProgress {
-    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
-    hud.labelText = @"Проверяю";
-    hud.removeFromSuperViewOnHide = YES;
-    
-    [[UIApplication sharedApplication].keyWindow addSubview:hud];
-    [hud show:YES];
-}
-
--(void)dismissProgress {
-    MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
-    [hud hide:YES];
 }
 
 -(void)next {
@@ -193,41 +182,51 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
         [self clearHighlightForElementWithKey:key];
     }];
     
-    [self showProgress];
+    [MBProgressHUD showGlobalProgressHUDWithTitle:@"Проверка"];
+    
     [_clientService validateEmail:[self textForElementKey:@"email"]
                          password:[self textForElementKey:@"password"]
                            mobile:[self textForElementKey:@"mobile"]
                       withSuccess:^(ICMessage *message) {
-                          [self dismissProgress];
+                          [MBProgressHUD hideGlobalHUD];
 
                           __block NSString *alertMessage = @"";
                           [message.apiResponse.validationErrors.allKeys each:^(id errorKey) {
                               [self highlightElementWithKey:errorKey];
                               alertMessage = [alertMessage stringByAppendingString:message.apiResponse.validationErrors[errorKey]];
-                              alertMessage = [alertMessage stringByAppendingString:@".\r\n"];
+                              alertMessage = [alertMessage stringByAppendingString:@".\r\n\r\n"];
                           }];
                           
+                          alertMessage = [alertMessage stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\r\n"]];
+                          
                           if (message.apiResponse.validationErrors.count > 0) {
-                              [app showAlertWithTitle:@"Неверные данные" message:alertMessage cancelButtonTitle:@"OK"];
+                              [app showAlertWithTitle:@"Ошибка" message:alertMessage cancelButtonTitle:@"OK"];
                           }
                           else {
                               [self nextStep];
                           }
                       }
                           failure:^{
-                              [self dismissProgress];
+                              [MBProgressHUD hideGlobalHUD];
+                              
                               [app showAlertWithTitle:@"Сервер недоступен" message:@"Не могу проверить данные." cancelButtonTitle:@"OK"];
                           }
      ];
 }
 
+- (ICSignUpInfo *)signUpInfo {
+    ICSignUpInfo *info = [[ICSignUpInfo alloc] init];
+    info.email = [self textForElementKey:@"email"];
+    info.password = [self textForElementKey:@"password"];
+    info.mobile = [self textForElementKey:@"mobile"];
+    
+    return info;
+}
+
 -(void)nextStep {
     ICCreateProfileDialog *controller = [[ICCreateProfileDialog alloc] initWithNibName:nil bundle:nil];
     controller.delegate = self.delegate;
-    controller.signupInfo = [[ICSignUpInfo alloc] init];
-    controller.signupInfo.email = [self textForElementKey:@"email"];
-    controller.signupInfo.password = [self textForElementKey:@"password"];
-    controller.signupInfo.mobile = [self textForElementKey:@"mobile"];
+    controller.signupInfo = [self signUpInfo];
 
     [self.navigationController pushViewController:controller animated:YES];
 }
@@ -238,12 +237,6 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
 
 -(void)clearHighlightForElementWithKey:(NSString *)key {
     [self cellForElementKey:key].textLabel.textColor = [UIColor blackColor];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

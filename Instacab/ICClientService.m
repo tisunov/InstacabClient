@@ -23,8 +23,9 @@ NSString *const kNearestCabRequestReasonPing = @"ping";
 NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
 NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 
-float const kPingIntervalInSeconds = 6.0;
-float const kCheckPaymentProfileIntervalInSeconds = 2.0;
+float const kPingIntervalInSeconds = 6.0f;
+float const kPaymentProfilePolling = 2.0f;
+float const kPaymentProfileTimeout = 15.0f;
 
 @implementation AFHTTPRequestOperationManager (EnableCookies)
 
@@ -42,12 +43,26 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
 
 @end
 
+@interface ICClientService ()
+@property (nonatomic, copy) ICClientServiceSuccessBlock successBlock;
+@property (nonatomic, copy) ICClientServiceFailureBlock failureBlock;
+@end
+
 @implementation ICClientService {
     ICClientServiceSuccessBlock _successBlock;
     ICClientServiceFailureBlock _failureBlock;
+    
+    CardRegisterSuccessBlock _cardRegisterSuccess;
+    CardRegisterFailureBlock _cardRegisterFailure;
+    NSTimer *_cardRegisterTimer;
+    NSDate *_cardRegisteredAt;
+    
     FCReachability *_reachability;
     NSTimer *_pingTimer;
 }
+
+@synthesize successBlock = _successBlock;
+@synthesize failureBlock = _failureBlock;
 
 - (id)init
 {
@@ -74,10 +89,10 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
     failure:(ICClientServiceFailureBlock)failure
 {
     if (success) {
-        _successBlock = [success copy];
+        self.successBlock = success;
     }
     if (failure) {
-        _failureBlock = [failure copy];
+        self.failureBlock = failure;
     }
     
     // TODO: Посылать текущий vehicleViewId
@@ -101,8 +116,8 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
               success:(ICClientServiceSuccessBlock)success
               failure:(ICClientServiceFailureBlock)failure
 {
-    _successBlock = [success copy];
-    _failureBlock = [failure copy];
+    self.successBlock = success;
+    self.failureBlock = failure;
 
     // Always reconnect after sending login
     self.dispatchServer.maintainConnection = YES;
@@ -154,8 +169,8 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
         [message setObject:feedback forKey:@"feedback"];
     }
     
-    _successBlock = [success copy];
-    _failureBlock = [failure copy];
+    self.successBlock = success;
+    self.failureBlock = failure;
     
     [self sendMessage:message];
 }
@@ -179,9 +194,11 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
     [self trackEvent:@"Request Vehicle" params:nil];
 }
 
--(void)cancelPickup {
+-(void)cancelInstacabRequest {
+    // Спросить у клиента причину отмены: feedbackType
+    
     NSDictionary *message = @{
-        kFieldMessageType: @"CancelPickup",
+        kFieldMessageType: @"PickupCanceledClient",
         @"token": [ICClient sharedInstance].token,
         @"id": [ICClient sharedInstance].uID,
         @"tripId": [ICTrip sharedInstance].tripId
@@ -209,27 +226,35 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
 #pragma mark - Signup Flow
 
 -(void)signUp:(ICSignUpInfo *)info
-   withCardIo:(BOOL)cardio
+       cardio:(BOOL)cardio
+cardioAttempts:(NSUInteger)cardioAttempts
       success:(ICClientServiceSuccessBlock)success
       failure:(ICClientServiceFailureBlock)failure
 {
-    _successBlock = [success copy];
-    _failureBlock = [failure copy];
+    self.successBlock = success;
+    self.failureBlock = failure;
     
-    NSDictionary *message = @{
-        @"user": [MTLJSONAdapter JSONDictionaryFromModel:info],
-        @"cardio": @(cardio),
-        kFieldMessageType: @"SignUpClient"
-    };
+    NSMutableDictionary *message = [NSMutableDictionary dictionaryWithDictionary:@{
+        kFieldMessageType: @"ApiCommand",
+        @"apiUrl": [NSString stringWithFormat:@"/sign_up"],
+        @"apiMethod": @"POST",
+        @"apiParameters": @{
+            @"user": [MTLJSONAdapter JSONDictionaryFromModel:info],
+        }
+    }];
     
-    [self.dispatchServer sendLogEvent:@"SignUpRequest" parameters:nil];
+    if (cardio) {
+        [message setObject:@(1) forKey:@"cardio"];
+    }
+    
+    [self.dispatchServer sendLogEvent:@"SignUpRequest" parameters:@{@"cardioAttempts": @(cardioAttempts)}];
     
     [self sendMessage:message];
 }
 
-- (void)createCardSessionSuccess:(ICClientServiceSuccessBlock)success
+- (void)createCardSessionOnFailure:(ICClientServiceFailureBlock)failure;
 {
-    _successBlock = [success copy];
+    self.failureBlock = failure;
     
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
@@ -245,44 +270,85 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
          expirationMonth:(NSNumber *)expirationMonth
           expirationYear:(NSNumber *)expirationYear
               secureCode:(NSString *)secureCode
-                 success:(ICClientServiceSuccessBlock)success
-                 failure:(ICClientServiceFailureBlock)failure
-
+             addCardUrl:(NSString *)addCardUrl
+           submitCardUrl:(NSString *)submitCardUrl
+                  cardio:(BOOL)cardio
+                 success:(CardRegisterSuccessBlock)success
+                 failure:(CardRegisterFailureBlock)failure
 {
+    NSLog(@"createCardNumber, cardHolder=%@, cardIO=%d", cardHolder, cardio);
+    
     NSString *cardData = [NSString stringWithFormat:@"CardNumber=%@;EMonth=%@;EYear=%@;CardHolder=%@;SecureCode=%@", cardNumber, expirationMonth, expirationYear, cardHolder, secureCode];
 
-    [[ICClientService sharedInstance] createCardSessionSuccess:^(ICMessage *message) {
-        if (message.apiResponse.isSuccess) {
-            [self downloadAddCardPage:message.apiResponse.addCardUrl
-                       submitCardData:cardData
-                                toUrl:message.apiResponse.submitCardUrl
-                              success:success
-                              failure:failure];
-        }
-        // Should not happen in production
-        else {
-            NSLog(@"Error: Failed to create add card session, statusCode %@", message.apiResponse.error.statusCode);
-        }
-    }];
+    [self downloadAddCardPage:addCardUrl
+               submitCardData:cardData
+                        toUrl:submitCardUrl
+                      success:success
+                      failure:failure];
 }
 
-- (void)isPaymentProfilePresentSuccess:(ICClientServiceSuccessBlock)success
-                               failure:(ICClientServiceFailureBlock)failure
+- (void)isPaymentProfilePresent:(ICClientServiceSuccessBlock)success
 {
+    self.successBlock = success;
+    
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
-        @"apiUrl": [NSString stringWithFormat:@"/clients/%@/payment_profile", [ICClient sharedInstance].uID],
+        @"apiUrl": [NSString stringWithFormat:@"/clients/%@/payment_profile_exists", [ICClient sharedInstance].uID],
         @"apiMethod": @"GET"
     };
 
     [self sendMessage:message];
 }
 
+- (void)paymentProfileExists {
+    // Timeout while waiting for client payment profile to be created
+    NSTimeInterval sinceCardRegistration = -[_cardRegisteredAt timeIntervalSinceNow];
+    if (sinceCardRegistration >= kPaymentProfileTimeout) {
+        if (_cardRegisterFailure) {
+            _cardRegisterFailure(@"Банк не сообщил вовремя о добавлении карты", @"Возможно карта добавлена. Пожалуйста, попробуйте отменить регистрацию и выполнить вход.");
+            _cardRegisterFailure = nil;
+            _cardRegisterSuccess = nil;
+        }
+
+        [_cardRegisterTimer invalidate];
+        _cardRegisterTimer = nil;
+        return;
+    }
+
+    // Poll server for update
+    [self isPaymentProfilePresent:^(ICMessage *message) {
+        if (message.apiResponse.paymentProfile) {
+            if (_cardRegisterSuccess) {
+                _cardRegisterSuccess();
+                _cardRegisterSuccess = nil;
+                _cardRegisterFailure = nil;
+            }
+            
+            [_cardRegisterTimer invalidate];
+            _cardRegisterTimer = nil;
+        }
+    }];
+}
+
+- (void)waitForPaymentProfileSuccess:(CardRegisterSuccessBlock)success
+                             failure:(CardRegisterFailureBlock)failure
+{
+    _cardRegisterSuccess = [success copy];
+    _cardRegisterFailure = [failure copy];
+    _cardRegisteredAt = [NSDate date];
+    
+    _cardRegisterTimer = [NSTimer scheduledTimerWithTimeInterval:kPaymentProfilePolling
+                                                          target:self
+                                                        selector:@selector(paymentProfileExists)
+                                                        userInfo:nil
+                                                         repeats:YES];
+}
+
 - (void)downloadAddCardPage:(NSString *)addCardUrl
              submitCardData:(NSString *)cardData
                       toUrl:(NSString *)submitUrl
-                    success:(ICClientServiceSuccessBlock)successBlock
-                    failure:(ICClientServiceFailureBlock)failureBlock
+                    success:(CardRegisterSuccessBlock)success
+                    failure:(CardRegisterFailureBlock)failure
 
 {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -307,37 +373,23 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
                        NSString *content = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
                        NSLog(@"AddSubmit Response: %@, %@", content, operation.response);
                        
-                       // TODO: SignUpClient должна быть API командой. Вернуть ID и Token
-                       // TODO: Далее завести NSTimer с интервалом 2 секунды. И дать ему тикать 5 раз (10 секунд timeout)
-                       // TODO: Сообщить об ошибке или успехе пользователю
-                       
                        if ([self submitWasSuccessful:content]) {
-                           // TODO: Ждать (переодически опрашивая) когда DispatchServer скажет что карта добавлена
-                           // ApiCommand has_payment_profile
-                           [self beginPaymentProfilePolling:]
-                           dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kCheckPaymentProfileIntervalInSeconds * NSEC_PER_SEC));
-                           dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-                               [self isPaymentProfilePresentSuccess]
-                           });
-                           
+                           [self waitForPaymentProfileSuccess:success failure:failure];
                        }
                        else {
                            NSLog(@"Error: Submit failed. Try again");
-                           failureBlock();
-                           // TODO: Уведомить человека чтобы проверил данные карты или ввел другую карту
+                           failure(@"Ваш банк не может обработать эту карту", @"Свяжитесь с вашим банком и повторите попытку. Если проблема не будет устранена, укажите другую карту.");
                        }
                    }
                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                        NSLog(@"Error: %@", error);
-                       failureBlock();
-                       // TODO: Уведомить человека что произошла ошибка при попытке добавить карту, попробовать еще раз
+                       failure(@"Ошибка передачи данных в банк", @"Пожалуйста, повторите попытку.");
                    }
               ];
          }
          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              NSLog(@"Error: %@", error);
-             failureBlock();
-             // TODO: Уведомить человека что произошла ошибка при попытке добавить карту, попробовать еще раз
+             failure(@"Ошибка связи с банком", @"Пожалуйста, повторите попытку.");
          }
      ];
 }
@@ -373,8 +425,8 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
           withSuccess:(ICClientServiceSuccessBlock)success
               failure:(ICClientServiceFailureBlock)failure
 {
-    _successBlock = [success copy];
-    _failureBlock = [failure copy];
+    self.successBlock = success;
+    self.failureBlock = failure;
     
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
@@ -400,13 +452,47 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
     [self sendMessage:message];
 }
 
-- (void)confirmMobileToken:(NSString *)token {
+- (void)confirmMobileToken:(NSString *)token
+                   success:(ICClientServiceSuccessBlock)success
+                   failure:(ICClientServiceFailureBlock)failure;
+{
+    self.successBlock = success;
+    self.failureBlock = failure;
+    
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
         @"apiUrl": [NSString stringWithFormat:@"/clients/%@/confirm_mobile", [ICClient sharedInstance].uID],
         @"apiMethod": @"PUT",
         @"apiParameters": @{
-            @"mobile_token": token
+            @"mobile_token": token,
+            @"token": [ICClient sharedInstance].uID
+        }
+    };
+    
+    [self sendMessage:message];
+}
+
+-(void)validatePromo:(NSString *)promotionCode {
+    NSDictionary *message = @{
+        kFieldMessageType: @"ApiCommand",
+            @"apiUrl": @"/validate/promotion",
+            @"apiMethod": @"PUT",
+            @"apiParameters": @{
+                @"promotion_code": promotionCode
+            }
+    };
+    
+    [self sendMessage:message];
+}
+
+-(void)applyPromo:(NSString *)promotionCode {
+    NSDictionary *message = @{
+        kFieldMessageType: @"ApiCommand",
+        @"apiUrl": @"/clients_promotions",
+        @"apiMethod": @"PUT",
+        @"apiParameters": @{
+            @"promotion_code": promotionCode,
+            @"token": [ICClient sharedInstance].uID
         }
     };
     
@@ -554,16 +640,32 @@ float const kCheckPaymentProfileIntervalInSeconds = 2.0;
 
 #pragma mark - Log Events
 
-// TODO: Track SignUpCancel event
-// TODO: При SignUpCancel учитывать какие поля были заполнены при отмене регистрации
-// firstName, lastName, email, password, mobile, card_number,
-// card_expiration_month, card_expiration_year, card_code
 - (void)logMapPageView {
     [self.dispatchServer sendLogEvent:@"MapPageView" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
 }
 
 - (void)logSignInPageView {
     [self.dispatchServer sendLogEvent:@"SignInPageView" parameters:nil];
+}
+
+- (void)logSignUpPageView {
+    [self.dispatchServer sendLogEvent:@"SignUpPageView" parameters:nil];
+}
+
+- (void)logSignUpCancel:(ICSignUpInfo *)info {
+    NSDictionary *params = @{
+        @"firstName": @([info.firstName isPresent]),
+        @"lastName": @([info.lastName isPresent]),
+        @"email": @([info.email isPresent]),
+        @"password": @([info.password isPresent]),
+        @"mobile": @([info.mobile isPresent]),
+        @"cardNumber": @([info.cardNumber isPresent]),
+        @"cardExpirationMonth": @([info.cardExpirationMonth isPresent]),
+        @"cardExpirationYear": @([info.cardExpirationYear isPresent]),
+        @"cardCode": @([info.cardCode isPresent]),
+    };
+    
+    [self.dispatchServer sendLogEvent:@"SignUpCancel" parameters:params];
 }
 
 @end

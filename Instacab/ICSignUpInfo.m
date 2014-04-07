@@ -1,5 +1,5 @@
 //
-//  ICClientAccount.m
+//  ICSignUpInfo.m
 //  Instacab
 //
 //  Created by Pavel Tisunov on 15/01/14.
@@ -7,6 +7,14 @@
 //
 
 #import "ICSignUpInfo.h"
+
+@implementation NSString (Helper)
+
+- (BOOL)isPresent {
+    return self && self.length;
+}
+
+@end
 
 @implementation ICSignUpInfo
 
@@ -17,21 +25,15 @@
         @"email": @"email",
         @"mobile": @"mobile",
         @"password": @"password",
-//        @"cardNumber": @"card_number",
-//        @"cardExpirationMonth": @"card_expiration_month",
-//        @"cardExpirationYear": @"card_expiration_year",
-//        @"cardCode": @"card_code"
+        @"cardNumber": [NSNull null],
+        @"cardExpirationMonth": [NSNull null],
+        @"cardExpirationYear": [NSNull null],
+        @"cardCode": [NSNull null],
     };
 }
 
--(NSString *)cardHolder {
-    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
-    NSMutableString *buffer = [fullName mutableCopy];
-    CFMutableStringRef bufferRef = (__bridge CFMutableStringRef)buffer;
-    CFStringTransform(bufferRef, NULL, kCFStringTransformToLatin, false);
-    CFStringTransform(bufferRef, NULL, kCFStringTransformStripCombiningMarks, false);
-    
-    return buffer;
+-(BOOL)accountDataPresent {
+    return [_password isPresent] || [_email isPresent] || [_mobile isPresent];
 }
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "QuickDialog.h"
-#import "ICCancelDialogDelegate.h"
+#import "ICSignUpFlowDelegate.h"
 #import "UIViewController+TitleLabelAttritbutes.h"
 
 @interface QCustomAppearance : QFlatAppearance
@@ -18,5 +18,5 @@
 
 @interface ICCreateAccountDialog : QuickDialogController<QuickDialogEntryElementDelegate>
 
-@property (nonatomic, weak) id<ICCancelDialogDelegate> delegate;
+@property (nonatomic, weak) id<ICSignUpFlowDelegate> delegate;
 @end

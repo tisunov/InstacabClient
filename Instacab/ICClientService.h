@@ -22,6 +22,9 @@ extern NSString *const kRequestVehicleDeniedReasonNoCard;
 typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
 typedef void (^ICClientServiceFailureBlock)();
 
+typedef void (^CardRegisterSuccessBlock)();
+typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description);
+
 @interface ICClientService : BaseService
 -(void)loginWithEmail:(NSString *)email
              password: (NSString *)password
@@ -34,7 +37,7 @@ typedef void (^ICClientServiceFailureBlock)();
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure;
 
--(void)cancelPickup;
+-(void)cancelInstacabRequest;
 -(void)cancelTrip;
 
 -(void)submitRating:(NSUInteger)rating
@@ -45,10 +48,22 @@ typedef void (^ICClientServiceFailureBlock)();
 
 -(void)logOut;
 
+-(void)requestMobileConfirmation;
+
+-(void)confirmMobileToken:(NSString *)token
+                  success:(ICClientServiceSuccessBlock)success
+                  failure:(ICClientServiceFailureBlock)failure;
+
+-(void)applyPromo:(NSString *)promotionCode;
+-(void)validatePromo:(NSString *)promotionCode;
+
+//(void)fareEstimate:(ICLocation *)pickupLocation destination:(ICLocation *)destination;
+
 #pragma mark - Signup Flow
 
 -(void)signUp:(ICSignUpInfo *)info
-   withCardIo:(BOOL)cardio
+       cardio:(BOOL)cardio
+cardioAttempts:(NSUInteger)cardioAttempts
       success:(ICClientServiceSuccessBlock)success
       failure:(ICClientServiceFailureBlock)failure;
 
@@ -58,13 +73,18 @@ typedef void (^ICClientServiceFailureBlock)();
          withSuccess:(ICClientServiceSuccessBlock)success
              failure:(ICClientServiceFailureBlock)failure;
 
+- (void)createCardSessionOnFailure:(ICClientServiceFailureBlock)failure;
+
 - (void)createCardNumber:(NSString *)cardNumber
               cardHolder:(NSString *)cardHolder
          expirationMonth:(NSNumber *)month
           expirationYear:(NSNumber *)year
               secureCode:(NSString *)cvv
-                 success:(ICClientServiceSuccessBlock)success
-                 failure:(ICClientServiceFailureBlock)failure;
+             addCardUrl:(NSString *)addCardUrl
+           submitCardUrl:(NSString *)submitCardUrl
+                  cardio:(BOOL)cardio
+                 success:(CardRegisterSuccessBlock)success
+                 failure:(CardRegisterFailureBlock)failure;
 
 -(void)disconnectWithoutTryingToReconnect;
 
@@ -80,5 +100,7 @@ typedef void (^ICClientServiceFailureBlock)();
 
 - (void)logMapPageView;
 - (void)logSignInPageView;
-
+- (void)logSignUpPageView;
+- (void)logSignUpCancel:(ICSignUpInfo *)signUpData;
+    
 @end

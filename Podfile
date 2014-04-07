@@ -13,6 +13,6 @@ pod 'Bugsnag'
 pod 'ObjectiveSugar'
 pod 'QuickDialog', :git => 'https://github.com/escoz/QuickDialog.git'
 pod 'AKNumericFormatter', :git => 'https://github.com/blackm00n/AKNumericFormatter.git'
-pod 'PaymentKit', :git => 'https://github.com/lmcd/PaymentKit.git'
+pod 'PaymentKit', :git => 'https://github.com/stripe/PaymentKit.git'
 pod 'FCUtilities', :git => 'https://github.com/marcoarment/FCUtilities.git'
 pod 'iOSBlocks', :git => 'https://github.com/dzenbot/iOSBlocks.git', :inhibit_warnings => true

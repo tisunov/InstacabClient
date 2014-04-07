@@ -13,18 +13,25 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"error": @"error",
-        @"validationErrors": @"data.errors",
-        @"addCardUrl": @"data.add_card_page_url",
-        @"submitCardUrl": @"data.submit_url"
+        @"statusCode": @"statusCode",
+        @"validationErrors": @"errors",
+        @"addCardUrl": @"add_card_page_url",
+        @"submitCardUrl": @"submit_url",
+        @"paymentProfile": @"payment_profile",
+        @"client": @"client",
     };
 }
 
-+ (NSValueTransformer *)errorJSONTransformer {
-    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICError.class];
++ (NSValueTransformer *)clientJSONTransformer {
+    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICClient.class];
+}
+
++ (NSValueTransformer *)hasPaymentProfileJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
 -(BOOL)isSuccess {
-    return !self.error;
+    return [self.error length] == 0;
 }
 
 @end

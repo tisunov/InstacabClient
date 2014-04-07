@@ -1,5 +1,6 @@
 @implementation UIApplication (Alerts)
- 
+
+// TODO: Сделать extension на UIViewController
 - (void) showAlertWithTitle:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)cancelButtonTitle
 {
 	UIAlertView *anAlertView = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:cancelButtonTitle otherButtonTitles:nil];

@@ -473,8 +473,12 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _pickupTimeLabel.text = [[NSString stringWithFormat:kRequestMinimumEtaTemplate, nearbyVehicles.minEtaString] uppercaseString];
     _pickupBtn.enabled = YES;
     
+    [self displayCars:nearbyVehicles.vehiclePoints];
+}
+
+- (void)displayCars:(NSArray *)cars {
     // Add new vehicles and update existing vehicles' positions
-    for (ICVehiclePoint *vehiclePoint in nearbyVehicles.vehiclePoints) {
+    for (ICVehiclePoint *vehiclePoint in cars) {
         NSPredicate *filter = [NSPredicate predicateWithFormat:@"userData = %@", vehiclePoint.vehicleId];
         GMSMarker *existingMarker = [[_addedMarkers filteredArrayUsingPredicate:filter] firstObject];
         if (existingMarker != nil) {
@@ -501,7 +505,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         
         NSPredicate *filter = [NSPredicate predicateWithFormat:@"vehicleId = %@", marker.userData];
         
-        BOOL isVehicleMissing = [[nearbyVehicles.vehiclePoints filteredArrayUsingPredicate:filter] count] == 0;
+        BOOL isVehicleMissing = [[cars filteredArrayUsingPredicate:filter] count] == 0;
         if (isVehicleMissing) {
             marker.map = nil;
             [_addedMarkers removeObject:obj];
@@ -596,8 +600,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)cancelPickup {
-    [_clientService cancelPickup];
-    [self showProgressWithMessage:@"Отправляю..." allowCancel:NO];
+
 }
 
 - (IBAction)requestPickup:(id)sender {

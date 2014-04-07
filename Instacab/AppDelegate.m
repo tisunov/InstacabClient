@@ -15,9 +15,10 @@
 #import "UIColor+Colours.h"
 #import "UIApplication+Alerts.h"
 #import "TargetConditionals.h"
+#import "ICClient.h"
+
 #import "Bugsnag.h"
 #import "LocalyticsSession.h"
-#import "ICClient.h"
 
 @implementation AppDelegate
 

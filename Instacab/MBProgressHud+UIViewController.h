@@ -32,8 +32,7 @@
 
 @end
 
-@interface UIViewController (UIViewControllerWithMBProgressHUD)
-<MBProgressHUDDelegate>
+@interface UIViewController (UIViewControllerWithMBProgressHUD)<MBProgressHUDDelegate>
 
 - (void)showHUD;
 - (void)showHUDWithText:(NSString*)text;

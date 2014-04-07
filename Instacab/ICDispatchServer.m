@@ -129,7 +129,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 - (BOOL)_sendData:(NSDictionary *)data {
     if (!self.connected) return NO;
 
-    NSLog(@"Sending: %@", [data objectForKey:@"messageType"]);
+//    NSLog(@"Sending: %@", [data objectForKey:@"messageType"]);
+    NSLog(@"Sending: %@", data);
     [_socket send:[self _serializeToJSON:data]];
     return YES;
 }
@@ -141,7 +142,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 // and after app resume it proceedes to execute reconnect
 -(void)handleDisconnect {
     _socket = nil;
-    [self stopPingTimer];
+//    [self stopPingTimer];
     
     // Notify about disconnect
     if (_reconnectAttempts <= 0 || !self.maintainConnection) {
@@ -188,7 +189,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     
     NSLog(@"Close connection to dispatch server");
     
-    [self stopPingTimer];
+//    [self stopPingTimer];
     [_socket closeWithCode:1000 reason:@"Graceful disconnect"];
     _socket = nil;
 }
@@ -223,7 +224,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
     NSError *error;
     
-    [self delayPingTimer];
+//    [self delayPingTimer];
     
     // Convert string to JSON dictionary
     NSDictionary *jsonDictionary =
@@ -245,7 +246,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     
     // Resend all messages that were queued while we were offline
     [self _resendOfflineMessages];
-    [self startPingTimer];
+//    [self startPingTimer];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kDispatchServerConnectionChangeNotification object:self];
     
@@ -271,41 +272,41 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 // start sending WebSocket ping/pong message every 20 seconds
 // and reset timer every time we receive data from server
--(void)startPingTimer {
-    if(_pingTimer || !_enablePingPong) return;
-    
-    NSLog(@"Start Ping/Pong timer with interval of %lu seconds", (unsigned long)kInternalPingIntervalInSeconds);
-    
-    [self schedulePingTimer];
-}
-
--(void)schedulePingTimer {
-    _pingTimer =
-        [NSTimer scheduledTimerWithTimeInterval:kInternalPingIntervalInSeconds
-                                         target:self
-                                       selector:@selector(performPing)
-                                       userInfo:nil
-                                        repeats:YES];
-}
-
--(void)delayPingTimer {
-    if (!_pingTimer) return;
-    
-    [_pingTimer invalidate];
-    [self schedulePingTimer];
-}
-
--(void)performPing {
-    if (self.connected) [_socket sendPing];
-}
-
--(void)stopPingTimer {
-    if (!_pingTimer) return;
-    NSLog(@"Stop Ping/Pong timer");
-    
-    [_pingTimer invalidate];
-    _pingTimer = nil;
-}
+//-(void)startPingTimer {
+//    if(_pingTimer || !_enablePingPong) return;
+//    
+//    NSLog(@"Start Ping/Pong timer with interval of %lu seconds", (unsigned long)kInternalPingIntervalInSeconds);
+//    
+//    [self schedulePingTimer];
+//}
+//
+//-(void)schedulePingTimer {
+//    _pingTimer =
+//        [NSTimer scheduledTimerWithTimeInterval:kInternalPingIntervalInSeconds
+//                                         target:self
+//                                       selector:@selector(performPing)
+//                                       userInfo:nil
+//                                        repeats:YES];
+//}
+//
+//-(void)delayPingTimer {
+//    if (!_pingTimer) return;
+//    
+//    [_pingTimer invalidate];
+//    [self schedulePingTimer];
+//}
+//
+//-(void)performPing {
+//    if (self.connected) [_socket sendPing];
+//}
+//
+//-(void)stopPingTimer {
+//    if (!_pingTimer) return;
+//    NSLog(@"Stop Ping/Pong timer");
+//    
+//    [_pingTimer invalidate];
+//    _pingTimer = nil;
+//}
 
 #pragma mark - Log Events
 

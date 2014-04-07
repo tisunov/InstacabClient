@@ -10,14 +10,19 @@
 #import "PKView.h"
 #import "CardIO.h"
 #import "ICSignUpInfo.h"
-#import "ICCancelDialogDelegate.h"
+#import "ICSignUpFlowDelegate.h"
 #import "UIViewController+TitleLabelAttritbutes.h"
 
-@interface ICLinkCardDialog : UIViewController<PKViewDelegate, CardIOPaymentViewControllerDelegate>
-@property (strong, nonatomic) IBOutlet UILabel *helpLabel;
-@property (strong, nonatomic) IBOutlet PKView *paymentView;
-@property (strong, nonatomic) ICSignUpInfo *signupInfo;
-- (IBAction)scanCardPressed:(id)sender;
+@interface PKViewEx : PKView
+-(void)updateWithCardIO:(CardIOCreditCardInfo *)info;
+@end
 
-@property (nonatomic, weak) id<ICCancelDialogDelegate> delegate;
+@interface ICLinkCardDialog : UIViewController<PKViewDelegate, CardIOPaymentViewControllerDelegate>
+@property (strong, nonatomic) IBOutlet PKViewEx *paymentView;
+@property (strong, nonatomic) ICSignUpInfo *signupInfo;
+@property (strong, nonatomic) IBOutlet UIButton *cardioButton;
+
+@property (nonatomic, weak) id<ICSignUpFlowDelegate> delegate;
+
+- (IBAction)scanCardPressed:(id)sender;
 @end

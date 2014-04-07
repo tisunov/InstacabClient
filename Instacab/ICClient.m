@@ -7,6 +7,7 @@
 //
 
 #import "ICClient.h"
+#import "AKTransliteration/AKTransliteration.h"
 
 @interface ICClient ()
 @property (nonatomic, copy) NSNumber *uID;
@@ -22,6 +23,7 @@
     dispatch_once(&onceToken, ^{
         sharedClient = [[self alloc] init];
         [sharedClient load];
+        [sharedClient cardHolder];
     });
     return sharedClient;
 }
@@ -111,6 +113,14 @@
 
 - (BOOL)cardPresent {
     return self.paymentProfile && self.paymentProfile.cardActive;
+}
+
+-(NSString *)cardHolder {
+    AKTransliteration *translit = [[AKTransliteration alloc] initForDirection:TD_RuEn];
+    
+    NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
+    
+    return [[translit transliterate:fullName] capitalizedString];
 }
 
 @end

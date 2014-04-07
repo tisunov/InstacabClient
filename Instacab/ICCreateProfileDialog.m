@@ -13,6 +13,8 @@
 #import "ICClientService.h"
 #import "MBProgressHud+UIViewController.h"
 #import "UIApplication+Alerts.h"
+#import "ICVerifyMobileViewController.h"
+#import "ICClientService.h"
 
 @interface ICCreateProfileDialog ()
 
@@ -27,18 +29,18 @@
         self.root = [[QRootElement alloc] init];
         self.root.grouped = YES;
         
-        QEntryElement *firstName = [[QEntryElement alloc] initWithTitle:@"Имя" Value:@"Павел" Placeholder:nil];
+        QEntryElement *firstName = [[QEntryElement alloc] initWithTitle:@"Имя" Value:nil Placeholder:nil];
         firstName.enablesReturnKeyAutomatically = YES;
         firstName.hiddenToolbar = YES;
         firstName.key = @"firstName";
         
-        QEntryElement *lastName = [[QEntryElement alloc] initWithTitle:@"Фамилия" Value:@"Тисунов" Placeholder:nil];
+        QEntryElement *lastName = [[QEntryElement alloc] initWithTitle:@"Фамилия" Value:nil Placeholder:nil];
         lastName.key = @"lastName";
         lastName.enablesReturnKeyAutomatically = YES;
         lastName.hiddenToolbar = YES;
         
         QSection *section = [[QSection alloc] init];
-        section.footer = @"Ваше имя поможет водителю узнать вас при встрече у машины.";
+        section.footer = @"Ваше имя поможет водителю узнать вас при встрече.";
         [section addElement:firstName];
         [section addElement:lastName];
         
@@ -53,14 +55,14 @@
 
     self.titleText = @"ПРОФИЛЬ";
     
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = cancel;
     
-    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(next)];
+    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(linkCard)];
     next.enabled = NO;
     self.navigationItem.rightBarButtonItem = next;
     
-//    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-25, 0, 0, 0);
+    [[ICClientService sharedInstance] trackScreenView:@"Create Profile"];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -83,55 +85,25 @@
 }
 
 -(void)cancel:(id)sender {
-    [self.delegate cancelDialog:self];
+    self.signupInfo.firstName = [self textForElementKey:@"firstName"];
+    self.signupInfo.lastName = [self textForElementKey:@"lastName"];
+    
+    [self.delegate cancelSignUp:self signUpInfo:self.signupInfo];
 }
 
 // Handle Done button
 - (BOOL)QEntryShouldReturnForElement:(QEntryElement *)element andCell:(QEntryTableViewCell *)cell
 {
     if ([element.key isEqualToString:@"lastName"]) {
-        [self performSelector:@selector(next)];
+        [self performSelector:@selector(linkCard)];
     }
     return YES;
 }
 
--(void)next {
-    [self showHUDWithText:@"Создаю аккаунт"];
-    
+- (void)linkCard {
     self.signupInfo.firstName = [self textForElementKey:@"firstName"];
     self.signupInfo.lastName = [self textForElementKey:@"lastName"];
-    
-    [[ICClientService sharedInstance] signUp:self.signupInfo
-                                  withCardIo:NO
-                                     success:^(ICMessage *message) {
-                                         [self hideHUD];
-                                         
-                                         if (message.messageType == SVMessageTypeOK) {
-                                             [self signupComplete:message];
-                                         }
-                                         else {
-                                             [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка создания аккаунта" message:message.errorText cancelButtonTitle:@"OK"];
-                                         }
-                                     }
-                                     failure:^{
-                                         [self hideHUD];
-                                         
-                                         [[UIApplication sharedApplication] showAlertWithTitle:@"Сервер недоступен" message:@"Не могу создать аккаунт." cancelButtonTitle:@"OK"];
-                                     }
-     ];
-}
-
-// TODO: Сервер должен вернуть либо в ответ на команду регистрации
-// либо в ответ на прямой запрос: URL страницы добавления карты
-
-// TODO: Передать контролеру добавления карты ссылку на Payture страницу добавления карты
-// 1. Он загрузит страницу, извлечет key, сделает POST данных карты в AddSubmit
-// 2. Если Payture ответит 200 OK и вернет страницу снова то показать ошибку человеку чтобы он проверил данные карты и попробовал снова
-// 3. Если Payture ответит HTTP Redirect значит карта была принята или Payture устал добавлять карту и направляет меня на instacab. Завести таймер на 10 секунд получения положительного ответа с сервера что карта добавлена, если нет, то показываем ошибку пользователю и говорим что карту не удалось добавить.
-- (void)signupComplete:(ICMessage *)message {
-    // Save email and password for login
-    [[ICClient sharedInstance] save];
-    
+        
     ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
     controller.signupInfo = self.signupInfo;
     controller.delegate = self.delegate;
