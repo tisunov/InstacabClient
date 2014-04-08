@@ -319,10 +319,41 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		D949AC6818F3A61C0053EB2E /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				D99E792D18CA3D7000585A49 /* BaseService.m */,
+				D99E792C18CA3D7000585A49 /* BaseService.h */,
+				D9AD515A1817C7A200692E7E /* ICClientService.m */,
+				D9AD51591817C7A200692E7E /* ICClientService.h */,
+				D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */,
+				D9EF8ED118170AEB00F9DD52 /* ICDispatchServer.h */,
+			);
+			name = Networking;
+			sourceTree = "<group>";
+		};
+		D949AC6918F3A7120053EB2E /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				D98058C5181A5A1800DD0BBF /* ICSingleton.m */,
+				D98058C4181A5A1800DD0BBF /* ICSingleton.h */,
+			);
+			name = Library;
+			sourceTree = "<group>";
+		};
+		D949AC6A18F3A9D20053EB2E /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				D9C193201888779200A889E4 /* ICAccountViewController.h */,
+				D9C193211888779200A889E4 /* ICAccountViewController.m */,
+				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
+			);
+			name = Account;
+			sourceTree = "<group>";
+		};
 		D9532E1B1819A5510046E5EC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				D9D88412188FE79E006BD004 /* SignUp */,
 				D90BAE121884306600E03F3E /* ICWelcomeViewController.m */,
 				D90BAE111884306600E03F3E /* ICWelcomeViewController.h */,
 				D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */,
@@ -337,9 +368,6 @@
 				D90BAE211884359500E03F3E /* ICFeedbackViewController.m */,
 				D90BAE201884359500E03F3E /* ICFeedbackViewController.h */,
 				D90BAE221884359500E03F3E /* ICFeedbackViewController.xib */,
-				D9C193201888779200A889E4 /* ICAccountViewController.h */,
-				D9C193211888779200A889E4 /* ICAccountViewController.m */,
-				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
 				D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */,
 				D97A48D018F03FCB0095B4BC /* ICVerifyMobileViewController.h */,
 				D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */,
@@ -357,23 +385,15 @@
 			name = 3rdParty;
 			sourceTree = "<group>";
 		};
-		D9AD51581817C78100692E7E /* Services */ = {
+		D9AD51581817C78100692E7E /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				D99E792D18CA3D7000585A49 /* BaseService.m */,
-				D99E792C18CA3D7000585A49 /* BaseService.h */,
-				D9AD515A1817C7A200692E7E /* ICClientService.m */,
-				D9AD51591817C7A200692E7E /* ICClientService.h */,
-				D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */,
-				D9EF8ED118170AEB00F9DD52 /* ICDispatchServer.h */,
 				D9AD51561817B74C00692E7E /* ICGoogleService.m */,
 				D9AD51551817B74C00692E7E /* ICGoogleService.h */,
 				D9AD515E1817D17C00692E7E /* ICLocationService.m */,
 				D9AD515D1817D17C00692E7E /* ICLocationService.h */,
-				D98058C5181A5A1800DD0BBF /* ICSingleton.m */,
-				D98058C4181A5A1800DD0BBF /* ICSingleton.h */,
 			);
-			name = Services;
+			name = Location;
 			sourceTree = "<group>";
 		};
 		D9AD515C1817C80100692E7E /* Categories */ = {
@@ -459,8 +479,12 @@
 			isa = PBXGroup;
 			children = (
 				D92019361816FD9A00EEA47C /* Models */,
-				D9AD51581817C78100692E7E /* Services */,
+				D949AC6818F3A61C0053EB2E /* Networking */,
+				D9AD51581817C78100692E7E /* Location */,
 				D9532E1B1819A5510046E5EC /* Controllers */,
+				D949AC6918F3A7120053EB2E /* Library */,
+				D9D88412188FE79E006BD004 /* SignUp */,
+				D949AC6A18F3A9D20053EB2E /* Account */,
 				D9AD515C1817C80100692E7E /* Categories */,
 				D978D4F218B5F11500952BB7 /* 3rdParty */,
 				D9B03247180572B400F7AF69 /* AppDelegate.h */,

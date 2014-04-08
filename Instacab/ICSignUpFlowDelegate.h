@@ -11,5 +11,5 @@
 
 @protocol ICSignUpFlowDelegate <NSObject>
 -(void)cancelSignUp: (UIViewController *)controller signUpInfo:(ICSignUpInfo *)info;
--(void)clientDidSignUp;
+-(void)signUpCompleted;
 @end

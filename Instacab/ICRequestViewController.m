@@ -773,7 +773,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self hideProgress];
     
     [self.navigationController pushViewController:vc animated:YES onCompletion:^{
-        [self prepareForNextTrip];
+        [self setupForLooking];
     }];
 }
 
@@ -815,7 +815,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     switch (clientState) {
         case SVClientStateLooking:
-            [self prepareForNextTrip];
+            [self setupForLooking];
             [[ICTrip sharedInstance] clear];
             [self hideProgress];
             break;
@@ -943,8 +943,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }];
 }
 
--(void)prepareForNextTrip {
-    NSLog(@"prepareForNextTrip");
+-(void)setupForLooking {
+    NSLog(@"setupForLooking");
 
     self.titleText = @"INSTACAB";
     [self showPickupPanel];

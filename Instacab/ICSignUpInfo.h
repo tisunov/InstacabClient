@@ -26,5 +26,7 @@
 @property (nonatomic, copy) NSString *cardExpirationYear;
 @property (nonatomic, copy) NSString *cardCode;
 
+@property (nonatomic, copy) NSString *promoCode;
+
 @property (nonatomic, readonly) BOOL accountDataPresent;
 @end

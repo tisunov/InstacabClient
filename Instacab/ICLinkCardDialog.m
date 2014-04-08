@@ -204,7 +204,7 @@
 - (void)clientCardCreated {
     [MBProgressHUD hideGlobalHUD];
     [self.navigationController dismissViewControllerAnimated:YES completion:^{
-        [self.delegate clientDidSignUp];
+        [self.delegate signUpCompleted];
     }];
 }
 

@@ -18,6 +18,15 @@
 
 @implementation ICSignUpInfo
 
++ (instancetype)sharedInfo {
+    static ICSignUpInfo *instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        instance = [[self alloc] init];
+    });
+    return instance;
+}
+
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"firstName": @"first_name",
@@ -25,6 +34,7 @@
         @"email": @"email",
         @"mobile": @"mobile",
         @"password": @"password",
+        @"promoCode": @"promo_code",
         @"cardNumber": [NSNull null],
         @"cardExpirationMonth": [NSNull null],
         @"cardExpirationYear": [NSNull null],

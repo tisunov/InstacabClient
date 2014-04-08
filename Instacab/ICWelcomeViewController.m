@@ -141,6 +141,8 @@
     NSLog(@"+ Enter background");
     
     _inBackground = YES;
+    // TODO: Выполнять Disconnect но не разрушать RequestController
+    // Сделать SplashView и показывать его поверх
     [_clientService disconnectWithoutTryingToReconnect];
 }
 
@@ -298,7 +300,7 @@
                     }];
 }
 
-- (void)clientDidSignUp {
+- (void)signUpCompleted {
     [self beginSignIn];
     
     ICClient *client = [ICClient sharedInstance];
@@ -317,7 +319,7 @@
                                
                                [_clientService requestMobileConfirmation];
                                
-                               [self performSelector:@selector(confirmMobile) withObject:nil afterDelay:9.0f];
+                               [self performSelector:@selector(showVerifyMobileAlert) withObject:nil afterDelay:9.0f];
                            } failure:^{
                                [self stopLoading];
                                
@@ -328,7 +330,7 @@
                            }];
 }
 
-- (void)confirmMobile {
+- (void)showVerifyMobileAlert {
     ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
 
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:controller];
