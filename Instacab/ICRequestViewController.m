@@ -463,7 +463,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // No available vehicles
     if (nearbyVehicles.noneAvailableString.length > 0) {
         _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
-        [self setReadyToRequest:NO resetZoom:NO];
         [self clearMap];
     }
     else if (nearbyVehicles.vehiclePoints.count > 0) {
@@ -909,14 +908,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         case SVMessageTypeError:
             [self hideProgress];
             
-            if (message.errorCode == ICErrorTypeNoAvailableDrivers) {
-                [[UIApplication sharedApplication] showAlertWithTitle:@"" message:message.errorText cancelButtonTitle:@"OK"];
-            }
-            else {
-                [self popViewController];
-                
-                [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка" message:message.errorText cancelButtonTitle:@"OK"];
-            }
+            [self popViewController];
+            
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка" message:message.errorText cancelButtonTitle:@"OK"];
             break;
             
         default:
