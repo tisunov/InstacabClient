@@ -39,12 +39,4 @@
         [self mergeValuesForKeysFromModel:nearbyVehicles];
 }
 
--(BOOL)isEmpty {
-    return _noneAvailableString != nil;
-}
-
--(BOOL)isRestrictedArea {
-    return _sorryMsg != nil;
-}
-
 @end

@@ -108,8 +108,11 @@
                         }];
 }
 
+// TODO: Проверить как работает
 - (IBAction)resendConfirmation:(id)sender {
-    [[ICClientService sharedInstance] requestMobileConfirmation];
+    [[ICClientService sharedInstance] requestMobileConfirmation:^(ICMessage *message){
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Готово!" message:@"В течение нескольких секунд вам придет СМС"];
+    }];
 }
 
 @end

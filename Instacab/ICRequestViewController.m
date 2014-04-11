@@ -54,8 +54,7 @@ NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
 NSString * const kConfirmPickupLocation = @"Заказать автомобиль";
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
 
-NSString * const kProgressLookingForDriver = @"Выбираю водителя...";
-NSString * const kProgressWaitingConfirmation = @"Запрашиваю...";
+NSString * const kProgressRequestingPickup = @"Выполняется заказ";
 NSString * const kProgressCancelingTrip = @"Отменяю...";
 NSString * const kTripEtaTemplate = @"ПРИЕДЕТ ПРИМЕРНО ЧЕРЕЗ %@ %@";
 NSString * const kRequestMinimumEtaTemplate = @"примерно %@ до приезда машины";
@@ -331,12 +330,16 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         [_mapView animateToZoom:zoomLevel];
         
         [self.pickupBtn setTitle:[kConfirmPickupLocation uppercaseString] forState:UIControlStateNormal];
+//        self.pickupBtn.normalColor = [UIColor colorFromHexString:@"#333333"];
+//        self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#404040"];
         
         [self showCancelConfirmationNavbarButton];
     }
     else {
         self.titleText = @"INSTACAB";
         [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
+//        self.pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
+//        self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
         
         if (resetZoom) {
             [_mapView animateToZoom:kDefaultMapZoom];
@@ -449,31 +452,27 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_addedMarkers removeAllObjects];
 }
 
-- (void)showNearbyVehicles: (ICNearbyVehicles *) nearbyVehicles {
+- (void)showNearbyVehicles: (ICNearbyVehicles *)nearbyVehicles {
     if (!nearbyVehicles || [ICClient sharedInstance].state != SVClientStateLooking) return;
     
+    if (nearbyVehicles.sorryMsg.length > 0) {
+        [self hideProgress];
+        [[UIApplication sharedApplication] showAlertWithTitle:@"" message:nearbyVehicles.sorryMsg];
+    }
+    
     // No available vehicles
-    if (nearbyVehicles.isEmpty) {
+    if (nearbyVehicles.noneAvailableString.length > 0) {
         _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
-        _pickupBtn.enabled = NO;
         [self setReadyToRequest:NO resetZoom:NO];
         [self clearMap];
-        return;
     }
-    
-    // Not supported area for pickup
-    if (nearbyVehicles.isRestrictedArea) {
-        _pickupTimeLabel.text = [nearbyVehicles.sorryMsg uppercaseString];
-        _pickupBtn.enabled = NO;
-        [self setReadyToRequest:NO resetZoom:NO];
-        return;
+    else if (nearbyVehicles.vehiclePoints.count > 0) {
+        // Display cars
+        [self displayCars:nearbyVehicles.vehiclePoints];
+        
+        // Display ETA
+        _pickupTimeLabel.text = [[NSString stringWithFormat:kRequestMinimumEtaTemplate, nearbyVehicles.minEtaString] uppercaseString];
     }
-    
-    // Show ETA
-    _pickupTimeLabel.text = [[NSString stringWithFormat:kRequestMinimumEtaTemplate, nearbyVehicles.minEtaString] uppercaseString];
-    _pickupBtn.enabled = YES;
-    
-    [self displayCars:nearbyVehicles.vehiclePoints];
 }
 
 - (void)displayCars:(NSArray *)cars {
@@ -614,11 +613,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             return;
         }
         
-        [self showProgressWithMessage:kProgressLookingForDriver allowCancel:NO];
+        [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
 
-        // TODO: Диспетчер нуждает в этом адресе чтобы показать водителю
-        // Я могу запустить reverse geocoding и после его окончания, посылать заказ машины!
-        
         // Initialize pickup location with pin coordinates
         if (!_pickupLocation) {
             _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
@@ -821,7 +817,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             break;
             
         case SVClientStateDispatching:
-            [self showProgressWithMessage:kProgressWaitingConfirmation allowCancel:NO];
+            [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
             break;
             
         case SVClientStateWaitingForPickup:
@@ -914,7 +910,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             [self hideProgress];
             
             if (message.errorCode == ICErrorTypeNoAvailableDrivers) {
-                [[UIApplication sharedApplication] showAlertWithTitle:@"Нет Водителей" message:message.errorText cancelButtonTitle:@"OK"];
+                [[UIApplication sharedApplication] showAlertWithTitle:@"" message:message.errorText cancelButtonTitle:@"OK"];
             }
             else {
                 [self popViewController];

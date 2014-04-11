@@ -48,7 +48,7 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
 
 -(void)logOut;
 
--(void)requestMobileConfirmation;
+-(void)requestMobileConfirmation:(ICClientServiceSuccessBlock)success;
 
 -(void)confirmMobileToken:(NSString *)token
                   success:(ICClientServiceSuccessBlock)success

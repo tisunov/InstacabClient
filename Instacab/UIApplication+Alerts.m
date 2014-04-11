@@ -14,7 +14,7 @@
  
 - (void) showAlertWithTitle:(NSString *)title message:(NSString *)message
 {
-	[self showAlertWithTitle:title message:message cancelButtonTitle:NSLocalizedString(@"Dismiss", @"")];
+	[self showAlertWithTitle:title message:message cancelButtonTitle:@"OK"];
 }
 
 - (void) showAlertWithTitle:(NSString *)title {

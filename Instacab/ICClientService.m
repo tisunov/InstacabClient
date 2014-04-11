@@ -442,7 +442,9 @@ cardioAttempts:(NSUInteger)cardioAttempts
     [self sendMessage:message];
 }
 
-- (void)requestMobileConfirmation {
+-(void)requestMobileConfirmation:(ICClientServiceSuccessBlock)success {
+    self.successBlock = success;
+    
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
         @"apiUrl": [NSString stringWithFormat:@"/clients/%@/request_mobile_confirmation", [ICClient sharedInstance].uID],

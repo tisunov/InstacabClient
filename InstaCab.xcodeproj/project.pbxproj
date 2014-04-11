@@ -86,6 +86,8 @@
 		D9D5FAC618F24B12006AB0A8 /* AKTransliteration.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D5FAC218F24B12006AB0A8 /* AKTransliteration.m */; };
 		D9D5FAC718F24B12006AB0A8 /* EnRuRules.plist in Resources */ = {isa = PBXBuildFile; fileRef = D9D5FAC318F24B12006AB0A8 /* EnRuRules.plist */; };
 		D9D5FAC818F24B12006AB0A8 /* RuEnRules.plist in Resources */ = {isa = PBXBuildFile; fileRef = D9D5FAC418F24B12006AB0A8 /* RuEnRules.plist */; };
+		D9DD9BD618F793BC009798C2 /* ICUpdateMobileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9DD9BD418F793BC009798C2 /* ICUpdateMobileViewController.m */; };
+		D9DD9BD718F793BC009798C2 /* ICUpdateMobileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9DD9BD518F793BC009798C2 /* ICUpdateMobileViewController.xib */; };
 		D9EF8ED318170AEB00F9DD52 /* ICDispatchServer.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */; };
 		D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D9EF8ED518170B3500F9DD52 /* ICClient.m */; };
 		D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EFF9A31805867100A68AED /* QuartzCore.framework */; };
@@ -236,6 +238,9 @@
 		D9D5FAC218F24B12006AB0A8 /* AKTransliteration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AKTransliteration.m; sourceTree = "<group>"; };
 		D9D5FAC318F24B12006AB0A8 /* EnRuRules.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = EnRuRules.plist; sourceTree = "<group>"; };
 		D9D5FAC418F24B12006AB0A8 /* RuEnRules.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = RuEnRules.plist; sourceTree = "<group>"; };
+		D9DD9BD318F793BC009798C2 /* ICUpdateMobileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICUpdateMobileViewController.h; sourceTree = "<group>"; };
+		D9DD9BD418F793BC009798C2 /* ICUpdateMobileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICUpdateMobileViewController.m; sourceTree = "<group>"; };
+		D9DD9BD518F793BC009798C2 /* ICUpdateMobileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICUpdateMobileViewController.xib; sourceTree = "<group>"; };
 		D9EF8ED118170AEB00F9DD52 /* ICDispatchServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICDispatchServer.h; sourceTree = "<group>"; };
 		D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICDispatchServer.m; sourceTree = "<group>"; };
 		D9EF8ED418170B3500F9DD52 /* ICClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICClient.h; sourceTree = "<group>"; };
@@ -371,6 +376,9 @@
 				D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */,
 				D97A48D018F03FCB0095B4BC /* ICVerifyMobileViewController.h */,
 				D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */,
+				D9DD9BD318F793BC009798C2 /* ICUpdateMobileViewController.h */,
+				D9DD9BD418F793BC009798C2 /* ICUpdateMobileViewController.m */,
+				D9DD9BD518F793BC009798C2 /* ICUpdateMobileViewController.xib */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -676,6 +684,7 @@
 				D9B03243180572B400F7AF69 /* InfoPlist.strings in Resources */,
 				D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */,
 				D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */,
+				D9DD9BD718F793BC009798C2 /* ICUpdateMobileViewController.xib in Resources */,
 				D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */,
 				D97A48D418F03FCB0095B4BC /* ICVerifyMobileViewController.xib in Resources */,
 				D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */,
@@ -787,6 +796,7 @@
 				D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */,
 				D98058C0181A518700DD0BBF /* ICDriver.m in Sources */,
 				D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */,
+				D9DD9BD618F793BC009798C2 /* ICUpdateMobileViewController.m in Sources */,
 				D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */,
 				D9F222AE18C9FA8500A6B02B /* MBProgressHud+UIViewController.m in Sources */,
 				D98058C3181A52F700DD0BBF /* ICPerson.m in Sources */,

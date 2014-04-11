@@ -91,7 +91,7 @@
     
     _fareLabel.text = [NSString stringWithFormat:@"%@ р.", [formatter stringFromNumber:[NSNumber numberWithDouble:fare]]];
     
-    _billingStatusLabel.text = [@"Оплачено Картой" uppercaseString];
+    _billingStatusLabel.text = [@"Списано С Карты" uppercaseString];
     _starRating.enabled = YES;
 }
 
