@@ -186,7 +186,10 @@
     
     [self stopLoading];
     
-    [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Определения Местоположения" message:errorMsg cancelButtonTitle:@"OK"];
+    // Show location services error only when trying to auto login
+    if ([[ICClient sharedInstance] isSignedIn]) {
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Определения Местоположения" message:errorMsg cancelButtonTitle:@"OK"];
+    }
 }
 
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {

@@ -23,6 +23,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *cardioButton;
 
 @property (nonatomic, weak) id<ICSignUpFlowDelegate> delegate;
+- (IBAction)displayTerms:(id)sender;
 
 - (IBAction)scanCardPressed:(id)sender;
 @end

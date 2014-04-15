@@ -51,7 +51,7 @@
 }
 
 NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
-NSString * const kConfirmPickupLocation = @"Заказать автомобиль";
+NSString * const kConfirmPickupLocation = @"Заказать Instacab";
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
 
 NSString * const kProgressRequestingPickup = @"Выполняется заказ";
@@ -427,11 +427,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         return;
     }
     
+    // Map drag ended
+    
     // Reset pickup location
     _pickupLocation = nil;
 
     // Set pin address to blank, to make address change animation nicer
-    [self updateAddressLabel:@""];
+    [self updateAddressLabel:kGoToMarker];
     // Show UI controls
     [self setDraggingPin:NO];
     
@@ -518,8 +520,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)didFailToGeocodeWithError:(NSError*)error {
     NSLog(@"didFailToGeocodeWithError %@", error);
-    [self updateAddressLabel:kGoToMarker];
-    
     // Analytics
     [_clientService trackError:@{@"type": @"geocoder", @"description": [error localizedDescription]}];
 }

@@ -208,6 +208,12 @@
     }];
 }
 
+- (IBAction)displayTerms:(id)sender {
+// TODO:
+//    UIViewController *controller = [UIViewController alloc] init
+//    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - (IBAction)scanCardPressed:(id)sender {
     CardIOPaymentViewController *scanViewController = [[CardIOPaymentViewController alloc] initWithPaymentDelegate:self];
     scanViewController.suppressScanConfirmation = YES;
