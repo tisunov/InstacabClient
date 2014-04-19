@@ -100,8 +100,13 @@
                             {
                                 [[UIApplication sharedApplication] showAlertWithTitle:message.apiResponse.error];
                             }
-                            else
+                            else {
+                                if ([self.delegate respondsToSelector:@selector(didConfirmMobile)])
+                                    [self.delegate didConfirmMobile];
+                                
+                                [[ICClient sharedInstance] confirmMobile];
                                 [self cancel];
+                            }
                         }
                         failure:^{
                             [MBProgressHUD hideGlobalHUD];

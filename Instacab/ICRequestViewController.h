@@ -15,8 +15,9 @@
 #import "ICClientService.h"
 #import "ICLocationService.h"
 #import "UIViewController+TitleLabelAttritbutes.h"
+#import "ICVerifyMobileViewController.h"
 
-@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate>
+@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICVerifyMobileDelegate>
 - (IBAction)requestPickup:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *view;

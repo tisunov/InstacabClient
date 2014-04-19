@@ -33,8 +33,13 @@
         @"token": @"token",
         @"state": @"state",
         @"tripPendingRating": @"tripPendingRating",
-        @"paymentProfile": @"paymentProfile"
+        @"paymentProfile": @"paymentProfile",
+        @"hasConfirmedMobile": @"hasConfirmedMobile"
     }];
+}
+
++ (NSValueTransformer *)hasConfirmedMobileJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
 + (NSValueTransformer *)tripPendingRatingJSONTransformer {
@@ -72,7 +77,7 @@
 
     // don't merge token if it's nil
     if ([key isEqualToString:@"token"] && [model valueForKey:key] == nil) return;
-    
+
     [super mergeValueForKey:key fromModel:model];
 }
 
@@ -121,6 +126,10 @@
     NSString *fullName = [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
     
     return [[translit transliterate:fullName] capitalizedString];
+}
+
+-(void)confirmMobile {
+    _hasConfirmedMobile = YES;
 }
 
 @end

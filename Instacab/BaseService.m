@@ -68,7 +68,7 @@ NSString * const kFieldPassword = @"password";
 -(void)startRequestTimeout {
     [_requestTimer invalidate];
     
-    // Give first request some time, because we need to connect first
+    // Give first request longer timeout, because we have to connect first
     NSTimeInterval timeout = _dispatchServer.connected ? kRequestTimeoutSecs : kRequestTimeoutSecs + kConnectTimeoutSecs;
     
     NSLog(@"Start Request timeout: %f seconds, connected: %d", timeout, _dispatchServer.connected);

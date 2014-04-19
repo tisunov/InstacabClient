@@ -604,29 +604,53 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (IBAction)requestPickup:(id)sender {
     if (_readyToRequest) {
         
-        // Check if card registered
-        if (![ICClient sharedInstance].cardPresent) {
-            [_clientService trackEvent:@"Request Vehicle Denied" params:@{ @"reason":kRequestVehicleDeniedReasonNoCard  }];
-            
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
+        if (![ICClient sharedInstance].hasConfirmedMobile) {
+            [self showVerifyMobileDialog];
             return;
         }
         
-        [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
-
-        // Initialize pickup location with pin coordinates
-        if (!_pickupLocation) {
-            _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
-        }
-        
-        // Request pickup
-        [_clientService requestPickupAt:_pickupLocation];
-        
-        [self setReadyToRequest:NO resetZoom:NO];
+        [self checkCardLinkedAndRequestPickup];
     }
     else {
         [self setReadyToRequest:YES resetZoom:NO];
     }
+}
+
+- (void)checkCardLinkedAndRequestPickup {
+    // Check if card registered
+    if (![ICClient sharedInstance].cardPresent) {
+        [_clientService trackEvent:@"Request Vehicle Denied" params:@{ @"reason":kRequestVehicleDeniedReasonNoCard  }];
+        
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
+        return;
+    }
+    
+    [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
+    
+    // Initialize pickup location with pin coordinates
+    if (!_pickupLocation) {
+        _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
+    }
+    
+    // Request pickup
+    [_clientService requestPickupAt:_pickupLocation];
+    
+    [self setReadyToRequest:NO resetZoom:NO];
+}
+
+- (void)showVerifyMobileDialog {
+    [_clientService requestMobileConfirmation:nil];
+    
+    ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
+    controller.delegate = self;
+    
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:controller];
+    
+    [self.navigationController presentViewController:navigation animated:YES completion:nil];
+}
+
+-(void)didConfirmMobile {
+    [self checkCardLinkedAndRequestPickup];
 }
 
 - (void)setViewTopShadow:(UIView *)view {

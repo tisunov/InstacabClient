@@ -23,6 +23,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy) NSString *email;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *token;
+@property (nonatomic, assign) BOOL hasConfirmedMobile;
 @property (nonatomic, strong, readonly) ICPaymentProfile *paymentProfile;
 @property (nonatomic, assign) ICClientState state;
 @property (nonatomic, strong, readonly) ICTrip *tripPendingRating;
@@ -35,6 +36,7 @@ typedef enum : NSUInteger {
 -(BOOL)isSignedIn;
 -(void)update: (ICClient *)client;
 -(void)save;
+-(void)confirmMobile;
 +(instancetype)sharedInstance;
 
 @end

@@ -143,7 +143,7 @@
     _inBackground = YES;
     // TODO: Выполнять Disconnect но не разрушать RequestController
     // Сделать SplashView и показывать его поверх
-    [_clientService disconnectWithoutTryingToReconnect];
+//    [_clientService disconnectWithoutTryingToReconnect];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)n {
@@ -151,7 +151,7 @@
     
     NSLog(@"+ Become active");
     
-    [self beginLoading];
+//    [self beginLoading];
     [self pingToRestoreStateReason:kNearestCabRequestReasonPing];
     
     _inBackground = NO;
