@@ -17,6 +17,7 @@
 @property (nonatomic, copy) NSString *addCardUrl;
 @property (nonatomic, copy) NSString *submitCardUrl;
 @property (nonatomic, strong) ICPaymentProfile *paymentProfile;
+@property (nonatomic, copy) NSString *promotionResult;
 
 @property (nonatomic, readonly) BOOL isSuccess;
 @end

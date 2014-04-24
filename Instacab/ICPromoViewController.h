@@ -17,5 +17,6 @@
 @property (strong, nonatomic) IBOutlet ICTextField *promoCodeTextField;
 @property (strong, nonatomic) IBOutlet UIView *borderView;
 @property (strong, nonatomic) IBOutlet UILabel *messageLabel;
+- (IBAction)promoChanged:(id)sender;
 
 @end

@@ -12,9 +12,17 @@
 
 + (MBProgressHUD *)showGlobalProgressHUDWithTitle:(NSString *)title {
     UIWindow *window = [[[UIApplication sharedApplication] windows] lastObject];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
+    
+	MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:window];
+    hud.animationType = MBProgressHUDAnimationFade;
     hud.removeFromSuperViewOnHide = YES;
     hud.labelText = title;
+    
+	[window addSubview:hud];
+    hud.color = [UIColor colorWithRed:51/255.0 green:51/255.0 blue:51/255.0 alpha:1.0];
+    
+	[hud show:YES];
+    
     return hud;
 }
 

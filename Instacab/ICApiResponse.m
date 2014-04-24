@@ -19,6 +19,7 @@
         @"submitCardUrl": @"submit_url",
         @"paymentProfile": @"payment_profile",
         @"client": @"client",
+        @"promotionResult": @"promotion_result",
     };
 }
 

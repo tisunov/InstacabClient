@@ -62,7 +62,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
         email.hiddenToolbar = YES;
         email.key = @"email";
         
-        QEntryElement *mobile = [[QEntryElement alloc] initWithTitle:@"Мобильный" Value:nil Placeholder:@"+7 (555) 555-55-55"];
+        QEntryElement *mobile = [[QEntryElement alloc] initWithTitle:@"Мобильный" Value:nil Placeholder:@"(555) 555-55-55"];
         mobile.keyboardType = UIKeyboardTypePhonePad;
         mobile.key = @"mobile";
         mobile.enablesReturnKeyAutomatically = YES;

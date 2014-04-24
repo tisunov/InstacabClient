@@ -746,7 +746,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (IBAction)requestPickup:(id)sender {
     if (_readyToRequest) {
         
-        if (![ICClient sharedInstance].hasConfirmedMobile) {
+        if (![ICClient sharedInstance].mobileConfirmed) {
             [self showVerifyMobileDialog];
             return;
         }

@@ -7,6 +7,8 @@
 //
 
 #import "ICPromoViewController.h"
+#import "ICClientService.h"
+#import "MBProgressHud+Global.h"
 
 @implementation ICTextField
 
@@ -79,7 +81,28 @@
 }
 
 - (void)applyPromo {
+    MBProgressHUD *hud = [MBProgressHUD showGlobalProgressHUDWithTitle:@"Загрузка"];
     
+    [[ICClientService sharedInstance] applyPromo:_promoCodeTextField.text success:^(ICMessage *message) {
+        _messageLabel.text = message.apiResponse.promotionResult;
+        if (message.apiResponse.statusCode.intValue == 200) {
+            _promoCodeTextField.text = @"";
+            
+            hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"success_icon.png"]];
+            hud.mode = MBProgressHUDModeCustomView;
+            hud.labelText = @"Готово!";
+            [hud hide:YES afterDelay:2];
+        }
+        else {
+            hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fail_icon.png"]];
+            hud.mode = MBProgressHUDModeCustomView;
+            hud.labelText = @"Ошибка";
+            [hud hide:YES afterDelay:2];
+        }
+    } failure:^{
+        _messageLabel.text = @"Произошла сетевая ошибка";
+        [MBProgressHUD hideGlobalHUD];
+    }];
 }
 
 - (void)back
@@ -87,4 +110,12 @@
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (IBAction)promoChanged:(id)sender {
+    if ([_promoCodeTextField.text length] != 0) {
+        self.navigationItem.rightBarButtonItem.enabled = YES;
+    }
+    else {
+        self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+}
 @end

@@ -380,9 +380,6 @@
 				D90BAE211884359500E03F3E /* ICFeedbackViewController.m */,
 				D90BAE201884359500E03F3E /* ICFeedbackViewController.h */,
 				D90BAE221884359500E03F3E /* ICFeedbackViewController.xib */,
-				D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */,
-				D97A48D018F03FCB0095B4BC /* ICVerifyMobileViewController.h */,
-				D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */,
 				D9DD9BD318F793BC009798C2 /* ICUpdateMobileViewController.h */,
 				D9DD9BD418F793BC009798C2 /* ICUpdateMobileViewController.m */,
 				D9DD9BD518F793BC009798C2 /* ICUpdateMobileViewController.xib */,
@@ -610,6 +607,9 @@
 				D90BAE1C1884356B00E03F3E /* ICLinkCardDialog.m */,
 				D90BAE1B1884356B00E03F3E /* ICLinkCardDialog.h */,
 				D9D4A276188655FA00067879 /* ICLinkCardDialog.xib */,
+				D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */,
+				D97A48D018F03FCB0095B4BC /* ICVerifyMobileViewController.h */,
+				D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */,
 				D9BD7BB11887C087009351D6 /* ICSignUpFlowDelegate.h */,
 			);
 			name = SignUp;

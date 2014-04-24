@@ -38,10 +38,6 @@
     }];
 }
 
-+ (NSValueTransformer *)hasConfirmedMobileJSONTransformer {
-    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
-}
-
 + (NSValueTransformer *)tripPendingRatingJSONTransformer {
     return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICTrip.class];
 }
@@ -129,7 +125,11 @@
 }
 
 -(void)confirmMobile {
-    _hasConfirmedMobile = YES;
+    _hasConfirmedMobile = [NSNumber numberWithBool:YES];
+}
+
+-(BOOL)mobileConfirmed {
+    return _hasConfirmedMobile == [NSNumber numberWithBool:YES];
 }
 
 @end

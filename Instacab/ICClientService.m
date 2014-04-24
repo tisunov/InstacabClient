@@ -488,13 +488,19 @@ cardioAttempts:(NSUInteger)cardioAttempts
     [self sendMessage:message];
 }
 
--(void)applyPromo:(NSString *)promotionCode {
+-(void)applyPromo:(NSString *)promotionCode
+          success:(ICClientServiceSuccessBlock)success
+          failure:(ICClientServiceFailureBlock)failure
+{
+    self.successBlock = success;
+    self.failureBlock = failure;
+    
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
         @"apiUrl": @"/clients_promotions",
-        @"apiMethod": @"PUT",
+        @"apiMethod": @"POST",
         @"apiParameters": @{
-            @"promotion_code": promotionCode,
+            @"code": promotionCode,
             @"token": [ICClient sharedInstance].token
         }
     };

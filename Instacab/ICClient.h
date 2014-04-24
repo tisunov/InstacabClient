@@ -23,7 +23,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy) NSString *email;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *token;
-@property (nonatomic, assign) BOOL hasConfirmedMobile;
+@property (nonatomic, copy) NSNumber *hasConfirmedMobile;
 @property (nonatomic, strong, readonly) ICPaymentProfile *paymentProfile;
 @property (nonatomic, assign) ICClientState state;
 @property (nonatomic, strong, readonly) ICTrip *tripPendingRating;
@@ -31,6 +31,7 @@ typedef enum : NSUInteger {
 // Computed properties
 @property (readonly) BOOL cardPresent;
 @property (nonatomic, readonly) NSString *cardHolder;
+@property (readonly) BOOL mobileConfirmed;
 
 -(void)logout;
 -(BOOL)isSignedIn;

@@ -54,7 +54,10 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
                   success:(ICClientServiceSuccessBlock)success
                   failure:(ICClientServiceFailureBlock)failure;
 
--(void)applyPromo:(NSString *)promotionCode;
+-(void)applyPromo:(NSString *)promotionCode
+          success:(ICClientServiceSuccessBlock)success
+          failure:(ICClientServiceFailureBlock)failure;
+
 -(void)validatePromo:(NSString *)promotionCode;
 
 //(void)fareEstimate:(ICLocation *)pickupLocation destination:(ICLocation *)destination;
