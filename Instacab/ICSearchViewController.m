@@ -169,13 +169,13 @@
 }
 
 -(void)showProgress {
-    [self hideProgress];
+    if ([MBProgressHUD HUDForView:_progressOverlayView]) return;
     
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     
     if (!_progressOverlayView) {
         _progressOverlayView = [[UIView alloc] initForAutoLayout];
-        _progressOverlayView.backgroundColor = [UIColor colorWithRed:90/255.0 green:90/255.0 blue:90/255.0 alpha:0.8];
+        _progressOverlayView.backgroundColor = [UIColor colorWithRed:90/255.0 green:90/255.0 blue:90/255.0 alpha:0.95];
         _progressOverlayView.translatesAutoresizingMaskIntoConstraints = NO;
         _progressOverlayView.alpha = 0;
     }
