@@ -43,6 +43,7 @@ PODS:
   - SocketRocket (0.3.1-beta2)
   - TSMessages (0.9.4):
     - HexColors
+  - UIView+AutoLayout (1.3.0)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
@@ -61,6 +62,7 @@ DEPENDENCIES:
   - SLScrollViewKeyboardSupport (from `https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git`)
   - SocketRocket (from `git@github.com:tisunov/SocketRocket.git`)
   - TSMessages (from `https://github.com/tisunov/TSMessages.git`)
+  - UIView+AutoLayout
 
 EXTERNAL SOURCES:
   AKNumericFormatter:
@@ -87,10 +89,10 @@ SPEC CHECKSUMS:
   AFNetworking: c7d7901a83f631414c7eda1737261f696101a5cd
   AKNumericFormatter: 49e215306b97d774bff72d16ffe9951ebcd11931
   Bugsnag: 877ad8c9d632397b0685994c93a3e8e76bedc482
-  Colours: f0700c9b392177f1089e7744c43f46e42777280b
-  EDStarRating: 6761f41fd040f1cde155e2885dddc96461620f67
+  Colours: 5a3fbbd7455aa788cbfcb40a931f7644ecc59a63
+  EDStarRating: 4954b62647884e7b2d37c4720d4a1f758b5a3435
   FCUtilities: d0f0da2640a643bb319c3ef58e9c43530fcbc521
-  HexColors: 3a68db077cd6572a8f7d4aa1add284dd2436a934
+  HexColors: 99211502e17904af7891fc8f687d0e4958a6d66e
   iOSBlocks: fecd9f6ff80da30bc23b9d35ccf78f483baa8043
   Mantle: abc3b0c81bc66eb624cf9cebb8640e377d5a44ae
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
@@ -101,5 +103,6 @@ SPEC CHECKSUMS:
   SLScrollViewKeyboardSupport: 8e59a8af41cc29a8b63b7adf8de3da09d523cc2c
   SocketRocket: 9cbe08469513356cddc0afcab1ff160bd190296a
   TSMessages: de3fecb312d44078128add86d4347307669d0af2
+  UIView+AutoLayout: 43373a18797954fd8ee3b1423af364f1b80a2af8
 
-COCOAPODS: 0.29.0
+COCOAPODS: 0.32.1

@@ -16,3 +16,4 @@ pod 'AKNumericFormatter', :git => 'https://github.com/blackm00n/AKNumericFormatt
 pod 'PaymentKit', :git => 'https://github.com/stripe/PaymentKit.git'
 pod 'FCUtilities', :git => 'https://github.com/marcoarment/FCUtilities.git'
 pod 'iOSBlocks', :git => 'https://github.com/dzenbot/iOSBlocks.git', :inhibit_warnings => true
+pod 'UIView+AutoLayout'

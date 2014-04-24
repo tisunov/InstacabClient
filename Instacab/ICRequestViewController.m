@@ -23,12 +23,13 @@
 #import "UIActionSheet+Blocks.h"
 #import "UIAlertView+Additions.h"
 #import "UIImageView+AFNetworking.h"
+#import "ICPromoViewController.h"
 
 @interface ICRequestViewController ()
 
 @end
 
-@implementation ICRequestViewController{
+@implementation ICRequestViewController {
     GMSMapView *_mapView;
     NSMutableArray *_addedMarkers;
     GMSMarker *_dispatchedVehicleMarker;
@@ -48,6 +49,7 @@
     
     CGFloat _addressViewOriginY;
     CGFloat _mapVerticalPadding;
+    UIImageView *_fogView;
 }
 
 NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
@@ -70,6 +72,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     // Custom initialization
     if (self) {
+        _justStarted = YES;
+        
         _googleService = [ICGoogleService sharedInstance];
         _googleService.delegate = self;
         
@@ -99,34 +103,111 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self setupAddressBar];
     [self setupDriverPanel];
 
+//    _pickupView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
     [self setViewTopShadow:_pickupView];
     [self setViewBottomShadow:_statusView];
     
-    self.pickupBtn.layer.cornerRadius = 3.0f;
-    self.pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
-    self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
-    [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
+    _buttonContainerView.layer.borderColor = [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1].CGColor;
+    _buttonContainerView.layer.borderWidth = 1.0;
+    _buttonContainerView.layer.cornerRadius = 3.0;
+    
+    [_fareEstimateButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
+    [_fareEstimateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    _fareEstimateButton.highlightedColor = _promoCodeButton.highlightedColor = [UIColor colorWithRed:(45/255.0) green:(186/255.0) blue:(212/255.0) alpha:1];
 
+    [_promoCodeButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
+    [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    _pickupBtn.layer.cornerRadius = 3.0f;
+    _pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
+    _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
+    [_pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
+
+    _confirmPickupButton.layer.cornerRadius = _pickupBtn.layer.cornerRadius;
+    _confirmPickupButton.normalColor = _pickupBtn.normalColor;
+    _confirmPickupButton.highlightedColor = _pickupBtn.highlightedColor;
+    
     // Should be sent only once when view is created to track open-to-order ratio
     // Even if user opens app and gets straight to ReceiptView, that method should be called
     [_clientService logMapPageView];
+    
+    UITapGestureRecognizer *singleFingerTap =
+        [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                action:@selector(handleAddressBarTap:)];
+    
+    [self.addressView addGestureRecognizer:singleFingerTap];
+    
+    [_searchAddressButton addTarget:self action:@selector(handleAddressBarTap:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)handleAddressBarTap:(UITapGestureRecognizer *)recognizer {
+    ICSearchViewController *vc = [[ICSearchViewController alloc] initWithCoordinates:_mapView.camera.target];
+    vc.delegate = self;
+    
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+}
+
+- (void)didSelectManualLocation:(ICLocation *)location {
+    _pickupLocation = location;
+    
+    _mapView.camera = [GMSCameraPosition cameraWithLatitude:location.coordinate.latitude
+                                                  longitude:location.coordinate.longitude
+                                                       zoom:_mapView.camera.zoom];
+    
+    [self transitionToConfirmScreenAtCoordinate:location.coordinate];
+    
+    if (location.name.length > 0) {
+        [self updateAddressLabel:location.name];
+    }
+    else {
+        [self updateAddressLabel:location.streetAddress];
+    }
 }
 
 - (void)showExitNavbarButton {
-    self.navigationItem.leftBarButtonItem =
+    UIBarButtonItem *exitButton =
         [[UIBarButtonItem alloc] initWithTitle:@"Выход" style:UIBarButtonItemStylePlain target:self action:@selector(showAccountActionSheet)];
+    
+    UIFont *font = [UIFont systemFontOfSize:13];
+    NSDictionary *attributes = @{
+        NSFontAttributeName: font,
+        NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
+    };
+    [exitButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
+    self.navigationItem.leftBarButtonItem = exitButton;
 }
 
 - (void)showCancelConfirmationNavbarButton {
-    self.navigationItem.leftBarButtonItem =
-        [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPickupRequesConfirmation)];
+    UIBarButtonItem *cancelButton =
+        [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPickupRequestConfirmation)];
+    
+    UIFont *font = [UIFont systemFontOfSize:13];
+    NSDictionary *attributes = @{
+        NSFontAttributeName: font,
+        NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
+    };
+    [cancelButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
+    self.navigationItem.leftBarButtonItem = cancelButton;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     ICClient *client = [ICClient sharedInstance];
-    [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionOld context:nil];
+    // On start use initial client state, which was loaded from server
+    if (_justStarted) {
+        [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew |NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionOld context:nil];
+        
+        _justStarted = NO;
+    }
+    // Initial client state already displayed
+    else {
+        [client addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    }
     
     [self presentDriverState];
     [self showNearbyVehicles:[ICNearbyVehicles sharedInstance]];
@@ -179,8 +260,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.navigationItem.rightBarButtonItem = nil;
 }
 
--(void)cancelPickupRequesConfirmation {
-    [self setReadyToRequest:NO resetZoom:YES];
+-(void)cancelPickupRequestConfirmation {
+    [self cancelConfirmation:YES];
 }
 
 -(void)showTripActionSheet {
@@ -251,7 +332,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)setupAddressBar {
-    _addressTitleLabel.textColor = [UIColor colorFromHexString:@"#2980B9"];
+    _addressTitleLabel.textColor = [UIColor colorFromHexString:@"#16a085"];
     _addressLabel.text = kGoToMarker;
     _addressLabel.textColor = [UIColor colorFromHexString:@"#2C3E50"];
     
@@ -289,7 +370,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
     _mapView.myLocationEnabled = YES;
     _mapView.indoorEnabled = NO;
-    _mapView.settings.myLocationButton = YES;
+    _mapView.settings.myLocationButton = NO;
     _mapView.settings.indoorPicker = NO;
     [self.view insertSubview:_mapView atIndex:0];
     
@@ -303,56 +384,112 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)attachMyLocationButtonTapHandler {
-    for (UIView *object in _mapView.subviews) {
-        if([[[object class] description] isEqualToString:@"GMSUISettingsView"] )
-        {
-            for(UIView *view in object.subviews) {
-                if([[[view class] description] isEqualToString:@"UIButton"] ) {
-                    [(UIButton *)view addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
-                    return;
-                }
-            }
-        }
-    };
+    [_centerMapButton addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
+//    for (UIView *object in _mapView.subviews) {
+//        if([[[object class] description] isEqualToString:@"GMSUISettingsView"] )
+//        {
+//            for(UIView *view in object.subviews) {
+//                if([[[view class] description] isEqualToString:@"UIButton"] ) {
+//                    [(UIButton *)view addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
+//                    return;
+//                }
+//            }
+//        }
+//    };
 }
 
-- (void)setReadyToRequest: (BOOL)isReady resetZoom:(BOOL)resetZoom {
-    _readyToRequest = isReady;
-    if (isReady) {
-        self.titleText = @"ПОДТВЕРЖДЕНИЕ";
+- (void)zoomMapForConfirmationAtCoordinate:(CLLocationCoordinate2D)coordinate {
+    GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinate zoom:19];
+    [_mapView animateWithCameraUpdate:update];
+}
+
+- (void)transitionToConfirmScreenAtCoordinate:(CLLocationCoordinate2D)coordinate {
+    _readyToRequest = YES;
+
+//    _mapView.settings.myLocationButton = NO;
+    
+    self.titleText = @"ПОДТВЕРЖДЕНИЕ";
+    
+    [self zoomMapForConfirmationAtCoordinate:coordinate];
+    
+    [self.pickupBtn setTitle:[kConfirmPickupLocation uppercaseString] forState:UIControlStateNormal];
+
+    [self showCancelConfirmationNavbarButton];
+    
+    [self showFog];
+    
+    [self showConfirmPickupView];
+}
+
+- (void)showConfirmPickupView {
+    _confirmPickupView.y = [UIScreen mainScreen].bounds.size.height;
+    _confirmPickupView.alpha = 1;
+    [self.view addSubview:_confirmPickupView];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        _pickupView.alpha = 0;
+        _confirmPickupView.y = [UIScreen mainScreen].bounds.size.height - _confirmPickupView.height;
+    }];
+}
+
+- (void)showFog {
+    if (!_fogView) {
+        _fogView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+        _fogView.alpha = 0;
         
-        CGFloat zoomLevel =
-            [GMSCameraPosition zoomAtCoordinate:_mapView.camera.target
-                                      forMeters:200
-                                      perPoints:self.view.frame.size.width];
-        
-        // zoom map to pinpoint pickup location
-        [_mapView animateToZoom:zoomLevel];
-        
-        [self.pickupBtn setTitle:[kConfirmPickupLocation uppercaseString] forState:UIControlStateNormal];
-//        self.pickupBtn.normalColor = [UIColor colorFromHexString:@"#333333"];
-//        self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#404040"];
-        
-        [self showCancelConfirmationNavbarButton];
+        _fogView.image = [UIImage imageNamed:@"confirmation_mask"];
     }
-    else {
-        self.titleText = @"INSTACAB";
-        [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
-//        self.pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
-//        self.pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
-        
-        if (resetZoom) {
-            [_mapView animateToZoom:kDefaultMapZoom];
-        }
-        [self showExitNavbarButton];
+    
+    [self.view insertSubview:_fogView atIndex:1];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        _fogView.alpha = 1;
+    }];
+}
+
+- (void)hideFog {
+    [UIView animateWithDuration:0.25 animations:^{
+        _fogView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [_fogView removeFromSuperview];
+    }];
+}
+
+- (void)showPickupView {
+    _pickupView.y = [UIScreen mainScreen].bounds.size.height;
+    _pickupView.alpha = 1;
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        _confirmPickupView.alpha = 0;
+        _pickupView.y = [UIScreen mainScreen].bounds.size.height - _pickupView.height;
+    } completion:^(BOOL finished) {
+        [_confirmPickupView removeFromSuperview];
+    }];
+}
+
+- (void)cancelConfirmation:(BOOL)resetZoom {
+    _readyToRequest = NO;
+    
+//    _mapView.settings.myLocationButton = YES;
+    
+    self.titleText = @"INSTACAB";
+    [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
+    
+    if (resetZoom) {
+        [_mapView animateToZoom:kDefaultMapZoom];
     }
+    [self showExitNavbarButton];
+    
+    [self hideFog];
+    
+    [self showPickupView];
 }
 
 //- (void)moveMapToPosition: (CLLocationCoordinate2D) coordinate {
 //    [CATransaction begin];
 //    [CATransaction setDisableActions:YES];
 //    _mapView.camera = [GMSCameraPosition cameraWithLatitude:coordinate.latitude
-//                                                 cu longitude:coordinate.longitude
+//                                                  longitude:coordinate.longitude
 //                                                       zoom:_mapView.camera.zoom];
 //    [CATransaction commit];
 //}
@@ -360,6 +497,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)myLocationTapped:(id)sender {
     if (!CLCOORDINATES_EQUAL(_mapView.camera.target, _mapView.myLocation.coordinate))
         [self findAddressAndNearbyCabsAtCameraTarget:NO];
+    
+    [_mapView animateToLocation:_locationService.coordinates];
 }
 
 // Control status bar visibility
@@ -370,7 +509,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)setDraggingPin: (BOOL)dragging {
     _draggingPin = dragging;
-    _mapView.settings.myLocationButton = !dragging;
+//    _mapView.settings.myLocationButton = !dragging;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
@@ -408,7 +547,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // First tap on the map returns to Pre-Request state
     if (_readyToRequest) {
         NSLog(@"Return UI state to 'Looking'");
-        [self setReadyToRequest:NO resetZoom:YES];
+        [self cancelConfirmation:YES];
     }
 }
 
@@ -474,6 +613,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         // Display ETA
         _pickupTimeLabel.text = [[NSString stringWithFormat:kRequestMinimumEtaTemplate, nearbyVehicles.minEtaString] uppercaseString];
     }
+    
+    // Copy to confirmation view
+    _pickupTimeLabel2.text = _pickupTimeLabel.text;
 }
 
 - (void)displayCars:(NSArray *)cars {
@@ -612,7 +754,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         [self checkCardLinkedAndRequestPickup];
     }
     else {
-        [self setReadyToRequest:YES resetZoom:NO];
+        [self transitionToConfirmScreenAtCoordinate:_mapView.camera.target];
     }
 }
 
@@ -635,7 +777,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Request pickup
     [_clientService requestPickupAt:_pickupLocation];
     
-    [self setReadyToRequest:NO resetZoom:NO];
+    [self cancelConfirmation:NO];
 }
 
 - (void)showVerifyMobileDialog {
@@ -871,6 +1013,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if ([object isKindOfClass:ICClient.class]) {
         ICClientState clientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
         ICClientState oldState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
+        
         if (oldState != clientState || !change[NSKeyValueChangeOldKey]) {
             [self presentClientState:clientState];
         }
@@ -1022,5 +1165,12 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 //    
 //    return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 //}
+
+- (IBAction)handlePromoTap:(id)sender {
+    ICPromoViewController *vc = [[ICPromoViewController alloc] initWithNibName:@"ICPromoViewController" bundle:nil];
+    
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
+    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+}
 
 @end

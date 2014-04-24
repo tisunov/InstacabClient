@@ -129,8 +129,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 - (BOOL)_sendData:(NSDictionary *)data {
     if (!self.connected) return NO;
 
-//    NSLog(@"Sending: %@", [data objectForKey:@"messageType"]);
-    NSLog(@"Sending: %@", data);
+    NSLog(@"Sending: %@", data[@"messageType"]);
     [_socket send:[self _serializeToJSON:data]];
     return YES;
 }
@@ -232,8 +231,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
                                         options:NSJSONReadingMutableContainers
                                           error:&error];
 
-    NSLog(@"Received: %@", jsonDictionary);
-//    NSLog(@"Received: %@", [jsonDictionary objectForKey:@"messageType"]);
+    NSLog(@"Received: %@", jsonDictionary[@"messageType"]);
     
     NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
     

@@ -16,17 +16,21 @@
 #import "ICLocationService.h"
 #import "UIViewController+TitleLabelAttritbutes.h"
 #import "ICVerifyMobileViewController.h"
+#import "ICSearchViewController.h"
 
-@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICVerifyMobileDelegate>
+@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICVerifyMobileDelegate, ICSearchViewDelegate>
 - (IBAction)requestPickup:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIButton *centerMapButton;
+@property (strong, nonatomic) IBOutlet UIButton *searchAddressButton;
 @property (strong, nonatomic) IBOutlet UILabel *addressLabel;
 @property (strong, nonatomic) IBOutlet UIView *addressView;
 @property (strong, nonatomic) IBOutlet ICHighlightButton *pickupBtn;
 @property (strong, nonatomic) IBOutlet UILabel *addressTitleLabel;
 @property (strong, nonatomic) IBOutlet UIView *pickupView;
 @property (strong, nonatomic) IBOutlet UILabel *pickupTimeLabel;
+@property (strong, nonatomic) IBOutlet UILabel *pickupTimeLabel2;
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
 @property (strong, nonatomic) IBOutlet UILabel *etaLabel;
@@ -37,5 +41,11 @@
 @property (strong, nonatomic) IBOutlet UIImageView *driverImageView;
 @property (strong, nonatomic) IBOutlet UILabel *vehicleLabel;
 @property (strong, nonatomic) IBOutlet UILabel *vehicleLicenseLabel;
+@property (strong, nonatomic) IBOutlet ICHighlightButton *fareEstimateButton;
+@property (strong, nonatomic) IBOutlet ICHighlightButton *promoCodeButton;
+@property (strong, nonatomic) IBOutlet UIView *buttonContainerView;
+@property (strong, nonatomic) IBOutlet UIView *confirmPickupView;
+@property (strong, nonatomic) IBOutlet ICHighlightButton *confirmPickupButton;
+- (IBAction)handlePromoTap:(id)sender;
 
 @end

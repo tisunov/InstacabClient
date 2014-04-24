@@ -37,7 +37,8 @@
     self.titleText = @"ПОДТВЕРЖДЕНИЕ НОМЕРА";
     self.view.backgroundColor = [UIColor colorFromHexString:@"#efeff4"];
     
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Закрыть" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
+    
     self.navigationItem.rightBarButtonItem = cancel;
     
     CALayer *bottomBorder = [CALayer layer];

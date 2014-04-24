@@ -60,9 +60,8 @@ NSString * const kSensorParam = @"true";
        parameters:@{@"latlng": [NSString stringWithFormat:@"%f,%f", location.latitude, location.longitude],
                     @"sensor": kSensorParam,
                     @"language": @"ru"}
-//  timeoutInterval:2.0f
           success:^(AFHTTPRequestOperation *operation, id responseObject) {
-              NSArray *results = [responseObject objectForKey: @"results"];
+              NSArray *results = [responseObject objectForKey:@"results"];
               NSString *status = [responseObject objectForKey:@"status"];
               BOOL isStatusOk = [status isEqualToString:@"OK"];
               if (!isStatusOk || !results) {
@@ -71,9 +70,9 @@ NSString * const kSensorParam = @"true";
                   return;
               }
 
-              ICLocation *loc = [[ICLocation alloc] initWithGeocoderResults: results];
-              loc.latitude = @(location.latitude);
-              loc.longitude = @(location.longitude);
+              ICLocation *loc = [[ICLocation alloc] initWithReverseGeocoderResults:results
+                                                                          latitude:location.latitude
+                                                                         longitude:location.longitude];
               [self.delegate didGeocodeLocation:loc];
           }
           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -83,6 +82,43 @@ NSString * const kSensorParam = @"true";
               }
           }
     ];
+}
+
+// Sample: http://maps.googleapis.com/maps/api/geocode/json?language=ru&address=9%20%D0%AF%D0%BD%D0%B2%D0%B0%D1%80%D1%8F,%20300&sensor=false
+- (void)geocodeAddress:(NSString *)address success:(ICGoogleServiceSuccessBlock)success failure:(ICGoogleServiceFailureBlock)failure
+{
+    [_manager GET:@"http://maps.googleapis.com/maps/api/geocode/json"
+       parameters:@{@"address": address,
+                    @"sensor": kSensorParam,
+                    @"components": @"route|locality:Воронеж",
+                    @"language": @"ru"}
+          success:^(AFHTTPRequestOperation *operation, id responseObject) {
+              NSArray *results = [responseObject objectForKey:@"results"];
+              NSString *status = [responseObject objectForKey:@"status"];
+              BOOL isStatusOk = [status isEqualToString:@"OK"];
+              
+              if (!isStatusOk || !results) {
+                  if (failure) {
+                      failure([NSError errorWithDomain:@"com.brightstripe.instacab" code:1000 userInfo:NULL]);
+                  }
+              }
+              else if (success) {
+                  NSMutableArray *locations = [[NSMutableArray alloc] init];
+                  for(NSDictionary *address in results) {
+                      // Got an address!
+                      if ([[address[@"types"] firstObject] isEqualToString:@"street_address"]) {
+                          [locations addObject:[[ICLocation alloc] initWithAddress:address]];
+                      }
+                  }
+                  success(locations);
+              }
+          }
+          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+              if (failure) {
+                  failure(error);
+              }
+          }
+     ];
 }
 
 @end

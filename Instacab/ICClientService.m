@@ -474,6 +474,7 @@ cardioAttempts:(NSUInteger)cardioAttempts
     [self sendMessage:message];
 }
 
+// TODO: Вызывать при регистрации, чтобы человек не думал что он регистрируется с правильным промо-кодом
 -(void)validatePromo:(NSString *)promotionCode {
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
@@ -494,7 +495,7 @@ cardioAttempts:(NSUInteger)cardioAttempts
         @"apiMethod": @"PUT",
         @"apiParameters": @{
             @"promotion_code": promotionCode,
-            @"token": [ICClient sharedInstance].uID
+            @"token": [ICClient sharedInstance].token
         }
     };
     

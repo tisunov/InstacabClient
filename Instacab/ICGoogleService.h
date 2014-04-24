@@ -16,8 +16,12 @@
 - (void)didFailToGeocodeWithError:(NSError*)error;
 @end
 
+typedef void (^ICGoogleServiceSuccessBlock)(NSArray *locations);
+typedef void (^ICGoogleServiceFailureBlock)(NSError *error);
+
 @interface ICGoogleService : ICSingleton
-- (void)reverseGeocodeLocation: (CLLocationCoordinate2D) location;
+- (void)reverseGeocodeLocation:(CLLocationCoordinate2D)location;
+- (void)geocodeAddress:(NSString *)address success:(ICGoogleServiceSuccessBlock)success failure:(ICGoogleServiceFailureBlock)failure;
 @property (nonatomic,weak) id <ICGoogleServiceDelegate> delegate;
 
 @end

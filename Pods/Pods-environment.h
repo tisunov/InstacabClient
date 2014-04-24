@@ -162,6 +162,12 @@
 #define COCOAPODS_VERSION_MINOR_TSMessages 9
 #define COCOAPODS_VERSION_PATCH_TSMessages 4
 
+// UIView+AutoLayout
+#define COCOAPODS_POD_AVAILABLE_UIView_AutoLayout
+#define COCOAPODS_VERSION_MAJOR_UIView_AutoLayout 1
+#define COCOAPODS_VERSION_MINOR_UIView_AutoLayout 3
+#define COCOAPODS_VERSION_PATCH_UIView_AutoLayout 0
+
 // iOSBlocks
 #define COCOAPODS_POD_AVAILABLE_iOSBlocks
 #define COCOAPODS_VERSION_MAJOR_iOSBlocks 1
