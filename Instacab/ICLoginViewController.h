@@ -11,6 +11,7 @@
 #import "ICLocationService.h"
 #import "QuickDialog.h"
 #import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+Location.h"
 
 @class ICLoginViewController;
 
@@ -18,6 +19,6 @@
 - (void)closeLoginViewController:(ICLoginViewController *)vc signIn:(BOOL)signIn client:(ICClient *)client;
 @end
 
-@interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate, ICLocationServiceDelegate>
+@interface ICLoginViewController : QuickDialogController<QuickDialogEntryElementDelegate>
 @property (nonatomic, weak) id <ICLoginViewControllerDelegate> delegate;
 @end

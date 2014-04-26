@@ -60,6 +60,12 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
 
 -(void)validatePromo:(NSString *)promotionCode;
 
+// TODO: Для изменения телефона, имени, фамилии, e-mail
+//-(void)updateClientInfo:(NSDictionary *)clientInfo;
+
+// TODO: messageType=SetDestination, performFareEstimate=true, pickupLocation=paramUBLocation1.getValuesForFareEstimate(), destination=paramUBLocation2.getValuesForFareEstimate()
+
+// getValuesForFareEstimate: latitude, longitude, type=(default:google, manual), formatted_address, address_components, nickname
 //(void)fareEstimate:(ICLocation *)pickupLocation destination:(ICLocation *)destination;
 
 #pragma mark - Signup Flow
@@ -95,6 +101,7 @@ cardioAttempts:(NSUInteger)cardioAttempts
 
 #pragma mark - Analytics
 
+// TODO: Сделать их методами класса +(void)
 - (void)trackScreenView:(NSString *)name;
 - (void)trackEvent:(NSString *)name params:(NSDictionary *)aParams;
 - (void)trackError:(NSDictionary *)attributes;
@@ -105,5 +112,5 @@ cardioAttempts:(NSUInteger)cardioAttempts
 - (void)logSignInPageView;
 - (void)logSignUpPageView;
 - (void)logSignUpCancel:(ICSignUpInfo *)signUpData;
-    
+
 @end

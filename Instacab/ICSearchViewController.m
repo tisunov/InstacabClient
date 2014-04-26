@@ -324,10 +324,10 @@
     cell.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1.0];
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:16.0];
     cell.textLabel.textColor = [UIColor colorWithRed:62/255.0 green:62/255.0 blue:62/255.0 alpha:1.0];
-    //    cell.textLabel.highlightedTextColor = [UIColor colorWithWhite:0.15 alpha:1.0];
+    cell.textLabel.highlightedTextColor = [UIColor colorWithWhite:1.0 alpha:1.0];
 
     UIView *selectionColor = [[UIView alloc] init];
-    selectionColor.backgroundColor = [UIColor colorWithRed:(45/255.0) green:(186/255.0) blue:(212/255.0) alpha:1];
+    selectionColor.backgroundColor = [UIColor blueberryColor];
     cell.selectedBackgroundView = selectionColor;
 }
 
@@ -358,6 +358,7 @@
             
             [self setupCell:cell];
             cell.detailTextLabel.textColor = [UIColor colorWithRed:94/255.0 green:94/255.0 blue:94/255.0 alpha:1.0];
+            cell.detailTextLabel.highlightedTextColor = [UIColor colorWithWhite:0.87 alpha:1.0];
         }
         
         ICLocation *location = (ICLocation *)self.foursquareVenues[indexPath.row];

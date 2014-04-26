@@ -52,17 +52,17 @@
     _promoCodeTextField.leftViewMode = UITextFieldViewModeAlways;
     _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"promo_icon_grey.png"]];
     
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"Назад" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"НАЗАД" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     self.navigationItem.leftBarButtonItem = backButton;
     
-    UIFont *font = [UIFont systemFontOfSize:13];
+    UIFont *font = [UIFont systemFontOfSize:10];
     NSDictionary *attributes = @{
         NSFontAttributeName: font,
         NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
     };
     [backButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
     
-    UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"Применить" style:UIBarButtonItemStyleDone target:self action:@selector(applyPromo)];
+    UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"ПРИМЕНИТЬ" style:UIBarButtonItemStyleDone target:self action:@selector(applyPromo)];
     applyButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = applyButton;
     

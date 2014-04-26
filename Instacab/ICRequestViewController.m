@@ -26,7 +26,7 @@
 #import "ICPromoViewController.h"
 
 @interface ICRequestViewController ()
-
+@property (nonatomic, strong) ICLocation *pickupLocation;
 @end
 
 @implementation ICRequestViewController {
@@ -41,7 +41,6 @@
     ICGoogleService *_googleService;
     ICClientService *_clientService;
     ICLocationService *_locationService;
-    ICLocation *_pickupLocation;
     UIGestureRecognizer *_hudGesture;
     UIImageView *_greenPinView;
     UIView *_statusView;
@@ -114,7 +113,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_fareEstimateButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
     [_fareEstimateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
-    _fareEstimateButton.highlightedColor = _promoCodeButton.highlightedColor = [UIColor colorWithRed:(45/255.0) green:(186/255.0) blue:(212/255.0) alpha:1];
+    _fareEstimateButton.highlightedColor = _promoCodeButton.highlightedColor = [UIColor blueberryColor];
 
     [_promoCodeButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
     [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -150,7 +149,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)didSelectManualLocation:(ICLocation *)location {
-    _pickupLocation = location;
+    self.pickupLocation = location;
     
     _mapView.camera = [GMSCameraPosition cameraWithLatitude:location.coordinate.latitude
                                                   longitude:location.coordinate.longitude
@@ -168,9 +167,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)showExitNavbarButton {
     UIBarButtonItem *exitButton =
-        [[UIBarButtonItem alloc] initWithTitle:@"Выход" style:UIBarButtonItemStylePlain target:self action:@selector(showAccountActionSheet)];
+        [[UIBarButtonItem alloc] initWithTitle:@"ВЫХОД" style:UIBarButtonItemStylePlain target:self action:@selector(showAccountActionSheet)];
     
-    UIFont *font = [UIFont systemFontOfSize:13];
+    UIFont *font = [UIFont systemFontOfSize:10];
     NSDictionary *attributes = @{
         NSFontAttributeName: font,
         NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
@@ -182,9 +181,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)showCancelConfirmationNavbarButton {
     UIBarButtonItem *cancelButton =
-        [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPickupRequestConfirmation)];
+        [[UIBarButtonItem alloc] initWithTitle:@"ОТМЕНА" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPickupRequestConfirmation)];
     
-    UIFont *font = [UIFont systemFontOfSize:13];
+    UIFont *font = [UIFont systemFontOfSize:10];
     NSDictionary *attributes = @{
         NSFontAttributeName: font,
         NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
@@ -569,7 +568,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Map drag ended
     
     // Reset pickup location
-    _pickupLocation = nil;
+    self.pickupLocation = nil;
 
     // Set pin address to blank, to make address change animation nicer
     [self updateAddressLabel:kGoToMarker];
@@ -595,11 +594,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)showNearbyVehicles: (ICNearbyVehicles *)nearbyVehicles {
     if (!nearbyVehicles || [ICClient sharedInstance].state != SVClientStateLooking) return;
-    
-    if (nearbyVehicles.sorryMsg.length > 0) {
-        [self hideProgress];
-        [[UIApplication sharedApplication] showAlertWithTitle:@"" message:nearbyVehicles.sorryMsg];
-    }
     
     // No available vehicles
     if (nearbyVehicles.noneAvailableString.length > 0) {
@@ -656,7 +650,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)didGeocodeLocation:(ICLocation *)location {
-    _pickupLocation = location;
+    self.pickupLocation = location;
     [self updateAddressLabel:location.streetAddress];
 }
 
@@ -760,22 +754,17 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)checkCardLinkedAndRequestPickup {
     // Check if card registered
-    if (![ICClient sharedInstance].cardPresent) {
-        [_clientService trackEvent:@"Request Vehicle Denied" params:@{ @"reason":kRequestVehicleDeniedReasonNoCard  }];
-        
-        [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
-        return;
-    }
+//    if (![ICClient sharedInstance].cardPresent) {
+//        [_clientService trackEvent:@"Request Vehicle Denied" params:@{ @"reason":kRequestVehicleDeniedReasonNoCard  }];
+//        
+//        [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
+//        return;
+//    }
     
     [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
     
-    // Initialize pickup location with pin coordinates
-    if (!_pickupLocation) {
-        _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
-    }
-    
     // Request pickup
-    [_clientService requestPickupAt:_pickupLocation];
+    [_clientService requestPickupAt:self.pickupLocation];
     
     [self cancelConfirmation:NO];
 }
@@ -1058,6 +1047,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     switch (message.messageType) {
         case SVMessageTypeOK:
             [self showNearbyVehicles:message.nearbyVehicles];
+            
+            if (message.nearbyVehicles.sorryMsg.length > 0) {
+                [self hideProgress];
+                [[UIApplication sharedApplication] showAlertWithTitle:@"" message:message.nearbyVehicles.sorryMsg];
+            }
             break;
             
         case SVMessageTypeEnroute:
@@ -1171,6 +1165,12 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
     [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+}
+
+-(ICLocation *)pickupLocation {
+    if (!_pickupLocation)
+        _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
+    return _pickupLocation;
 }
 
 @end

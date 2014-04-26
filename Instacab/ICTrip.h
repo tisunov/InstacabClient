@@ -16,7 +16,8 @@
 @property (nonatomic, strong, readonly) ICDriver *driver;
 @property (nonatomic, strong, readonly) ICVehicle *vehicle;
 @property (nonatomic, copy, readonly) NSString *fareBilledToCard;
-@property (nonatomic, copy, readonly) NSNumber *fare;
+@property (nonatomic, copy, readonly) NSString *fare;
+@property (nonatomic, copy, readonly) NSNumber *paidByCard;
 @property (nonatomic, strong) ICLocation *pickupLocation;
 @property (nonatomic, strong, readonly) ICLocation *dropoffLocation;
 @property (nonatomic, copy, readonly) NSNumber *dropoffAt;

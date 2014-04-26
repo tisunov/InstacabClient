@@ -28,6 +28,7 @@
         @"dropoffLocation": @"dropoffLocation",
         @"fareBilledToCard": @"fareBilledToCard",
         @"fare": @"fare",
+        @"paidByCard": @"paidByCard",
         @"dropoffAt": @"dropoffAt",
         @"eta": @"eta"
     };

@@ -103,6 +103,7 @@ float const kPaymentProfileTimeout = 15.0f;
     };
 
     // TODO: Посылать vehicleViewId (текущий тип автомобилей), vehicleViewIds (все доступные, так как они могут быть динамическими ото дня ко дню)
+    // TODO: Чтобы верно считать открытия приложения нужно также посылать reason=openApp при успешном выполнении Login
     [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": aReason, @"clientId":[ICClient sharedInstance].uID}];
 
     [self sendMessage:pingMessage coordinates:location];
@@ -467,7 +468,7 @@ cardioAttempts:(NSUInteger)cardioAttempts
         @"apiMethod": @"PUT",
         @"apiParameters": @{
             @"mobile_token": token,
-            @"token": [ICClient sharedInstance].uID
+            @"token": [ICClient sharedInstance].token
         }
     };
     

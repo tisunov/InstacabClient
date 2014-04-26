@@ -23,6 +23,7 @@
 #import "ICLinkCardDialog.h"
 #import "LocalyticsSession.h"
 #import "ICVerifyMobileViewController.h"
+#import "UIViewController+Location.h"
 
 @interface ICWelcomeViewController ()
 
@@ -31,7 +32,6 @@
 @implementation ICWelcomeViewController {
     ICClientService *_clientService;
     ICLocationService *_locationService;
-    BOOL _firstLoad;
     BOOL _inBackground;
 }
 
@@ -44,8 +44,6 @@
         
         _locationService = [ICLocationService sharedInstance];
         _locationService.delegate = self;
-        
-        _firstLoad = YES;
     }
     return self;
 }
@@ -125,8 +123,6 @@
 }
 
 - (void)pingToRestoreStateReason:(NSString *)reason {
-    if (![[ICClient sharedInstance] isSignedIn]) return;
-    
     [_clientService ping:_locationService.coordinates
                   reason:reason
                  success:^(ICMessage *message) {
@@ -141,20 +137,17 @@
     NSLog(@"+ Enter background");
     
     _inBackground = YES;
-    // TODO: Выполнять Disconnect но не разрушать RequestController
-    // Сделать SplashView и показывать его поверх
-//    [_clientService disconnectWithoutTryingToReconnect];
+    [_clientService disconnectWithoutTryingToReconnect];
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)n {
-    if (_firstLoad || !_inBackground) return;
-    
     NSLog(@"+ Become active");
     
-//    [self beginLoading];
-    [self pingToRestoreStateReason:kNearestCabRequestReasonPing];
-    
     _inBackground = NO;
+    
+    if ([ICClient sharedInstance].isSignedIn) {
+        [self pingToRestoreStateReason:kNearestCabRequestReasonOpenApp];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -169,8 +162,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    _firstLoad = NO;
     
     [_clientService trackScreenView:@"Welcome"];
 }
@@ -193,9 +184,6 @@
 }
 
 - (void)locationWasFixed:(CLLocationCoordinate2D)location {
-    NSLog(@"[Welcome] Got location fix");
-    
-    [self pingToRestoreStateReason:kNearestCabRequestReasonOpenApp];
 }
 
 - (void)showNotification {
@@ -205,7 +193,7 @@
     
     [TSMessage showNotificationInViewController:self
                                           title:@"Нет Сетевого Подключения"
-                                       subtitle:@"Немогу подключиться к серверу."
+                                       subtitle:@"Проверьте подключение к сети."
                                           image:[UIImage imageNamed:@"server-alert"]
                                            type:TSMessageNotificationTypeError
                                        duration:TSMessageNotificationDurationAutomatic];
@@ -230,15 +218,9 @@
         BOOL isWelcomeVisible = self.navigationController.visibleViewController == self;
         if (!isWelcomeVisible) {
             [self hideHUD];
-            
-            // Pop to WelcomeViewController and show error notification
-            [self.navigationController slideLayerAndPopToRootInDirection:kCATransitionFromTop completion:^{
-                [self showNotification];
-            }];
         }
-        // We're on visible, show error notification right away
-        else
-            [self showNotification];
+        
+        [self showNotification];
     }
 }
 

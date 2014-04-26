@@ -23,6 +23,7 @@
 		D90BAE2B1885CB2200E03F3E /* QuickDialogController+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */; };
 		D911228418094462006A49DA /* ICHighlightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D911228318094462006A49DA /* ICHighlightButton.m */; };
 		D92D430F18F11D720052B245 /* MBProgressHud+Global.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D430E18F11D720052B245 /* MBProgressHud+Global.m */; };
+		D9378E5F190A780900F805DB /* UIViewController+Location.m in Sources */ = {isa = PBXBuildFile; fileRef = D9378E5E190A780900F805DB /* UIViewController+Location.m */; };
 		D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC0187552C000288448 /* UIAlertView+Additions.m */; };
 		D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */; };
 		D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = D948113E18BCB6720005D348 /* ICPaymentProfile.m */; };
@@ -137,6 +138,8 @@
 		D911228318094462006A49DA /* ICHighlightButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICHighlightButton.m; sourceTree = "<group>"; };
 		D92D430D18F11D720052B245 /* MBProgressHud+Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHud+Global.h"; sourceTree = "<group>"; };
 		D92D430E18F11D720052B245 /* MBProgressHud+Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHud+Global.m"; sourceTree = "<group>"; };
+		D9378E5D190A780900F805DB /* UIViewController+Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Location.h"; sourceTree = "<group>"; };
+		D9378E5E190A780900F805DB /* UIViewController+Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Location.m"; sourceTree = "<group>"; };
 		D940FBBF187552C000288448 /* UIAlertView+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Additions.h"; sourceTree = "<group>"; };
 		D940FBC0187552C000288448 /* UIAlertView+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Additions.m"; sourceTree = "<group>"; };
 		D940FBC2187553E800288448 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
@@ -372,6 +375,8 @@
 				D90BAE121884306600E03F3E /* ICWelcomeViewController.m */,
 				D90BAE111884306600E03F3E /* ICWelcomeViewController.h */,
 				D90BAE131884306600E03F3E /* ICWelcomeViewController.xib */,
+				D9378E5E190A780900F805DB /* UIViewController+Location.m */,
+				D9378E5D190A780900F805DB /* UIViewController+Location.h */,
 				D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */,
 				D98EFDAF1842921C005A2BAA /* ICLoginViewController.h */,
 				D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */,
@@ -823,6 +828,7 @@
 				D9AD515F1817D17C00692E7E /* ICLocationService.m in Sources */,
 				D9C1932C1889016000A889E4 /* UIViewController+TitleLabelAttritbutes.m in Sources */,
 				D9B03245180572B400F7AF69 /* main.m in Sources */,
+				D9378E5F190A780900F805DB /* UIViewController+Location.m in Sources */,
 				D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */,
 				D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */,
 				D98058C0181A518700DD0BBF /* ICDriver.m in Sources */,

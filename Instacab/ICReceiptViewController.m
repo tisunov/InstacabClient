@@ -72,26 +72,30 @@
         _fareLabel.text = @"";
         [_fareLabel.layer addAnimation:transition forKey:@"kCATransitionFade"];
         
-        _billingStatusLabel.text = [@"Оплачиваю..." uppercaseString];
+        _billingStatusLabel.text = [@"Загружаю тариф..." uppercaseString];
         
         _starRating.enabled = NO;
         [_billingActivityView startAnimating];
     }
     else {
-        [self showFare:[trip.fareBilledToCard doubleValue]];
+        [self showFare];
     }
 }
 
-- (void)showFare:(double)fare {
-    // Display fare with comma as decimal separator
+- (void)showFare {
     // LATER: This should be handled by server backend => Trip.fareString
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    formatter.numberStyle = NSNumberFormatterDecimalStyle;
-    formatter.locale = _ruLocale;
+    ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
+
+    _fareLabel.text = [NSString stringWithFormat:@"%@ р.", trip.fare];
     
-    _fareLabel.text = [NSString stringWithFormat:@"%@ р.", [formatter stringFromNumber:[NSNumber numberWithDouble:fare]]];
+    // TODO: Позже добавить N/A - Недоступно, когда произошла ошибка списание средств с карты
+    if (trip.paidByCard.boolValue) {
+        _billingStatusLabel.text = [NSString stringWithFormat:@"ВСЕГО СПИСАНО С КАРТЫ: %@", trip.fareBilledToCard];
+    }
+    else {
+        _billingStatusLabel.text = @"СТОИМОСТЬ К ОПЛАТЕ НАЛИЧНЫМИ";
+    }
     
-    _billingStatusLabel.text = [@"Списано С Карты" uppercaseString];
     _starRating.enabled = YES;
 }
 
@@ -108,7 +112,7 @@
         [_billingActivityView stopAnimating];
         _fareLabel.hidden = NO;
         
-        [self showFare:[trip.fareBilledToCard doubleValue]];
+        [self showFare];
         
         [[ICClient sharedInstance] removeObserver:self forKeyPath:@"tripPendingRating"];
     }

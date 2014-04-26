@@ -21,8 +21,6 @@
 
 @implementation ICLoginViewController {
     ICClientService *_clientService;
-    ICLocationService *_locationService;
-    BOOL _loginAfterLocationFix;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,9 +28,6 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         _clientService = [ICClientService sharedInstance];
-        
-        _locationService = [ICLocationService sharedInstance];
-        _locationService.delegate = self;
         
         [self buildLoginForm];
     }
@@ -45,7 +40,7 @@
     
     ICClient *client = [ICClient sharedInstance];
     
-    QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"E-mail" Value:client.email Placeholder:@"email@domain.ru"];
+    QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"Эл.почта" Value:client.email Placeholder:@"email@domain.ru"];
     email.keyboardType = UIKeyboardTypeEmailAddress;
     email.enablesReturnKeyAutomatically = YES;
     email.hiddenToolbar = YES;
@@ -54,7 +49,7 @@
     email.key = @"email";
     email.delegate = self;
     
-    QEntryElement *password = [[QEntryElement alloc] initWithTitle:@"Пароль" Value:client.password Placeholder:nil];
+    QEntryElement *password = [[QEntryElement alloc] initWithTitle:@"Пароль" Value:nil Placeholder:nil];
     password.secureTextEntry = YES;
     password.enablesReturnKeyAutomatically = YES;
     password.hiddenToolbar = YES;
@@ -105,47 +100,9 @@
     [_clientService trackScreenView:@"Login"];
 }
 
-
-- (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates
-{
-    
-}
-
-- (void)didFailToAcquireLocationWithErrorMsg:(NSString *)errorMsg {
-    NSLog(@"%@", errorMsg);
-
-    [_clientService trackError:@{@"type": @"didNotAcquireLocation"}];
-    
-    [self dismissProgress];
-    
-    [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Определения Местоположения" message:errorMsg cancelButtonTitle:@"OK"];
-}
-
-- (void)locationWasFixed:(CLLocationCoordinate2D)location
-{
-    if (_loginAfterLocationFix) {
-        NSLog(@"[Login] Got location fix");
-        [self performLogin];
-    }
-}
-
 -(void)login {
-    if (![ICLocationService sharedInstance].isEnabled) {
-        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Службы геолокации выключены. Включите их пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
-        
-        // Analytics
-        [_clientService trackError:@{@"type": @"loginLocationSevicesDisabled"}];
-        return;
-    }
-
-    if ([ICLocationService sharedInstance].isRestricted) {
-        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Доступ к вашей геопозиции ограничен. Разрешите Instacab доступ пройдя в Настройки -> Основные -> Ограничения -> Службы геолокации." cancelButtonTitle:@"OK"];
-        
-        // Analytics
-        [_clientService trackError:@{@"type": @"loginLocationServicesRestricted"}];
-        return;
-    }
-
+    if (![self locationServicesEnabled]) return;
+    
     if (![ICClientService sharedInstance].isOnline) {
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Сети" message:@"Нет сетевого подключения." cancelButtonTitle:@"OK"];
         
@@ -154,19 +111,13 @@
         return;
     }
     
-    [self showProgress];
-    
-    if (_locationService.locationFixed) {
-        [self performLogin];
-    }
-    else {
-        [_locationService startUpdatingLocation];
-        _loginAfterLocationFix = YES;
-    }
+    [self performLogin];
 }
 
 - (void)performLogin {
     [self.view endEditing:YES];
+
+    [self showProgress];
     
     [_clientService loginWithEmail:[self clientEmail]
                           password:[self textForElementKey:@"password"]
