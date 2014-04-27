@@ -25,8 +25,8 @@
     transition.duration = 0.5;
     transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
 //    transition.type = kCATransitionPush;
+//    transition.subtype = direction;    
     transition.type = kCATransitionFade;
-    transition.subtype = direction;
     [self.view.layer addAnimation:transition forKey:kCATransition];
 }
 

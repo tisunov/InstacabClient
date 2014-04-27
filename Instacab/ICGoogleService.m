@@ -66,19 +66,26 @@ NSString * const kSensorParam = @"true";
               BOOL isStatusOk = [status isEqualToString:@"OK"];
               if (!isStatusOk || !results) {
                   NSLog(@"Google geocoder failed with status: %@", status);
-                  [self.delegate didFailToGeocodeWithError:[NSError errorWithDomain:@"com.brightstripe.instacab" code:1000 userInfo:NULL]];
+                  
+                  if ([self.delegate respondsToSelector:@selector(didFailToGeocodeWithError:)]) {
+                      [self.delegate didFailToGeocodeWithError:[NSError errorWithDomain:@"com.brightstripe.instacab" code:1000 userInfo:NULL]];
+                  }
                   return;
               }
 
               ICLocation *loc = [[ICLocation alloc] initWithReverseGeocoderResults:results
                                                                           latitude:location.latitude
                                                                          longitude:location.longitude];
-              [self.delegate didGeocodeLocation:loc];
+              if ([self.delegate respondsToSelector:@selector(didGeocodeLocation:)]) {
+                  [self.delegate didGeocodeLocation:loc];
+              }
           }
           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
               if (!operation.isCancelled) {
                   NSLog(@"Google geocoder failed: %@", error);
-                  [self.delegate didFailToGeocodeWithError:error];
+                  
+                  if ([self.delegate respondsToSelector:@selector(didFailToGeocodeWithError:)])
+                      [self.delegate didFailToGeocodeWithError:error];
               }
           }
     ];

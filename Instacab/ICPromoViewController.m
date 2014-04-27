@@ -51,6 +51,7 @@
     
     _promoCodeTextField.leftViewMode = UITextFieldViewModeAlways;
     _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"promo_icon_grey.png"]];
+    _promoCodeTextField.delegate = self;
     
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"НАЗАД" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
     [self setupBarButton:backButton];
@@ -89,6 +90,7 @@
 
 - (void)back
 {
+    [MBProgressHUD hideGlobalHUD];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -100,4 +102,10 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
 }
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self applyPromo];
+    return YES;
+}
+
 @end

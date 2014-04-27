@@ -13,7 +13,7 @@
 
 @end
 
-@interface ICPromoViewController : UIViewController
+@interface ICPromoViewController : UIViewController<UITextFieldDelegate>
 @property (strong, nonatomic) IBOutlet ICTextField *promoCodeTextField;
 @property (strong, nonatomic) IBOutlet UIView *borderView;
 @property (strong, nonatomic) IBOutlet UILabel *messageLabel;

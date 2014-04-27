@@ -145,7 +145,8 @@ static NSString *kFCTimeoutError = @"Пожалуйста убедитесь ч�
     [_locationManager stopUpdatingLocation];
     
     // Notify the delegate that it had a fatal error
-    [self.delegate didFailToAcquireLocationWithErrorMsg:errorMsg];
+    if ([self.delegate respondsToSelector:@selector(didFailToAcquireLocationWithErrorMsg:)])
+        [self.delegate didFailToAcquireLocationWithErrorMsg:errorMsg];
 }
 
 # pragma mark - Reverse Geocode
