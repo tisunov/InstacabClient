@@ -173,6 +173,8 @@ float const kPaymentProfileTimeout = 15.0f;
     self.successBlock = success;
     self.failureBlock = failure;
     
+    [self delayPing];
+    
     [self sendMessage:message];
 }
 
@@ -509,7 +511,29 @@ cardioAttempts:(NSUInteger)cardioAttempts
     [self sendMessage:message];
 }
 
-// TODO: Реализовать оплату задолженности за поездки из приложения
+-(void)fareEstimate:(ICLocation *)pickupLocation
+        destination:(ICLocation *)destination
+            success:(ICClientServiceSuccessBlock)success
+            failure:(ICClientServiceFailureBlock)failure
+{
+    self.successBlock = success;
+    self.failureBlock = failure;
+    
+    NSDictionary *message = @{
+        kFieldMessageType: @"SetDestination",
+        @"token": [ICClient sharedInstance].token,
+        @"id": [ICClient sharedInstance].uID,
+        @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:pickupLocation],
+        @"destination": [MTLJSONAdapter JSONDictionaryFromModel:destination],
+        @"performFareEstimate": @(YES)
+    };
+    
+    [self delayPing];
+    
+    [self sendMessage:message];
+}
+
+// TODO: Оплату задолженности за поездки из приложения
 // Просто набор неоплаченных счетов за поездки, каждую из которых можно оплатить прежде
 // чем начать следующую поездку
 // ApiCommand

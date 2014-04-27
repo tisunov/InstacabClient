@@ -90,7 +90,7 @@
     
     // TODO: Позже добавить N/A - Недоступно, когда произошла ошибка списание средств с карты
     if (trip.paidByCard.boolValue) {
-        _billingStatusLabel.text = [NSString stringWithFormat:@"ВСЕГО СПИСАНО С КАРТЫ: %@", trip.fareBilledToCard];
+        _billingStatusLabel.text = [NSString stringWithFormat:@"ВСЕГО СПИСАНО С КАРТЫ: %d р.", [trip.fareBilledToCard intValue]];
     }
     else {
         _billingStatusLabel.text = @"СТОИМОСТЬ К ОПЛАТЕ НАЛИЧНЫМИ";

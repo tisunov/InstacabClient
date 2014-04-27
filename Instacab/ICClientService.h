@@ -60,13 +60,19 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
 
 -(void)validatePromo:(NSString *)promotionCode;
 
+-(void)fareEstimate:(ICLocation *)pickupLocation
+        destination:(ICLocation *)destination
+            success:(ICClientServiceSuccessBlock)success
+            failure:(ICClientServiceFailureBlock)failure;
+
 // TODO: Для изменения телефона, имени, фамилии, e-mail
 //-(void)updateClientInfo:(NSDictionary *)clientInfo;
 
-// TODO: messageType=SetDestination, performFareEstimate=true, pickupLocation=paramUBLocation1.getValuesForFareEstimate(), destination=paramUBLocation2.getValuesForFareEstimate()
-
-// getValuesForFareEstimate: latitude, longitude, type=(default:google, manual), formatted_address, address_components, nickname
-//(void)fareEstimate:(ICLocation *)pickupLocation destination:(ICLocation *)destination;
+//-(void)locationSearchQuery:(NSString*)query
+//               searchTypes:(NSArray *)searchTypes
+//                  location:(CLLocationCoordinate2D)location
+//                   success:(ICClientServiceSuccessBlock)success
+//                   failure:(ICClientServiceFailureBlock)failure;
 
 #pragma mark - Signup Flow
 

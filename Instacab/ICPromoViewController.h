@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 
 @interface ICTextField : UITextField
 

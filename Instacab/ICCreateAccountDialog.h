@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "QuickDialog.h"
 #import "ICSignUpFlowDelegate.h"
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 
 @interface QCustomAppearance : QFlatAppearance
 

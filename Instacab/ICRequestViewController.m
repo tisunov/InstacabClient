@@ -24,6 +24,7 @@
 #import "UIAlertView+Additions.h"
 #import "UIImageView+AFNetworking.h"
 #import "ICPromoViewController.h"
+#import "ICFareEstimateViewController.h"
 
 @interface ICRequestViewController ()
 @property (nonatomic, strong) ICLocation *pickupLocation;
@@ -141,11 +142,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)handleAddressBarTap:(UITapGestureRecognizer *)recognizer {
-    ICSearchViewController *vc = [[ICSearchViewController alloc] initWithCoordinates:_mapView.camera.target];
+    ICSearchViewController *vc = [[ICSearchViewController alloc] initWithLocation:_mapView.camera.target];
     vc.delegate = self;
-    
-    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+
+    [self presentModalViewController:vc];
 }
 
 - (void)didSelectManualLocation:(ICLocation *)location {
@@ -1160,11 +1160,21 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 //    return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 //}
 
+- (void)presentModalViewController:(UIViewController *)viewControllerToPresent {
+    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:viewControllerToPresent];
+    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+}
+
 - (IBAction)handlePromoTap:(id)sender {
     ICPromoViewController *vc = [[ICPromoViewController alloc] initWithNibName:@"ICPromoViewController" bundle:nil];
+
+    [self presentModalViewController:vc];
+}
+
+- (IBAction)handleFareEsimateTap:(id)sender {
+    ICFareEstimateViewController *vc = [[ICFareEstimateViewController alloc] initWithPickupLocation:self.pickupLocation];
     
-    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:vc];
-    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+    [self presentModalViewController:vc];
 }
 
 -(ICLocation *)pickupLocation {

@@ -14,7 +14,7 @@
 #import "ICGoogleService.h"
 #import "ICClientService.h"
 #import "ICLocationService.h"
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 #import "ICVerifyMobileViewController.h"
 #import "ICSearchViewController.h"
 
@@ -47,5 +47,6 @@
 @property (strong, nonatomic) IBOutlet UIView *confirmPickupView;
 @property (strong, nonatomic) IBOutlet ICHighlightButton *confirmPickupButton;
 - (IBAction)handlePromoTap:(id)sender;
+- (IBAction)handleFareEsimateTap:(id)sender;
 
 @end

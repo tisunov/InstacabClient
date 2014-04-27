@@ -12,7 +12,7 @@
 #import "ICClient.h"
 #import "AKNumericFormatter.h"
 #import "UIApplication+Alerts.h"
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 #import "MBProgressHud+Global.h"
 
 @interface ICVerifyMobileViewController ()

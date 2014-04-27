@@ -6,15 +6,15 @@
 //  Copyright (c) 2014 Bright Stripe. All rights reserved.
 //
 
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 #import "UIColor+Colours.h"
 
 @implementation UIViewController (TitleLabelAttritbutes)
 
 -(void)setTitleText:(NSString *)titleText {
     NSDictionary *attributes = @{
-        NSForegroundColorAttributeName:[UIColor colorWithRed:0.25098 green:0.247059   blue:0.235294 alpha:1],
-        NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:18.0],
+        NSForegroundColorAttributeName:[UIColor colorWithRed:0.25098 green:0.247059 blue:0.235294 alpha:1],
+        NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:16.0],
 //        NSKernAttributeName: @1.0f,
     };
     UILabel *titleLabel = ((UILabel *)self.navigationItem.titleView);
@@ -25,6 +25,15 @@
         self.navigationItem.titleView = titleLabel;
     }
     
+    // Fade transition
+    CATransition *transition = [CATransition animation];
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionFade;
+    transition.duration = 0.25;
+    transition.fillMode = kCAFillModeBoth;
+    [titleLabel.layer addAnimation:transition forKey:@"kCATransitionFade"];
+    
+    // Set titleView label text
     titleLabel.attributedText = [[NSAttributedString alloc] initWithString:titleText
                                                                 attributes:attributes];
     [titleLabel sizeToFit];

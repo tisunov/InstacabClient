@@ -16,17 +16,21 @@
 @end
 
 @implementation ICLocation {
-    NSString *_countryShort;
     NSString *_countryLong;
     NSString *_postalCode;
     NSString *_area;
     NSString *_streetName;
+    NSString *_streetNameLong;
     NSString *_streetNumber;
 }
 
--(id)initWithAddress:(NSDictionary *)address {
+NSString * const kLocationTypeManual = @"manual";
+NSString * const kLocationTypeGoogle = @"google";
+
+-(id)initWithGoogleAddress:(NSDictionary *)address {
     self = [super init];
     if (self) {
+        _type = kLocationTypeManual;
         [self parseAddress:address];
     }
     return self;
@@ -35,8 +39,9 @@
 -(id)initWithReverseGeocoderResults:(NSArray *)results latitude:(double)latitude longitude:(double)longitude {
     self = [super init];
     if (self) {
-        self.latitude = @(latitude);
-        self.longitude = @(longitude);
+        _type = kLocationTypeGoogle;
+        _latitude = @(latitude);
+        _longitude = @(longitude);
         
         [self parseReverseGeocodeResults:results];
     }
@@ -46,8 +51,9 @@
 -(id)initWithCoordinate:(CLLocationCoordinate2D)coordinate {
     self = [super init];
     if (self) {
-        self.latitude = @(coordinate.latitude);
-        self.longitude = @(coordinate.longitude);
+        _type = kLocationTypeManual;
+        _latitude = @(coordinate.latitude);
+        _longitude = @(coordinate.longitude);
     }
     return self;
 }
@@ -56,6 +62,7 @@
     self = [super init];
     if (self) {
         _name = venue[@"name"];
+        _type = kLocationTypeManual;
 
         NSDictionary *location = venue[@"location"];
         // Always present
@@ -65,22 +72,15 @@
         // Anything below may be present
         _city = location[@"city"];
         
-        NSString *country = location[@"country"];
-        if ([country isEqualToString:@"Russia"]) {
-            country = @"Россия";
+        _countryLong = location[@"country"];
+        if ([_countryLong isEqualToString:@"Russia"]) {
+            _countryLong = @"Россия";
         }
         
         _streetAddress = @"";
         if ([location[@"address"] length] != 0) {
-            _streetAddress = [_streetAddress stringByAppendingFormat:@"%@, ", location[@"address"]];
+            _streetAddress = location[@"address"];
         }
-        if (_city.length != 0) {
-            _streetAddress = [_streetAddress stringByAppendingFormat:@"%@, ", _city];
-        }
-        if (country.length != 0) {
-            _streetAddress = [_streetAddress stringByAppendingString:country];
-        }
-        
     }
     return self;
 }
@@ -88,6 +88,7 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"name": @"name",
+        @"type": @"type",
         @"streetAddress": @"streetAddress",
         @"city": @"city",
         @"latitude": @"latitude",
@@ -107,7 +108,7 @@
         [self parseAddressComponent:component components:addressComponents];
     }
     
-    [self setupStreetAddress];
+    [self formatAddress];
 }
 
 -(void)parseReverseGeocodeResults:(NSArray *)results
@@ -120,16 +121,14 @@
         [self parseAddressComponent:component components:addressComponents];
     }
     
-    [self setupStreetAddress];
+    [self formatAddress];
 }
 
--(void)setupStreetAddress {
-    if (_streetNumber.length > 0) {
+-(void)formatAddress {
+    if (_streetNumber.length != 0)
         _streetAddress = [NSString stringWithFormat:@"%@, %@", _streetName, _streetNumber];
-    }
-    else {
+    else
         _streetAddress = _streetName;
-    }
 }
 
 -(void)parseAddressComponent:(NSDictionary *)component components:(NSArray *)addressComponents {
@@ -141,7 +140,6 @@
                     if (![componentType isEqualToString:@"administrative_area_level_1"]) {
                         if (![componentType isEqualToString:@"postal_code"]) {
                             if ([componentType isEqualToString:@"country"]) {
-                                _countryShort = [component objectForKey:@"short_name"];
                                 _countryLong = [component objectForKey:@"long_name"];
                             }
                         }
@@ -157,16 +155,20 @@
             else
                 _area = [component objectForKey:@"long_name"];
         }
-        else
+        // route
+        else {
             _streetName = [component objectForKey:@"short_name"];
+            _streetNameLong = [component objectForKey:@"long_name"];
+        }
     }
     else {
         _streetNumber = [component objectForKey:@"short_name"];
         
-        // Get street name
+        // route
         NSDictionary *routeComponent = [addressComponents objectAtIndex:1];
         if (routeComponent) {
             _streetName = [routeComponent objectForKey:@"short_name"];
+            _streetNameLong = [routeComponent objectForKey:@"long_name"];
         }
     }
 }
@@ -175,8 +177,21 @@
     return CLLocationCoordinate2DMake([self.latitude doubleValue], [self.longitude doubleValue]);
 }
 
--(NSString *)fullAddress {
-    return [NSString stringWithFormat:@"%@, %@, %@", _streetAddress, _city, _countryLong];
+-(NSString *)formattedAddressWithCity:(BOOL)includeCity country:(BOOL)includeCountry {
+    NSString *address;
+    
+    if (_streetNumber.length != 0)
+        address = [NSString stringWithFormat:@"%@, %@", _streetNameLong, _streetNumber];
+    else
+        address = _streetNameLong.length != 0 ? _streetNameLong : _streetAddress;
+    
+    if (includeCity && _city.length != 0)
+        address = [address stringByAppendingFormat:@", %@", _city];
+    
+    if (includeCountry && _countryLong.length != 0)
+        address = [address stringByAppendingFormat:@", %@", _countryLong];
+    
+    return address;
 }
 
 @end

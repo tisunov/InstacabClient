@@ -9,7 +9,7 @@
 #import "ICFeedbackViewController.h"
 #import "UIColor+Colours.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 #import "ICClientService.h"
 #import "SLScrollViewKeyboardSupport.h"
 #import "MBProgressHUD.h"

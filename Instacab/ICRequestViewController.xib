@@ -75,6 +75,9 @@
                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </state>
                             <state key="highlighted" image="fare_estimate_icon_white"/>
+                            <connections>
+                                <action selector="handleFareEsimateTap:" destination="-1" eventType="touchUpInside" id="ow3-ey-tAd"/>
+                            </connections>
                         </button>
                         <view contentMode="scaleToFill" id="LcJ-w3-t3s" userLabel="SeparatorView">
                             <rect key="frame" x="139" y="0.0" width="1" height="44"/>

@@ -66,6 +66,7 @@
     applyButton.enabled = NO;
     self.navigationItem.rightBarButtonItem = applyButton;
     
+    font = [UIFont boldSystemFontOfSize:10];
     attributes = @{
         NSFontAttributeName: font,
         NSForegroundColorAttributeName:[UIColor colorWithRed:46/255.0 green:167/255.0 blue:31/255.0 alpha:1]

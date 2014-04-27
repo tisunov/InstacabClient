@@ -9,7 +9,7 @@
 #import "QuickDialog.h"
 #import "ICSignUpInfo.h"
 #import "ICSignUpFlowDelegate.h"
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 
 @interface ICCreateProfileDialog : QuickDialogController<QuickDialogEntryElementDelegate>
 @property (strong, nonatomic) ICSignUpInfo *signupInfo;

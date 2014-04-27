@@ -10,7 +10,7 @@
 #import "ICClientService.h"
 #import "ICLocationService.h"
 #import "QuickDialog.h"
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 #import "UIViewController+Location.h"
 
 @class ICLoginViewController;

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Bright Stripe. All rights reserved.
 //
 
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 #import "ICLocation.h"
 
 @protocol ICSearchViewDelegate <NSObject>
@@ -17,9 +17,15 @@
     UITableView *searchTableView;
     UISearchBar *searchBar;
     UISearchDisplayController *searchDisplayController;
+    
+    NSArray *foursquareVenues;
+    NSArray *googleAddresses;
 }
 
--(id)initWithCoordinates:(CLLocationCoordinate2D)coordinates;
+-(id)initWithLocation:(CLLocationCoordinate2D)coordinates;
+-(ICLocation *)locationAtIndexPath:(NSIndexPath *)indexPath;
+- (void)dismissSearchBar;
 
+@property (nonatomic, assign) BOOL includeNearbyResults;
 @property (nonatomic, weak) id<ICSearchViewDelegate> delegate;
 @end

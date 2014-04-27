@@ -19,8 +19,7 @@
 // http://patrickcrosby.com/2010/04/27/iphone-ipad-uisearchbar-uisearchdisplaycontroller-asynchronous-example.html
 
 @interface ICSearchViewController ()
-@property (strong, nonatomic) NSArray *foursquareVenues;
-@property (strong, nonatomic) NSArray *googleAddresses;
+
 @end
 
 @implementation ICSearchViewController {
@@ -35,13 +34,15 @@
     AFHTTPRequestOperationManager *_manager;
 }
 
--(id)initWithCoordinates:(CLLocationCoordinate2D)coordinates {
+-(id)initWithLocation:(CLLocationCoordinate2D)location {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
-        _nearCoordinates = coordinates;
-        
         _manager = [AFHTTPRequestOperationManager manager];
         _manager.responseSerializer = [AFJSONResponseSerializer serializer];
+        
+        self.includeNearbyResults = YES;
+
+        _nearCoordinates = location;
     }
     return self;
 }
@@ -92,9 +93,10 @@
     [allConstraints addObjectsFromArray:horizontalSearchBarConstraints];
     [allConstraints addObjectsFromArray:verticalSearchBarDataTableConstraints];
     
-    [[self view] addConstraints:allConstraints];
+    [self.view addConstraints:allConstraints];
     
-    [self loadNearbyPlaces];
+    if (self.includeNearbyResults)
+        [self performNoQuerySearch];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -162,6 +164,8 @@
 - (NSArray *)foursquareJSONToLocations:(NSDictionary *)JSON {
     NSMutableArray *locations = [NSMutableArray new];
     for (NSDictionary *venue in JSON[@"response"][@"venues"]) {
+        if ([venue[@"location"][@"address"] length] == 0) continue;
+        
         [locations addObject:[[ICLocation alloc] initWithFoursquareVenue:venue ]];
     }
     
@@ -209,7 +213,7 @@
     }];
 }
 
--(void)loadNearbyPlaces {
+-(void)performNoQuerySearch {
     [self showProgress];
     
     [_manager GET:@"https://api.foursquare.com/v2/venues/search"
@@ -229,7 +233,7 @@
              _overlayView.hidden = YES;
              
              _nearbyPlaces = [self foursquareJSONToLocations:JSON];
-             self.foursquareVenues = _nearbyPlaces;
+             foursquareVenues = _nearbyPlaces;
              
              [searchTableView reloadData];
           }
@@ -258,10 +262,10 @@
     switch (section) {
         case 0:
             // Google geocoder address
-            return self.googleAddresses.count > 0 ? @"АДРЕСА" : nil;
+            return googleAddresses.count > 0 ? @"АДРЕСА" : nil;
         case 1:
             // Foursquare venues
-            return self.foursquareVenues.count > 0 ? _headerTitle : nil;
+            return foursquareVenues.count > 0 ? _headerTitle : nil;
         default:
             return nil;
     }
@@ -282,9 +286,9 @@
 {
     switch (section) {
         case 0:
-            return self.googleAddresses.count;
+            return googleAddresses.count;
         case 1:
-            return self.foursquareVenues.count > 0 ? self.foursquareVenues.count + 1 : 0;
+            return foursquareVenues.count > 0 ? foursquareVenues.count + 1 : 0;
         default:
             return 0;
     }
@@ -293,15 +297,16 @@
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) return YES;
     
-    return indexPath.row < self.foursquareVenues.count;
+    return indexPath.row < foursquareVenues.count;
+}
+
+- (ICLocation *)locationAtIndexPath:(NSIndexPath *)indexPath {
+    NSArray *container = indexPath.section == 0 ? googleAddresses : foursquareVenues;
+    return (ICLocation *)container[indexPath.row];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSArray *container = indexPath.section == 0 ? self.googleAddresses : self.foursquareVenues;
-    
-    ICLocation *location = (ICLocation *)container[indexPath.row];
-    [self.delegate didSelectManualLocation:location];
-    
+    [self.delegate didSelectManualLocation:[self locationAtIndexPath:indexPath]];
     [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -323,7 +328,7 @@
 - (void)setupCell:(UITableViewCell *)cell {
     cell.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1.0];
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:16.0];
-    cell.textLabel.textColor = [UIColor colorWithRed:62/255.0 green:62/255.0 blue:62/255.0 alpha:1.0];
+    cell.textLabel.textColor = [UIColor colorWithRed:31/255.0 green:31/255.0 blue:31/255.0 alpha:1.0];
     cell.textLabel.highlightedTextColor = [UIColor colorWithWhite:1.0 alpha:1.0];
 
     UIView *selectionColor = [[UIView alloc] init];
@@ -333,7 +338,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1 && indexPath.row >= self.foursquareVenues.count) {
+    if (indexPath.section == 1 && indexPath.row >= foursquareVenues.count) {
         return [self attributionCellForTableView:tableView];
     }
     
@@ -347,24 +352,25 @@
             [self setupCell:cell];
         }
         
-        ICLocation *location = (ICLocation *)self.googleAddresses[indexPath.row];
-        cell.textLabel.text = location.fullAddress;
+        ICLocation *location = (ICLocation *)googleAddresses[indexPath.row];
+        cell.textLabel.text = [location formattedAddressWithCity:YES country:NO];
     }
     // Foursquare venues
     else if (indexPath.section == 1) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"VenueCell"];
         if(cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"VenueCell"];
+            cell.translatesAutoresizingMaskIntoConstraints = NO;
             
             [self setupCell:cell];
             cell.detailTextLabel.textColor = [UIColor colorWithRed:94/255.0 green:94/255.0 blue:94/255.0 alpha:1.0];
             cell.detailTextLabel.highlightedTextColor = [UIColor colorWithWhite:0.87 alpha:1.0];
         }
         
-        ICLocation *location = (ICLocation *)self.foursquareVenues[indexPath.row];
+        ICLocation *location = (ICLocation *)foursquareVenues[indexPath.row];
         
         cell.textLabel.text = location.name;
-        cell.detailTextLabel.text = location.streetAddress;
+        cell.detailTextLabel.text = [location formattedAddressWithCity:YES country:YES];
     }
     
     return cell;
@@ -376,48 +382,51 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBarLocal
 {
     [self showProgress];
+    [searchBar resignFirstResponder];
     
-    [[ICGoogleService sharedInstance] geocodeAddress:searchBarLocal.text
+    [self performQuerySearch];
+}
+
+- (void)performQuerySearch {
+    [[ICGoogleService sharedInstance] geocodeAddress:searchBar.text
                                              success:^(NSArray *locations) {
-                                                 self.googleAddresses = locations;
+                                                 googleAddresses = locations;
                                                  [self reloadSearchResults];
                                              }
                                              failure:^(NSError *error) {
-                                                 self.googleAddresses = @[];
+                                                 googleAddresses = @[];
                                              }
      ];
     
     [_manager GET:@"https://api.foursquare.com/v2/venues/search"
        parameters:@{@"ll": [NSString stringWithFormat:@"%f,%f", _nearCoordinates.latitude, _nearCoordinates.longitude],
-                   @"client_id": @"LYCPRBQO5IHY0SMMHIGT213S100HX3NGRASK0530UA2NCGLJ",
-                   @"client_secret": @"RMQ12C5UUDQY5NRXWJBLZOH3J1YZ1VGGCDMKB2LJCXES0OHW",
-                   @"limit": @(15),
-                   @"radius": @(20000),
-                   @"intent": @"checkin",
-                   @"locale": @"ru",
-                   @"query": searchBarLocal.text,
-                   @"v": [self formatDate]}
+                    @"client_id": @"LYCPRBQO5IHY0SMMHIGT213S100HX3NGRASK0530UA2NCGLJ",
+                    @"client_secret": @"RMQ12C5UUDQY5NRXWJBLZOH3J1YZ1VGGCDMKB2LJCXES0OHW",
+                    @"limit": @(15),
+                    @"radius": @(20000),
+                    @"intent": @"checkin",
+                    @"locale": @"ru",
+                    @"query": searchBar.text,
+                    @"v": [self formatDate]}
           success:^(AFHTTPRequestOperation *operation, id JSON) {
-             [self hideProgress];
-             
-             _headerTitle = @"МЕСТА";
-             
-             self.foursquareVenues = [self foursquareJSONToLocations:JSON];
-             [self reloadSearchResults];
+              [self hideProgress];
+              
+              _headerTitle = @"МЕСТА";
+              
+              foursquareVenues = [self foursquareJSONToLocations:JSON];
+              [self reloadSearchResults];
           }
           failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             NSLog(@"%@", error.localizedDescription);
-             [self hideProgress];
+              NSLog(@"%@", error.localizedDescription);
+              [self hideProgress];
           }
      ];
-    
-    [searchBar resignFirstResponder];
 }
 
 - (void)reloadSearchResults {
     [searchTableView reloadData];
     
-    BOOL hasResults = self.foursquareVenues.count > 0 || self.googleAddresses.count > 0;
+    BOOL hasResults = foursquareVenues.count > 0 || googleAddresses.count > 0;
     if (hasResults) {
         _overlayView.hidden = YES;
     }
@@ -439,7 +448,9 @@
     }];
 }
 
-- (void)searchBarCancelButtonClicked:(UISearchBar *)sb {
+- (void)dismissSearchBar {
+    if (!searchBar.showsCancelButton) return;
+    
     [searchBar setShowsCancelButton:NO animated:YES];
     
     [UIView animateWithDuration:0.25 animations:^(void){
@@ -452,10 +463,14 @@
     
     searchBar.text = @"";
     [searchBar resignFirstResponder];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)sb {
+    [self dismissSearchBar];
     
     _headerTitle = @"ПОБЛИЗОСТИ";
-    self.foursquareVenues = _nearbyPlaces;
-    self.googleAddresses = @[];
+    foursquareVenues = _nearbyPlaces;
+    googleAddresses = @[];
     
     [searchTableView reloadData];
     

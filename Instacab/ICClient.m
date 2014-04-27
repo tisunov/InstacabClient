@@ -34,7 +34,8 @@
         @"state": @"state",
         @"tripPendingRating": @"tripPendingRating",
         @"paymentProfile": @"paymentProfile",
-        @"hasConfirmedMobile": @"hasConfirmedMobile"
+        @"hasConfirmedMobile": @"hasConfirmedMobile",
+        @"lastFareEstimate": @"lastFareEstimate"
     }];
 }
 

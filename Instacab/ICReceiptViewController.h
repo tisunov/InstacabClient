@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EDStarRating.h"
-#import "UIViewController+TitleLabelAttritbutes.h"
+#import "UIViewController+TitleLabel.h"
 
 @interface ICReceiptViewController : UIViewController<EDStarRatingProtocol>
 @property (strong, nonatomic) IBOutlet UILabel *timestampLabel;

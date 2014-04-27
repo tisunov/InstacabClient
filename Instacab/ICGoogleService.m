@@ -107,7 +107,7 @@ NSString * const kSensorParam = @"true";
                   for(NSDictionary *address in results) {
                       // Got an address!
                       if ([[address[@"types"] firstObject] isEqualToString:@"street_address"]) {
-                          [locations addObject:[[ICLocation alloc] initWithAddress:address]];
+                          [locations addObject:[[ICLocation alloc] initWithGoogleAddress:address]];
                       }
                   }
                   success(locations);

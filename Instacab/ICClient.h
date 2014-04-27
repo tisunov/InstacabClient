@@ -27,6 +27,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong, readonly) ICPaymentProfile *paymentProfile;
 @property (nonatomic, assign) ICClientState state;
 @property (nonatomic, strong, readonly) ICTrip *tripPendingRating;
+@property (nonatomic, copy, readonly) NSString *lastFareEstimate;
 
 // Computed properties
 @property (readonly) BOOL cardPresent;
