@@ -391,7 +391,6 @@
     [[ICGoogleService sharedInstance] geocodeAddress:searchBar.text
                                              success:^(NSArray *locations) {
                                                  googleAddresses = locations;
-                                                 [self reloadSearchResults];
                                              }
                                              failure:^(NSError *error) {
                                                  googleAddresses = @[];

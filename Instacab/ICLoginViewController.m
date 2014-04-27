@@ -106,7 +106,7 @@
     if (![self locationServicesEnabled]) return;
     
     if (![ICClientService sharedInstance].isOnline) {
-        [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Сети" message:@"Нет сетевого подключения." cancelButtonTitle:@"OK"];
+        [[UIApplication sharedApplication] showAlertWithTitle:@"Отсутствует подключение к сети" message:@"Проверьте свое подключение к сети и повторите попытку." cancelButtonTitle:@"OK"];
         
         // Analytics
         [_clientService trackError:@{@"type": @"loginNetworkOffline"}];
@@ -131,7 +131,7 @@
                                // Analytics
                                [_clientService trackError:@{@"type": @"loginNetworkError"}];
                                
-                               [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка сети" message:@"Невозможно подключиться к серверу." cancelButtonTitle:@"OK"];
+                               [[UIApplication sharedApplication] showAlertWithTitle:@"Нет соединения с сервером Instacab" message:@"Проверьте свое подключение к сети и повторите попытку." cancelButtonTitle:@"OK"];
                            }];
 }
 
