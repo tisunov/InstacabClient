@@ -169,12 +169,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     UIBarButtonItem *exitButton =
         [[UIBarButtonItem alloc] initWithTitle:@"ВЫХОД" style:UIBarButtonItemStylePlain target:self action:@selector(showAccountActionSheet)];
     
-    UIFont *font = [UIFont systemFontOfSize:10];
-    NSDictionary *attributes = @{
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
-    };
-    [exitButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    [self setupBarButton:exitButton];
     
     self.navigationItem.leftBarButtonItem = exitButton;
 }
@@ -183,12 +178,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     UIBarButtonItem *cancelButton =
         [[UIBarButtonItem alloc] initWithTitle:@"ОТМЕНА" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPickupRequestConfirmation)];
     
-    UIFont *font = [UIFont systemFontOfSize:10];
-    NSDictionary *attributes = @{
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
-    };
-    [cancelButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    [self setupBarButton:cancelButton];
     
     self.navigationItem.leftBarButtonItem = cancelButton;
 }
@@ -253,6 +243,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
              style:UIBarButtonItemStylePlain
              target:self
              action:@selector(showTripActionSheet)];
+    
+    [self setupBarButton:self.navigationItem.rightBarButtonItem];
 }
 
 -(void)hideTripCancelButton {
@@ -365,6 +357,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                                             longitude:39.211667
                                                                  zoom:kDefaultMapZoom];
     _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
+    _mapView.delegate = self;
     // to account for address view
     _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
     _mapView.myLocationEnabled = YES;
@@ -381,6 +374,30 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeDragOnMap:)];
     _mapView.gestureRecognizers = @[panRecognizer, tapRecognizer];
 }
+
+- (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
+    if (_draggingPin) return;
+    
+    BOOL centeredOnMyLocation = CLCOORDINATES_EQUAL(position.target, _locationService.coordinates);
+    BOOL centerMapButtonVisible = !_centerMapButton.hidden;
+    
+    if (!centeredOnMyLocation && !centerMapButtonVisible) {
+        _centerMapButton.hidden = NO;
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             _centerMapButton.alpha = 1.0;
+                         }];
+    }
+    else if (centeredOnMyLocation && centerMapButtonVisible) {
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             _centerMapButton.alpha = 0.0;
+                         } completion:^(BOOL finished) {
+                             _centerMapButton.hidden = YES;
+                         }];
+    }
+}
+
 
 - (void)attachMyLocationButtonTapHandler {
     [_centerMapButton addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];

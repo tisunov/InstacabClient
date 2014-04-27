@@ -18,7 +18,7 @@
 #import "ICVerifyMobileViewController.h"
 #import "ICSearchViewController.h"
 
-@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICVerifyMobileDelegate, ICSearchViewDelegate>
+@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICVerifyMobileDelegate, ICSearchViewDelegate, GMSMapViewDelegate>
 - (IBAction)requestPickup:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *view;

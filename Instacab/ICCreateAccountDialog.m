@@ -98,10 +98,12 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
 //    self.quickDialogTableView.contentInset = UIEdgeInsetsMake(-15, 0, 0, 0);
     
     UIBarButtonItem *back = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    [self setupBarButton:back];
     self.navigationItem.leftBarButtonItem = back;
 
     UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(next)];
     next.enabled = NO;
+    [self setupBarButton:next];
     self.navigationItem.rightBarButtonItem = next;
     
     [_clientService trackScreenView:@"Create Account"];

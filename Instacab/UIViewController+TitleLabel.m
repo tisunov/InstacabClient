@@ -9,7 +9,7 @@
 #import "UIViewController+TitleLabel.h"
 #import "UIColor+Colours.h"
 
-@implementation UIViewController (TitleLabelAttritbutes)
+@implementation UIViewController (TitleLabel)
 
 -(void)setTitleText:(NSString *)titleText {
     NSDictionary *attributes = @{
@@ -41,6 +41,28 @@
 
 -(NSString *)titleText {
     return self.title;
+}
+
+-(void)setupBarButton:(UIBarButtonItem *)button {
+    UIFont *font = [UIFont systemFontOfSize:10];
+    NSDictionary *attributes = @{ NSFontAttributeName: font,
+                                  NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1] };
+
+    button.title = [button.title uppercaseString];
+    [button setTitleTextAttributes:attributes forState:UIControlStateNormal];
+}
+
+-(void)setupCallToActionBarButton:(UIBarButtonItem *)button {
+    UIFont *font = [UIFont boldSystemFontOfSize:12];
+    NSDictionary *attributes = @{ NSFontAttributeName: font,
+                                  NSForegroundColorAttributeName:[UIColor colorWithRed:46/255.0 green:167/255.0 blue:31/255.0 alpha:1] };
+    [button setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
+    attributes = @{ NSFontAttributeName: font,
+                    NSForegroundColorAttributeName:[UIColor lightGrayColor] };
+    [button setTitleTextAttributes:attributes forState:UIControlStateDisabled];
+    
+    button.title = [button.title uppercaseString];
 }
 
 @end

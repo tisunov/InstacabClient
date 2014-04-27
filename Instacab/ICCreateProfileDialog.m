@@ -56,10 +56,12 @@
     self.titleText = @"ПРОФИЛЬ";
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    [self setupBarButton:cancel];
     self.navigationItem.leftBarButtonItem = cancel;
     
     UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(linkCard)];
     next.enabled = NO;
+    [self setupBarButton:next];
     self.navigationItem.rightBarButtonItem = next;
     
     [[ICClientService sharedInstance] trackScreenView:@"Create Profile"];

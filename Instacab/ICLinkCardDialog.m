@@ -75,10 +75,12 @@
     self.view.backgroundColor = [UIColor colorFromHexString:@"#efeff4"];
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+    [self setupBarButton:cancel];
     self.navigationItem.leftBarButtonItem = cancel;
     
     UIBarButtonItem *signUp = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(signupClient)];
     signUp.enabled = NO;
+    [self setupCallToActionBarButton:signUp];
     self.navigationItem.rightBarButtonItem = signUp;
     
     _cardioButton.tintColor = [UIColor pastelBlueColor];

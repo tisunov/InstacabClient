@@ -70,11 +70,13 @@
     self.titleText = @"ВХОД";
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancelPressed)];
+    [self setupBarButton:cancel];
     self.navigationItem.leftBarButtonItem = cancel;
     
     UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Вход" style:UIBarButtonItemStyleDone target:self action:@selector(login)];
     next.tintColor = [UIColor colorFromHexString:@"#27AE60"];
     next.enabled = NO;
+    [self setupCallToActionBarButton:next];
     self.navigationItem.rightBarButtonItem = next;
     
     [_clientService logSignInPageView];

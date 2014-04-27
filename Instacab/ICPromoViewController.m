@@ -53,32 +53,13 @@
     _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"promo_icon_grey.png"]];
     
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"НАЗАД" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
+    [self setupBarButton:backButton];
     self.navigationItem.leftBarButtonItem = backButton;
-    
-    UIFont *font = [UIFont systemFontOfSize:10];
-    NSDictionary *attributes = @{
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1],
-    };
-    [backButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
     
     UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"ПРИМЕНИТЬ" style:UIBarButtonItemStyleDone target:self action:@selector(applyPromo)];
     applyButton.enabled = NO;
+    [self setupCallToActionBarButton:applyButton];
     self.navigationItem.rightBarButtonItem = applyButton;
-    
-    font = [UIFont boldSystemFontOfSize:10];
-    attributes = @{
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName:[UIColor colorWithRed:46/255.0 green:167/255.0 blue:31/255.0 alpha:1]
-    };
-    [applyButton setTitleTextAttributes:attributes forState:UIControlStateNormal];
-    
-    attributes = @{
-        NSFontAttributeName: font,
-        NSForegroundColorAttributeName:[UIColor lightGrayColor]
-    };
-    [applyButton setTitleTextAttributes:attributes forState:UIControlStateDisabled];
-
 }
 
 - (void)applyPromo {

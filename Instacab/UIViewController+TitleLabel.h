@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UIViewController (TitleLabelAttritbutes)
+@interface UIViewController (TitleLabel)
 @property (nonatomic, copy) NSString* titleText;
+
+-(void)setupBarButton:(UIBarButtonItem *)button;
+-(void)setupCallToActionBarButton:(UIBarButtonItem *)button;
 @end
