@@ -64,7 +64,7 @@ NSString * const kRequestMinimumEtaTemplate = @"примерно %@ до при�
 CGFloat const kDefaultMapZoom = 15.0f;
 CGFloat const kDriverInfoPanelHeight = 75.0f;
 
-#define EPSILON 0.000001
+#define EPSILON 0.000002
 #define CLCOORDINATES_EQUAL( coord1, coord2 ) ((fabs(coord1.latitude - coord2.latitude) <= EPSILON) && (fabs(coord1.longitude - coord2.longitude) <= EPSILON))
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -98,7 +98,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self showExitNavbarButton];
     
-    [self addGoogleMapView];
+    [self setupMapView];
     [self addPickupPositionPin];
     [self setupAddressBar];
     [self setupDriverPanel];
@@ -350,11 +350,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_mapView addSubview:_greenPinView];
 }
 
-- (void)addGoogleMapView {
+- (void)setupMapView {
     // Create a GMSCameraPosition that tells the map to display the
     // coordinate at zoom level.
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:51.673889
-                                                            longitude:39.211667
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:_locationService.coordinates.latitude
+                                                            longitude:_locationService.coordinates.longitude
                                                                  zoom:kDefaultMapZoom];
     _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
     _mapView.delegate = self;
@@ -376,7 +376,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
-    if (_draggingPin) return;
+    if (_draggingPin || _justStarted) return;
     
     BOOL centeredOnMyLocation = CLCOORDINATES_EQUAL(position.target, _locationService.coordinates);
     BOOL centerMapButtonVisible = !_centerMapButton.hidden;
@@ -388,16 +388,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                              _centerMapButton.alpha = 1.0;
                          }];
     }
-    else if (centeredOnMyLocation && centerMapButtonVisible) {
-        [UIView animateWithDuration:0.25
-                         animations:^{
-                             _centerMapButton.alpha = 0.0;
-                         } completion:^(BOOL finished) {
-                             _centerMapButton.hidden = YES;
-                         }];
-    }
+    else if (centeredOnMyLocation && centerMapButtonVisible)
+        [self hideCenterMapButton];
 }
 
+- (void)hideCenterMapButton {
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         _centerMapButton.alpha = 0.0;
+                     } completion:^(BOOL finished) {
+                         _centerMapButton.hidden = YES;
+                     }];
+}
 
 - (void)attachMyLocationButtonTapHandler {
     [_centerMapButton addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -513,6 +515,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)myLocationTapped:(id)sender {
     if (!CLCOORDINATES_EQUAL(_mapView.camera.target, _mapView.myLocation.coordinate))
         [self findAddressAndNearbyCabsAtCameraTarget:NO];
+
+    [self hideCenterMapButton];
     
     [_mapView animateToLocation:_locationService.coordinates];
 }

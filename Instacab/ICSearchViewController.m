@@ -113,6 +113,12 @@
     searchBar.searchBarStyle = UISearchBarStyleMinimal;
     searchBar.delegate = self;
     [self.view addSubview:searchBar];
+    
+    // Rename searchBar.cancelButton
+    id appearance = [UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil];
+    [appearance setTitle:@"Отмена"];    
+    [self setupBarButton:appearance];
+
 }
 
 -(void)cancel {

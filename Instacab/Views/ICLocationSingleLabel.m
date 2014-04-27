@@ -34,7 +34,7 @@
         _addressLabel.minimumScaleFactor = 0.6;
         [self addSubview:_addressLabel];
 
-        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(37.0, 4.0, 320 - 44.0, 21.0)];
+        _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(37.0, 5.0, 320 - 44.0, 21.0)];
         _nameLabel.adjustsFontSizeToFitWidth = YES;
         _nameLabel.font = [UIFont systemFontOfSize:16.0];
         _nameLabel.minimumScaleFactor = 0.6;
@@ -80,7 +80,7 @@
         
         _addressLabel.text = [location formattedAddressWithCity:YES country:NO];
         _addressLabel.font = [UIFont systemFontOfSize:12.0];
-        _addressLabel.y = 22.0;
+        _addressLabel.y = 23.0;
     }
     else {
         _nameLabel.hidden = YES;
