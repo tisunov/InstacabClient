@@ -24,24 +24,24 @@
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </imageView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.90000000000000002" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="INSTACAB" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tJ4-TX-KUy">
-                    <rect key="frame" x="55" y="80" width="210" height="48"/>
+                    <rect key="frame" x="57" y="80" width="207" height="48"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="kNK-70-Zvz"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="Marion-Bold" family="Marion" pointSize="40"/>
+                    <fontDescription key="fontDescription" name="Verdana" family="Verdana" pointSize="40"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Личный Водитель Каждому" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l16-H9-sit">
-                    <rect key="frame" x="35" y="220" width="250" height="22"/>
+                    <rect key="frame" x="35" y="240" width="250" height="22"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.89999999999999991" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Закажите машину с вашего смартфона, легкая оплата без наличных и суеты. Регистрируйтесь сейчас!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="238" translatesAutoresizingMaskIntoConstraints="NO" id="aa7-HN-NMu">
-                    <rect key="frame" x="41" y="244" width="238" height="77"/>
+                    <rect key="frame" x="41" y="264" width="238" height="77"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -108,8 +108,9 @@
                 <constraint firstItem="o2X-ng-ZqV" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="15" id="hHn-gG-hXH"/>
                 <constraint firstItem="tJ4-TX-KUy" firstAttribute="centerX" secondItem="KOO-kU-Fm2" secondAttribute="centerX" id="kLK-cV-bTB"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="o2X-ng-ZqV" secondAttribute="bottom" constant="47" id="kQk-1H-CC7"/>
+                <constraint firstItem="KOO-kU-Fm2" firstAttribute="top" secondItem="aa7-HN-NMu" secondAttribute="bottom" constant="30" id="qvD-0a-efM"/>
                 <constraint firstAttribute="trailing" secondItem="gUc-uM-k3o" secondAttribute="trailing" constant="17" id="sUc-da-5zu"/>
-                <constraint firstItem="KOO-kU-Fm2" firstAttribute="top" secondItem="aa7-HN-NMu" secondAttribute="bottom" constant="50" id="saF-Da-s9W"/>
+                <constraint firstItem="KOO-kU-Fm2" firstAttribute="top" relation="lessThanOrEqual" secondItem="aa7-HN-NMu" secondAttribute="bottom" priority="400" constant="50" id="saF-Da-s9W"/>
                 <constraint firstAttribute="centerX" secondItem="aa7-HN-NMu" secondAttribute="centerX" id="tpL-BY-Hgr"/>
                 <constraint firstItem="tJ4-TX-KUy" firstAttribute="centerX" secondItem="9Jg-Yu-v26" secondAttribute="centerX" id="yi7-UC-yLq"/>
             </constraints>
