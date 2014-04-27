@@ -56,12 +56,22 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     _fareEstimateView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
     [self.view addSubview:_fareEstimateView];
 
+    UISwipeGestureRecognizer *swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleFareEstimateSwipe:)];
+    swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+    _fareEstimateView.gestureRecognizers = @[swipeRecognizer];
+    
     [_fareEstimateView autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:0];
     [_fareEstimateView autoPinEdgeToSuperviewEdge:ALEdgeBottom withInset:0];
     [_fareEstimateView autoMatchDimension:ALDimensionWidth toDimension:ALDimensionWidth ofView:self.view];
     _estimateViewLeftConstraint = [_fareEstimateView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:self.view.bounds.size.width relation:NSLayoutRelationLessThanOrEqual];
     
     [self setupFareEstimateView];
+}
+
+-(void)handleFareEstimateSwipe:(UISwipeGestureRecognizer *)swipeRecognizer {
+    if (swipeRecognizer.state == UIGestureRecognizerStateRecognized) {
+        [self changeDestination:nil];
+    }
 }
 
 - (void)setupFareEstimateView {

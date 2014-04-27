@@ -371,7 +371,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeTapOnMap:)];
     
     // use own gesture recognizer to geocode location only once user stops panning
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeDragOnMap:)];
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(recognizeDragOnMap:)];
     _mapView.gestureRecognizers = @[panRecognizer, tapRecognizer];
 }
 
