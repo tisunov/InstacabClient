@@ -8,7 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "ICLoginViewController.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "UINavigationController+Animation.h"
 #import "ReactiveCocoa/ReactiveCocoa.h"
 #import "MBProgressHUD.h"

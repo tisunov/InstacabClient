@@ -7,7 +7,7 @@
 //
 
 #import "UIViewController+TitleLabel.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 
 @implementation UIViewController (TitleLabel)
 

@@ -9,7 +9,7 @@
 #import "ICLinkCardDialog.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MBProgressHud+Global.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "ICClientService.h"
 #import "PKTextField.h"
 #import "UIApplication+Alerts.h"

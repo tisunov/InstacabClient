@@ -7,7 +7,7 @@
 //
 
 #import "ICVerifyMobileViewController.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "ICClientService.h"
 #import "ICClient.h"
 #import "AKNumericFormatter.h"

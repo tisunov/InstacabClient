@@ -7,7 +7,7 @@
 //
 
 #import "ICFeedbackViewController.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIViewController+TitleLabel.h"
 #import "ICClientService.h"
@@ -117,7 +117,7 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
 
 - (void)showProgress {
     MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:[UIApplication sharedApplication].keyWindow];
-    hud.labelText = @"Отправляю";
+    hud.labelText = @"Отправка";
     hud.removeFromSuperViewOnHide = YES;
     
     [[UIApplication sharedApplication].keyWindow addSubview:hud];

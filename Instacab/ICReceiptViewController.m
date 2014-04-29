@@ -9,7 +9,7 @@
 #import "ICReceiptViewController.h"
 #import "ICClient.h"
 #import "ICClientService.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "ICFeedbackViewController.h"
 
 @interface ICReceiptViewController ()
@@ -35,6 +35,8 @@
     self.titleText = @"КВИТАНЦИЯ";
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBarHidden = NO;
+
+    _fareLabel.text = @"";
     
     _billingActivityView.color = [UIColor grayColor];
     
@@ -62,17 +64,8 @@
     // Show progress while fare is being billed to card
     if (!trip.billingComplete) {
         [[ICClient sharedInstance] addObserver:self forKeyPath:@"tripPendingRating" options:NSKeyValueObservingOptionNew context:nil];
-        
-        CATransition *transition = [CATransition animation];
-        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionFade;
-        transition.duration = 0.35;
-        transition.fillMode = kCAFillModeBoth;
-        
-        _fareLabel.text = @"";
-        [_fareLabel.layer addAnimation:transition forKey:@"kCATransitionFade"];
-        
-        _billingStatusLabel.text = [@"Загружаю тариф..." uppercaseString];
+
+        _billingStatusLabel.text = [@"Загрузка тарифа..." uppercaseString];
         
         _starRating.enabled = NO;
         [_billingActivityView startAnimating];
@@ -86,14 +79,23 @@
     // LATER: This should be handled by server backend => Trip.fareString
     ICTrip *trip = [ICClient sharedInstance].tripPendingRating;
 
-    _fareLabel.text = [NSString stringWithFormat:@"%@ р.", trip.fare];
+    CATransition *transition = [CATransition animation];
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionFade;
+    transition.duration = 0.4;
+    transition.fillMode = kCAFillModeBoth;
+    
+    [_fareLabel.layer addAnimation:transition forKey:@"kCATransitionFade"];
+    [_billingStatusLabel.layer addAnimation:transition forKey:@"kCATransitionFade"];
+    
+    self.fareLabel.text = [NSString stringWithFormat:@"%@ р.", trip.fare];
     
     // TODO: Позже добавить N/A - Недоступно, когда произошла ошибка списание средств с карты
     if (trip.paidByCard.boolValue) {
-        _billingStatusLabel.text = [NSString stringWithFormat:@"ВСЕГО СПИСАНО С КАРТЫ: %d р.", [trip.fareBilledToCard intValue]];
+        self.billingStatusLabel.text = [NSString stringWithFormat:@"ВСЕГО СПИСАНО С КАРТЫ: %d р.", [trip.fareBilledToCard intValue]];
     }
     else {
-        _billingStatusLabel.text = @"СТОИМОСТЬ К ОПЛАТЕ НАЛИЧНЫМИ";
+        self.billingStatusLabel.text = @"СТОИМОСТЬ К ОПЛАТЕ НАЛИЧНЫМИ";
     }
     
     _starRating.enabled = YES;

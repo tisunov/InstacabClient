@@ -10,7 +10,7 @@
 #import "ICLoginViewController.h"
 #import "ICCreateAccountDialog.h"
 #import <QuartzCore/QuartzCore.h>
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "UINavigationController+Animation.h"
 #import "ICLinkCardDialog.h"
 #import "ICRequestViewController.h"

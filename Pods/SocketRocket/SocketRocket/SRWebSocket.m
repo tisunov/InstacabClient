@@ -361,7 +361,7 @@ static __strong NSData *CRLFCRLF;
         dispatch_sync( blockQueue, ^{} ); // block until the work queue is empty
         sr_dispatch_release(blockQueue);
     }
-    
+
     if (_receivedHTTPHeaders) {
         CFRelease(_receivedHTTPHeaders);
         _receivedHTTPHeaders = NULL;

@@ -16,7 +16,7 @@
 #import "ICClientService.h"
 #import "UIApplication+Alerts.h"
 #import "MBProgressHud+Global.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import <ObjectiveSugar/ObjectiveSugar.h>
 
 @implementation QCustomAppearance

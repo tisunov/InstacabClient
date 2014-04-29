@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <GoogleMaps/GoogleMaps.h>
 #import <GoogleMaps/GMSCameraPosition.h>
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "ICHighlightButton.h"
 #import "ICGoogleService.h"
 #import "ICClientService.h"

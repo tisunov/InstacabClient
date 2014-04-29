@@ -10,7 +10,7 @@
 #import "ICClientService.h"
 #import "UIView+AutoLayout.h"
 #import "ICHighlightButton.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Views/ICLocationLabelView.h"
 
@@ -96,12 +96,17 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     _descriptionLabel.preferredMaxLayoutWidth = 220;
     [_fareEstimateView addSubview:_descriptionLabel];
     
-    ICHighlightButton *newDestinationButton = [[ICHighlightButton alloc] initForAutoLayout];
+    UIButton *newDestinationButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    newDestinationButton.translatesAutoresizingMaskIntoConstraints = NO;
     newDestinationButton.layer.cornerRadius = 3.0;
+    newDestinationButton.layer.borderWidth = 1.0;
+    newDestinationButton.layer.borderColor = [UIColor blueberryColor].CGColor;
     newDestinationButton.titleLabel.font = [UIFont systemFontOfSize:15];
-    newDestinationButton.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
-    newDestinationButton.normalColor = [UIColor colorWithRed:87/255.0 green:87/255.0 blue:101/255.0 alpha:1];
-    newDestinationButton.highlightedColor = [UIColor blueberryColor];
+    newDestinationButton.tintColor = [UIColor blueberryColor];
+//    [newDestinationButton setTitleColor:[UIColor blueberryColor] forState:UIControlStateNormal];
+//    newDestinationButton.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
+//    newDestinationButton.normalColor = [UIColor colorWithRed:87/255.0 green:87/255.0 blue:101/255.0 alpha:1];
+//    newDestinationButton.highlightedColor = [UIColor blueberryColor];
     [newDestinationButton setTitle:@"НОВЫЙ ПУНКТ НАЗНАЧЕНИЯ" forState:UIControlStateNormal];
     [newDestinationButton addTarget:self action:@selector(changeDestination:) forControlEvents:UIControlEventTouchUpInside];
     [_fareEstimateView addSubview:newDestinationButton];

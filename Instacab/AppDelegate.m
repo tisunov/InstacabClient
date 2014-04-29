@@ -12,7 +12,7 @@
 #import "ICWelcomeViewController.h"
 #import "ICDispatchServer.h"
 #import "ICLocationService.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "UIApplication+Alerts.h"
 #import "TargetConditionals.h"
 #import "ICClient.h"

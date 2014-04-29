@@ -10,7 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <sys/sysctl.h>
 #import "ICVehiclePoint.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "ICReceiptViewController.h"
 #import "ICFeedbackViewController.h"
 #import "MBProgressHUD.h"
@@ -57,7 +57,7 @@ NSString * const kConfirmPickupLocation = @"Заказать Instacab";
 NSString * const kSelectPickupLocation = @"Выбрать место посадки";
 
 NSString * const kProgressRequestingPickup = @"Выполняется заказ";
-NSString * const kProgressCancelingTrip = @"Отменяю...";
+NSString * const kProgressCancelingTrip = @"Отмена заказа";
 NSString * const kTripEtaTemplate = @"ПРИЕДЕТ ПРИМЕРНО ЧЕРЕЗ %@ %@";
 NSString * const kRequestMinimumEtaTemplate = @"примерно %@ до приезда машины";
 
@@ -252,7 +252,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)cancelPickupRequestConfirmation {
-    [self cancelConfirmation:YES];
+    [self cancelConfirmation:YES showPickup:YES];
 }
 
 -(void)showTripActionSheet {
@@ -473,7 +473,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }];
 }
 
-- (void)showPickupView {
+- (void)transitionFromConfirmViewToPickupView {
     _pickupView.y = [UIScreen mainScreen].bounds.size.height;
     _pickupView.alpha = 1;
     
@@ -485,7 +485,21 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }];
 }
 
-- (void)cancelConfirmation:(BOOL)resetZoom {
+- (void)transitionFromDriverViewToPickupView {
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    
+    _pickupView.y = screenBounds.size.height;
+    _pickupView.alpha = 1;
+    
+    [UIView animateWithDuration:0.35 animations:^(void){
+        // Slide up
+        _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
+        // Slide down
+        _driverView.alpha = 0;
+    }];
+}
+
+- (void)cancelConfirmation:(BOOL)resetZoom showPickup:(BOOL)showPickup {
     _readyToRequest = NO;
     
 //    _mapView.settings.myLocationButton = YES;
@@ -493,14 +507,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.titleText = @"INSTACAB";
     [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
     
-    if (resetZoom) {
+    if (resetZoom)
         [_mapView animateToZoom:kDefaultMapZoom];
-    }
+
     [self showExitNavbarButton];
     
     [self hideFog];
     
-    [self showPickupView];
+    if (showPickup)
+        [self transitionFromConfirmViewToPickupView];
 }
 
 //- (void)moveMapToPosition: (CLLocationCoordinate2D) coordinate {
@@ -567,7 +582,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // First tap on the map returns to Pre-Request state
     if (_readyToRequest) {
         NSLog(@"Return UI state to 'Looking'");
-        [self cancelConfirmation:YES];
+        [self cancelConfirmation:YES showPickup:YES];
     }
 }
 
@@ -786,8 +801,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     // Request pickup
     [_clientService requestPickupAt:self.pickupLocation];
-    
-    [self cancelConfirmation:NO];
 }
 
 - (void)showVerifyMobileDialog {
@@ -853,18 +866,23 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl] placeholderImage:[UIImage imageNamed:@"driver_placeholder"]];
 }
 
-- (void)showDriverPanel {
+- (void)transitionFromConfirmPickupViewToDriverView {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     float driverPanelY = screenBounds.size.height - kDriverInfoPanelHeight;
 
     // if already shown
     if (driverPanelY == _driverView.frame.origin.y) return;
 
+    [self cancelConfirmation:NO showPickup:NO];
+    
     [self loadDriverDetails];
     
+    _driverView.y = screenBounds.size.height;
+    _driverView.alpha = 1;
+    
     [UIView animateWithDuration:0.35 animations:^(void){
-        // Slide down
-        _pickupView.y = screenBounds.size.height;
+        // Fade out
+        _confirmPickupView.alpha = 0;
         // Slide up
         _driverView.y = driverPanelY;
     }];
@@ -959,20 +977,20 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     switch (driver.state) {
         case SVDriverStateArrived:
             [self updateStatusLabel:@"Ваш InstaCab подъезжает" withETA:NO];
-            [self showDriverPanel];
+            [self transitionFromConfirmPickupViewToDriverView];
             [self updateVehiclePosition];
             break;
 
         case SVDriverStateAccepted:
             [self updateStatusLabel:@"Водитель подтвердил заказ и в пути" withETA:YES];
-            [self showDriverPanel];
+            [self transitionFromConfirmPickupViewToDriverView];
             [self updateVehiclePosition];
             break;
 
         // TODO: Показать и скрыть статус через 6 секунд совсем alpha => 0
         case SVDriverStateDrivingClient:
             [self updateStatusLabel:@"Наслаждайтесь поездкой!" withETA:NO];
-            [self showDriverPanel];
+            [self transitionFromConfirmPickupViewToDriverView];
             [self updateVehiclePosition];
             break;
             
@@ -1084,6 +1102,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             break;
 
         case SVMessageTypePickupCanceled:
+            [self cancelConfirmation:NO showPickup:YES];
+            
             [[UIApplication sharedApplication] showAlertWithTitle:@"Заказ Отменен" message:message.reason cancelButtonTitle:@"OK"];
             break;
             
@@ -1104,22 +1124,22 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_clientService ping:coordinates reason:aReason success:nil failure:nil];
 }
 
-- (void)showPickupPanel {
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    
-    [UIView animateWithDuration:0.35 animations:^(void){
-        // Slide up
-        _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
-        // Slide down
-        _driverView.y = screenBounds.size.height;
-    }];
-}
+//- (void)showPickupPanel {
+//    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+//    
+//    [UIView animateWithDuration:0.35 animations:^(void){
+//        // Slide up
+//        _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
+//        // Slide down
+//        _driverView.y = screenBounds.size.height;
+//    }];
+//}
 
 -(void)setupForLooking {
     NSLog(@"setupForLooking");
 
     self.titleText = @"INSTACAB";
-    [self showPickupPanel];
+    [self transitionFromDriverViewToPickupView];
     
     // Clear all markers and add pickup marker
     _pickupLocationMarker.map = nil;

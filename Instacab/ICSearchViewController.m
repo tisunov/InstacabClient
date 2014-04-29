@@ -7,7 +7,7 @@
 //
 
 #import "ICSearchViewController.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "UIImageView+AFNetworking.h"
 #import <QuartzCore/QuartzCore.h>
