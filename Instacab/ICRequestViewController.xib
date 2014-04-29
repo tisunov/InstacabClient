@@ -41,7 +41,7 @@
                     <rect key="frame" x="20" y="58" width="280" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <color key="backgroundColor" red="0.2413105995" green="0.76225685590000003" blue="0.38909753860000001" alpha="1" colorSpace="calibratedRGB"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
                     <state key="normal" title="ЗАКАЗАТЬ МАШИНУ">

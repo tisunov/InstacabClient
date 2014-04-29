@@ -14,7 +14,7 @@
 -(void)setTitleText:(NSString *)titleText {
     NSDictionary *attributes = @{
         NSForegroundColorAttributeName:[UIColor colorWithRed:0.25098 green:0.247059 blue:0.235294 alpha:1],
-        NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:16.0],
+        NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Light" size:17.0],
 //        NSKernAttributeName: @1.0f,
     };
     UILabel *titleLabel = ((UILabel *)self.navigationItem.titleView);
@@ -50,6 +50,10 @@
 
     button.title = [button.title uppercaseString];
     [button setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
+    attributes = @{ NSFontAttributeName: font,
+                    NSForegroundColorAttributeName:[UIColor lightGrayColor] };
+    [button setTitleTextAttributes:attributes forState:UIControlStateDisabled];
 }
 
 -(void)setupCallToActionBarButton:(UIBarButtonItem *)button {

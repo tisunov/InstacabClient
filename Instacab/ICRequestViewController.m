@@ -417,7 +417,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)zoomMapForConfirmationAtCoordinate:(CLLocationCoordinate2D)coordinate {
-    GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinate zoom:19];
+    GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinate zoom:17];
     [_mapView animateWithCameraUpdate:update];
 }
 

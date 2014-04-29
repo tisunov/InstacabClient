@@ -138,7 +138,7 @@ float const kPaymentProfileTimeout = 15.0f;
     [self trackEvent:@"Log In" params:nil]; 
 }
 
-// TODO: Добавить (reason=initialPingFailed), (reason=locationServicesDisabled)
+// TODO: Добавить (reason=initialPingFailed), (reason=locationServicesDisabled), reason=userInitiated
 -(void)logOut {
     // Don't reconnect after logout
     self.dispatchServer.maintainConnection = NO;
