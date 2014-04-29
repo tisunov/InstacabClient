@@ -104,7 +104,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self setupDriverPanel];
 
 //    _pickupView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
-    [self setViewTopShadow:_pickupView];
+//    [self setViewTopShadow:_pickupView];
     [self setViewBottomShadow:_statusView];
     
     _buttonContainerView.layer.borderColor = [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1].CGColor;
