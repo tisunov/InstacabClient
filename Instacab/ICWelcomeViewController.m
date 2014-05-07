@@ -302,9 +302,9 @@
                                
                                [self signInClient:message.client];
                                
-                               [_clientService requestMobileConfirmation:nil];
+//                               [_clientService requestMobileConfirmation:nil];
                                
-                               [self performSelector:@selector(showVerifyMobileAlert) withObject:nil afterDelay:9.0f];
+//                               [self performSelector:@selector(showVerifyMobileAlert) withObject:nil afterDelay:9.0f];
                            } failure:^{
                                [self stopLoading];
                                
