@@ -866,12 +866,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_driverImageView setImageWithURL:[NSURL URLWithString:trip.driver.photoUrl] placeholderImage:[UIImage imageNamed:@"driver_placeholder"]];
 }
 
-- (void)transitionFromConfirmPickupViewToDriverView {
+- (void)transitionFromConfirmViewToDriverView {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     float driverPanelY = screenBounds.size.height - kDriverInfoPanelHeight;
 
     // if already shown
-    if (driverPanelY == _driverView.frame.origin.y) return;
+    if (driverPanelY == _driverView.frame.origin.y && _confirmPickupView.alpha == 0 && _driverView.alpha == 1)
+        return;
 
     [self cancelConfirmation:NO showPickup:NO];
     
@@ -976,21 +977,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     switch (driver.state) {
         case SVDriverStateArrived:
-            [self updateStatusLabel:@"Ваш InstaCab подъезжает" withETA:NO];
-            [self transitionFromConfirmPickupViewToDriverView];
+            [self updateStatusLabel:@"Водитель прибыл" withETA:NO];
             [self updateVehiclePosition];
             break;
 
         case SVDriverStateAccepted:
             [self updateStatusLabel:@"Водитель подтвердил заказ и в пути" withETA:YES];
-            [self transitionFromConfirmPickupViewToDriverView];
             [self updateVehiclePosition];
             break;
 
         // TODO: Показать и скрыть статус через 6 секунд совсем alpha => 0
         case SVDriverStateDrivingClient:
             [self updateStatusLabel:@"Наслаждайтесь поездкой!" withETA:NO];
-            [self transitionFromConfirmPickupViewToDriverView];
             [self updateVehiclePosition];
             break;
             
@@ -1015,12 +1013,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             
         case SVClientStateWaitingForPickup:
             self.titleText = @"INSTACAB";
+            [self transitionFromConfirmViewToDriverView];
             [self showTripCancelButton];
             [self addPickupLocationMarker];
             [self hideProgress];
             break;
             
         case SVClientStateOnTrip:
+            [self transitionFromConfirmViewToDriverView];
             [self hideTripCancelButton];
             [self addPickupLocationMarker];
             [self hideProgress];
