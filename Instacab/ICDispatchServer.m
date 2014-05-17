@@ -316,7 +316,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 // TODO: Добавить отправку identifierForVendor (меняется при удалении всех приложений от моего имени с устройства)
 - (NSDictionary *)buildLogEventWithName:(NSString *)eventName
-                         parameters:(NSDictionary *)params
+                             parameters:(NSDictionary *)params
 {
     NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:@{
       @"eventName": eventName,
@@ -348,7 +348,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 #pragma mark - Misc
 
-- (NSMutableDictionary *)buildGenericDataWithLatitude: (double) latitude longitude: (double) longitude
+- (NSMutableDictionary *)buildGenericDataWithLatitude:(double) latitude longitude: (double) longitude
 {
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     [data setValue:_deviceOS forKey:@"deviceOS"];

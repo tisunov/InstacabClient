@@ -53,9 +53,8 @@
     _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"promo_icon_grey.png"]];
     _promoCodeTextField.delegate = self;
     
-    UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithTitle:@"НАЗАД" style:UIBarButtonItemStylePlain target:self action:@selector(back)];
-    [self setupBarButton:backButton];
-    self.navigationItem.leftBarButtonItem = backButton;
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(back)];
+    self.navigationItem.leftBarButtonItem = cancel;
     
     UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"ПРИМЕНИТЬ" style:UIBarButtonItemStyleDone target:self action:@selector(applyPromo)];
     applyButton.enabled = NO;

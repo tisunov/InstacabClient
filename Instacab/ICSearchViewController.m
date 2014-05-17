@@ -56,7 +56,7 @@
     self.navigationController.view.backgroundColor = [UIColor whiteColor];
 
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(cancel)];
-    self.navigationItem.rightBarButtonItem = cancel;
+    self.navigationItem.leftBarButtonItem = cancel;
     
     [self setupSearchBar];
     
