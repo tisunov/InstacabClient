@@ -20,7 +20,6 @@ NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotif
 NSString *const kNearestCabRequestReasonOpenApp = @"openApp";
 NSString *const kNearestCabRequestReasonMovePin = @"movepin";
 NSString *const kNearestCabRequestReasonPing = @"ping";
-NSString *const kNearestCabRequestReasonReconnect = @"reconnect";
 NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 
 float const kPingIntervalInSeconds = 6.0f;
@@ -104,6 +103,7 @@ float const kPaymentProfileTimeout = 15.0f;
 
     // TODO: Посылать vehicleViewId (текущий тип автомобилей), vehicleViewIds (все доступные, так как они могут быть динамическими ото дня ко дню)
     // TODO: Чтобы верно считать открытия приложения нужно также посылать reason=openApp при успешном выполнении Login
+    // Analytics
     [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": aReason, @"clientId":[ICClient sharedInstance].uID}];
 
     [self sendMessage:pingMessage coordinates:location];
@@ -635,8 +635,11 @@ cardioAttempts:(NSUInteger)cardioAttempts
     }
 }
 
-
 #pragma mark - Analytics
+
+- (void)vehicleViewEventWithReason:(NSString *)reason {
+    [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": reason, @"clientId":[ICClient sharedInstance].uID}];
+}
 
 - (void)trackScreenView:(NSString *)name {
     [[LocalyticsSession shared] tagScreen:name];

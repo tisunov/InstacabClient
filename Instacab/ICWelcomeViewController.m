@@ -146,7 +146,7 @@
     _inBackground = NO;
     
     if ([ICClient sharedInstance].isSignedIn) {
-        [self pingToRestoreStateReason:kNearestCabRequestReasonOpenApp];
+        [self pingToRestoreStateReason:kNearestCabRequestReasonPing];
     }
 }
 
@@ -324,6 +324,9 @@
 }
 
 - (void)pushRequestViewControllerAnimated:(BOOL)animate {
+    if ([self.navigationController.visibleViewController isKindOfClass:ICRequestViewController.class])
+        return;
+    
     ICRequestViewController *vc = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
     if (animate) {
         [self.navigationController slideLayerInDirection:kCATransitionFromBottom andPush:vc];

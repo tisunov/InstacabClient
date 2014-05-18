@@ -83,6 +83,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         _locationService.delegate = self;
         
         _addedMarkers = [[NSMutableArray alloc] init];
+        
+        // Analytics
+        [_clientService vehicleViewEventWithReason:kNearestCabRequestReasonOpenApp];
     }
     return self;
 }
@@ -364,6 +367,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _mapView.indoorEnabled = NO;
     _mapView.settings.myLocationButton = NO;
     _mapView.settings.indoorPicker = NO;
+    _mapView.settings.rotateGestures = NO;
     [self.view insertSubview:_mapView atIndex:0];
     
     [self attachMyLocationButtonTapHandler];
@@ -1074,7 +1078,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICDispatchServer *dispatcher = [note object];
     // Connection was lost, now it's online again
     if (dispatcher.connected) {
-        [self requestNearestCabs:_mapView.camera.target reason:kNearestCabRequestReasonReconnect];
+        [self requestNearestCabs:_mapView.camera.target reason:kNearestCabRequestReasonPing];
     }
 }
 

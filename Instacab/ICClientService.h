@@ -15,7 +15,6 @@ extern NSString *const kClientServiceMessageNotification;
 extern NSString *const kNearestCabRequestReasonOpenApp;
 extern NSString *const kNearestCabRequestReasonMovePin;
 extern NSString *const kNearestCabRequestReasonPing;
-extern NSString *const kNearestCabRequestReasonReconnect;
 
 extern NSString *const kRequestVehicleDeniedReasonNoCard;
 
@@ -107,6 +106,10 @@ cardioAttempts:(NSUInteger)cardioAttempts
 
 #pragma mark - Analytics
 
+// TODO: Вынести в класс ICAnalytics
+- (void)vehicleViewEventWithReason:(NSString *)reason;
+
+// Localytics
 // TODO: Сделать их методами класса +(void)
 - (void)trackScreenView:(NSString *)name;
 - (void)trackEvent:(NSString *)name params:(NSDictionary *)aParams;
