@@ -66,20 +66,28 @@
     MBProgressHUD *hud = [MBProgressHUD showGlobalProgressHUDWithTitle:@"Загрузка"];
     
     [[ICClientService sharedInstance] applyPromo:_promoCodeTextField.text success:^(ICMessage *message) {
-        _messageLabel.text = message.apiResponse.promotionResult;
-        if (message.apiResponse.statusCode.intValue == 200) {
-            _promoCodeTextField.text = @"";
-            
-            hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"success_icon.png"]];
-            hud.mode = MBProgressHUDModeCustomView;
-            hud.labelText = @"Готово!";
-            [hud hide:YES afterDelay:2];
-        }
-        else {
-            hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fail_icon.png"]];
-            hud.mode = MBProgressHUDModeCustomView;
-            hud.labelText = @"Ошибка";
-            [hud hide:YES afterDelay:2];
+        NSDictionary *data = message.apiResponse.data;
+        if (data) {
+            NSString *error = data[@"error"];
+            if (error) {
+                _messageLabel.text = error;
+                
+                // Error
+                hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"fail_icon.png"]];
+                hud.mode = MBProgressHUDModeCustomView;
+                hud.labelText = @"Ошибка";
+                [hud hide:YES afterDelay:2];
+            }
+            else {
+                _promoCodeTextField.text = @"";
+                _messageLabel.text = data[@"description"];
+                
+                // Success
+                hud.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"success_icon.png"]];
+                hud.mode = MBProgressHUDModeCustomView;
+                hud.labelText = @"Готово!";
+                [hud hide:YES afterDelay:2];
+            }
         }
     } failure:^{
         _messageLabel.text = @"Произошла сетевая ошибка";

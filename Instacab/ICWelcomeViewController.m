@@ -315,13 +315,13 @@
                            }];
 }
 
-- (void)showVerifyMobileAlert {
-    ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
-
-    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:controller];
-    
-    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
-}
+//- (void)showVerifyMobileAlert {
+//    ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
+//
+//    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:controller];
+//    
+//    [self.navigationController presentViewController:navigation animated:YES completion:NULL];
+//}
 
 - (void)pushRequestViewControllerAnimated:(BOOL)animate {
     if ([self.navigationController.visibleViewController isKindOfClass:ICRequestViewController.class])

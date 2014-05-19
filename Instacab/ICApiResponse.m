@@ -20,6 +20,7 @@
         @"paymentProfile": @"payment_profile",
         @"client": @"client",
         @"promotionResult": @"promotion_result",
+        @"data": @"data"
     };
 }
 
