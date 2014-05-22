@@ -166,10 +166,13 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     
     [_locationLabelView updatePickupLocation:_pickupLocation dropoffLocation:destination];
     
-    [[ICClientService sharedInstance] fareEstimate:_pickupLocation destination:destination success:^(ICMessage *message) {
-        NSString *fareEstimate = [ICClient sharedInstance].lastFareEstimate;
-        if (fareEstimate.length != 0)
-            [self setFare:fareEstimate];
+    [[ICClientService sharedInstance] fareEstimate:_pickupLocation destination:destination success:^(ICPing *message) {
+        NSDictionary *lastEstimatedTrip = [ICClient sharedInstance].lastEstimatedTrip;
+        if (lastEstimatedTrip) {
+            NSString *fareEstimate = (NSString *)lastEstimatedTrip[@"fareEstimateString"];
+            if (fareEstimate && fareEstimate.length > 0)
+                [self setFare:fareEstimate];
+        }
         else
             [self showEstimateError];
     } failure:^{

@@ -18,7 +18,7 @@
 #import "ICVerifyMobileViewController.h"
 #import "ICSearchViewController.h"
 
-@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICVerifyMobileDelegate, ICSearchViewDelegate, GMSMapViewDelegate>
+@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICSearchViewDelegate, GMSMapViewDelegate>
 - (IBAction)requestPickup:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *view;
@@ -29,11 +29,11 @@
 @property (strong, nonatomic) IBOutlet ICHighlightButton *pickupBtn;
 @property (strong, nonatomic) IBOutlet UILabel *addressTitleLabel;
 @property (strong, nonatomic) IBOutlet UIView *pickupView;
-@property (strong, nonatomic) IBOutlet UILabel *pickupTimeLabel;
-@property (strong, nonatomic) IBOutlet UILabel *pickupTimeLabel2;
+@property (strong, nonatomic) IBOutlet UILabel *pickupEtaLabel;
+@property (strong, nonatomic) IBOutlet UILabel *confirmEtaLabel;
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
-@property (strong, nonatomic) IBOutlet UILabel *etaLabel;
+@property (strong, nonatomic) IBOutlet UILabel *driverEtaLabel;
 @property (strong, nonatomic) IBOutlet UIView *driverView;
 @property (strong, nonatomic) IBOutlet ICHighlightButton *callDriverButton;
 @property (strong, nonatomic) IBOutlet UILabel *driverNameLabel;

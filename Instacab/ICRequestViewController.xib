@@ -12,17 +12,17 @@
                 <outlet property="buttonContainerView" destination="iK2-AY-9F0" id="YTu-JO-lU5"/>
                 <outlet property="callDriverButton" destination="gPu-de-iHu" id="VSK-cI-7Rc"/>
                 <outlet property="centerMapButton" destination="8z8-0j-ul9" id="Lm4-cf-Gdi"/>
+                <outlet property="confirmEtaLabel" destination="JQX-oN-qhm" id="ZYC-QH-AIi"/>
                 <outlet property="confirmPickupButton" destination="N4v-Xo-dCr" id="VwD-Np-S49"/>
                 <outlet property="confirmPickupView" destination="uDQ-U6-fW6" id="BWv-tk-Eb8"/>
+                <outlet property="driverEtaLabel" destination="uec-hM-kVf" id="Zp5-ip-gij"/>
                 <outlet property="driverImageView" destination="8sm-Nx-73L" id="RqD-0j-74L"/>
                 <outlet property="driverNameLabel" destination="rb0-MO-89J" id="Hby-x7-FW2"/>
                 <outlet property="driverRatingLabel" destination="pfy-cl-tfc" id="XWr-wg-ax5"/>
                 <outlet property="driverView" destination="tGL-uD-7oP" id="fzq-hZ-OpB"/>
-                <outlet property="etaLabel" destination="uec-hM-kVf" id="EQk-kk-aQQ"/>
                 <outlet property="fareEstimateButton" destination="IYU-ee-siK" id="mfP-iW-q2X"/>
                 <outlet property="pickupBtn" destination="WW7-hF-aDX" id="mZP-Nb-5nb"/>
-                <outlet property="pickupTimeLabel" destination="7tm-9b-PCc" id="Vcr-2m-Pr8"/>
-                <outlet property="pickupTimeLabel2" destination="JQX-oN-qhm" id="WDT-tr-Oiq"/>
+                <outlet property="pickupEtaLabel" destination="7tm-9b-PCc" id="kWV-E2-SKM"/>
                 <outlet property="pickupView" destination="T9t-2n-lFJ" id="c6h-wZ-SaT"/>
                 <outlet property="promoCodeButton" destination="QPr-Ri-iSH" id="x4x-q4-dSU"/>
                 <outlet property="searchAddressButton" destination="WlW-QL-mBW" id="CBa-i9-xye"/>

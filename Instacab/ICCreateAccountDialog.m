@@ -180,7 +180,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     }
     
     // clear highlight from field labels
-    [@[@"email", @"password"] each:^(id key) {
+    [@[@"email", @"password", @"mobile"] each:^(id key) {
         [self clearHighlightForElementWithKey:key];
     }];
     
@@ -189,19 +189,23 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     [_clientService validateEmail:[self textForElementKey:@"email"]
                          password:[self textForElementKey:@"password"]
                            mobile:[self textForElementKey:@"mobile"]
-                      withSuccess:^(ICMessage *message) {
+                      withSuccess:^(ICPing *message) {
                           [MBProgressHUD hideGlobalHUD];
 
                           __block NSString *alertMessage = @"";
-                          [message.apiResponse.validationErrors.allKeys each:^(id errorKey) {
-                              [self highlightElementWithKey:errorKey];
-                              alertMessage = [alertMessage stringByAppendingString:message.apiResponse.validationErrors[errorKey]];
-                              alertMessage = [alertMessage stringByAppendingString:@".\r\n\r\n"];
-                          }];
+                          ICApiResponse *apiResponse = message.apiResponse;
+                          NSDictionary *data = apiResponse.data;
                           
-                          alertMessage = [alertMessage stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\r\n"]];
-                          
-                          if (message.apiResponse.validationErrors.count > 0) {
+                          if (apiResponse.error.statusCode.intValue == 406) {
+                              [data.allKeys each:^(id errorKey) {
+                                  [self highlightElementWithKey:errorKey];
+                                  
+                                  alertMessage = [alertMessage stringByAppendingString:data[errorKey]];
+                                  alertMessage = [alertMessage stringByAppendingString:@".\r\n\r\n"];
+                              }];
+                              
+                              alertMessage = [alertMessage stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\r\n"]];
+                              
                               [app showAlertWithTitle:@"Ошибка" message:alertMessage cancelButtonTitle:@"OK"];
                           }
                           else {

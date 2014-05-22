@@ -12,7 +12,7 @@
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
-        @"objectId": @"id",
+        @"uniqueId": @"id",
         @"exteriorColor": @"exteriorColor",
         @"interiorColor": @"interiorColor",
         @"licensePlate": @"licensePlate",
@@ -20,12 +20,13 @@
         @"model": @"model",
         @"capacity": @"capacity",
         @"year": @"year",
-        @"point": @"point"
+        @"vehiclePath": @"vehiclePath",
+        @"vehicleViewId": @"vehicleViewId",
     };
 }
 
-+ (NSValueTransformer *)pointJSONTransformer {
-    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICVehiclePoint.class];
++ (NSValueTransformer *)vehiclePathJSONTransformer {
+    return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:ICVehiclePathPoint.class];
 }
 
 -(NSString *)makeAndModel {

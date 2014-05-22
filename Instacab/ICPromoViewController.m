@@ -65,7 +65,7 @@
 - (void)applyPromo {
     MBProgressHUD *hud = [MBProgressHUD showGlobalProgressHUDWithTitle:@"Загрузка"];
     
-    [[ICClientService sharedInstance] applyPromo:_promoCodeTextField.text success:^(ICMessage *message) {
+    [[ICClientService sharedInstance] applyPromo:_promoCodeTextField.text success:^(ICPing *message) {
         NSDictionary *data = message.apiResponse.data;
         if (data) {
             NSString *error = data[@"error"];

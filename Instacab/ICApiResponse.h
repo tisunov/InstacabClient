@@ -9,16 +9,16 @@
 #import "Mantle.h"
 #import "ICClient.h"
 
+@interface ICError : MTLModel <MTLJSONSerializing>
+@property (nonatomic, copy, readonly) NSString *message;
+@property (nonatomic, copy, readonly) NSNumber *statusCode;
+@end
+
 @interface ICApiResponse : MTLModel <MTLJSONSerializing>
-@property (nonatomic, copy) NSString *error;
-@property (nonatomic, copy) NSNumber *statusCode;
+@property (nonatomic, copy, readonly) ICError *error;
 @property (nonatomic, strong, readonly) ICClient *client;
-@property (nonatomic, copy) NSDictionary *validationErrors;
 @property (nonatomic, copy) NSString *addCardUrl;
 @property (nonatomic, copy) NSString *submitCardUrl;
 @property (nonatomic, strong) ICPaymentProfile *paymentProfile;
-@property (nonatomic, copy) NSString *promotionResult;
-@property (nonatomic, copy) NSDictionary *data;
-
-@property (nonatomic, readonly) BOOL isSuccess;
+@property (nonatomic, copy, readonly) NSDictionary *data;
 @end

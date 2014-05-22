@@ -123,7 +123,7 @@
     
     [_clientService loginWithEmail:[self clientEmail]
                           password:[self textForElementKey:@"password"]
-                           success:^(ICMessage *message) {
+                           success:^(ICPing *message) {
                                [self loginResponseReceived:message];
                            } failure:^{
                                [self dismissProgress];
@@ -154,7 +154,7 @@
     [hud hide:YES];
 }
 
-- (void)loginResponseReceived:(ICMessage *)message {
+- (void)loginResponseReceived:(ICPing *)message {
     ICClient *client = [ICClient sharedInstance];
      
     switch (message.messageType) {
@@ -175,9 +175,9 @@
             [self dismissProgress];
             
             // Analytics
-            [_clientService trackError:@{@"type": @"loginBadCredentials", @"errorText": message.errorText}];
+            [_clientService trackError:@{@"type": @"loginBadCredentials", @"description": message.description}];
             
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Входа" message:message.errorText cancelButtonTitle:@"OK"];
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Входа" message:message.description cancelButtonTitle:@"OK"];
             break;
             
         default:

@@ -7,7 +7,7 @@
 //
 
 #import "BaseService.h"
-#import "ICMessage.h"
+#import "ICPing.h"
 #import "ICSignUpInfo.h"
 
 extern NSString *const kClientServiceMessageNotification;
@@ -18,7 +18,7 @@ extern NSString *const kNearestCabRequestReasonPing;
 
 extern NSString *const kRequestVehicleDeniedReasonNoCard;
 
-typedef void (^ICClientServiceSuccessBlock)(ICMessage *message);
+typedef void (^ICClientServiceSuccessBlock)(ICPing *message);
 typedef void (^ICClientServiceFailureBlock)();
 
 typedef void (^CardRegisterSuccessBlock)();
@@ -29,7 +29,9 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
              password: (NSString *)password
               success:(ICClientServiceSuccessBlock)success
               failure:(ICClientServiceFailureBlock)failure;
--(void)requestPickupAt: (ICLocation *)location;
+-(void)requestPickupAt:(ICLocation *)location
+               success:(ICClientServiceSuccessBlock)success
+               failure:(ICClientServiceFailureBlock)failure;
 
 -(void)ping:(CLLocationCoordinate2D)location
      reason:(NSString *)aReason
@@ -76,8 +78,6 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
 #pragma mark - Signup Flow
 
 -(void)signUp:(ICSignUpInfo *)info
-       cardio:(BOOL)cardio
-cardioAttempts:(NSUInteger)cardioAttempts
       success:(ICClientServiceSuccessBlock)success
       failure:(ICClientServiceFailureBlock)failure;
 

@@ -125,7 +125,7 @@
 - (void)pingToRestoreStateReason:(NSString *)reason {
     [_clientService ping:_locationService.coordinates
                   reason:reason
-                 success:^(ICMessage *message) {
+                 success:^(ICPing *message) {
                      [self pingResponseReceived:message];
                  }
                  failure:^{
@@ -247,7 +247,7 @@
 }
 
 - (void)signInClient:(ICClient *)client {
-    if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
+    if ([ICClient sharedInstance].state == ICClientStatusPendingRating) {
         self.navigationController.viewControllers = [self viewControllers];
     }
     else {
@@ -292,19 +292,16 @@
     
     [_clientService loginWithEmail:client.email
                           password:client.password
-                           success:^(ICMessage *message) {
+                           success:^(ICPing *message) {
                                [self stopLoading];
                                
                                if (message.messageType == SVMessageTypeError) {
-                                   [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка входа" message:message.errorText cancelButtonTitle:@"OK"];
+                                   [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка входа" message:message.description cancelButtonTitle:@"OK"];
                                    return;
                                }
                                
                                [self signInClient:message.client];
                                
-//                               [_clientService requestMobileConfirmation:nil];
-                               
-//                               [self performSelector:@selector(showVerifyMobileAlert) withObject:nil afterDelay:9.0f];
                            } failure:^{
                                [self stopLoading];
                                
@@ -344,11 +341,11 @@
     return @[self, vc1, vc2];
 }
 
-- (void)pingResponseReceived:(ICMessage *)message {
+- (void)pingResponseReceived:(ICPing *)message {
     switch (message.messageType) {
         case SVMessageTypeOK:
         {
-            if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
+            if ([ICClient sharedInstance].state == ICClientStatusPendingRating) {
                 [self.navigationController slideLayerInDirection:kCATransitionFromBottom andSetViewControllers:[self viewControllers]];
             }
             else {

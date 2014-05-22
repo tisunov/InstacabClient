@@ -48,10 +48,11 @@
 }
 
 -(void)setState:(SVDriverState)state {
-//    if (_state != state) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kDriverStateChangeNotification object:self userInfo:@{@"state": [NSNumber numberWithInt:state]}];
-//    }
     _state = state;
+}
+
+-(CLLocationCoordinate2D)coordinate {
+    return self.location.coordinate;
 }
 
 @end

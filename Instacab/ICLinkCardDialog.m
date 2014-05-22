@@ -124,10 +124,10 @@
     [MBProgressHUD showGlobalProgressHUDWithTitle:@"Регистрация"];
     
     [[ICClientService sharedInstance] signUp:self.signupInfo
-                                      cardio:_cardio
-                              cardioAttempts:_cardioAttempts
-                                     success:^(ICMessage *message) {
-                                         if (message.apiResponse.isSuccess) {
+//                                      cardio:_cardio
+//                              cardioAttempts:_cardioAttempts
+                                     success:^(ICPing *message) {
+                                         if (!message.apiResponse.data[@"error"]) {
                                              [self saveClient:message.apiResponse.client];
                                              
                                              [self performSelector:@selector(linkCard) withObject:nil afterDelay:0.0];
@@ -260,10 +260,10 @@
 // can belong to another request, which receives unexpected response
 // So instead of block callbacks, rely on NotificationCenter message
 - (void)didReceiveMessage:(NSNotification *)note {
-    ICMessage *message = [[note userInfo] objectForKey:@"message"];
+    ICPing *message = [[note userInfo] objectForKey:@"message"];
     
     switch (message.messageType) {
-        case SVMessageTypeApiResponse:
+        case SVMessageTypeOK:
             if ([message.apiResponse.addCardUrl length] > 0 && !_cardRegistrationInProgress) {
                 [self createCard:message.apiResponse];
                 _cardRegistrationInProgress = YES;

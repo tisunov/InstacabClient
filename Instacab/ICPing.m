@@ -6,14 +6,15 @@
 //  Copyright (c) 2013 Bright Stripe. All rights reserved.
 //
 
-#import "ICMessage.h"
+#import "ICPing.h"
 
-@implementation ICMessage
+@implementation ICPing
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"messageType": @"messageType",
-        @"errorText": @"errorText",
+        @"city": @"city",
+        @"description": @"description",
         @"errorCode": @"errorCode",
         @"reason": @"reason",
         @"client": @"client",
@@ -21,6 +22,10 @@
         @"nearbyVehicles": @"nearbyVehicles",
         @"apiResponse": @"apiResponse",
     };
+}
+
++ (NSValueTransformer *)cityJSONTransformer {
+    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICCity.class];
 }
 
 + (NSValueTransformer *)clientJSONTransformer {
@@ -32,7 +37,19 @@
 }
 
 + (NSValueTransformer *)nearbyVehiclesJSONTransformer {
-    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICNearbyVehicles.class];
+    return [MTLValueTransformer transformerWithBlock:^(NSDictionary *nearbyVehicles) {
+        NSValueTransformer *dictionaryTransformer = [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICNearbyVehicle.class];
+        
+        NSMutableDictionary *tranformedNearbyVehicles = [NSMutableDictionary dictionaryWithCapacity:nearbyVehicles.count];
+        
+        // Transform key values for each dictionary key to ICNearbyVehicle
+        for (id vehicleViewId in nearbyVehicles) {
+            NSDictionary *nearbyVehicle = nearbyVehicles[vehicleViewId];
+            tranformedNearbyVehicles[vehicleViewId] = [dictionaryTransformer transformedValue:nearbyVehicle];
+        }
+        
+        return tranformedNearbyVehicles;
+    }];
 }
 
 + (NSValueTransformer *)apiResponseJSONTransformer {
@@ -44,18 +61,11 @@
         @"OK": @(SVMessageTypeOK),
         @"Error": @(SVMessageTypeError),
         @"PickupCanceled": @(SVMessageTypePickupCanceled),
-        @"TripCanceled": @(SVMessageTypeTripCanceled),
-        @"Enroute": @(SVMessageTypeEnroute),
-        @"ArrivingNow": @(SVMessageTypeArrivingNow),
-        @"BeginTrip": @(SVMessageTypeBeginTrip),
-        @"EndTrip": @(SVMessageTypeEndTrip),
-        @"ApiResponse": @(SVMessageTypeApiResponse),
+        @"TripCanceled": @(SVMessageTypeTripCanceled)
     };
     
-    return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {
+    return [MTLValueTransformer transformerWithBlock:^(NSString *str) {
         return messageTypes[str];
-    } reverseBlock:^(NSNumber *messageType) {
-        return [messageTypes allKeysForObject:messageType].lastObject;
     }];
 }
 

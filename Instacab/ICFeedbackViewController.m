@@ -95,11 +95,11 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
     [service submitRating:_driverRating
              withFeedback:feedback
                   forTrip:trip
-                  success:^(ICMessage *message) {
+                  success:^(ICPing *message) {
                       [self dismissProgress];
 
                       // Keep trying to submit feedback
-                      if ([ICClient sharedInstance].state == SVClientStatePendingRating) {
+                      if ([ICClient sharedInstance].state == ICClientStatusPendingRating) {
                           [self submitPressed:nil];
                       }
                       else {

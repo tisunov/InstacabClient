@@ -12,9 +12,9 @@
 #import "FCReachability.h"
 #import "LocalyticsSession.h"
 #import "ICLocationService.h"
-#import "ICNearbyVehicles.h"
 #import "AFHTTPRequestOperationManager.h"
 #import "AFHTTPRequestOperation.h"
+#import "ICNearbyVehicles.h"
 
 NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonOpenApp = @"openApp";
@@ -178,9 +178,15 @@ float const kPaymentProfileTimeout = 15.0f;
     [self sendMessage:message];
 }
 
--(void)requestPickupAt: (ICLocation*)location {
+-(void)requestPickupAt:(ICLocation *)location
+               success:(ICClientServiceSuccessBlock)success
+               failure:(ICClientServiceFailureBlock)failure
+{
     NSAssert([[ICClient sharedInstance] isSignedIn], @"Can't pickup until sign in");
     NSAssert(location != nil, @"Pickup location is nil");
+
+    self.successBlock = success;
+    self.failureBlock = failure;
     
     NSDictionary *message = @{
         kFieldMessageType: @"Pickup",
@@ -229,8 +235,6 @@ float const kPaymentProfileTimeout = 15.0f;
 #pragma mark - Signup Flow
 
 -(void)signUp:(ICSignUpInfo *)info
-       cardio:(BOOL)cardio
-cardioAttempts:(NSUInteger)cardioAttempts
       success:(ICClientServiceSuccessBlock)success
       failure:(ICClientServiceFailureBlock)failure
 {
@@ -246,11 +250,7 @@ cardioAttempts:(NSUInteger)cardioAttempts
         }
     }];
     
-    if (cardio) {
-        [message setObject:@(1) forKey:@"cardio"];
-    }
-    
-    [self.dispatchServer sendLogEvent:@"SignUpRequest" parameters:@{@"cardioAttempts": @(cardioAttempts)}];
+    [self.dispatchServer sendLogEvent:@"SignUpRequest" parameters:nil];
     
     [self sendMessage:message];
 }
@@ -319,7 +319,7 @@ cardioAttempts:(NSUInteger)cardioAttempts
     }
 
     // Poll server for update
-    [self isPaymentProfilePresent:^(ICMessage *message) {
+    [self isPaymentProfilePresent:^(ICPing *message) {
         if (message.apiResponse.paymentProfile) {
             if (_cardRegisterSuccess) {
                 _cardRegisterSuccess();
@@ -451,7 +451,9 @@ cardioAttempts:(NSUInteger)cardioAttempts
     NSDictionary *message = @{
         kFieldMessageType: @"ApiCommand",
         @"apiUrl": [NSString stringWithFormat:@"/clients/%@/request_mobile_confirmation", [ICClient sharedInstance].uID],
-        @"apiMethod": @"PUT"
+        @"apiMethod": @"PUT",
+        @"id": [ICClient sharedInstance].uID,
+        @"token": [ICClient sharedInstance].token
     };
     
     [self sendMessage:message];
@@ -471,7 +473,9 @@ cardioAttempts:(NSUInteger)cardioAttempts
         @"apiParameters": @{
             @"mobile_token": token,
             @"token": [ICClient sharedInstance].token
-        }
+        },
+        @"id": [ICClient sharedInstance].uID,
+        @"token": [ICClient sharedInstance].token
     };
     
     [self sendMessage:message];
@@ -505,7 +509,9 @@ cardioAttempts:(NSUInteger)cardioAttempts
         @"apiParameters": @{
             @"code": promotionCode,
             @"token": [ICClient sharedInstance].token
-        }
+        },
+        @"id": [ICClient sharedInstance].uID,
+        @"token": [ICClient sharedInstance].token
     };
     
     [self sendMessage:message];
@@ -552,14 +558,16 @@ cardioAttempts:(NSUInteger)cardioAttempts
     [self delayPing];
     
     // Deserialize to object instance
-    ICMessage *msg = [MTLJSONAdapter modelOfClass:ICMessage.class
+    ICPing *msg = [MTLJSONAdapter modelOfClass:ICPing.class
                                fromJSONDictionary:responseMessage
                                             error:&error];
     
-    // Update client state from server
-    [[ICTrip sharedInstance] update:msg.trip];
-    [[ICClient sharedInstance] update:msg.client];
-    [[ICNearbyVehicles sharedInstance] update:msg.nearbyVehicles];
+    if (msg.messageType != SVMessageTypeError) {
+        [[ICCity shared] update:msg.city];
+        [[ICTrip sharedInstance] update:msg.trip];
+        [[ICClient sharedInstance] update:msg.client];
+        [[ICNearbyVehicles shared] update:msg.nearbyVehicles];
+    }
     
     // Let someone handle the message
     [[NSNotificationCenter defaultCenter] postNotificationName:kClientServiceMessageNotification object:self userInfo:@{@"message":msg}];

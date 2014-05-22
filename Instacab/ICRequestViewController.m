@@ -9,7 +9,7 @@
 #import "ICRequestViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import <sys/sysctl.h>
-#import "ICVehiclePoint.h"
+#import "ICVehiclePathPoint.h"
 #import "Colours.h"
 #import "ICReceiptViewController.h"
 #import "ICFeedbackViewController.h"
@@ -32,9 +32,11 @@
 
 @implementation ICRequestViewController {
     GMSMapView *_mapView;
-    NSMutableArray *_addedMarkers;
-    GMSMarker *_dispatchedVehicleMarker;
-    GMSMarker *_pickupLocationMarker;
+    GMSMarker *_pickupMarker;
+    NSMutableDictionary *_vehicleMarkers;
+    UIImage *_blankMarkerIcon;
+    ICClientStatus _status;
+    
     BOOL _draggingPin;
     BOOL _readyToRequest;
     BOOL _justStarted;
@@ -53,8 +55,8 @@
 }
 
 NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
-NSString * const kConfirmPickupLocation = @"Заказать Instacab";
-NSString * const kSelectPickupLocation = @"Выбрать место посадки";
+NSString * const kRequestPickup = @"Заказать Автомобиль";
+NSString * const kSetPickupLocation = @"Выбрать место посадки";
 
 NSString * const kProgressRequestingPickup = @"Выполняется заказ";
 NSString * const kProgressCancelingTrip = @"Отмена заказа";
@@ -82,10 +84,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         _locationService = [ICLocationService sharedInstance];
         _locationService.delegate = self;
         
-        _addedMarkers = [[NSMutableArray alloc] init];
+        _vehicleMarkers = [[NSMutableDictionary alloc] init];
         
         // Analytics
         [_clientService vehicleViewEventWithReason:kNearestCabRequestReasonOpenApp];
+        
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(16, 16), NO, 0.0);
+        _blankMarkerIcon = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
     }
     return self;
 }
@@ -125,7 +131,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _pickupBtn.layer.cornerRadius = 3.0f;
     _pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
     _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
-    [_pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
 
     _confirmPickupButton.layer.cornerRadius = _pickupBtn.layer.cornerRadius;
     _confirmPickupButton.normalColor = _pickupBtn.normalColor;
@@ -202,19 +207,27 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
     
     [self presentDriverState];
-    [self showNearbyVehicles:[ICNearbyVehicles sharedInstance]];
+    [self pingUpdated];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveMessage:)
+                                             selector:@selector(onDispatcherReceiveResponse:)
                                                  name:kClientServiceMessageNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dispatcherDidConnectionChange:)
+                                             selector:@selector(onDispatcherConnectionChange:)
                                                  name:kDispatchServerConnectionChangeNotification
                                                object:nil];
     
-//    [[ICNearbyVehicles sharedInstance] addObserver:self forKeyPath:@"noneAvailableString" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onNearbyVehiclesChanged:)
+                                                 name:kNearbyVehiclesChangedNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onTripChanged:)
+                                                 name:kTripChangedNotification
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -309,7 +322,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 // moved to other location, then launched the app again, in this case
 // center map on current location if he is not dragging pin
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
-    if (_draggingPin || [ICClient sharedInstance].state != SVClientStateLooking) return;
+    if (_draggingPin || [ICClient sharedInstance].state != ICClientStatusLooking) return;
     
     // TODO: Если расстояние между центром карты _mapView и текущей координатой > 10 м
     // тогда смещать карту (человек сдвинулся на существенное расстояние при закрытом приложении или открытом) CLLocation::distanceFromLocation
@@ -428,14 +441,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)transitionToConfirmScreenAtCoordinate:(CLLocationCoordinate2D)coordinate {
     _readyToRequest = YES;
 
-//    _mapView.settings.myLocationButton = NO;
-    
     self.titleText = @"ПОДТВЕРЖДЕНИЕ";
     
     [self zoomMapForConfirmationAtCoordinate:coordinate];
     
-    [self.pickupBtn setTitle:[kConfirmPickupLocation uppercaseString] forState:UIControlStateNormal];
-
     [self showCancelConfirmationNavbarButton];
     
     [self showFog];
@@ -505,11 +514,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)cancelConfirmation:(BOOL)resetZoom showPickup:(BOOL)showPickup {
     _readyToRequest = NO;
-    
-//    _mapView.settings.myLocationButton = YES;
-    
     self.titleText = @"INSTACAB";
-    [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
     
     if (resetZoom)
         [_mapView animateToZoom:kDefaultMapZoom];
@@ -521,15 +526,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (showPickup)
         [self transitionFromConfirmViewToPickupView];
 }
-
-//- (void)moveMapToPosition: (CLLocationCoordinate2D) coordinate {
-//    [CATransaction begin];
-//    [CATransaction setDisableActions:YES];
-//    _mapView.camera = [GMSCameraPosition cameraWithLatitude:coordinate.latitude
-//                                                  longitude:coordinate.longitude
-//                                                       zoom:_mapView.camera.zoom];
-//    [CATransaction commit];
-//}
 
 - (void)myLocationTapped:(id)sender {
     if (!CLCOORDINATES_EQUAL(_mapView.camera.target, _mapView.myLocation.coordinate))
@@ -548,7 +544,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 -(void)setDraggingPin: (BOOL)dragging {
     _draggingPin = dragging;
-//    _mapView.settings.myLocationButton = !dragging;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
@@ -581,7 +576,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)recognizeTapOnMap:(id)sender {
-    if ([ICClient sharedInstance].state != SVClientStateLooking) return;
+    if ([ICClient sharedInstance].state != ICClientStatusLooking) return;
     
     // First tap on the map returns to Pre-Request state
     if (_readyToRequest) {
@@ -591,7 +586,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)recognizeDragOnMap:(id)sender {
-    if ([ICClient sharedInstance].state != SVClientStateLooking) return;
+    if ([ICClient sharedInstance].state != ICClientStatusLooking) return;
     
     UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
     // Hide UI controls when user starts map drag to show move of the map
@@ -629,64 +624,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)clearMap {
     [_mapView clear];
-    [_addedMarkers removeAllObjects];
-}
-
-- (void)showNearbyVehicles: (ICNearbyVehicles *)nearbyVehicles {
-    if (!nearbyVehicles || [ICClient sharedInstance].state != SVClientStateLooking) return;
-    
-    // No available vehicles
-    if (nearbyVehicles.noneAvailableString.length > 0) {
-        _pickupTimeLabel.text = [nearbyVehicles.noneAvailableString uppercaseString];
-        [self clearMap];
-    }
-    else if (nearbyVehicles.vehiclePoints.count > 0) {
-        // Display cars
-        [self displayCars:nearbyVehicles.vehiclePoints];
-        
-        // Display ETA
-        _pickupTimeLabel.text = [[NSString stringWithFormat:kRequestMinimumEtaTemplate, nearbyVehicles.minEtaString] uppercaseString];
-    }
-    
-    // Copy to confirmation view
-    _pickupTimeLabel2.text = _pickupTimeLabel.text;
-}
-
-- (void)displayCars:(NSArray *)cars {
-    // Add new vehicles and update existing vehicles' positions
-    for (ICVehiclePoint *vehiclePoint in cars) {
-        NSPredicate *filter = [NSPredicate predicateWithFormat:@"userData = %@", vehiclePoint.vehicleId];
-        GMSMarker *existingMarker = [[_addedMarkers filteredArrayUsingPredicate:filter] firstObject];
-        if (existingMarker != nil) {
-            // Update existing vehicle's position if needed
-            if (!CLCOORDINATES_EQUAL(vehiclePoint.coordinate, existingMarker.position)) {
-                existingMarker.position = vehiclePoint.coordinate;
-            }
-        }
-        else {
-            // Add new vehicle
-            GMSMarker *marker = [GMSMarker markerWithPosition:vehiclePoint.coordinate];
-            marker.icon = [UIImage imageNamed:@"car-lux"];
-            marker.map = _mapView;
-            marker.userData = vehiclePoint.vehicleId;
-            [_addedMarkers addObject:marker];
-        }
-    }
-    
-    // Remove missing vehicles
-    [_addedMarkers enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop){
-        GMSMarker *marker = (GMSMarker *) obj;
-        // skip non-vehicle markers
-        if (!marker.userData) return;
-        
-        NSPredicate *filter = [NSPredicate predicateWithFormat:@"vehicleId = %@", marker.userData];
-        
-        BOOL isVehicleMissing = [[cars filteredArrayUsingPredicate:filter] count] == 0;
-        if (isVehicleMissing) {
-            marker.map = nil;
-            [_addedMarkers removeObject:obj];
-        }
-    }];
+    [_vehicleMarkers removeAllObjects];
 }
 
 - (void)didGeocodeLocation:(ICLocation *)location {
@@ -717,9 +655,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_statusLabel.layer addAnimation:_textChangeAnimation forKey:@"kCATransitionFade"];
     _statusLabel.text = [text uppercaseString];
     
-    _etaLabel.hidden = !withEta;
+    _driverEtaLabel.hidden = !withEta;
     if (withEta) {
-        _etaLabel.text = [self pickupEta:[ICTrip sharedInstance].eta withFormat:kTripEtaTemplate];
+        // TODO: Использовать etaStringShort для показа ETA водителя
+        _driverEtaLabel.text = [self pickupEta:[ICTrip sharedInstance].eta withFormat:kTripEtaTemplate];
         _statusView.frame = CGRectSetHeight(_statusView.frame, 50.0f);
     }
     else {
@@ -753,18 +692,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 	[hud show:YES];
 }
 
-//- (void)hudWasCancelled {
-//    [UIAlertView presentWithTitle:@"Отмена Заказа"
-//                          message:@"Вы уверены что хотите отменить вызов?"
-//                          buttons:@[ @"Нет", @"Да" ]
-//                    buttonHandler:^(NSUInteger index) {
-//                        /* ДА */
-//                        if (index == 1) {
-//                            [self cancelPickup];
-//                        }
-//                    }];
-//}
-
 -(void)hideProgress {
     MBProgressHUD *hud = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
     if (hud) {
@@ -779,12 +706,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (IBAction)requestPickup:(id)sender {
     if (_readyToRequest) {
-        
-        if (![ICClient sharedInstance].mobileConfirmed) {
-            [self showVerifyMobileDialog];
-            return;
-        }
-        
         [self checkCardLinkedAndRequestPickup];
     }
     else {
@@ -803,23 +724,45 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
     
-    // Request pickup
-    [_clientService requestPickupAt:self.pickupLocation];
+    [_clientService requestPickupAt:self.pickupLocation
+                            success:^(ICPing *response) {
+                                
+                                if (![ICClient sharedInstance].mobileConfirmed) {
+                                    [self hideProgress];
+                                    [self showVerifyMobileDialog];
+                                }
+                                else {
+                                    if ([ICClient sharedInstance].state == ICClientStatusLooking) {
+                                        [self hideProgress];
+                                        
+                                        NSString *description = @"Ошибка сети";
+                                        if (response.messageType == SVMessageTypeError) {
+                                            description = response.description;
+                                        }
+                                        else {
+                                            ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:[self vehicleViewId]];
+                                            
+                                            if (vehicle && vehicle.sorryMsg.length) {
+                                                description = vehicle.sorryMsg;
+                                            }
+                                        }
+                                        
+                                        [[UIApplication sharedApplication] showAlertWithTitle:@"" message:description];
+                                    }
+                                }
+                            }
+                failure:^{
+                    
+                }
+    ];
 }
 
 - (void)showVerifyMobileDialog {
-    [_clientService requestMobileConfirmation:nil];
-    
     ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
-    controller.delegate = self;
     
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:controller];
     
     [self.navigationController presentViewController:navigation animated:YES completion:nil];
-}
-
--(void)didConfirmMobile {
-    [self checkCardLinkedAndRequestPickup];
 }
 
 - (void)setViewTopShadow:(UIView *)view {
@@ -893,17 +836,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }];
 }
 
--(void)addPickupLocationMarker {
-    if (_pickupLocationMarker) return;
-    
-    // Remove green centered pin
-    [_greenPinView removeFromSuperview];
-    // Add red pin
-    _pickupLocationMarker = [GMSMarker markerWithPosition:[ICTrip sharedInstance].pickupLocation.coordinate];
-    _pickupLocationMarker.icon = [UIImage imageNamed:@"pin_red.png"];
-    _pickupLocationMarker.map = _mapView;
-}
-
 -(void)showStatusBar {
     if (!_statusView.hidden) return;
     
@@ -930,33 +862,41 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }];
 }
 
--(void)showDispatchedVehicle {
-    if (_dispatchedVehicleMarker) return;
-    
-    // Remove nearby vehicle markers
-    [_addedMarkers enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop){
-        GMSMarker *marker = (GMSMarker *) obj;
-        marker.map = nil;
-    }];
-    [_addedMarkers removeAllObjects];
-    
+-(void)centerMap {
+    ICClientStatus clientStatus = [ICClient sharedInstance].state;
     ICTrip *trip = [ICTrip sharedInstance];
-    // Show dispatched vehicle
-    _dispatchedVehicleMarker = [GMSMarker markerWithPosition:trip.driverCoordinate];
-    _dispatchedVehicleMarker.icon = [UIImage imageNamed:@"car-lux"];
-    _dispatchedVehicleMarker.map = _mapView;
+    ICDriver *driver = trip.driver;
     
-    // Show both markers (pickup location & driver's location)
-    GMSCoordinateBounds *bounds =
-        [[GMSCoordinateBounds alloc] initWithCoordinate:trip.pickupLocation.coordinate
-                                             coordinate:trip.driverCoordinate];
-    
-    GMSCameraUpdate *update = [GMSCameraUpdate fitBounds:bounds];
+    switch (clientStatus) {
+        case ICClientStatusWaitingForPickup: {
+            ICLocation *pickupLocation = trip.pickupLocation;
+            [self mapFitCoordinates:pickupLocation.coordinate coordinate2:driver.coordinate];
+            break;
+        }
+            
+        case ICClientStatusOnTrip:
+            [self mapCenterAndZoom:driver.coordinate zoom:16];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)mapCenterAndZoom:(CLLocationCoordinate2D)coordinate zoom:(int)zoom
+{
+    GMSCameraUpdate *update = [GMSCameraUpdate setCamera:[GMSCameraPosition cameraWithTarget:coordinate zoom:zoom]];
     [_mapView animateWithCameraUpdate:update];
 }
 
--(void)updateVehiclePosition {
-    _dispatchedVehicleMarker.position = [ICTrip sharedInstance].driverCoordinate;
+- (void)mapFitCoordinates:(CLLocationCoordinate2D)coordinate1 coordinate2:(CLLocationCoordinate2D)coordinate2
+{
+    GMSCoordinateBounds *bounds =
+    [[GMSCoordinateBounds alloc] initWithCoordinate:coordinate1
+                                         coordinate:coordinate2];
+    
+    GMSCameraUpdate *update = [GMSCameraUpdate fitBounds:bounds];
+    [_mapView animateWithCameraUpdate:update];
 }
 
 -(void)showFareAndRateDriver {
@@ -977,23 +917,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
     NSLog(@"Present Driver state: %lu", (unsigned long)driver.state);
     
-    [self showDispatchedVehicle];
-    
     switch (driver.state) {
         case SVDriverStateArrived:
             [self updateStatusLabel:@"Водитель прибыл" withETA:NO];
-            [self updateVehiclePosition];
             break;
 
         case SVDriverStateAccepted:
             [self updateStatusLabel:@"Водитель подтвердил заказ и в пути" withETA:YES];
-            [self updateVehiclePosition];
             break;
 
         // TODO: Показать и скрыть статус через 6 секунд совсем alpha => 0
         case SVDriverStateDrivingClient:
             [self updateStatusLabel:@"Наслаждайтесь поездкой!" withETA:NO];
-            [self updateVehiclePosition];
             break;
             
         default:
@@ -1001,36 +936,34 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)presentClientState:(ICClientState)clientState {
+-(void)presentClientState:(ICClientStatus)clientState {
     NSLog(@"Present Client state: %lu", (unsigned long)clientState);
     
     switch (clientState) {
-        case SVClientStateLooking:
+        case ICClientStatusLooking:
             [self setupForLooking];
             [[ICTrip sharedInstance] clear];
             [self hideProgress];
             break;
             
-        case SVClientStateDispatching:
+        case ICClientStatusDispatching:
             [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
             break;
             
-        case SVClientStateWaitingForPickup:
+        case ICClientStatusWaitingForPickup:
             self.titleText = @"INSTACAB";
             [self transitionFromConfirmViewToDriverView];
             [self showTripCancelButton];
-            [self addPickupLocationMarker];
             [self hideProgress];
             break;
             
-        case SVClientStateOnTrip:
+        case ICClientStatusOnTrip:
             [self transitionFromConfirmViewToDriverView];
             [self hideTripCancelButton];
-            [self addPickupLocationMarker];
             [self hideProgress];
             break;
             
-        case SVClientStatePendingRating:
+        case ICClientStatusPendingRating:
             [self showFareAndRateDriver];
             [[ICTrip sharedInstance] clear];
             break;
@@ -1043,38 +976,16 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([object isKindOfClass:ICClient.class]) {
-        ICClientState clientState = (ICClientState)[change[NSKeyValueChangeNewKey] intValue];
-        ICClientState oldState = (ICClientState)[change[NSKeyValueChangeOldKey] intValue];
+        ICClientStatus clientState = (ICClientStatus)[change[NSKeyValueChangeNewKey] intValue];
+        ICClientStatus oldState = (ICClientStatus)[change[NSKeyValueChangeOldKey] intValue];
         
         if (oldState != clientState || !change[NSKeyValueChangeOldKey]) {
             [self presentClientState:clientState];
         }
     }
-// TODO: Проще прятать целиком PickupView когда нет машин и показывать новый View
-//    else if ([object isKindOfClass:ICNearbyVehicles.class]) {
-//        CGFloat offset = _pickupBtn.y + _pickupBtn.height;
-//        
-//        [UIView animateWithDuration:0.25f animations:^(void){
-//            // Hide request pickup button
-//            if ([ICNearbyVehicles sharedInstance].isEmpty) {
-//                _pickupBtn.alpha = 0.0f;
-//                _pickupBtn.height = 0.0;
-//                _pickupView.y += offset;
-//                _pickupView.height -= offset;
-//                _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding - offset, 0, _mapVerticalPadding - offset, 0);
-//            }
-//            else {
-//                _pickupBtn.alpha = 1.f;
-//                _pickupBtn.height = 40.0f;
-//                _pickupView.height = 75.f;
-//                _pickupView.y = [UIScreen mainScreen].bounds.size.height - _pickupView.height;
-//                _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
-//            }
-//        }];
-//    }
 }
 
--(void)dispatcherDidConnectionChange:(NSNotification*)note {
+-(void)onDispatcherConnectionChange:(NSNotification*)note {
     ICDispatchServer *dispatcher = [note object];
     // Connection was lost, now it's online again
     if (dispatcher.connected) {
@@ -1082,41 +993,204 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
-- (void)didReceiveMessage:(NSNotification *)note {
-    ICMessage *message = [[note userInfo] objectForKey:@"message"];
+-(NSNumber *)vehicleViewId {
+    return [ICCity shared].defaultVehicleViewId;
+}
+
+-(void)removeVehicleMarkers {
+    for (id uuid in _vehicleMarkers) {
+        GMSMarker *vehicleMarker = _vehicleMarkers[uuid];
+        vehicleMarker.map = nil;
+    }
+    [_vehicleMarkers removeAllObjects];
+}
+
+-(void)pingUpdated {
+    ICClientStatus clientStatus = [ICClient sharedInstance].state;
+    if (_status == clientStatus) return;
+    
+    // Status was assigned before and now changed, remove vehicle markers
+    if (_status)
+        [self removeVehicleMarkers];
+    
+    if (clientStatus == ICClientStatusLooking) {
+        [self updateSetPickup];
+    }
+    else if (clientStatus == ICClientStatusWaitingForPickup || clientStatus == ICClientStatusOnTrip) {
+        [self centerMap];
+
+        [self updateTripStatus];
+    }
+    
+    [self updateMapMarkers];
+    
+    _status = clientStatus;
+}
+
+-(void)destroyPickupMarker {
+    _pickupMarker.map = nil;
+    _pickupMarker = nil;
+}
+
+-(void)onNearbyVehiclesChanged:(NSNotification *)note {
+    [self updateSetPickup];
+    [self updateMapMarkers];
+}
+
+-(void)onTripChanged:(NSNotification *)note {
+    [self updateTripStatus];
+    [self updateMapMarkers];
+}
+
+-(void)updateTripStatus {
+    // TODO: Обновлять здесь состояние приближения/прибытия водителя
+}
+
+-(void)updateMapMarkers {
+    ICClientStatus clientStatus = [ICClient sharedInstance].state;
+    
+    if (clientStatus == ICClientStatusLooking) {
+        [self updateVehicleMarkers];
+        [self destroyPickupMarker];
+    }
+    else if (clientStatus == ICClientStatusWaitingForPickup || clientStatus == ICClientStatusOnTrip) {
+        ICClientStatus clientStatus = [ICClient sharedInstance].state;
+        ICTrip *trip = [ICTrip sharedInstance];
+        ICDriver *driver = trip.driver;
+        ICVehicle *vehicle = trip.vehicle;
+        
+        if (driver && vehicle) {
+            GMSMarker *vehicleMarker = _vehicleMarkers[vehicle.uniqueId];
+            if (vehicleMarker) {
+                vehicleMarker.position = driver.coordinate;
+            }
+            else {
+                GMSMarker *vehicleMarker = [GMSMarker markerWithPosition:driver.coordinate];
+                vehicleMarker.icon = [UIImage imageNamed:@"map-urban.png"];
+                vehicleMarker.map = _mapView;
+                _vehicleMarkers[vehicle.uniqueId] = vehicleMarker;
+            }
+            [self centerMap];
+        }
+        
+        if (clientStatus == ICClientStatusWaitingForPickup) {
+            ICLocation *pickupLocation = trip.pickupLocation;
+            if (!_pickupMarker) {
+                // Remove pickup location image
+                [_greenPinView removeFromSuperview];
+                // Add pickup marker
+                _pickupMarker = [GMSMarker markerWithPosition:pickupLocation.coordinate];
+                _pickupMarker.icon = [UIImage imageNamed:@"pin_red.png"];
+                _pickupMarker.map = _mapView;
+            }
+        }
+        else
+            [self destroyPickupMarker];
+        
+    }
+}
+
+// TODO: Позже взять и объединить в памяти City VehicleViews и Nearby VehicleViews чтобы оперировать одним объектом ICNearbyVehicle в котором есть все свойства.
+-(void)updateSetPickup {
+    ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:[self vehicleViewId]];
+    if (!vehicleView) return;
+    
+    NSString *requestPickupButtonString =
+    vehicleView.requestPickupButtonString.length ?
+    [vehicleView.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:vehicleView.description] : kRequestPickup;
+    
+    [_confirmPickupButton setTitle:requestPickupButtonString forState:UIControlStateNormal];
+    
+    NSString *setPickupLocationString =
+    vehicleView.setPickupLocationString.length ?
+    vehicleView.setPickupLocationString : kSetPickupLocation;
+    
+    [_pickupBtn setTitle:setPickupLocationString forState:UIControlStateNormal];
+    
+    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:[self vehicleViewId]];
+    if (vehicle && vehicle.available) {
+        // Display ETA
+        _pickupEtaLabel.text = [vehicleView.pickupEtaString stringByReplacingOccurrencesOfString:@"{string}" withString:vehicle.etaStringShort];
+    }
+    else {
+        _pickupEtaLabel.text = vehicleView.noneAvailableString;
+    }
+    
+    _pickupEtaLabel.text = [_pickupEtaLabel.text uppercaseString];
+    _confirmEtaLabel.text = _pickupEtaLabel.text;
+}
+
+-(void)updateVehicleMarkers {
+    NSNumber *vehicleViewId = [self vehicleViewId];
+    
+    ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:vehicleViewId];
+    if (!vehicleView) return;
+    
+    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:vehicleViewId];
+    if (vehicle) {
+        // Add new vehicles and update existing vehicles' positions
+        for (NSString *uuid in vehicle.vehiclePaths) {
+            NSArray *vehiclePath = vehicle.vehiclePaths[uuid];
+            ICVehiclePathPoint *pathPoint = vehiclePath.firstObject;
+            if (!pathPoint) continue;
+            
+            GMSMarker *vehicleMarker = _vehicleMarkers[uuid];
+            if (vehicleMarker) {
+                if (!CLCOORDINATES_EQUAL(pathPoint.coordinate, vehicleMarker.position)) {
+                    vehicleMarker.position = pathPoint.coordinate;
+                }
+                if (vehicleMarker.rotation != pathPoint.course) {
+                    vehicleMarker.rotation = pathPoint.course;
+                }
+            }
+            else {
+                GMSMarker *marker = [GMSMarker markerWithPosition:pathPoint.coordinate];
+                marker.icon = [UIImage imageNamed:@"map-urban"];//_blankMarkerIcon;
+                marker.map = _mapView;
+                marker.rotation = pathPoint.course;
+                marker.userData = vehicleViewId;
+                _vehicleMarkers[uuid] = marker;
+            }
+        }
+    }
+    
+    // Remove missing vehicles
+    for (NSString *uuid in _vehicleMarkers) {
+        GMSMarker *vehicleMarker = _vehicleMarkers[uuid];
+        if (!vehicle.vehiclePaths[uuid] && vehicleMarker.userData == vehicleViewId) {
+            vehicleMarker.map = nil;
+            [_vehicleMarkers removeObjectForKey:uuid];
+        }
+    }
+}
+
+- (void)onDispatcherReceiveResponse:(NSNotification *)note {
+    ICPing *response = [[note userInfo] objectForKey:@"message"];
         
     [self presentDriverState];
     
-    switch (message.messageType) {
+    switch (response.messageType) {
+        // Ping updated
         case SVMessageTypeOK:
-            [self showNearbyVehicles:message.nearbyVehicles];
-            
-            if (message.nearbyVehicles.sorryMsg.length > 0) {
-                [self hideProgress];
-                [[UIApplication sharedApplication] showAlertWithTitle:@"" message:message.nearbyVehicles.sorryMsg];
-            }
+            [self pingUpdated];
             break;
             
-        case SVMessageTypeEnroute:
-            [self updateVehiclePosition];
-            break;
-            
+        // TODO: В Uber всегда присылается SMS когда отменяется заказ, там нет разделения TripCanceled/PickupCanceled
         case SVMessageTypeTripCanceled:
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Заказ Отменен" message:message.reason cancelButtonTitle:@"OK"];
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Заказ Отменен" message:response.reason cancelButtonTitle:@"OK"];
             break;
 
         case SVMessageTypePickupCanceled:
             [self cancelConfirmation:NO showPickup:YES];
             
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Заказ Отменен" message:message.reason cancelButtonTitle:@"OK"];
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Заказ Отменен" message:response.reason cancelButtonTitle:@"OK"];
             break;
             
         case SVMessageTypeError:
             [self hideProgress];
-            
             [self popViewController];
             
-            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка" message:message.errorText cancelButtonTitle:@"OK"];
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка" message:response.description cancelButtonTitle:@"OK"];
             break;
             
         default:
@@ -1128,17 +1202,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_clientService ping:coordinates reason:aReason success:nil failure:nil];
 }
 
-//- (void)showPickupPanel {
-//    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-//    
-//    [UIView animateWithDuration:0.35 animations:^(void){
-//        // Slide up
-//        _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
-//        // Slide down
-//        _driverView.y = screenBounds.size.height;
-//    }];
-//}
-
 -(void)setupForLooking {
     NSLog(@"setupForLooking");
 
@@ -1146,14 +1209,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self transitionFromDriverViewToPickupView];
     
     // Clear all markers and add pickup marker
-    _pickupLocationMarker.map = nil;
-    _pickupLocationMarker = nil;
-    _dispatchedVehicleMarker.map = nil;
-    _dispatchedVehicleMarker = nil;
+    [self destroyPickupMarker];
     [_mapView addSubview:_greenPinView];
 
-    [self.pickupBtn setTitle:[kSelectPickupLocation uppercaseString] forState:UIControlStateNormal];
-    
     [self showAddressBar];
     [self hideTripCancelButton];
     
@@ -1191,20 +1249,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
 }
 
-//- (NSString *)nearbyEta:(NSNumber *)etaValue withFormat:(NSString *)format
-//{
-//    // Uncomment to take App Store screenshots
-////    etaValue = [NSNumber numberWithInt:1];
-//    int eta = [etaValue intValue];
-//    int d = (int)floor(eta) % 10;
-//    
-//    NSString *minute = @"минут";
-//    if(eta == 1 || eta == 21 || eta == 31 || eta == 41 || eta == 51) minute = @"минута";
-//    if(eta > 1 && eta < 5) minute = @"минуты";
-//    
-//    return [[NSString stringWithFormat:format, etaValue, minute] uppercaseString];
-//}
-
 - (void)presentModalViewController:(UIViewController *)viewControllerToPresent {
     UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:viewControllerToPresent];
     [self.navigationController presentViewController:navigation animated:YES completion:NULL];
@@ -1227,5 +1271,23 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
     return _pickupLocation;
 }
+
+// TODO: Для разных машин асинхронно грузить картинки из сети и кэшировать их по vehicleViewId,
+// грузить только если их нету.
+// TODO: Выполнить это после pingUpdated, проверить есть ли загруженные картинки для vehicleViewId
+// и если нету то выполнить асинхронную загрузку для этого vehicleViewId, а после этого выполнить код по присвоению загруженной картинки всем маркерам на карте для данного vehicleViewId, и ОБЯЗАТЕЛЬНО в главной нитке
+
+// TODO: Взять и применить здесь iOS Promises SDK
+
+//AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:urlRequest];
+//requestOperation.responseSerializer = [AFImageResponseSerializer serializer];
+//[requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//    NSLog(@"Response: %@", responseObject);
+//    _imageView.image = responseObject;
+//    
+//} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//    NSLog(@"Image error: %@", error);
+//}];
+//[requestOperation start];
 
 @end

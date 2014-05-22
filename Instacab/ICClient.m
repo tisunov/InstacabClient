@@ -35,7 +35,7 @@
         @"tripPendingRating": @"tripPendingRating",
         @"paymentProfile": @"paymentProfile",
         @"hasConfirmedMobile": @"hasConfirmedMobile",
-        @"lastFareEstimate": @"lastFareEstimate"
+        @"lastEstimatedTrip": @"lastEstimatedTrip"
     }];
 }
 
@@ -49,11 +49,11 @@
 
 + (NSValueTransformer *)stateJSONTransformer {
     NSDictionary *states = @{
-        @"Looking": @(SVClientStateLooking),
-        @"Dispatching": @(SVClientStateDispatching),
-        @"WaitingForPickup": @(SVClientStateWaitingForPickup),
-        @"OnTrip": @(SVClientStateOnTrip),
-        @"PendingRating": @(SVClientStatePendingRating)
+        @"Looking": @(ICClientStatusLooking),
+        @"Dispatching": @(ICClientStatusDispatching),
+        @"WaitingForPickup": @(ICClientStatusWaitingForPickup),
+        @"OnTrip": @(ICClientStatusOnTrip),
+        @"PendingRating": @(ICClientStatusPendingRating)
     };
     
     return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str) {
@@ -63,7 +63,7 @@
     }];
 }
 
--(void)update: (ICClient *)client {
+-(void)update:(ICClient *)client {
     if (client)
         [self mergeValuesForKeysFromModel:client];
 }

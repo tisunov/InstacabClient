@@ -26,5 +26,6 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy, readonly) NSString *photoUrl;
 
 -(void)call;
+@property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 
 @end

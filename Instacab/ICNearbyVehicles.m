@@ -1,42 +1,49 @@
 //
-//  SVNearbyVehicles.m
-//  Hopper
+//  ICNearbyVehicles.m
+//  InstaCab
 //
-//  Created by Pavel Tisunov on 27/10/13.
-//  Copyright (c) 2013 Bright Stripe. All rights reserved.
+//  Created by Pavel Tisunov on 20/05/14.
+//  Copyright (c) 2014 Bright Stripe. All rights reserved.
 //
 
 #import "ICNearbyVehicles.h"
-#import "ICVehiclePoint.h"
 
-@implementation ICNearbyVehicles
+NSString * const kNearbyVehiclesChangedNotification = @"nearbyVehiclesChanged";
 
-+ (instancetype)sharedInstance {
-    static ICNearbyVehicles *shared = nil;
+@implementation ICNearbyVehicles {
+    NSDictionary *_vehicleViews;
+}
+
++ (instancetype)shared {
+    static ICNearbyVehicles *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [[self alloc] init];
+        sharedInstance = [[self alloc] init];
     });
-    return shared;
+    return sharedInstance;
 }
 
-+ (NSDictionary *)JSONKeyPathsByPropertyKey {
-    return @{
-        @"minEta": @"minEta",
-        @"minEtaString": @"minEtaString",
-        @"vehiclePoints": @"vehiclePoints",
-        @"sorryMsg": @"sorryMsg",
-        @"noneAvailableString": @"noneAvailableString"
-    };
+-(void)update:(NSDictionary *)nearbyVehicles {
+    BOOL haveEqualNearbyVehicles = [self isEqual:nearbyVehicles];
+    
+    _vehicleViews = nearbyVehicles;
+    
+    if (!haveEqualNearbyVehicles) {
+        NSLog(@"Nearby vehicles changed");
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNearbyVehiclesChangedNotification object:self];
+    }
 }
 
-+ (NSValueTransformer *)vehiclePointsJSONTransformer {
-    return [NSValueTransformer mtl_JSONArrayTransformerWithModelClass:ICVehiclePoint.class];
+-(ICNearbyVehicle *)vehicleByViewId:(NSNumber *)vehicleViewId {
+    return _vehicleViews[[vehicleViewId stringValue]];
 }
 
--(void)update:(ICNearbyVehicles *)nearbyVehicles {
-    if (nearbyVehicles)
-        [self mergeValuesForKeysFromModel:nearbyVehicles];
+#pragma mark - NSObject
+
+-(BOOL)isEqual:(NSDictionary *)object {
+    BOOL haveEqualNearbyVehicles = (!_vehicleViews && !object) || [_vehicleViews isEqualToDictionary:object];
+    
+    return haveEqualNearbyVehicles;
 }
 
 @end

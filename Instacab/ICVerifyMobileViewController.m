@@ -93,20 +93,23 @@
     
     ICClientService *service = [ICClientService sharedInstance];
     
+    __weak __typeof(self)weakSelf = self;
+    
     [service confirmMobileToken:_tokenTextField.text
-                        success:^(ICMessage *message) {
+                        success:^(ICPing *response) {
+                            __strong __typeof(weakSelf)strongSelf = weakSelf;
                             [MBProgressHUD hideGlobalHUD];
                             
-                            if (message.messageType == SVMessageTypeApiResponse && !message.apiResponse.isSuccess)
+                            ICError *error = response.apiResponse.error;
+                            if (error && error.statusCode.intValue == 400)
                             {
-                                [[UIApplication sharedApplication] showAlertWithTitle:message.apiResponse.error];
+                                _tokenTextField.text = @"";
+                                [[UIApplication sharedApplication] showAlertWithTitle:@"Неправильный код подтверждения"];
                             }
                             else {
-                                if ([self.delegate respondsToSelector:@selector(didConfirmMobile)])
-                                    [self.delegate didConfirmMobile];
-                                
                                 [[ICClient sharedInstance] confirmMobile];
-                                [self cancel];
+                                
+                                [strongSelf cancel];
                             }
                         }
                         failure:^{
@@ -114,9 +117,8 @@
                         }];
 }
 
-// TODO: Проверить как работает
 - (IBAction)resendConfirmation:(id)sender {
-    [[ICClientService sharedInstance] requestMobileConfirmation:^(ICMessage *message){
+    [[ICClientService sharedInstance] requestMobileConfirmation:^(ICPing *message){
         [[UIApplication sharedApplication] showAlertWithTitle:@"Готово!" message:@"В течение нескольких секунд вам придет СМС"];
     }];
 }

@@ -1,21 +1,19 @@
 //
-//  SVNearbyVehicles.h
-//  Hopper
+//  ICNearbyVehicles.h
+//  InstaCab
 //
-//  Created by Pavel Tisunov on 27/10/13.
-//  Copyright (c) 2013 Bright Stripe. All rights reserved.
+//  Created by Pavel Tisunov on 20/05/14.
+//  Copyright (c) 2014 Bright Stripe. All rights reserved.
 //
 
-#import "Mantle.h"
+#import "ICNearbyVehicle.h"
 
-@interface ICNearbyVehicles : MTLModel <MTLJSONSerializing>
-@property (nonatomic, copy, readonly) NSNumber *minEta;
-@property (nonatomic, copy, readonly) NSString *minEtaString;
-@property (nonatomic, copy, readonly) NSArray *vehiclePoints;
-@property (nonatomic, copy, readonly) NSString *sorryMsg;
-@property (nonatomic, copy, readonly) NSString *noneAvailableString;
+extern NSString *const kNearbyVehiclesChangedNotification;
 
--(void)update:(ICNearbyVehicles *)nearbyVehicles;
+@interface ICNearbyVehicles : NSObject
++(instancetype)shared;
 
-+(instancetype)sharedInstance;
+-(void)update:(NSDictionary *)nearbyVehicles;
+-(ICNearbyVehicle *)vehicleByViewId:(NSNumber *)vehicleViewId;
+
 @end

@@ -7,10 +7,10 @@
 //
 
 #import "Mantle.h"
-#import "ICVehiclePoint.h"
+#import "ICVehiclePathPoint.h"
 
 @interface ICVehicle : MTLModel <MTLJSONSerializing>
-@property (nonatomic, copy, readonly) NSNumber *objectId;
+@property (nonatomic, copy, readonly) NSNumber *uniqueId;
 @property (nonatomic, copy, readonly) NSString *exteriorColor;
 @property (nonatomic, copy, readonly) NSString *interiorColor;
 @property (nonatomic, copy, readonly) NSString *licensePlate;
@@ -18,7 +18,8 @@
 @property (nonatomic, copy, readonly) NSString *model;
 @property (nonatomic, copy, readonly) NSNumber *capacity;
 @property (nonatomic, copy, readonly) NSNumber *year;
-@property (nonatomic, strong, readonly) ICVehiclePoint *point;
+@property (nonatomic, copy, readonly) NSArray *vehiclePath;
+@property (nonatomic, assign, readonly) long vehicleViewId;
 
 -(NSString *)makeAndModel;
 @end

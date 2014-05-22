@@ -11,6 +11,8 @@
 #import "ICVehicle.h"
 #import "ICLocation.h"
 
+extern NSString *const kTripChangedNotification;
+
 @interface ICTrip : MTLModel <MTLJSONSerializing>
 @property (nonatomic, copy, readonly) NSNumber *tripId;
 @property (nonatomic, strong, readonly) ICDriver *driver;
@@ -23,7 +25,6 @@
 @property (nonatomic, copy, readonly) NSNumber *dropoffAt;
 @property (nonatomic, copy, readonly) NSNumber *eta;
 
-@property (nonatomic, readonly) CLLocationCoordinate2D driverCoordinate;
 @property (nonatomic, readonly) BOOL billingComplete;
 
 -(void)update: (ICTrip *)trip;

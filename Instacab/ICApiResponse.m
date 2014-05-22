@@ -8,20 +8,33 @@
 
 #import "ICApiResponse.h"
 
+@implementation ICError
+
++ (NSDictionary *)JSONKeyPathsByPropertyKey {
+    return @{
+        @"message": @"message",
+        @"statusCode": @"statusCode",
+    };
+}
+
+@end
+
+
 @implementation ICApiResponse
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"error": @"error",
-        @"statusCode": @"statusCode",
-        @"validationErrors": @"errors",
         @"addCardUrl": @"add_card_page_url",
         @"submitCardUrl": @"submit_url",
         @"paymentProfile": @"payment_profile",
         @"client": @"client",
-        @"promotionResult": @"promotion_result",
         @"data": @"data"
     };
+}
+
++ (NSValueTransformer *)errorJSONTransformer {
+    return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICError.class];
 }
 
 + (NSValueTransformer *)clientJSONTransformer {
@@ -30,10 +43,6 @@
 
 + (NSValueTransformer *)hasPaymentProfileJSONTransformer {
     return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
-}
-
--(BOOL)isSuccess {
-    return [self.error length] == 0;
 }
 
 @end

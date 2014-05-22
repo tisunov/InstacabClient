@@ -8,6 +8,8 @@
 
 #import "ICTrip.h"
 
+NSString *const kTripChangedNotification = @"tripChanged";
+
 @implementation ICTrip
 
 + (instancetype)sharedInstance {
@@ -50,14 +52,17 @@
     return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICLocation.class];
 }
 
--(void)update: (ICTrip *)trip {
+-(void)update:(ICTrip *)trip {
     if (trip) {
+        BOOL tripsEqual = [self isEqual:trip];
+        
         [self mergeValuesForKeysFromModel:trip];
+        
+        if (!tripsEqual) {
+            NSLog(@"Trip changed");
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTripChangedNotification object:self];
+        }
     }
-}
-
--(CLLocationCoordinate2D)driverCoordinate {
-    return self.driver.location.coordinate;
 }
 
 -(BOOL)billingComplete {

@@ -15,6 +15,7 @@
 #import "UIApplication+Alerts.h"
 #import "ICVerifyMobileViewController.h"
 #import "ICClientService.h"
+#import "MBProgressHud+Global.h"
 
 @interface ICCreateProfileDialog ()
 
@@ -105,12 +106,49 @@
 - (void)linkCard {
     self.signupInfo.firstName = [self textForElementKey:@"firstName"];
     self.signupInfo.lastName = [self textForElementKey:@"lastName"];
-        
-    ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
-    controller.signupInfo = self.signupInfo;
-    controller.delegate = self.delegate;
     
-    [self.navigationController pushViewController:controller animated:YES];
+    [MBProgressHUD showGlobalProgressHUDWithTitle:@"Регистрация"];
+    
+    ICClientService *service = [ICClientService sharedInstance];
+    [service signUp:self.signupInfo
+            success:^(ICPing *response){
+                [MBProgressHUD hideGlobalHUD];
+                
+                ICError *error = response.apiResponse.error;
+                if (error && (error.statusCode.intValue != 201)) {
+                    [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка регистрации." message:@"Пожалуйста, пожалуйста повторите попытку." cancelButtonTitle:@"OK"];
+                }
+                else {
+                    [self saveClient:response.client];
+                    
+                    [self.navigationController dismissViewControllerAnimated:YES completion:^{
+                        [self.delegate signUpCompleted];
+                    }];
+                }
+            }
+            failure:^(NSString *errorTitle, NSString *errorMessage){
+                [MBProgressHUD hideGlobalHUD];
+              
+                [[UIApplication sharedApplication] showAlertWithTitle:errorTitle message:errorMessage cancelButtonTitle:@"OK"];
+            }];
+    
+    
+//    ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
+//    controller.signupInfo = self.signupInfo;
+//    controller.delegate = self.delegate;
+//    
+//    [self.navigationController pushViewController:controller animated:YES];
 }
+
+- (void)saveClient:(ICClient *)registeredClient
+{
+    ICClient *client = [ICClient sharedInstance];
+    client.email = self.signupInfo.email;
+    client.password = self.signupInfo.password;
+    
+    [client update:registeredClient];
+    [client save];
+}
+
 
 @end

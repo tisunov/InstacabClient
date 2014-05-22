@@ -12,12 +12,12 @@
 #import "ICPaymentProfile.h"
 
 typedef enum : NSUInteger {
-    SVClientStateLooking,
-    SVClientStateDispatching,
-    SVClientStateWaitingForPickup,
-    SVClientStateOnTrip,
-    SVClientStatePendingRating
-} ICClientState;
+    ICClientStatusLooking = 1,
+    ICClientStatusDispatching,
+    ICClientStatusWaitingForPickup,
+    ICClientStatusOnTrip,
+    ICClientStatusPendingRating
+} ICClientStatus;
 
 @interface ICClient : ICPerson
 @property (nonatomic, copy) NSString *email;
@@ -25,9 +25,9 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy) NSString *token;
 @property (nonatomic, copy) NSNumber *hasConfirmedMobile;
 @property (nonatomic, strong, readonly) ICPaymentProfile *paymentProfile;
-@property (nonatomic, assign) ICClientState state;
+@property (nonatomic, assign) ICClientStatus state;
 @property (nonatomic, strong, readonly) ICTrip *tripPendingRating;
-@property (nonatomic, copy, readonly) NSString *lastFareEstimate;
+@property (nonatomic, copy, readonly) NSDictionary *lastEstimatedTrip;
 
 // Computed properties
 @property (readonly) BOOL cardPresent;
