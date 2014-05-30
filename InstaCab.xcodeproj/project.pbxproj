@@ -23,6 +23,7 @@
 		D90BAE2B1885CB2200E03F3E /* QuickDialogController+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE2A1885CB2200E03F3E /* QuickDialogController+Additions.m */; };
 		D911228418094462006A49DA /* ICHighlightButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D911228318094462006A49DA /* ICHighlightButton.m */; };
 		D92D430F18F11D720052B245 /* MBProgressHud+Global.m in Sources */ = {isa = PBXBuildFile; fileRef = D92D430E18F11D720052B245 /* MBProgressHud+Global.m */; };
+		D9329AE51931D9BD00453641 /* ICVehicleSelectionSliderLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D9329AE41931D9BD00453641 /* ICVehicleSelectionSliderLabel.m */; };
 		D9378E5F190A780900F805DB /* UIViewController+Location.m in Sources */ = {isa = PBXBuildFile; fileRef = D9378E5E190A780900F805DB /* UIViewController+Location.m */; };
 		D939FFE4190BCC4C00FED191 /* ICLocationLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = D939FFE3190BCC4C00FED191 /* ICLocationLabelView.m */; };
 		D939FFE7190BCCF800FED191 /* ICLocationSingleLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D939FFE6190BCCF800FED191 /* ICLocationSingleLabel.m */; };
@@ -43,8 +44,12 @@
 		D98EFDB11842921C005A2BAA /* ICLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDAE1842921C005A2BAA /* ICLoginViewController.m */; };
 		D98EFDC118429BA8005A2BAA /* UINavigationController+Animation.m in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDC018429BA8005A2BAA /* UINavigationController+Animation.m */; };
 		D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */ = {isa = PBXBuildFile; fileRef = D98EFDC218435677005A2BAA /* CGRectUtils.c */; };
+		D996A0C819305F7A003E7349 /* ICVehicleSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = D996A0C719305F7A003E7349 /* ICVehicleSelectionView.m */; };
+		D996A0CC19306656003E7349 /* ICVehicleSelectionSliderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = D996A0CB19306656003E7349 /* ICVehicleSelectionSliderButton.m */; };
+		D996A0CF19306672003E7349 /* ICVehicleSelectionSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = D996A0CE19306672003E7349 /* ICVehicleSelectionSliderView.m */; };
 		D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D99833D11820E89A00A7DA8E /* Images.xcassets */; };
 		D99833D5182159C600A7DA8E /* ICVehicle.m in Sources */ = {isa = PBXBuildFile; fileRef = D99833D4182159C600A7DA8E /* ICVehicle.m */; };
+		D99C8EAA19332D0A00B5FA4D /* ICImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = D99C8EA919332D0A00B5FA4D /* ICImageDownloader.m */; };
 		D99E792E18CA3D7000585A49 /* BaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = D99E792D18CA3D7000585A49 /* BaseService.m */; };
 		D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D9A10705185F329C00350A17 /* 9yanvarya.gpx */; };
 		D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */ = {isa = PBXBuildFile; fileRef = D9A63CCD18B0843C00F9577E /* Skver.gpx */; };
@@ -146,6 +151,8 @@
 		D911228318094462006A49DA /* ICHighlightButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ICHighlightButton.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		D92D430D18F11D720052B245 /* MBProgressHud+Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHud+Global.h"; sourceTree = "<group>"; };
 		D92D430E18F11D720052B245 /* MBProgressHud+Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHud+Global.m"; sourceTree = "<group>"; };
+		D9329AE31931D9BD00453641 /* ICVehicleSelectionSliderLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICVehicleSelectionSliderLabel.h; path = Request/ICVehicleSelectionSliderLabel.h; sourceTree = "<group>"; };
+		D9329AE41931D9BD00453641 /* ICVehicleSelectionSliderLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICVehicleSelectionSliderLabel.m; path = Request/ICVehicleSelectionSliderLabel.m; sourceTree = "<group>"; };
 		D9378E5D190A780900F805DB /* UIViewController+Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Location.h"; sourceTree = "<group>"; };
 		D9378E5E190A780900F805DB /* UIViewController+Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Location.m"; sourceTree = "<group>"; };
 		D939FFE2190BCC4C00FED191 /* ICLocationLabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICLocationLabelView.h; path = Views/ICLocationLabelView.h; sourceTree = "<group>"; };
@@ -182,9 +189,17 @@
 		D98EFDC018429BA8005A2BAA /* UINavigationController+Animation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Animation.m"; sourceTree = "<group>"; };
 		D98EFDC218435677005A2BAA /* CGRectUtils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CGRectUtils.c; sourceTree = "<group>"; };
 		D98EFDC318435677005A2BAA /* CGRectUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGRectUtils.h; sourceTree = "<group>"; };
+		D996A0C619305F7A003E7349 /* ICVehicleSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICVehicleSelectionView.h; path = Request/ICVehicleSelectionView.h; sourceTree = "<group>"; };
+		D996A0C719305F7A003E7349 /* ICVehicleSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICVehicleSelectionView.m; path = Request/ICVehicleSelectionView.m; sourceTree = "<group>"; };
+		D996A0CA19306656003E7349 /* ICVehicleSelectionSliderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVehicleSelectionSliderButton.h; sourceTree = "<group>"; };
+		D996A0CB19306656003E7349 /* ICVehicleSelectionSliderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVehicleSelectionSliderButton.m; sourceTree = "<group>"; };
+		D996A0CD19306672003E7349 /* ICVehicleSelectionSliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICVehicleSelectionSliderView.h; path = Request/ICVehicleSelectionSliderView.h; sourceTree = "<group>"; };
+		D996A0CE19306672003E7349 /* ICVehicleSelectionSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICVehicleSelectionSliderView.m; path = Request/ICVehicleSelectionSliderView.m; sourceTree = "<group>"; };
 		D99833D11820E89A00A7DA8E /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D99833D3182159C600A7DA8E /* ICVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVehicle.h; sourceTree = "<group>"; };
 		D99833D4182159C600A7DA8E /* ICVehicle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICVehicle.m; sourceTree = "<group>"; };
+		D99C8EA819332D0A00B5FA4D /* ICImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICImageDownloader.h; sourceTree = "<group>"; };
+		D99C8EA919332D0A00B5FA4D /* ICImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICImageDownloader.m; sourceTree = "<group>"; };
 		D99E792C18CA3D7000585A49 /* BaseService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseService.h; sourceTree = "<group>"; };
 		D99E792D18CA3D7000585A49 /* BaseService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseService.m; sourceTree = "<group>"; };
 		D9A10705185F329C00350A17 /* 9yanvarya.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = 9yanvarya.gpx; path = ../9yanvarya.gpx; sourceTree = "<group>"; };
@@ -386,6 +401,8 @@
 				D9AD51591817C7A200692E7E /* ICClientService.h */,
 				D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */,
 				D9EF8ED118170AEB00F9DD52 /* ICDispatchServer.h */,
+				D99C8EA819332D0A00B5FA4D /* ICImageDownloader.h */,
+				D99C8EA919332D0A00B5FA4D /* ICImageDownloader.m */,
 			);
 			name = Networking;
 			sourceTree = "<group>";
@@ -433,6 +450,21 @@
 				D9D08D2118B4F6F300760327 /* Localytics */,
 			);
 			name = 3rdParty;
+			sourceTree = "<group>";
+		};
+		D996A0C91930662F003E7349 /* VehicleSelector */ = {
+			isa = PBXGroup;
+			children = (
+				D996A0C619305F7A003E7349 /* ICVehicleSelectionView.h */,
+				D996A0C719305F7A003E7349 /* ICVehicleSelectionView.m */,
+				D996A0CD19306672003E7349 /* ICVehicleSelectionSliderView.h */,
+				D996A0CE19306672003E7349 /* ICVehicleSelectionSliderView.m */,
+				D996A0CA19306656003E7349 /* ICVehicleSelectionSliderButton.h */,
+				D996A0CB19306656003E7349 /* ICVehicleSelectionSliderButton.m */,
+				D9329AE31931D9BD00453641 /* ICVehicleSelectionSliderLabel.h */,
+				D9329AE41931D9BD00453641 /* ICVehicleSelectionSliderLabel.m */,
+			);
+			name = VehicleSelector;
 			sourceTree = "<group>";
 		};
 		D9AD51581817C78100692E7E /* Location */ = {
@@ -593,6 +625,7 @@
 		D9BD8EAC1903A42A008E0F80 /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				D996A0C91930662F003E7349 /* VehicleSelector */,
 				D9B0327318057E2C00F7AF69 /* ICRequestViewController.m */,
 				D9B0327218057E2C00F7AF69 /* ICRequestViewController.h */,
 				D96EEB281805895B0048A669 /* ICRequestViewController.xib */,
@@ -854,6 +887,7 @@
 				D9EF8ED318170AEB00F9DD52 /* ICDispatchServer.m in Sources */,
 				D98EFDC418435677005A2BAA /* CGRectUtils.c in Sources */,
 				D9B03249180572B400F7AF69 /* AppDelegate.m in Sources */,
+				D996A0CC19306656003E7349 /* ICVehicleSelectionSliderButton.m in Sources */,
 				D9AD51571817B74C00692E7E /* ICGoogleService.m in Sources */,
 				D9BD8EB01903A92A008E0F80 /* ICSearchViewController.m in Sources */,
 				D99E792E18CA3D7000585A49 /* BaseService.m in Sources */,
@@ -861,6 +895,7 @@
 				D982840318878F4A0014BBF7 /* ICApiResponse.m in Sources */,
 				D9D4A28318866F2500067879 /* ICSignUpInfo.m in Sources */,
 				D9CDF237192B2FEF009F7D4A /* ICNearbyVehicles.m in Sources */,
+				D9329AE51931D9BD00453641 /* ICVehicleSelectionSliderLabel.m in Sources */,
 				D9AD515B1817C7A200692E7E /* ICClientService.m in Sources */,
 				D911228418094462006A49DA /* ICHighlightButton.m in Sources */,
 				D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */,
@@ -882,6 +917,9 @@
 				D9D5FAC618F24B12006AB0A8 /* AKTransliteration.m in Sources */,
 				D9B5F494190B78560090CB8D /* ICFareEstimateViewController.m in Sources */,
 				D9C193231888779200A889E4 /* ICAccountViewController.m in Sources */,
+				D996A0CF19306672003E7349 /* ICVehicleSelectionSliderView.m in Sources */,
+				D996A0C819305F7A003E7349 /* ICVehicleSelectionView.m in Sources */,
+				D99C8EAA19332D0A00B5FA4D /* ICImageDownloader.m in Sources */,
 				D92D430F18F11D720052B245 /* MBProgressHud+Global.m in Sources */,
 				D9CDF22B192A8EC4009F7D4A /* ICCity.m in Sources */,
 				D9532E1E1819B44E0046E5EC /* ICPing.m in Sources */,

@@ -44,7 +44,7 @@
 }
 
 -(void)setupBarButton:(UIBarButtonItem *)button {
-    UIFont *font = [UIFont systemFontOfSize:10];
+    UIFont *font = [UIFont boldSystemFontOfSize:10];
     NSDictionary *attributes = @{ NSFontAttributeName: font,
                                   NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1] };
 

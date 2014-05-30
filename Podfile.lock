@@ -20,6 +20,7 @@ PODS:
     - AFNetworking/NSURLSession
   - AKNumericFormatter (0.0.1)
   - Bugsnag (3.1.2)
+  - ChuzzleKit (1.0.2)
   - Colours (5.3.0)
   - EDStarRating (1.1)
   - FCUtilities (0.1.0)
@@ -31,6 +32,32 @@ PODS:
   - MBProgressHUD (0.8)
   - ObjectiveSugar (1.1.0)
   - PaymentKit (1.0.5)
+  - PromiseKit (0.9.7.1):
+    - PromiseKit/base
+    - PromiseKit/CoreLocation
+    - PromiseKit/Foundation
+    - PromiseKit/MapKit
+    - PromiseKit/private
+    - PromiseKit/SocialFramework
+    - PromiseKit/StoreKit
+    - PromiseKit/UIKit
+  - PromiseKit/base (0.9.7.1)
+  - PromiseKit/CoreLocation (0.9.7.1):
+    - PromiseKit/base
+    - PromiseKit/private
+  - PromiseKit/Foundation (0.9.7.1):
+    - ChuzzleKit
+    - PromiseKit/base
+  - PromiseKit/MapKit (0.9.7.1):
+    - PromiseKit/base
+  - PromiseKit/private (0.9.7.1)
+  - PromiseKit/SocialFramework (0.9.7.1):
+    - PromiseKit/base
+  - PromiseKit/StoreKit (0.9.7.1):
+    - PromiseKit/base
+    - PromiseKit/private
+  - PromiseKit/UIKit (0.9.7.1):
+    - PromiseKit/base
   - QuickDialog (1.0):
     - QuickDialog/Core
   - QuickDialog/Core (1.0)
@@ -58,6 +85,7 @@ DEPENDENCIES:
   - MBProgressHUD (from `https://github.com/dannybabiy/MBProgressHUD.git`, branch `ios7`)
   - ObjectiveSugar
   - PaymentKit (from `https://github.com/stripe/PaymentKit.git`)
+  - PromiseKit
   - QuickDialog (from `https://github.com/escoz/QuickDialog.git`)
   - ReactiveCocoa (~> 2.1.7)
   - SLScrollViewKeyboardSupport (from `https://github.com/OliverLetterer/SLScrollViewKeyboardSupport.git`)
@@ -87,23 +115,25 @@ EXTERNAL SOURCES:
     :git: https://github.com/tisunov/TSMessages.git
 
 SPEC CHECKSUMS:
-  AFNetworking: ae513199cca79e9d7af2708ccabe2ed075550c42
+  AFNetworking: 47947303319594706f48a55185ea95a95159ab94
   AKNumericFormatter: 49e215306b97d774bff72d16ffe9951ebcd11931
-  Bugsnag: 165e71d6169549a7ea51c76691318a06bfd59c76
-  Colours: 4df972e1ff8d888acad5a00302288a94c43ec5dc
-  EDStarRating: 4954b62647884e7b2d37c4720d4a1f758b5a3435
+  Bugsnag: 74d109dfa41b55d16890c987c7551ca071afd3d2
+  ChuzzleKit: 9932e7e4576360ae6ed95f912e74d2ee4288626b
+  Colours: 60b2e4dbdf2a0f077a98a07dae1ed18ac3333e21
+  EDStarRating: c7b87f9866be0ea29bb054964023b8eb3f18286c
   FCUtilities: d0f0da2640a643bb319c3ef58e9c43530fcbc521
-  HexColors: 99211502e17904af7891fc8f687d0e4958a6d66e
+  HexColors: 01384d2bbe8dc4ffa43c3b4135db6e976952d153
   iOSBlocks: fecd9f6ff80da30bc23b9d35ccf78f483baa8043
-  Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
+  Mantle: 1ca9c0fa84d3d3fc98524e7229f30489b6dd44e5
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
-  ObjectiveSugar: fed588577bcf9733546aeaa089de444e4bab9a52
+  ObjectiveSugar: f48793f5902c77cfc02a4ce46d2e8ecddcad4dc2
   PaymentKit: 92df7c2fb4fb3b4e0c3f5fb8c8e75cc528025126
+  PromiseKit: 2eb1c6754c9b9a1577e6886dac4c4cf82fc6a447
   QuickDialog: 36f3e3387b6e1af9f963c3afc665a07f03107a01
-  ReactiveCocoa: 0db710a0afa1c627a64470e5c912a3870d4854ae
+  ReactiveCocoa: 399d3ad0c8ac73d79bed5bcd076a04f46ec635fc
   SLScrollViewKeyboardSupport: 8e59a8af41cc29a8b63b7adf8de3da09d523cc2c
   SocketRocket: 9cbe08469513356cddc0afcab1ff160bd190296a
   TSMessages: de3fecb312d44078128add86d4347307669d0af2
-  UIView+AutoLayout: 43373a18797954fd8ee3b1423af364f1b80a2af8
+  UIView+AutoLayout: dc24ec6114498617510af759148a05b957af1b38
 
 COCOAPODS: 0.32.1

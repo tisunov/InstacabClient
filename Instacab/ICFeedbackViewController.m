@@ -20,7 +20,7 @@
 
 @end
 
-NSString * const kFeedbackPlaceholder = @"Комментарии";
+NSString * const kFeedbackPlaceholder = @"Что мы могли сделать лучше?";
 
 @implementation ICFeedbackViewController {
     SLScrollViewKeyboardSupport *_keybdSupport;
@@ -61,7 +61,7 @@ NSString * const kFeedbackPlaceholder = @"Комментарии";
     _starRating.starHighlightedImage = [UIImage imageNamed:@"rating_star_full.png"];
     _starRating.maxRating = 5.0;
     _starRating.delegate = self;
-    _starRating.horizontalMargin = 12;
+    _starRating.horizontalMargin = 8;
     _starRating.editable = YES;
     _starRating.displayMode = EDStarRatingDisplayFull;
     [_starRating setNeedsDisplay];

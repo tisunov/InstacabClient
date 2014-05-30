@@ -248,7 +248,7 @@
 
 - (void)signInClient:(ICClient *)client {
     if ([ICClient sharedInstance].state == ICClientStatusPendingRating) {
-        self.navigationController.viewControllers = [self viewControllers];
+        self.navigationController.viewControllers = [self stackedRequestAndReceiptViewControllers];
     }
     else {
         [self pushRequestViewControllerAnimated:NO];
@@ -333,7 +333,7 @@
     }
 }
 
-- (NSArray *)viewControllers {
+- (NSArray *)stackedRequestAndReceiptViewControllers {
     ICRequestViewController *vc1 = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
     
     ICReceiptViewController *vc2 = [[ICReceiptViewController alloc] initWithNibName:@"ICReceiptViewController" bundle:nil];
@@ -346,7 +346,10 @@
         case SVMessageTypeOK:
         {
             if ([ICClient sharedInstance].state == ICClientStatusPendingRating) {
-                [self.navigationController slideLayerInDirection:kCATransitionFromBottom andSetViewControllers:[self viewControllers]];
+                if ([self.navigationController.visibleViewController isKindOfClass:ICReceiptViewController.class])
+                    return;
+                
+                [self.navigationController slideLayerInDirection:kCATransitionFromBottom andSetViewControllers:[self stackedRequestAndReceiptViewControllers]];
             }
             else {
                 [self pushRequestViewControllerAnimated:YES];

@@ -60,6 +60,12 @@
 #define COCOAPODS_VERSION_MINOR_Bugsnag 1
 #define COCOAPODS_VERSION_PATCH_Bugsnag 2
 
+// ChuzzleKit
+#define COCOAPODS_POD_AVAILABLE_ChuzzleKit
+#define COCOAPODS_VERSION_MAJOR_ChuzzleKit 1
+#define COCOAPODS_VERSION_MINOR_ChuzzleKit 0
+#define COCOAPODS_VERSION_PATCH_ChuzzleKit 2
+
 // Colours
 #define COCOAPODS_POD_AVAILABLE_Colours
 #define COCOAPODS_VERSION_MAJOR_Colours 5
@@ -113,6 +119,69 @@
 #define COCOAPODS_VERSION_MAJOR_PaymentKit 1
 #define COCOAPODS_VERSION_MINOR_PaymentKit 0
 #define COCOAPODS_VERSION_PATCH_PaymentKit 5
+
+// PromiseKit
+#define COCOAPODS_POD_AVAILABLE_PromiseKit
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/CoreLocation
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_CoreLocation
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/Foundation
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_Foundation
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/MapKit
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_MapKit
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/SocialFramework
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_SocialFramework
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/StoreKit
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_StoreKit
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/UIKit
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_UIKit
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/base
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_base
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
+
+// PromiseKit/private
+#define COCOAPODS_POD_AVAILABLE_PromiseKit_private
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.9.7.1.
 
 // QuickDialog
 #define COCOAPODS_POD_AVAILABLE_QuickDialog

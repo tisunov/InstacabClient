@@ -15,8 +15,8 @@
     return @{
         @"uniqueId": @"id",
         @"description": @"description",
-        @"pickupButtonString": @"pickupButtonString",
-        @"confirmPickupButtonString": @"confirmPickupButtonString",
+//        @"pickupButtonString": @"pickupButtonString",
+//        @"confirmPickupButtonString": @"confirmPickupButtonString",
         @"requestPickupButtonString": @"requestPickupButtonString",
         @"setPickupLocationString": @"setPickupLocationString",
         @"pickupEtaString": @"pickupEtaString",
@@ -53,13 +53,13 @@
     
     ICVehicleView *other = (ICVehicleView *)object;
     
-    BOOL haveEqualIds = self.uniqueId == other.uniqueId;
+    BOOL haveEqualIds = (!self.uniqueId && !other.uniqueId) || [self.uniqueId isEqualToNumber:other.uniqueId];
     
     BOOL haveEqualDescriptions = (!self.description && !other.description) || [self.description isEqualToString:other.description];
     
-    BOOL haveEqualPickupButtonStrings = (!self.pickupButtonString && !other.pickupButtonString) || [self.pickupButtonString isEqualToString:other.pickupButtonString];
-    
-    BOOL haveEqualConfirmPickupButtonStrings = (!self.confirmPickupButtonString && !other.confirmPickupButtonString) || [self.confirmPickupButtonString isEqualToString:other.confirmPickupButtonString];
+//    BOOL haveEqualPickupButtonStrings = (!self.pickupButtonString && !other.pickupButtonString) || [self.pickupButtonString isEqualToString:other.pickupButtonString];
+//    
+//    BOOL haveEqualConfirmPickupButtonStrings = (!self.confirmPickupButtonString && !other.confirmPickupButtonString) || [self.confirmPickupButtonString isEqualToString:other.confirmPickupButtonString];
     
     BOOL haveEqualRequestPickupButtonStrings = (!self.requestPickupButtonString && !other.requestPickupButtonString) || [self.requestPickupButtonString isEqualToString:other.requestPickupButtonString];
 
@@ -69,7 +69,7 @@
 
     BOOL haveEqualNoneAvailableString = (!self.noneAvailableString && !other.pickupEtaString) || [self.noneAvailableString isEqualToString:other.noneAvailableString];
     
-    BOOL equal = haveEqualIds && haveEqualDescriptions && haveEqualPickupButtonStrings && haveEqualConfirmPickupButtonStrings && haveEqualRequestPickupButtonStrings && haveEqualSetPickupLocationString && haveEqualPickupEtaString && haveEqualNoneAvailableString;
+    BOOL equal = haveEqualIds && haveEqualDescriptions && /*haveEqualPickupButtonStrings && haveEqualConfirmPickupButtonStrings &&*/ haveEqualRequestPickupButtonStrings && haveEqualSetPickupLocationString && haveEqualPickupEtaString && haveEqualNoneAvailableString;
     
     return equal;
 }

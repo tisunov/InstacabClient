@@ -10,10 +10,10 @@
 #import "ICImage.h"
 
 @interface ICVehicleView : MTLModel <MTLJSONSerializing>
-@property (nonatomic, assign, readonly) long uniqueId;
+@property (nonatomic, copy, readonly) NSNumber *uniqueId;
 @property (nonatomic, copy, readonly) NSString *description;
-@property (nonatomic, copy, readonly) NSString *pickupButtonString;
-@property (nonatomic, copy, readonly) NSString *confirmPickupButtonString;
+//@property (nonatomic, copy, readonly) NSString *pickupButtonString;
+//@property (nonatomic, copy, readonly) NSString *confirmPickupButtonString;
 @property (nonatomic, copy, readonly) NSString *requestPickupButtonString;
 @property (nonatomic, copy, readonly) NSString *setPickupLocationString;
 @property (nonatomic, copy, readonly) NSString *pickupEtaString;

@@ -25,6 +25,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "ICPromoViewController.h"
 #import "ICFareEstimateViewController.h"
+#import "ICVehicleSelectionView.h"
 
 @interface ICRequestViewController ()
 @property (nonatomic, strong) ICLocation *pickupLocation;
@@ -52,6 +53,7 @@
     CGFloat _addressViewOriginY;
     CGFloat _mapVerticalPadding;
     UIImageView *_fogView;
+    ICVehicleSelectionView *_vehicleSelector;
 }
 
 NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
@@ -106,16 +108,28 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _mapVerticalPadding = _pickupView.frame.size.height;
     
     [self showExitNavbarButton];
-    
     [self setupMapView];
     [self addPickupPositionPin];
     [self setupAddressBar];
     [self setupDriverPanel];
 
-//    _pickupView.backgroundColor = [UIColor colorWithRed:242/255.0 green:242/255.0 blue:242/255.0 alpha:1];
-//    [self setViewTopShadow:_pickupView];
     [self setViewBottomShadow:_statusView];
+
+    [self styleButtons];
     
+//    [self setupVehicleSelectionView];
+    
+    // Should be sent only once when view is created to track open-to-order ratio
+    // Even if user opens app and gets straight to ReceiptView, that method should be called
+    [_clientService logMapPageView];
+}
+
+- (void)setupVehicleSelectionView {
+    _vehicleSelector = [[ICVehicleSelectionView alloc] initWithFrame:CGRectMake(0, [[UIScreen mainScreen] bounds].size.height - 80, 320, 80)];
+    [self.view addSubview:_vehicleSelector];
+}
+
+- (void)styleButtons {
     _buttonContainerView.layer.borderColor = [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1].CGColor;
     _buttonContainerView.layer.borderWidth = 1.0;
     _buttonContainerView.layer.cornerRadius = 3.0;
@@ -124,29 +138,17 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_fareEstimateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
     _fareEstimateButton.highlightedColor = _promoCodeButton.highlightedColor = [UIColor blueberryColor];
-
+    
     [_promoCodeButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
     [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
     _pickupBtn.layer.cornerRadius = 3.0f;
     _pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
     _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
-
+    
     _confirmPickupButton.layer.cornerRadius = _pickupBtn.layer.cornerRadius;
     _confirmPickupButton.normalColor = _pickupBtn.normalColor;
     _confirmPickupButton.highlightedColor = _pickupBtn.highlightedColor;
-    
-    // Should be sent only once when view is created to track open-to-order ratio
-    // Even if user opens app and gets straight to ReceiptView, that method should be called
-    [_clientService logMapPageView];
-    
-    UITapGestureRecognizer *singleFingerTap =
-        [[UITapGestureRecognizer alloc] initWithTarget:self
-                                                action:@selector(handleAddressBarTap:)];
-    
-    [self.addressView addGestureRecognizer:singleFingerTap];
-    
-    [_searchAddressButton addTarget:self action:@selector(handleAddressBarTap:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)handleAddressBarTap:(UITapGestureRecognizer *)recognizer {
@@ -208,6 +210,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self presentDriverState];
     [self pingUpdated];
+    [self onCityChanged:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onDispatcherReceiveResponse:)
@@ -222,6 +225,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onNearbyVehiclesChanged:)
                                                  name:kNearbyVehiclesChangedNotification
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(onCityChanged:)
+                                                 name:kCityChangedNotification
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -351,6 +359,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _textChangeAnimation.type = kCATransitionFade;
     _textChangeAnimation.duration = 0.4;
     _textChangeAnimation.fillMode = kCAFillModeBoth;
+    
+    UITapGestureRecognizer *singleFingerTap =
+    [[UITapGestureRecognizer alloc] initWithTarget:self
+                                            action:@selector(handleAddressBarTap:)];
+    
+    [self.addressView addGestureRecognizer:singleFingerTap];
+    
+    [_searchAddressButton addTarget:self action:@selector(handleAddressBarTap:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)addPickupPositionPin {
@@ -760,9 +776,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)showVerifyMobileDialog {
     ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
     
-    UINavigationController *navigation = [[UINavigationController alloc] initWithRootViewController:controller];
-    
-    [self.navigationController presentViewController:navigation animated:YES completion:nil];
+    [self presentModalViewController:controller];
 }
 
 - (void)setViewTopShadow:(UIView *)view {
@@ -900,8 +914,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)showFareAndRateDriver {
-    if (self.navigationController.topViewController != self) return;
-    
     ICReceiptViewController *vc = [[ICReceiptViewController alloc] initWithNibName:@"ICReceiptViewController" bundle:nil];
     
     [self hideProgress];
@@ -963,11 +975,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             [self hideProgress];
             break;
             
-        case ICClientStatusPendingRating:
-            [self showFareAndRateDriver];
-            [[ICTrip sharedInstance] clear];
-            break;
-            
         default:
             break;
     }
@@ -1021,6 +1028,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
         [self updateTripStatus];
     }
+    else if (clientStatus == ICClientStatusPendingRating) {
+        [self showFareAndRateDriver];
+        [[ICTrip sharedInstance] clear];
+    }
     
     [self updateMapMarkers];
     
@@ -1030,6 +1041,22 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)destroyPickupMarker {
     _pickupMarker.map = nil;
     _pickupMarker = nil;
+}
+
+// TODO: Обновить надписи на кнопках в соответствии с defaultVehicleViewId и строками в default VehicleView
+-(void)onCityChanged:(NSNotification *)note {
+    ICCity *city = [ICCity shared];
+    
+    [self updateSetPickup];
+    
+    if (!city.vehicleViewsOrder) return;
+    
+//    NSMutableArray *items = [NSMutableArray arrayWithArray:city.vehicleViews.allValues];
+//    [items sortUsingComparator:^NSComparisonResult(ICVehicleView *obj1, ICVehicleView *obj2) {
+//        return [@([city.vehicleViewsOrder indexOfObject:obj1.uniqueId]) compare:@([city.vehicleViewsOrder indexOfObject:obj2.uniqueId])];
+//    }];
+//    
+//    [_vehicleSelector layoutWithOrderedVehicleViews:items selectedViewId:city.defaultVehicleViewId];
 }
 
 -(void)onNearbyVehiclesChanged:(NSNotification *)note {
@@ -1096,14 +1123,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (!vehicleView) return;
     
     NSString *requestPickupButtonString =
-    vehicleView.requestPickupButtonString.length ?
-    [vehicleView.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:vehicleView.description] : kRequestPickup;
+        vehicleView.requestPickupButtonString.length ?
+            [vehicleView.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:vehicleView.description] : kRequestPickup;
     
     [_confirmPickupButton setTitle:requestPickupButtonString forState:UIControlStateNormal];
     
     NSString *setPickupLocationString =
-    vehicleView.setPickupLocationString.length ?
-    vehicleView.setPickupLocationString : kSetPickupLocation;
+        vehicleView.setPickupLocationString.length ?
+            vehicleView.setPickupLocationString : kSetPickupLocation;
     
     [_pickupBtn setTitle:setPickupLocationString forState:UIControlStateNormal];
     
@@ -1272,22 +1299,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     return _pickupLocation;
 }
 
-// TODO: Для разных машин асинхронно грузить картинки из сети и кэшировать их по vehicleViewId,
+// TODO: Для разных машин асинхронно грузить картинки из сети и кэшировать их по url,
 // грузить только если их нету.
 // TODO: Выполнить это после pingUpdated, проверить есть ли загруженные картинки для vehicleViewId
 // и если нету то выполнить асинхронную загрузку для этого vehicleViewId, а после этого выполнить код по присвоению загруженной картинки всем маркерам на карте для данного vehicleViewId, и ОБЯЗАТЕЛЬНО в главной нитке
-
-// TODO: Взять и применить здесь iOS Promises SDK
-
-//AFHTTPRequestOperation *requestOperation = [[AFHTTPRequestOperation alloc] initWithRequest:urlRequest];
-//requestOperation.responseSerializer = [AFImageResponseSerializer serializer];
-//[requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-//    NSLog(@"Response: %@", responseObject);
-//    _imageView.image = responseObject;
-//    
-//} failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//    NSLog(@"Image error: %@", error);
-//}];
-//[requestOperation start];
 
 @end

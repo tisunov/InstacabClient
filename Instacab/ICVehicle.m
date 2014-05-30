@@ -33,4 +33,16 @@
     return [NSString stringWithFormat:@"%@ %@", self.make, self.model];
 }
 
+-(BOOL)isEqual:(ICVehicle *)vehicle {
+    if (self == vehicle) {
+        return YES;
+    }
+    
+    if (![vehicle isKindOfClass:[ICVehicle class]]) {
+        return NO;
+    }
+    
+    return [vehicle.uniqueId isEqualToNumber:self.uniqueId];
+}
+
 @end

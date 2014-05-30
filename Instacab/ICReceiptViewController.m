@@ -32,7 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.titleText = @"КВИТАНЦИЯ";
+    self.titleText = @"ВАШ ЧЕК";
     self.navigationItem.hidesBackButton = YES;
     self.navigationController.navigationBarHidden = NO;
 
@@ -124,10 +124,11 @@
     _starRating.starImage = [UIImage imageNamed:@"rating_star_empty.png"];
     _starRating.starHighlightedImage = [UIImage imageNamed:@"rating_star_full.png"];
     _starRating.maxRating = 5.0;
-    _starRating.delegate = self;
-    _starRating.horizontalMargin = 12;
+    _starRating.horizontalMargin = 8;
     _starRating.editable = YES;
     _starRating.displayMode = EDStarRatingDisplayFull;
+    _starRating.delegate = self;
+    
     [_starRating setNeedsDisplay];
 }
 
