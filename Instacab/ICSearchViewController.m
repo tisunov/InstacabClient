@@ -99,6 +99,23 @@
         [self performNoQuerySearch];
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    // Change UISearchBar cancel button appearance
+    UIFont *font = [UIFont boldSystemFontOfSize:10];
+    NSDictionary *attributes = @{ NSFontAttributeName: font,
+                                  NSForegroundColorAttributeName:[UIColor colorWithRed:42/255.0 green:43/255.0 blue:42/255.0 alpha:1] };
+    
+    id appearance = [UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil];
+    [appearance setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    
+    attributes = @{ NSFontAttributeName: font,
+                    NSForegroundColorAttributeName:[UIColor lightGrayColor] };
+    
+    [appearance setTitleTextAttributes:attributes forState:UIControlStateDisabled];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
@@ -113,13 +130,22 @@
     searchBar.searchBarStyle = UISearchBarStyleMinimal;
     searchBar.delegate = self;
     [self.view addSubview:searchBar];
-    
-    // Rename searchBar.cancelButton
-    id appearance = [UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil];
-    [appearance setTitle:@"Отмена"];    
-    [self setupBarButton:appearance];
-
 }
+
+-(void)setupSearchCancelButton {
+    UIButton *button;
+    UIView *topView = searchBar.subviews[0];
+    for (UIView *subView in topView.subviews) {
+        if ([subView isKindOfClass:NSClassFromString(@"UINavigationButton")]) {
+            button = (UIButton*)subView;
+        }
+    }
+    
+    if (button) {
+        [button setTitle:[@"Отмена" uppercaseString] forState:UIControlStateNormal];
+    }
+}
+
 
 -(void)cancel {
     [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
@@ -441,9 +467,15 @@
     }
 }
 
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)sb {
-    [searchBar setShowsCancelButton:YES animated:YES];
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)sb {
+    [searchBar setShowsCancelButton:YES animated:NO];
     
+    [self setupSearchCancelButton];
+    
+    return YES;
+}
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)sb {
     [UIView animateWithDuration:0.25 animations:^(void){
         _searchBarTopConstraint.constant = 20.0f;
 

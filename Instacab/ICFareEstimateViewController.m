@@ -107,7 +107,7 @@ NSString *const kFareDescription = @"Тариф может изменяться 
 //    newDestinationButton.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
 //    newDestinationButton.normalColor = [UIColor colorWithRed:87/255.0 green:87/255.0 blue:101/255.0 alpha:1];
 //    newDestinationButton.highlightedColor = [UIColor blueberryColor];
-    [newDestinationButton setTitle:@"НОВЫЙ ПУНКТ НАЗНАЧЕНИЯ" forState:UIControlStateNormal];
+    [newDestinationButton setTitle:@"НОВОЕ МЕСТО НАЗНАЧЕНИЯ" forState:UIControlStateNormal];
     [newDestinationButton addTarget:self action:@selector(changeDestination:) forControlEvents:UIControlEventTouchUpInside];
     [_fareEstimateView addSubview:newDestinationButton];
     

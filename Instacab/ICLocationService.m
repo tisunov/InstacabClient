@@ -107,7 +107,7 @@ static NSString *kFCTimeoutError = @"Пожалуйста убедитесь ч�
     return _locationManager.location.coordinate;
 }
 
-- (CLLocation *) location{
+- (CLLocation *)location{
     return _locationManager.location;
 }
 
@@ -124,6 +124,11 @@ static NSString *kFCTimeoutError = @"Пожалуйста убедитесь ч�
     
     // Timeout after 7 seconds of trying to get location
     [self performSelector:@selector(handleFatalError:) withObject:kFCTimeoutError afterDelay:7.0f];
+}
+
+-(void)startUpdatingHeading {
+    _locationManager.headingFilter = 5.0;
+    [_locationManager startUpdatingHeading];
 }
 
 - (BOOL)isAvailable {

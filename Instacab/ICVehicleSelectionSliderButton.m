@@ -10,6 +10,7 @@
 
 @implementation UIImage (Tinted)
 
+// TODO: Для экономии батареи делать это только один раз!
 - (UIImage *)tintedImageWithColor:(UIColor *)tintColor {
     UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -38,10 +39,12 @@
 
 @implementation ICVehicleSelectionSliderButton
 
+
+// TODO: http://stackoverflow.com/questions/1957317/how-do-i-scale-a-uibuttons-imageview
+//
 -(void)setIcon:(UIImage *)icon {
     [self setImage:icon forState:UIControlStateNormal];
     [self setImage:[icon tintedImageWithColor:self.tintColor] forState:UIControlStateHighlighted];
-    [self setImageEdgeInsets:UIEdgeInsetsMake(17, 10, 17, 10)];
 }
 
 #pragma mark Initialization

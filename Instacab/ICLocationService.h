@@ -29,4 +29,5 @@
 @property (nonatomic, readonly) BOOL isRestricted;
 
 -(void)startUpdatingLocation;
+-(void)startUpdatingHeading;
 @end

@@ -7,7 +7,7 @@
 //
 
 #import "ICHighlightButton.h"
-#import "UIColor+Colours.h"
+#import "Colours.h"
 
 @implementation ICHighlightButton
 
