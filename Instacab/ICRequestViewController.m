@@ -1182,13 +1182,16 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
     
     // Remove missing vehicles
+    NSMutableArray *uuids = [NSMutableArray new];
     for (NSString *uuid in _vehicleMarkers) {
         GMSMarker *vehicleMarker = _vehicleMarkers[uuid];
         if (!vehicle.vehiclePaths[uuid] && vehicleMarker.userData == vehicleViewId) {
             vehicleMarker.map = nil;
-            [_vehicleMarkers removeObjectForKey:uuid];
+            [uuids addObject:uuid];
         }
     }
+    
+    [_vehicleMarkers removeObjectsForKeys:uuids];
 }
 
 - (void)onDispatcherReceiveResponse:(NSNotification *)note {
