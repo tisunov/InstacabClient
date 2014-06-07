@@ -46,7 +46,7 @@
     ICClientService *_clientService;
     ICLocationService *_locationService;
     UIGestureRecognizer *_hudGesture;
-    UIImageView *_greenPinView;
+    UIImageView *_pickupLocationMarker;
     UIView *_statusView;
     UILabel *_statusLabel;
     
@@ -109,7 +109,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self showExitNavbarButton];
     [self setupMapView];
-    [self addPickupPositionPin];
     [self setupAddressBar];
     [self setupDriverPanel];
 
@@ -367,19 +366,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.addressView addGestureRecognizer:singleFingerTap];
     
     [_searchAddressButton addTarget:self action:@selector(handleAddressBarTap:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)addPickupPositionPin {
-    UIImage *pinGreen = [UIImage imageNamed:@"pin_green.png"];
-//    UIImage *pinGreen = [UIImage imageNamed:@"pin_red"];
-    
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    int pinX = screenBounds.size.width / 2 - pinGreen.size.width / 2;
-    int pinY = screenBounds.size.height / 2 - pinGreen.size.height;
-    
-    _greenPinView = [[UIImageView alloc] initWithFrame:CGRectMake(pinX, pinY, pinGreen.size.width, pinGreen.size.height)];
-    _greenPinView.image = pinGreen;
-    [_mapView addSubview:_greenPinView];
 }
 
 - (void)setupMapView {
@@ -1043,6 +1029,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _pickupMarker = nil;
 }
 
+-(void)destroyPickupLocationMarker {
+    if (_pickupLocationMarker) {
+        [_pickupLocationMarker removeFromSuperview];
+        _pickupLocationMarker = nil;
+    }
+}
+
 // TODO: Обновить надписи на кнопках в соответствии с defaultVehicleViewId и строками в default VehicleView
 -(void)onCityChanged:(NSNotification *)note {
     ICCity *city = [ICCity shared];
@@ -1073,14 +1066,31 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // TODO: Обновлять здесь состояние приближения/прибытия водителя
 }
 
+- (void)addPickupLocationMarker {
+    if (_pickupLocationMarker) return;
+    
+    UIImage *pinGreen = [UIImage imageNamed:@"pin_green.png"];
+    
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    int pinX = screenBounds.size.width / 2 - pinGreen.size.width / 2;
+    int pinY = screenBounds.size.height / 2 - pinGreen.size.height;
+    
+    _pickupLocationMarker = [[UIImageView alloc] initWithFrame:CGRectMake(pinX, pinY, pinGreen.size.width, pinGreen.size.height)];
+    _pickupLocationMarker.image = pinGreen;
+    [self.view addSubview:_pickupLocationMarker];
+}
+
 -(void)updateMapMarkers {
     ICClientStatus clientStatus = [ICClient sharedInstance].state;
     
     if (clientStatus == ICClientStatusLooking) {
         [self updateVehicleMarkers];
         [self destroyPickupMarker];
+        [self addPickupLocationMarker];
     }
     else if (clientStatus == ICClientStatusWaitingForPickup || clientStatus == ICClientStatusOnTrip) {
+        [self destroyPickupLocationMarker];
+        
         ICClientStatus clientStatus = [ICClient sharedInstance].state;
         ICTrip *trip = [ICTrip sharedInstance];
         ICDriver *driver = trip.driver;
@@ -1103,8 +1113,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         if (clientStatus == ICClientStatusWaitingForPickup) {
             ICLocation *pickupLocation = trip.pickupLocation;
             if (!_pickupMarker) {
-                // Remove pickup location image
-                [_greenPinView removeFromSuperview];
                 // Add pickup marker
                 _pickupMarker = [GMSMarker markerWithPosition:pickupLocation.coordinate];
                 _pickupMarker.icon = [UIImage imageNamed:@"pin_red.png"];
@@ -1113,7 +1121,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         }
         else
             [self destroyPickupMarker];
-        
     }
 }
 
@@ -1238,10 +1245,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.titleText = @"INSTACAB";
     [self transitionFromDriverViewToPickupView];
     
-    // Clear all markers and add pickup marker
-    [self destroyPickupMarker];
-    [_mapView addSubview:_greenPinView];
-
     [self showAddressBar];
     [self hideTripCancelButton];
     
