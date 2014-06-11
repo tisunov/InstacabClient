@@ -50,7 +50,7 @@
     _borderView.layer.cornerRadius = 3.0;
     
     _promoCodeTextField.leftViewMode = UITextFieldViewModeAlways;
-    _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"promo_icon_grey.png"]];
+    _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_promo.png"]];
     _promoCodeTextField.delegate = self;
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(back)];

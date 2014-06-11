@@ -32,6 +32,8 @@
 		D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = D948113E18BCB6720005D348 /* ICPaymentProfile.m */; };
 		D948114118BD3E680005D348 /* libLocalyticsAMP_x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */; };
 		D9532E1E1819B44E0046E5EC /* ICPing.m in Sources */ = {isa = PBXBuildFile; fileRef = D9532E1D1819B44E0046E5EC /* ICPing.m */; };
+		D960BF961948D2880062DC7F /* libGoogleConversionTracking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D960BF941948D2880062DC7F /* libGoogleConversionTracking.a */; };
+		D960BF971948D2880062DC7F /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = D960BF951948D2880062DC7F /* README.txt */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
 		D97A48D318F03FCB0095B4BC /* ICVerifyMobileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */; };
 		D97A48D418F03FCB0095B4BC /* ICVerifyMobileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D97A48D218F03FCB0095B4BC /* ICVerifyMobileViewController.xib */; };
@@ -168,6 +170,11 @@
 		D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP_x64.a; sourceTree = "<group>"; };
 		D9532E1C1819B44E0046E5EC /* ICPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICPing.h; sourceTree = "<group>"; };
 		D9532E1D1819B44E0046E5EC /* ICPing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPing.m; sourceTree = "<group>"; };
+		D960BF8F1948D2880062DC7F /* ACTReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACTReporter.h; sourceTree = "<group>"; };
+		D960BF911948D2880062DC7F /* GoogleConversionPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleConversionPing.h; sourceTree = "<group>"; };
+		D960BF931948D2880062DC7F /* DCTReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCTReporter.h; sourceTree = "<group>"; };
+		D960BF941948D2880062DC7F /* libGoogleConversionTracking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleConversionTracking.a; sourceTree = "<group>"; };
+		D960BF951948D2880062DC7F /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
 		D97A48D018F03FCB0095B4BC /* ICVerifyMobileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICVerifyMobileViewController.h; sourceTree = "<group>"; };
 		D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ICVerifyMobileViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -306,6 +313,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D906B11B18A924230065E256 /* libsqlite3.dylib in Frameworks */,
+				D960BF961948D2880062DC7F /* libGoogleConversionTracking.a in Frameworks */,
 				D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */,
 				D9EFF9A61805867700A68AED /* SystemConfiguration.framework in Frameworks */,
 				D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */,
@@ -442,9 +450,39 @@
 			name = "Welcome & Login";
 			sourceTree = "<group>";
 		};
+		D960BF8E1948D2880062DC7F /* GoogleConversionTrackingSDK */ = {
+			isa = PBXGroup;
+			children = (
+				D960BF8F1948D2880062DC7F /* ACTReporter.h */,
+				D960BF901948D2880062DC7F /* Deprecated */,
+				D960BF921948D2880062DC7F /* DoubleClick */,
+				D960BF941948D2880062DC7F /* libGoogleConversionTracking.a */,
+				D960BF951948D2880062DC7F /* README.txt */,
+			);
+			name = GoogleConversionTrackingSDK;
+			path = "GoogleConversionTrackingSDK-iOS-3.0.0";
+			sourceTree = "<group>";
+		};
+		D960BF901948D2880062DC7F /* Deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				D960BF911948D2880062DC7F /* GoogleConversionPing.h */,
+			);
+			path = Deprecated;
+			sourceTree = "<group>";
+		};
+		D960BF921948D2880062DC7F /* DoubleClick */ = {
+			isa = PBXGroup;
+			children = (
+				D960BF931948D2880062DC7F /* DCTReporter.h */,
+			);
+			path = DoubleClick;
+			sourceTree = "<group>";
+		};
 		D978D4F218B5F11500952BB7 /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				D960BF8E1948D2880062DC7F /* GoogleConversionTrackingSDK */,
 				D9D5FABF18F24B12006AB0A8 /* AKTransliteration */,
 				D9D4A2781886629C00067879 /* CardIO */,
 				D9D08D2118B4F6F300760327 /* Localytics */,
@@ -812,6 +850,7 @@
 				D90BAE151884306600E03F3E /* ICWelcomeViewController.xib in Resources */,
 				D9CD0E4D1829A55400A02619 /* ICReceiptViewController.xib in Resources */,
 				D900105219069B2000F0FB09 /* ICPromoViewController.xib in Resources */,
+				D960BF971948D2880062DC7F /* README.txt in Resources */,
 				D9A10706185F329C00350A17 /* 9yanvarya.gpx in Resources */,
 				D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */,
 				D9D5FAC718F24B12006AB0A8 /* EnRuRules.plist in Resources */,
@@ -1080,6 +1119,7 @@
 					"$(inherited)",
 					/Users/tisunov/InstacabApp/Instacab/CardIO,
 					/Users/tisunov/InstacabApp/Instacab/Localytics,
+					"$(PROJECT_DIR)/Instacab/GoogleConversionTrackingSDK-iOS-3.0.0",
 				);
 				OTHER_LDFLAGS = (
 					"-all_load",
@@ -1115,6 +1155,7 @@
 					"$(inherited)",
 					/Users/tisunov/InstacabApp/Instacab/CardIO,
 					/Users/tisunov/InstacabApp/Instacab/Localytics,
+					"$(PROJECT_DIR)/Instacab/GoogleConversionTrackingSDK-iOS-3.0.0",
 				);
 				OTHER_LDFLAGS = (
 					"-all_load",

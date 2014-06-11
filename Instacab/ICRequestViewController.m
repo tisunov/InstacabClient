@@ -141,9 +141,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_promoCodeButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
     [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
+    // CTA buttons
     _pickupBtn.layer.cornerRadius = 3.0f;
-    _pickupBtn.normalColor = [UIColor colorFromHexString:@"#1abc9c"];
-    _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#16a085"];
+    _pickupBtn.normalColor = [UIColor colorFromHexString:@"#00b4ae"];
+    _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#008b87"];
     
     _confirmPickupButton.layer.cornerRadius = _pickupBtn.layer.cornerRadius;
     _confirmPickupButton.normalColor = _pickupBtn.normalColor;
@@ -558,6 +559,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             _addressView.y = 0.0;
             // Slide down
             _pickupView.y = screenBounds.size.height;
+            _pickupView.alpha = 0.0f;
             
             _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
         }];
@@ -571,6 +573,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             _addressView.y = _addressViewOriginY;
             // Slide up
             _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
+            _pickupView.alpha = 1.0f;
             
             _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
         }];

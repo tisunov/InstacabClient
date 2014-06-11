@@ -15,7 +15,6 @@
     UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    
     CGContextTranslateCTM(context, 0, self.size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
     

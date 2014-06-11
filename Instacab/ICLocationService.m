@@ -28,7 +28,7 @@ static NSString *kFCTimeoutError = @"Пожалуйста убедитесь ч�
     self = [super init];
     if (self) {
         _locationManager = [[CLLocationManager alloc] init];
-        _locationManager.distanceFilter = 5;
+        _locationManager.distanceFilter = 10; // 10 meters
         // Use the highest-level of accuracy.
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.delegate = self;
@@ -122,8 +122,8 @@ static NSString *kFCTimeoutError = @"Пожалуйста убедитесь ч�
 -(void)startUpdatingLocation {
     [_locationManager startUpdatingLocation];
     
-    // Timeout after 7 seconds of trying to get location
-    [self performSelector:@selector(handleFatalError:) withObject:kFCTimeoutError afterDelay:7.0f];
+    // Timeout after 10 seconds of trying to get location
+    [self performSelector:@selector(handleFatalError:) withObject:kFCTimeoutError afterDelay:10.0f];
 }
 
 -(void)startUpdatingHeading {

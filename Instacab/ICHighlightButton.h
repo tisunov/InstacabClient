@@ -18,5 +18,3 @@
 - (void)setHighlightedColor:(UIColor *)highlightedColor;
 
 @end
-
-#import <UIKit/UIKit.h>
