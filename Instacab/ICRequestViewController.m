@@ -54,9 +54,11 @@
     CGFloat _mapVerticalPadding;
     UIImageView *_fogView;
     ICVehicleSelectionView *_vehicleSelector;
+    
+    NSTimer *_pinDragFinishTimer;
 }
 
-NSString * const kGoToMarker = @"ПРИЕХАТЬ К ОТМЕТКЕ";
+NSString * const kGoToMarker = @"Возле Булавки";
 NSString * const kRequestPickup = @"Заказать Автомобиль";
 NSString * const kSetPickupLocation = @"Выбрать место посадки";
 
@@ -539,20 +541,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_mapView animateToLocation:_locationService.coordinates];
 }
 
-// Control status bar visibility
-- (BOOL)prefersStatusBarHidden
-{
-    return NO;//_draggingPin;
-}
-
 -(void)setDraggingPin: (BOOL)dragging {
     _draggingPin = dragging;
     
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    
     if (dragging) {
         [UIView animateWithDuration:0.35 animations:^(void){
-//            [self setNeedsStatusBarAppearanceUpdate];
             [self.navigationController setNavigationBarHidden:YES animated:YES];
             
             _centerMapButton.alpha = 0.0;
@@ -560,28 +553,37 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             // Slide up
             _addressView.y = -24.0;
             // Slide down
-            _pickupView.y = screenBounds.size.height;
+            _pickupView.y = [[UIScreen mainScreen] bounds].size.height;
             _pickupView.alpha = 0.0f;
             
             _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
         }];
     }
     else {
-        [UIView animateWithDuration:0.35 animations:^(void){
-//            [self setNeedsStatusBarAppearanceUpdate];
-            [self.navigationController setNavigationBarHidden:NO animated:YES];
-            
-            _centerMapButton.alpha = 1.0;
-            
-            // Slide down
-            _addressView.y = _addressViewOriginY;
-            // Slide up
-            _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
-            _pickupView.alpha = 1.0f;
-            
-            _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
-        }];
+        [_pinDragFinishTimer invalidate];
+        
+        _pinDragFinishTimer = [NSTimer scheduledTimerWithTimeInterval:0.8f target:self selector:@selector(pinDragFinished) userInfo:nil repeats:NO];
     }
+}
+
+-(void)pinDragFinished {
+    if (_draggingPin) return;
+    
+    [self findAddressAndNearbyCabsAtCameraTarget:YES];
+    
+    [UIView animateWithDuration:0.35 animations:^(void){
+        [self.navigationController setNavigationBarHidden:NO animated:YES];
+        
+        _centerMapButton.alpha = 1.0;
+        
+        // Slide down
+        _addressView.y = _addressViewOriginY;
+        // Slide up
+        _pickupView.y = [[UIScreen mainScreen] bounds].size.height - _pickupView.frame.size.height;
+        _pickupView.alpha = 1.0f;
+        
+        _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
+    }];
 }
 
 -(void)recognizeTapOnMap:(id)sender {
@@ -618,8 +620,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self updateAddressLabel:kGoToMarker];
     // Show UI controls
     [self setDraggingPin:NO];
-    
-    [self findAddressAndNearbyCabsAtCameraTarget:YES];
 }
 
 - (void)findAddressAndNearbyCabsAtCameraTarget:(BOOL)atCameraTarget {
@@ -650,6 +650,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 - (void)updateAddressLabel: (NSString *)text {
     if ([_addressLabel.text isEqualToString:text]) return;
 
+    if (text.length == 0) text = kGoToMarker;
+    
     // Animate text change from blank to address
     if (![text isEqualToString:kGoToMarker]) {
         [_addressLabel.layer addAnimation:_textChangeAnimation forKey:@"kCATransitionFade"];
