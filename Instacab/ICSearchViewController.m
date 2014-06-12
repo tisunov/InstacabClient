@@ -520,4 +520,9 @@
     }
 }
 
+-(void)dealloc {
+    searchTableView.delegate = nil;
+    searchTableView.dataSource = nil;
+}
+
 @end

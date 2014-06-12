@@ -16,7 +16,7 @@
 #import "ICVerifyMobileViewController.h"
 #import "ICClientService.h"
 #import "MBProgressHud+Global.h"
-#import "ACTReporter.h"
+//#import "ACTReporter.h"
 
 @interface ICCreateProfileDialog ()
 
@@ -123,7 +123,7 @@
                     [self saveClient:response.client];
                     
                     // Google iOS in-app conversion tracking snippet
-                    [ACTConversionReporter reportWithConversionID:@"1025317418" label:@"zljtCPb0_QgQqrT06AM" value:@"0.000000" isRepeatable:YES];
+//                    [ACTConversionReporter reportWithConversionID:@"1025317418" label:@"zljtCPb0_QgQqrT06AM" value:@"0.000000" isRepeatable:YES];
                     
                     [self.navigationController dismissViewControllerAnimated:YES completion:^{
                         [self.delegate signUpCompleted];

@@ -104,7 +104,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.titleText = @"INSTACAB";
     self.navigationController.navigationBarHidden = NO;
     
-    _addressViewOriginY = self.navigationController.navigationBar.frame.origin.x + self.navigationController.navigationBar.frame.size.height + [UIApplication sharedApplication].statusBarFrame.size.height;
+    _addressViewOriginY = /*self.navigationController.navigationBar.frame.origin.x + self.navigationController.navigationBar.frame.size.height + */[UIApplication sharedApplication].statusBarFrame.size.height;
     _mapVerticalPadding = _pickupView.frame.size.height;
     
     [self showExitNavbarButton];
@@ -542,7 +542,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 // Control status bar visibility
 - (BOOL)prefersStatusBarHidden
 {
-    return _draggingPin;
+    return NO;//_draggingPin;
 }
 
 -(void)setDraggingPin: (BOOL)dragging {
@@ -551,12 +551,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
     if (dragging) {
-        [UIView animateWithDuration:0.20 animations:^(void){
-            [self setNeedsStatusBarAppearanceUpdate];
+        [UIView animateWithDuration:0.35 animations:^(void){
+//            [self setNeedsStatusBarAppearanceUpdate];
             [self.navigationController setNavigationBarHidden:YES animated:YES];
             
+            _centerMapButton.alpha = 0.0;
+            
             // Slide up
-            _addressView.y = 0.0;
+            _addressView.y = -24.0;
             // Slide down
             _pickupView.y = screenBounds.size.height;
             _pickupView.alpha = 0.0f;
@@ -565,9 +567,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         }];
     }
     else {
-        [UIView animateWithDuration:0.20 animations:^(void){
+        [UIView animateWithDuration:0.35 animations:^(void){
+//            [self setNeedsStatusBarAppearanceUpdate];
             [self.navigationController setNavigationBarHidden:NO animated:YES];
-            [self setNeedsStatusBarAppearanceUpdate];
+            
+            _centerMapButton.alpha = 1.0;
             
             // Slide down
             _addressView.y = _addressViewOriginY;
