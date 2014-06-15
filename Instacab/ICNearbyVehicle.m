@@ -38,6 +38,23 @@
     }];
 }
 
+- (CLLocationCoordinate2D)anyCoordinate {
+    // Center of Voronezh
+    CLLocationCoordinate2D defaultCoordinate = CLLocationCoordinate2DMake(51.672448f, 39.192151f);
+    
+    NSArray *values = [self.vehiclePaths allValues];
+    if (values.count != 0) {
+        ICVehiclePathPoint* vehiclePathPoint = (ICVehiclePathPoint*)[[values firstObject] firstObject];
+        return vehiclePathPoint ? vehiclePathPoint.coordinate : defaultCoordinate;
+    }
+    
+    return defaultCoordinate;
+}
+
+-(BOOL)available {
+    return !!self.minEta;
+}
+
 #pragma mark - NSObject
 
 - (BOOL)isEqual:(id)object {
@@ -59,10 +76,6 @@
     BOOL equal = self.minEta == other.minEta && haveEqualEtaStrings && haveEqualEtaStringShorts && haveEqualSorryMsgs && haveEqualVehiclePaths;
     
     return equal;
-}
-
--(BOOL)available {
-    return !!self.minEta;
 }
 
 @end

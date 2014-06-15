@@ -7,6 +7,7 @@
 //
 
 #import "Mantle.h"
+#import "CoreLocation/CLLocation.h"
 
 @interface ICNearbyVehicle : MTLModel <MTLJSONSerializing>
 @property (nonatomic, assign, readonly) long minEta;
@@ -15,5 +16,6 @@
 @property (nonatomic, copy, readonly) NSString *sorryMsg;
 @property (nonatomic, copy, readonly) NSDictionary *vehiclePaths;
 @property (nonatomic, readonly) BOOL available;
+@property (readonly) CLLocationCoordinate2D anyCoordinate;
 
 @end

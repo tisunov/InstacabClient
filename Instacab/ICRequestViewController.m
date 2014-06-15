@@ -38,9 +38,6 @@
     NSMutableDictionary *_vehicleMarkers;
     ICClientStatus _status;
     
-    BOOL _draggingPin;
-    BOOL _readyToRequest;
-    BOOL _justStarted;
     CATransition *_textChangeAnimation;
     ICGoogleService *_googleService;
     ICClientService *_clientService;
@@ -55,7 +52,12 @@
     ICVehicleSelectionView *_vehicleSelector;
     
     NSTimer *_pinDragFinishTimer;
+
+    BOOL _draggingPin;
+    BOOL _readyToRequest;
+    BOOL _justStarted;
     BOOL _sideMenuOpen;
+    BOOL _showAvailableVehicle;
 }
 
 NSString * const kGoToMarker = @"Приехать к булавке";
@@ -79,6 +81,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Custom initialization
     if (self) {
         _justStarted = YES;
+        _showAvailableVehicle = YES;
         
         _googleService = [ICGoogleService sharedInstance];
         _googleService.delegate = self;
@@ -128,29 +131,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.view addSubview:_vehicleSelector];
 }
 
-- (void)styleButtons {
-    _buttonContainerView.layer.borderColor = [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1].CGColor;
-    _buttonContainerView.layer.borderWidth = 1.0;
-    _buttonContainerView.layer.cornerRadius = 3.0;
-    
-    [_fareEstimateButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
-    [_fareEstimateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    
-    _fareEstimateButton.highlightedColor = _promoCodeButton.highlightedColor = [UIColor blueberryColor];
-    
-    [_promoCodeButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
-    [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    
-    // CTA buttons
-    _pickupBtn.layer.cornerRadius = 3.0f;
-    _pickupBtn.normalColor = [UIColor colorFromHexString:@"#00b4ae"];
-    _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#008b87"];
-    
-    _confirmPickupButton.layer.cornerRadius = _pickupBtn.layer.cornerRadius;
-    _confirmPickupButton.normalColor = _pickupBtn.normalColor;
-    _confirmPickupButton.highlightedColor = _pickupBtn.highlightedColor;
-}
-
 - (void)handleAddressBarTap:(UITapGestureRecognizer *)recognizer {
     ICSearchViewController *vc = [[ICSearchViewController alloc] initWithLocation:_mapView.camera.target];
     vc.delegate = self;
@@ -194,6 +174,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     self.navigationItem.leftBarButtonItem = cancelButton;
 }
+
+#pragma mark - View Lifecycle
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -348,98 +330,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_searchAddressButton addTarget:self action:@selector(handleAddressBarTap:) forControlEvents:UIControlEventTouchUpInside];
 }
 
-- (void)setupMapView {
-    // Create a GMSCameraPosition that tells the map to display the
-    // coordinate at zoom level.
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:_locationService.coordinates.latitude
-                                                            longitude:_locationService.coordinates.longitude
-                                                                 zoom:kDefaultMapZoom];
-    _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
-    _mapView.delegate = self;
-    // to account for address view
-    _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
-    _mapView.myLocationEnabled = YES;
-    _mapView.indoorEnabled = NO;
-    _mapView.settings.myLocationButton = NO;
-    _mapView.settings.indoorPicker = NO;
-    _mapView.settings.rotateGestures = NO;
-    [self.view insertSubview:_mapView atIndex:0];
-    
-    [self attachMyLocationButtonTapHandler];
-    
-    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeTapOnMap:)];
-    
-    // use own gesture recognizer to geocode location only once user stops panning
-    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(recognizeDragOnMap:)];
-    panRecognizer.delegate = self;    
-    _mapView.gestureRecognizers = @[tapRecognizer, panRecognizer];
-}
-
-// Screen edge is for the side menu
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    CGPoint point = [touch locationInView:self.view];
-    return point.x > 20;
-}
-
-- (void)sideMenu:(RESideMenu *)sideMenu didRecognizePanGesture:(UIPanGestureRecognizer *)recognizer {
-    _sideMenuOpen = YES;
-}
-
-- (void)sideMenu:(RESideMenu *)sideMenu willHideMenuViewController:(UIViewController *)menuViewController {
-    _sideMenuOpen = NO;
-}
-
-- (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture {
-    if (_sideMenuOpen)
-        [_mapView animateToLocation:[self pickupLocation].coordinate];
-}
-
-- (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
-    if (_draggingPin || _justStarted) return;
-    
-    BOOL centeredOnMyLocation = CLCOORDINATES_EQUAL(position.target, _locationService.coordinates);
-    BOOL centerMapButtonVisible = !_centerMapButton.hidden;
-    
-    if (!centeredOnMyLocation && !centerMapButtonVisible) {
-        _centerMapButton.hidden = NO;
-        [UIView animateWithDuration:0.25
-                         animations:^{
-                             _centerMapButton.alpha = 1.0;
-                         }];
-    }
-    else if (centeredOnMyLocation && centerMapButtonVisible)
-        [self hideCenterMapButton];
-}
-
-- (void)hideCenterMapButton {
-    [UIView animateWithDuration:0.25
-                     animations:^{
-                         _centerMapButton.alpha = 0.0;
-                     } completion:^(BOOL finished) {
-                         _centerMapButton.hidden = YES;
-                     }];
-}
-
-- (void)attachMyLocationButtonTapHandler {
-    [_centerMapButton addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
-//    for (UIView *object in _mapView.subviews) {
-//        if([[[object class] description] isEqualToString:@"GMSUISettingsView"] )
-//        {
-//            for(UIView *view in object.subviews) {
-//                if([[[view class] description] isEqualToString:@"UIButton"] ) {
-//                    [(UIButton *)view addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
-//                    return;
-//                }
-//            }
-//        }
-//    };
-}
-
-- (void)zoomMapForConfirmationAtCoordinate:(CLLocationCoordinate2D)coordinate {
-    GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinate zoom:17];
-    [_mapView animateWithCameraUpdate:update];
-}
-
 - (void)transitionToConfirmScreenAtCoordinate:(CLLocationCoordinate2D)coordinate {
     _readyToRequest = YES;
 
@@ -527,15 +417,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     if (showPickup)
         [self transitionFromConfirmViewToPickupView];
-}
-
-- (void)myLocationTapped:(id)sender {
-    if (!CLCOORDINATES_EQUAL(_mapView.camera.target, _mapView.myLocation.coordinate))
-        [self findAddressAndNearbyCabsAtCameraTarget:NO];
-
-    [self hideCenterMapButton];
-    
-    [_mapView animateToLocation:_locationService.coordinates];
 }
 
 -(void)setDraggingPin: (BOOL)dragging {
@@ -769,35 +650,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self presentModalViewController:controller];
 }
 
-- (void)setViewTopShadow:(UIView *)view {
-    view.layer.masksToBounds = NO;
-    view.layer.shadowOffset = CGSizeMake(0, -1);
-    view.layer.shadowRadius = 2;
-    view.layer.shadowOpacity = 0.1;
-}
-
-- (void)setViewBottomShadow:(UIView *)view {
-    view.layer.masksToBounds = NO;
-    view.layer.shadowOffset = CGSizeMake(0, 1);
-    view.layer.shadowRadius = 2;
-    view.layer.shadowOpacity = 0.1;
-}
-
-- (void)setupDriverPanel {
-    _driverNameLabel.textColor = [UIColor black25PercentColor];
-    _vehicleLabel.textColor = [UIColor black50PercentColor];
-    _vehicleLicenseLabel.textColor = [UIColor black50PercentColor];
-    
-    _callDriverButton.normalColor = [UIColor colorFromHexString:@"#BDC3C7"];
-    _callDriverButton.highlightedColor = [UIColor colorFromHexString:@"#7F8C8D"];
-    _callDriverButton.tintColor = [UIColor whiteColor];
-    _callDriverButton.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
-    [_callDriverButton setImage:[UIImage imageNamed:@"call_driver2.png"] forState:UIControlStateNormal];
-    [_callDriverButton addTarget:self action:@selector(callDriver) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self setViewTopShadow:_driverView];
-}
-
 - (void)loadDriverDetails {
     ICTrip *trip = [ICTrip sharedInstance];
     _driverNameLabel.text = trip.driver.firstName;
@@ -885,22 +737,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         default:
             break;
     }
-}
-
-- (void)mapCenterAndZoom:(CLLocationCoordinate2D)coordinate zoom:(int)zoom
-{
-    GMSCameraUpdate *update = [GMSCameraUpdate setCamera:[GMSCameraPosition cameraWithTarget:coordinate zoom:zoom]];
-    [_mapView animateWithCameraUpdate:update];
-}
-
-- (void)mapFitCoordinates:(CLLocationCoordinate2D)coordinate1 coordinate2:(CLLocationCoordinate2D)coordinate2
-{
-    GMSCoordinateBounds *bounds =
-    [[GMSCoordinateBounds alloc] initWithCoordinate:coordinate1
-                                         coordinate:coordinate2];
-    
-    GMSCameraUpdate *update = [GMSCameraUpdate fitBounds:bounds];
-    [_mapView animateWithCameraUpdate:update];
 }
 
 -(void)showFareAndRateDriver {
@@ -1059,8 +895,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)onNearbyVehiclesChanged:(NSNotification *)note {
     [self updateSetPickup];
     [self updateMapMarkers];
-    
-    
 }
 
 -(void)onTripChanged:(NSNotification *)note {
@@ -1086,8 +920,21 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.view addSubview:_pickupLocationMarker];
 }
 
+// TODO: A/B Test this
+// Zoom out to include any nearby vehicle,
+// Try to motivate client to request pickup
+- (void)makeVisibleAvailableVehicles {
+    ICNearbyVehicle *vehicle = [self vehicleForActiveViewId];
+    if (vehicle.available && _showAvailableVehicle) {
+        [self setZoomLevelToIncludeCoordinate:vehicle.anyCoordinate];
+        _showAvailableVehicle = NO;
+    }
+}
+
 -(void)updateMapMarkers {
     ICClientStatus clientStatus = [ICClient sharedInstance].state;
+    
+    [self makeVisibleAvailableVehicles];
     
     if (clientStatus == ICClientStatusLooking) {
         [self updateVehicleMarkers];
@@ -1162,13 +1009,19 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _confirmEtaLabel.text = _pickupEtaLabel.text;
 }
 
--(void)updateVehicleMarkers {
+- (ICNearbyVehicle *)vehicleForActiveViewId {
     NSNumber *vehicleViewId = [self vehicleViewId];
     
     ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:vehicleViewId];
-    if (!vehicleView) return;
+    if (!vehicleView) return nil;
     
-    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:vehicleViewId];
+    return [[ICNearbyVehicles shared] vehicleByViewId:vehicleViewId];
+}
+
+-(void)updateVehicleMarkers {
+    NSNumber *activeVehicleViewId = [self vehicleViewId];
+    
+    ICNearbyVehicle *vehicle = [self vehicleForActiveViewId];
     if (vehicle) {
         // Add new vehicles and update existing vehicles' positions
         for (NSString *uuid in vehicle.vehiclePaths) {
@@ -1191,7 +1044,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                 marker.map = _mapView;
                 marker.rotation = pathPoint.course;
                 marker.groundAnchor = CGPointMake(0.5f, 0.5f);
-                marker.userData = vehicleViewId;
+                marker.userData = activeVehicleViewId;
                 _vehicleMarkers[uuid] = marker;
             }
         }
@@ -1201,7 +1054,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     NSMutableArray *uuids = [NSMutableArray new];
     for (NSString *uuid in _vehicleMarkers) {
         GMSMarker *vehicleMarker = _vehicleMarkers[uuid];
-        if (!vehicle.vehiclePaths[uuid] && vehicleMarker.userData == vehicleViewId) {
+        if (!vehicle.vehiclePaths[uuid] && vehicleMarker.userData == activeVehicleViewId) {
             vehicleMarker.map = nil;
             [uuids addObject:uuid];
         }
@@ -1318,6 +1171,229 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _googleService.delegate = nil;
     _locationService.delegate = nil;
 }
+
+#pragma mark - Map
+
+- (void)setupMapView {
+    // Create a GMSCameraPosition that tells the map to display the
+    // coordinate at zoom level.
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:_locationService.coordinates.latitude
+                                                            longitude:_locationService.coordinates.longitude
+                                                                 zoom:kDefaultMapZoom];
+    _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
+    _mapView.delegate = self;
+    // to account for address view
+    _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
+    _mapView.myLocationEnabled = YES;
+    _mapView.indoorEnabled = NO;
+    _mapView.settings.myLocationButton = NO;
+    _mapView.settings.indoorPicker = NO;
+    _mapView.settings.rotateGestures = NO;
+    [self.view insertSubview:_mapView atIndex:0];
+    
+    [self attachMyLocationButtonTapHandler];
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget: self action:@selector(recognizeTapOnMap:)];
+    
+    // use own gesture recognizer to geocode location only once user stops panning
+    UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(recognizeDragOnMap:)];
+    panRecognizer.delegate = self;
+    _mapView.gestureRecognizers = @[tapRecognizer, panRecognizer];
+}
+
+- (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
+    if (_draggingPin || _justStarted) return;
+    
+    BOOL centeredOnMyLocation = CLCOORDINATES_EQUAL(position.target, _locationService.coordinates);
+    BOOL centerMapButtonVisible = !_centerMapButton.hidden;
+    
+    if (!centeredOnMyLocation && !centerMapButtonVisible) {
+        _centerMapButton.hidden = NO;
+        [UIView animateWithDuration:0.25
+                         animations:^{
+                             _centerMapButton.alpha = 1.0;
+                         }];
+    }
+    else if (centeredOnMyLocation && centerMapButtonVisible)
+        [self hideCenterMapButton];
+}
+
+- (void)hideCenterMapButton {
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         _centerMapButton.alpha = 0.0;
+                     } completion:^(BOOL finished) {
+                         _centerMapButton.hidden = YES;
+                     }];
+}
+
+- (void)attachMyLocationButtonTapHandler {
+    [_centerMapButton addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
+    //    for (UIView *object in _mapView.subviews) {
+    //        if([[[object class] description] isEqualToString:@"GMSUISettingsView"] )
+    //        {
+    //            for(UIView *view in object.subviews) {
+    //                if([[[view class] description] isEqualToString:@"UIButton"] ) {
+    //                    [(UIButton *)view addTarget:self action:@selector(myLocationTapped:) forControlEvents:UIControlEventTouchUpInside];
+    //                    return;
+    //                }
+    //            }
+    //        }
+    //    };
+}
+
+- (void)zoomMapForConfirmationAtCoordinate:(CLLocationCoordinate2D)coordinate {
+    GMSCameraUpdate *update = [GMSCameraUpdate setTarget:coordinate zoom:17];
+    [_mapView animateWithCameraUpdate:update];
+}
+
+- (void)myLocationTapped:(id)sender {
+    if (!CLCOORDINATES_EQUAL(_mapView.camera.target, _mapView.myLocation.coordinate))
+        [self findAddressAndNearbyCabsAtCameraTarget:NO];
+    
+    [self hideCenterMapButton];
+    
+    [_mapView animateToLocation:_locationService.coordinates];
+}
+
+
+- (void)mapCenterAndZoom:(CLLocationCoordinate2D)coordinate zoom:(int)zoom
+{
+    GMSCameraUpdate *update = [GMSCameraUpdate setCamera:[GMSCameraPosition cameraWithTarget:coordinate zoom:zoom]];
+    [_mapView animateWithCameraUpdate:update];
+}
+
+- (void)mapFitCoordinates:(CLLocationCoordinate2D)coordinate1 coordinate2:(CLLocationCoordinate2D)coordinate2
+{
+    GMSCoordinateBounds *bounds =
+        [[GMSCoordinateBounds alloc] initWithCoordinate:coordinate1
+                                             coordinate:coordinate2];
+    
+    GMSCameraUpdate *update = [GMSCameraUpdate fitBounds:bounds];
+    
+    [_mapView animateWithCameraUpdate:update];
+}
+
+// TODO: Можно все машины включить, а не только одну
+- (void)setZoomLevelToIncludeCoordinate:(CLLocationCoordinate2D)coordinate
+{
+    NSUInteger const kMarkerSize = 70, kMarkerMargin = 64;
+    
+    GMSCoordinateBounds* markerBounds = [[GMSCoordinateBounds alloc] initWithCoordinate:_mapView.camera.target coordinate:coordinate];
+    
+    // get marker bounds in points
+    CGPoint markerBoundsTopLeft = [_mapView.projection pointForCoordinate:CLLocationCoordinate2DMake(markerBounds.northEast.latitude, markerBounds.southWest.longitude)];
+    CGPoint markerBoundsBottomRight = [_mapView.projection pointForCoordinate:CLLocationCoordinate2DMake(markerBounds.southWest.latitude, markerBounds.northEast.longitude)];
+    
+    // get user location in points
+    CGPoint currentLocation = [_mapView.projection pointForCoordinate:_mapView.camera.target];
+    
+    CGPoint markerBoundsCurrentLocationMaxDelta = CGPointMake(MAX(fabs(currentLocation.x - markerBoundsTopLeft.x), fabs(currentLocation.x - markerBoundsBottomRight.x)), MAX(fabs(currentLocation.y - markerBoundsTopLeft.y), fabs(currentLocation.y - markerBoundsBottomRight.y)));
+    
+    // the marker bounds centered on self.currentLocation
+    CGSize centeredMarkerBoundsSize = CGSizeMake(2.0 * markerBoundsCurrentLocationMaxDelta.x, 2.0 * markerBoundsCurrentLocationMaxDelta.y);
+    
+    // inset the view bounds to fit markers
+    CGSize insetViewBoundsSize = CGSizeMake(_mapView.bounds.size.width - kMarkerSize / 2.0 - kMarkerMargin, _mapView.bounds.size.height - kMarkerSize / 2.0 - kMarkerSize);
+    
+    CGFloat x1;
+    CGFloat x2;
+    
+    // decide which axis to calculate the zoom level with by comparing the width/height ratios
+    if (centeredMarkerBoundsSize.width / centeredMarkerBoundsSize.height > insetViewBoundsSize.width / insetViewBoundsSize.height)
+    {
+        x1 = centeredMarkerBoundsSize.width;
+        x2 = insetViewBoundsSize.width;
+    }
+    else
+    {
+        x1 = centeredMarkerBoundsSize.height;
+        x2 = insetViewBoundsSize.height;
+    }
+    
+    CGFloat zoom = log2(x2 * pow(2, _mapView.camera.zoom) / x1);
+    
+    GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:_mapView.camera.target zoom:zoom];
+    
+    [_mapView animateToCameraPosition:camera];
+}
+
+#pragma mark - UI Styling
+
+- (void)setupDriverPanel {
+    _driverNameLabel.textColor = [UIColor black25PercentColor];
+    _vehicleLabel.textColor = [UIColor black50PercentColor];
+    _vehicleLicenseLabel.textColor = [UIColor black50PercentColor];
+    
+    _callDriverButton.normalColor = [UIColor colorFromHexString:@"#BDC3C7"];
+    _callDriverButton.highlightedColor = [UIColor colorFromHexString:@"#7F8C8D"];
+    _callDriverButton.tintColor = [UIColor whiteColor];
+    _callDriverButton.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
+    [_callDriverButton setImage:[UIImage imageNamed:@"call_driver2.png"] forState:UIControlStateNormal];
+    [_callDriverButton addTarget:self action:@selector(callDriver) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self setViewTopShadow:_driverView];
+}
+
+- (void)styleButtons {
+    _buttonContainerView.layer.borderColor = [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1].CGColor;
+    _buttonContainerView.layer.borderWidth = 1.0;
+    _buttonContainerView.layer.cornerRadius = 3.0;
+    
+    [_fareEstimateButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
+    [_fareEstimateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    _fareEstimateButton.highlightedColor = _promoCodeButton.highlightedColor = [UIColor blueberryColor];
+    
+    [_promoCodeButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
+    [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    // CTA buttons
+    _pickupBtn.layer.cornerRadius = 3.0f;
+    _pickupBtn.normalColor = [UIColor colorFromHexString:@"#00b4ae"];
+    _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#008b87"];
+    
+    _confirmPickupButton.layer.cornerRadius = _pickupBtn.layer.cornerRadius;
+    _confirmPickupButton.normalColor = _pickupBtn.normalColor;
+    _confirmPickupButton.highlightedColor = _pickupBtn.highlightedColor;
+}
+
+- (void)setViewTopShadow:(UIView *)view {
+    view.layer.masksToBounds = NO;
+    view.layer.shadowOffset = CGSizeMake(0, -1);
+    view.layer.shadowRadius = 2;
+    view.layer.shadowOpacity = 0.1;
+}
+
+- (void)setViewBottomShadow:(UIView *)view {
+    view.layer.masksToBounds = NO;
+    view.layer.shadowOffset = CGSizeMake(0, 1);
+    view.layer.shadowRadius = 2;
+    view.layer.shadowOpacity = 0.1;
+}
+
+#pragma mark - Side Menu and Map Hacks
+
+// Screen edge is for the side menu
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    CGPoint point = [touch locationInView:self.view];
+    return point.x > 20;
+}
+
+- (void)sideMenu:(RESideMenu *)sideMenu didRecognizePanGesture:(UIPanGestureRecognizer *)recognizer {
+    _sideMenuOpen = YES;
+}
+
+- (void)sideMenu:(RESideMenu *)sideMenu willHideMenuViewController:(UIViewController *)menuViewController {
+    _sideMenuOpen = NO;
+}
+
+// Keep map in the same location when swiping to open side menu
+- (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture {
+    if (_sideMenuOpen)
+        [_mapView animateToLocation:[self pickupLocation].coordinate];
+}
+
 
 // TODO: Для разных машин асинхронно грузить картинки из сети и кэшировать их по url,
 // грузить только если их нету.
