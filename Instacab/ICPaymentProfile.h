@@ -12,6 +12,8 @@
 @property (nonatomic, copy, readonly) NSNumber *ID;
 @property (nonatomic, copy, readonly) NSString *cardType;
 @property (nonatomic, copy, readonly) NSString *cardNumber;
-@property (nonatomic, readonly) BOOL cardActive;
+@property (nonatomic, copy, readonly) NSString *useCase;
+@property (readonly) BOOL canCharge;
 
+@property (readonly) BOOL isPersonal;
 @end

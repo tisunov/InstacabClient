@@ -12,7 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Colours.h"
 #import "UINavigationController+Animation.h"
-#import "ICLinkCardDialog.h"
+#import "ICLinkCardController.h"
 #import "ICRequestViewController.h"
 #import "ICReceiptViewController.h"
 #import "UIApplication+Alerts.h"
@@ -20,7 +20,7 @@
 #import "TSMessageView.h"
 #import "TSMessage.h"
 #import "MBProgressHUD.h"
-#import "ICLinkCardDialog.h"
+#import "ICLinkCardController.h"
 #import "LocalyticsSession.h"
 #import "ICVerifyMobileViewController.h"
 #import "UIViewController+Location.h"
@@ -48,10 +48,6 @@
     return self;
 }
 
-- (UIStatusBarStyle)preferredStatusBarStyle {
-    return UIStatusBarStyleLightContent;
-}
-
 // Uncomment to take LaunchImage screenshot
 //-(BOOL)prefersStatusBarHidden {
 //    return YES;
@@ -64,10 +60,10 @@
     if ([self respondsToSelector:@selector(edgesForExtendedLayout)])
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"background_tile"]];
+    // http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19513714#19513714
+    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth_pattern"]];
     
     self.loadingIndicator.hidesWhenStopped = YES;
-    [self setNeedsStatusBarAppearanceUpdate];
     
     _signinButton.layer.cornerRadius = 3.0f;
     _signinButton.tintColor = [UIColor whiteColor];
@@ -151,11 +147,20 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Change status bar color to white
+    // http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19513714#19513714
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBarHidden = YES;
+    self.sideMenuViewController.panGestureEnabled = NO;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
+    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    self.sideMenuViewController.panGestureEnabled = YES;
     
     [TSMessage dismissActiveNotification];
 }
@@ -323,7 +328,7 @@
 - (void)pushRequestViewControllerAnimated:(BOOL)animate {
     if ([self.navigationController.visibleViewController isKindOfClass:ICRequestViewController.class])
         return;
-    
+
     ICRequestViewController *vc = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
     if (animate) {
         [self.navigationController slideLayerInDirection:kCATransitionFromBottom andPush:vc];

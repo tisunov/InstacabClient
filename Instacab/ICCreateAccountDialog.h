@@ -11,11 +11,6 @@
 #import "ICSignUpFlowDelegate.h"
 #import "UIViewController+TitleLabel.h"
 
-@interface QCustomAppearance : QFlatAppearance
-
-@end
-
-
 @interface ICCreateAccountDialog : QuickDialogController<QuickDialogEntryElementDelegate>
 
 @property (nonatomic, weak) id<ICSignUpFlowDelegate> delegate;

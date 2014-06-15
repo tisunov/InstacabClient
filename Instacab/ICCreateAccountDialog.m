@@ -18,21 +18,7 @@
 #import "MBProgressHud+Global.h"
 #import "Colours.h"
 #import <ObjectiveSugar/ObjectiveSugar.h>
-
-@implementation QCustomAppearance
-
-- (void)cell:(UITableViewCell *)cell willAppearForElement:(QElement *)element atIndexPath:(NSIndexPath *)path
-{
-    if([element.key isEqualToString:@"mobile"])
-    {
-        QEntryTableViewCell *entryCell = (QEntryTableViewCell *)cell;
-        entryCell.textField.numericFormatter = [AKNumericFormatter formatterWithMask:@"+7 (***) ***-**-**"
-                                                                placeholderCharacter:'*'
-                                                                                mode:AKNumericFormatterMixed];
-    }
-}
-
-@end
+#import "QCustomAppearance.h"
 
 @interface ICCreateAccountDialog ()
 
@@ -54,7 +40,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
         self.root.grouped = YES;
         self.root.appearance = [QCustomAppearance new];
         
-        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"Эл.почта" Value:nil Placeholder:@"email@sample.ru"];
+        QEntryElement *email = [[QEntryElement alloc] initWithTitle:@"Эл.почта" Value:nil Placeholder:@"email@mail.ru"];
         email.keyboardType = UIKeyboardTypeEmailAddress;
         email.autocapitalizationType = UITextAutocapitalizationTypeNone;
         email.autocorrectionType = UITextAutocorrectionTypeNo;

@@ -25,8 +25,6 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"error": @"error",
-        @"addCardUrl": @"add_card_page_url",
-        @"submitCardUrl": @"submit_url",
         @"paymentProfile": @"payment_profile",
         @"client": @"client",
         @"data": @"data"

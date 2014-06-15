@@ -35,7 +35,8 @@
         @"tripPendingRating": @"tripPendingRating",
         @"paymentProfile": @"paymentProfile",
         @"hasConfirmedMobile": @"hasConfirmedMobile",
-        @"lastEstimatedTrip": @"lastEstimatedTrip"
+        @"lastEstimatedTrip": @"lastEstimatedTrip",
+        @"referralCode": @"referralCode"
     }];
 }
 
@@ -101,7 +102,8 @@
 
 -(void)logout {
     [super clear];
-    _token = nil;
+    self.token = nil;
+    self.uID = nil;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"client.token"];
@@ -114,7 +116,7 @@
 }
 
 - (BOOL)cardPresent {
-    return self.paymentProfile && self.paymentProfile.cardActive;
+    return self.paymentProfile && self.paymentProfile.canCharge;
 }
 
 -(NSString *)cardHolder {

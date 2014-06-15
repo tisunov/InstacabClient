@@ -17,8 +17,9 @@
 #import "UIViewController+TitleLabel.h"
 #import "ICVerifyMobileViewController.h"
 #import "ICSearchViewController.h"
+#import "RESideMenu.h"
 
-@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICSearchViewDelegate, GMSMapViewDelegate>
+@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICSearchViewDelegate, GMSMapViewDelegate, RESideMenuDelegate, UIGestureRecognizerDelegate>
 - (IBAction)requestPickup:(id)sender;
 
 @property (strong, nonatomic) IBOutlet UIView *view;

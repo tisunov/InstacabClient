@@ -70,11 +70,12 @@
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
                             <inset key="titleEdgeInsets" minX="-13" minY="20" maxX="0.0" maxY="0.0"/>
                             <inset key="imageEdgeInsets" minX="60" minY="0.0" maxX="0.0" maxY="15"/>
-                            <state key="normal" title="СТОИМОСТЬ ПОЕЗДКИ" image="icon_farequote">
+                            <state key="normal" title="СТОИМОСТЬ ПОЕЗДКИ" image="farequote_icon">
                                 <color key="titleColor" red="0.5490196078431373" green="0.5490196078431373" blue="0.5490196078431373" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </state>
-                            <state key="highlighted" image="icon_farequote_white"/>
+                            <state key="selected" image="farequote_icon_white"/>
+                            <state key="highlighted" image="farequote_icon_white"/>
                             <connections>
                                 <action selector="handleFareEsimateTap:" destination="-1" eventType="touchUpInside" id="ow3-ey-tAd"/>
                             </connections>
@@ -91,12 +92,12 @@
                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
                             <inset key="titleEdgeInsets" minX="-18" minY="20" maxX="0.0" maxY="0.0"/>
                             <inset key="imageEdgeInsets" minX="60" minY="0.0" maxX="0.0" maxY="15"/>
-                            <state key="normal" title="ПРОМО-КОД" image="icon_promo">
+                            <state key="normal" title="ПРОМО-КОД" image="promo_icon">
                                 <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </state>
-                            <state key="selected" image="icon_promo_white"/>
-                            <state key="highlighted" image="icon_promo_white"/>
+                            <state key="selected" image="farequote_icon_white"/>
+                            <state key="highlighted" image="promo_icon_white"/>
                             <connections>
                                 <action selector="handlePromoTap:" destination="-1" eventType="touchUpInside" id="9cR-uq-rUx"/>
                             </connections>
@@ -271,10 +272,10 @@
     </objects>
     <resources>
         <image name="center_icon_up" width="16" height="16"/>
-        <image name="icon_farequote" width="16" height="16"/>
-        <image name="icon_farequote_white" width="16" height="16"/>
-        <image name="icon_promo" width="16" height="16"/>
-        <image name="icon_promo_white" width="16" height="16"/>
+        <image name="farequote_icon" width="16" height="16"/>
+        <image name="farequote_icon_white" width="16" height="16"/>
+        <image name="promo_icon" width="16" height="16"/>
+        <image name="promo_icon_white" width="16" height="16"/>
         <image name="request_mask" width="320" height="78"/>
         <image name="search_icon_up" width="16" height="16"/>
         <image name="star" width="26" height="26"/>

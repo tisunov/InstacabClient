@@ -37,6 +37,7 @@
 - (void)buildLoginForm {
     self.root = [[QRootElement alloc] init];
     self.root.grouped = YES;
+    self.root.appearance.labelFont = [UIFont boldSystemFontOfSize:15];
     
     ICClient *client = [ICClient sharedInstance];
     
@@ -84,7 +85,10 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     // Focus email field and show keyboard
-    [[self.quickDialogTableView cellForElement:[self entryElementWithKey:@"email"]] becomeFirstResponder];
+    if ([ICClient sharedInstance].email.length == 0)
+        [[self.quickDialogTableView cellForElement:[self entryElementWithKey:@"email"]] becomeFirstResponder];
+    else
+        [[self.quickDialogTableView cellForElement:[self entryElementWithKey:@"password"]] becomeFirstResponder];
     
     NSArray *signals = @[
         [self textFieldForEntryElementWithKey:@"email"].rac_textSignal,

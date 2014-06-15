@@ -24,6 +24,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *token;
 @property (nonatomic, copy) NSNumber *hasConfirmedMobile;
+@property (nonatomic, copy) NSString *referralCode;
 @property (nonatomic, strong, readonly) ICPaymentProfile *paymentProfile;
 @property (nonatomic, assign) ICClientStatus state;
 @property (nonatomic, strong, readonly) ICTrip *tripPendingRating;

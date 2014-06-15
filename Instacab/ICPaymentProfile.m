@@ -15,12 +15,17 @@
         @"ID": @"id",
         @"cardType": @"cardType",
         @"cardNumber": @"cardNumber",
-        @"cardActive": @"cardActive"
+        @"canCharge": @"canCharge",
+        @"useCase": @"useCase"
     };
 }
 
 + (NSValueTransformer *)cardActiveJSONTransformer {
     return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
+}
+
+- (BOOL)isPersonal {
+    return !self.useCase || [self.useCase isEqualToString:@"personal"];
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "ICPromoViewController.h"
 #import "ICClientService.h"
 #import "MBProgressHud+Global.h"
+#import "RESideMenu.h"
 
 @implementation ICTextField
 
@@ -50,16 +51,28 @@
     _borderView.layer.cornerRadius = 3.0;
     
     _promoCodeTextField.leftViewMode = UITextFieldViewModeAlways;
-    _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_promo.png"]];
+    _promoCodeTextField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"promo_icon"]];
     _promoCodeTextField.delegate = self;
+
+    BOOL standalone = [self.navigationController.parentViewController isKindOfClass:RESideMenu.class];
+    UIBarButtonItem *leftNavButton;
     
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(back)];
-    self.navigationItem.leftBarButtonItem = cancel;
+    if (standalone) {
+        leftNavButton = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"sidebar_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]  style:UIBarButtonItemStylePlain target:self action:@selector(showMenu)];
+    }
+    else {
+        leftNavButton = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(back)];
+    }
+    self.navigationItem.leftBarButtonItem = leftNavButton;
     
     UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"ПРИМЕНИТЬ" style:UIBarButtonItemStyleDone target:self action:@selector(applyPromo)];
     applyButton.enabled = NO;
     [self setupCallToActionBarButton:applyButton];
     self.navigationItem.rightBarButtonItem = applyButton;
+}
+
+-(void)showMenu {
+    [self.sideMenuViewController presentLeftMenuViewController];
 }
 
 - (void)applyPromo {

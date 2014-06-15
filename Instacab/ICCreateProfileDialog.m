@@ -9,7 +9,7 @@
 #import "ICCreateProfileDialog.h"
 #import "QuickDialogController+Additions.h"
 #import "ReactiveCocoa/ReactiveCocoa.h"
-#import "ICLinkCardDialog.h"
+#import "ICLinkCardController.h"
 #import "ICClientService.h"
 #import "MBProgressHud+UIViewController.h"
 #import "UIApplication+Alerts.h"

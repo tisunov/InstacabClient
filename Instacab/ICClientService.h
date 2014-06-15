@@ -21,14 +21,12 @@ extern NSString *const kRequestVehicleDeniedReasonNoCard;
 typedef void (^ICClientServiceSuccessBlock)(ICPing *message);
 typedef void (^ICClientServiceFailureBlock)();
 
-typedef void (^CardRegisterSuccessBlock)();
-typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description);
-
 @interface ICClientService : BaseService
 -(void)loginWithEmail:(NSString *)email
-             password: (NSString *)password
+             password:(NSString *)password
               success:(ICClientServiceSuccessBlock)success
               failure:(ICClientServiceFailureBlock)failure;
+
 -(void)requestPickupAt:(ICLocation *)location
                success:(ICClientServiceSuccessBlock)success
                failure:(ICClientServiceFailureBlock)failure;
@@ -69,6 +67,7 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
 // TODO: Для изменения телефона, имени, фамилии, e-mail
 //-(void)updateClientInfo:(NSDictionary *)clientInfo;
 
+// TODO: Для запоминания поиска на сервере и показа частых адресов
 //-(void)locationSearchQuery:(NSString*)query
 //               searchTypes:(NSArray *)searchTypes
 //                  location:(CLLocationCoordinate2D)location
@@ -87,20 +86,9 @@ typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description)
          withSuccess:(ICClientServiceSuccessBlock)success
              failure:(ICClientServiceFailureBlock)failure;
 
-- (void)createCardSessionOnFailure:(ICClientServiceFailureBlock)failure;
+- (void)createCardSession:(ICClientServiceFailureBlock)failure;
 
-- (void)createCardNumber:(NSString *)cardNumber
-              cardHolder:(NSString *)cardHolder
-         expirationMonth:(NSNumber *)month
-          expirationYear:(NSNumber *)year
-              secureCode:(NSString *)cvv
-             addCardUrl:(NSString *)addCardUrl
-           submitCardUrl:(NSString *)submitCardUrl
-                  cardio:(BOOL)cardio
-                 success:(CardRegisterSuccessBlock)success
-                 failure:(CardRegisterFailureBlock)failure;
-
--(void)disconnectWithoutTryingToReconnect;
+- (void)disconnectWithoutTryingToReconnect;
 
 @property (nonatomic, readonly) BOOL isOnline;
 

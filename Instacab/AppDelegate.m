@@ -16,7 +16,7 @@
 #import "UIApplication+Alerts.h"
 #import "TargetConditionals.h"
 #import "ICClient.h"
-
+#import "ICSidebarController.h"
 #import "Bugsnag.h"
 #import "LocalyticsSession.h"
 
@@ -34,10 +34,30 @@
     [self setupServices:application];
     
     ICWelcomeViewController *vc = [[ICWelcomeViewController alloc] initWithNibName:@"ICWelcomeViewController" bundle:nil];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    self.window.rootViewController = nav;
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
+    navigationController.navigationBar.barTintColor = [UIColor colorFromHexString:@"#F8F8F4"];
+
+    ICSidebarController *sideViewController = [[ICSidebarController alloc] init];
     
-    nav.navigationBar.barTintColor = [UIColor colorFromHexString:@"#F8F8F4"];
+    RESideMenu *sideMenuViewController = [[RESideMenu alloc] initWithContentViewController:navigationController
+                                                                    leftMenuViewController:sideViewController
+                                                                   rightMenuViewController:nil];
+    //    sideMenuViewController.backgroundImage = [[UIImage imageNamed:@"cloth_pattern"] resizableImageWithCapInsets: UIEdgeInsetsMake(0, 0, 0, 0) resizingMode: UIImageResizingModeTile];
+    sideMenuViewController.backgroundImage = [UIImage imageNamed:@"cloth_pattern"];
+    sideMenuViewController.scaleBackgroundImageView = NO;
+    sideMenuViewController.panGestureEnabled = YES;
+    sideMenuViewController.panFromEdge = YES;
+    sideMenuViewController.menuPreferredStatusBarStyle = UIStatusBarStyleLightContent;
+    sideMenuViewController.bouncesHorizontally = YES;
+    sideMenuViewController.contentViewScaleValue = 0.71f;
+    sideMenuViewController.interactivePopGestureRecognizerEnabled = NO;
+//    sideMenuViewController.contentViewShadowColor = [UIColor darkGrayColor];
+//    sideMenuViewController.contentViewShadowOffset = CGSizeMake(0, 0);
+//    sideMenuViewController.contentViewShadowOpacity = 0.6;
+//    sideMenuViewController.contentViewShadowRadius = 12;
+    sideMenuViewController.contentViewShadowEnabled = NO;
+        
+    self.window.rootViewController = sideMenuViewController;
     
     [self.window makeKeyAndVisible];
     return YES;

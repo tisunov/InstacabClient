@@ -26,6 +26,7 @@
 #import "ICPromoViewController.h"
 #import "ICFareEstimateViewController.h"
 #import "ICVehicleSelectionView.h"
+#import "Constants.h"
 
 @interface ICRequestViewController ()
 @property (nonatomic, strong) ICLocation *pickupLocation;
@@ -35,7 +36,6 @@
     GMSMapView *_mapView;
     GMSMarker *_pickupMarker;
     NSMutableDictionary *_vehicleMarkers;
-    UIImage *_blankMarkerIcon;
     ICClientStatus _status;
     
     BOOL _draggingPin;
@@ -45,7 +45,6 @@
     ICGoogleService *_googleService;
     ICClientService *_clientService;
     ICLocationService *_locationService;
-    UIGestureRecognizer *_hudGesture;
     UIImageView *_pickupLocationMarker;
     UIView *_statusView;
     UILabel *_statusLabel;
@@ -56,9 +55,10 @@
     ICVehicleSelectionView *_vehicleSelector;
     
     NSTimer *_pinDragFinishTimer;
+    BOOL _sideMenuOpen;
 }
 
-NSString * const kGoToMarker = @"Возле Булавки";
+NSString * const kGoToMarker = @"Приехать к булавке";
 NSString * const kRequestPickup = @"Заказать Автомобиль";
 NSString * const kSetPickupLocation = @"Выбрать место посадки";
 
@@ -92,10 +92,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         
         // Analytics
         [_clientService vehicleViewEventWithReason:kNearestCabRequestReasonOpenApp];
-        
-        UIGraphicsBeginImageContextWithOptions(CGSizeMake(16, 16), NO, 0.0);
-        _blankMarkerIcon = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
     }
     return self;
 }
@@ -106,10 +102,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.titleText = @"INSTACAB";
     self.navigationController.navigationBarHidden = NO;
     
-    _addressViewOriginY = /*self.navigationController.navigationBar.frame.origin.x + self.navigationController.navigationBar.frame.size.height + */[UIApplication sharedApplication].statusBarFrame.size.height;
+    _addressViewOriginY = [UIApplication sharedApplication].statusBarFrame.size.height;
     _mapVerticalPadding = _pickupView.frame.size.height;
     
-    [self showExitNavbarButton];
+    [self showMenuNavbarButton];
     [self setupMapView];
     [self setupAddressBar];
     [self setupDriverPanel];
@@ -117,6 +113,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self setViewBottomShadow:_statusView];
 
     [self styleButtons];
+    
+    self.sideMenuViewController.delegate = self;
     
 //    [self setupVehicleSelectionView];
     
@@ -177,13 +175,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
-- (void)showExitNavbarButton {
-    UIBarButtonItem *exitButton =
-        [[UIBarButtonItem alloc] initWithTitle:@"ВЫХОД" style:UIBarButtonItemStylePlain target:self action:@selector(showAccountActionSheet)];
+- (void)showMenuNavbarButton {
+    UIBarButtonItem *button =
+        [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"sidebar_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]  style:UIBarButtonItemStylePlain target:self action:@selector(showMenu)];
     
-    [self setupBarButton:exitButton];
-    
-    self.navigationItem.leftBarButtonItem = exitButton;
+    self.navigationItem.leftBarButtonItem = button;
+}
+
+-(void)showMenu {
+    [self.sideMenuViewController presentLeftMenuViewController];
 }
 
 - (void)showCancelConfirmationNavbarButton {
@@ -296,29 +296,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                  }];
 }
 
--(void)showAccountActionSheet {
-    [UIActionSheet presentOnView:self.view
-                       withTitle:nil
-                    cancelButton:@"Отмена"
-               destructiveButton:@"Выйти"
-                    otherButtons:nil
-                        onCancel:^(UIActionSheet *actionSheet) {
-                        }
-                   onDestructive:^(UIActionSheet *actionSheet) {
-                       [self logout];
-                   }
-                 onClickedButton:^(UIActionSheet *actionSheet, NSUInteger index) {
-                 }];
-    
-}
-
--(void)logout {
-    _googleService.delegate = nil;
-    _locationService.delegate = nil;
-    [_clientService logOut];
-    [self popViewController];
-}
-
 -(void)cancelTrip {
     [_clientService cancelTrip];
     [self showProgressWithMessage:kProgressCancelingTrip allowCancel:NO];
@@ -394,7 +371,27 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     // use own gesture recognizer to geocode location only once user stops panning
     UIPanGestureRecognizer *panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(recognizeDragOnMap:)];
-    _mapView.gestureRecognizers = @[panRecognizer, tapRecognizer];
+    panRecognizer.delegate = self;    
+    _mapView.gestureRecognizers = @[tapRecognizer, panRecognizer];
+}
+
+// Screen edge is for the side menu
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    CGPoint point = [touch locationInView:self.view];
+    return point.x > 20;
+}
+
+- (void)sideMenu:(RESideMenu *)sideMenu didRecognizePanGesture:(UIPanGestureRecognizer *)recognizer {
+    _sideMenuOpen = YES;
+}
+
+- (void)sideMenu:(RESideMenu *)sideMenu willHideMenuViewController:(UIViewController *)menuViewController {
+    _sideMenuOpen = NO;
+}
+
+- (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture {
+    if (_sideMenuOpen)
+        [_mapView animateToLocation:[self pickupLocation].coordinate];
 }
 
 - (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position {
@@ -524,7 +521,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (resetZoom)
         [_mapView animateToZoom:kDefaultMapZoom];
 
-    [self showExitNavbarButton];
+    [self showMenuNavbarButton];
     
     [self hideFog];
     
@@ -596,8 +593,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)recognizeDragOnMap:(id)sender {
-    if ([ICClient sharedInstance].state != ICClientStatusLooking) return;
+-(void)recognizeDragOnMap:(UIPanGestureRecognizer *)sender {
+    if ([ICClient sharedInstance].state != ICClientStatusLooking || _readyToRequest) return;
     
     UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
     // Hide UI controls when user starts map drag to show move of the map
@@ -683,12 +680,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         hud.labelText = [message lowercaseString];
         if (cancelable) {
             hud.detailsLabelText = @"коснитесь для отмены";
-            [hud setGestureRecognizers:@[_hudGesture]];
         }
         else {
             hud.detailsLabelText = @"";
-            [hud removeGestureRecognizer:_hudGesture];
-        }        
+        }
         return;
     }
     
@@ -1064,6 +1059,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)onNearbyVehiclesChanged:(NSNotification *)note {
     [self updateSetPickup];
     [self updateMapMarkers];
+    
+    
 }
 
 -(void)onTripChanged:(NSNotification *)note {
@@ -1114,6 +1111,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                 GMSMarker *vehicleMarker = [GMSMarker markerWithPosition:driver.coordinate];
                 vehicleMarker.icon = [UIImage imageNamed:@"map-urban.png"];
                 vehicleMarker.map = _mapView;
+                // TODO: vehicleMarker.rotation = driver.course;
+                vehicleMarker.groundAnchor = CGPointMake(0.5f, 0.5f);
                 _vehicleMarkers[vehicle.uniqueId] = vehicleMarker;
             }
             [self centerMap];
@@ -1188,9 +1187,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             }
             else {
                 GMSMarker *marker = [GMSMarker markerWithPosition:pathPoint.coordinate];
-                marker.icon = [UIImage imageNamed:@"map-urban"];//_blankMarkerIcon;
+                marker.icon = [UIImage imageNamed:@"map-urban"];
                 marker.map = _mapView;
                 marker.rotation = pathPoint.course;
+                marker.groundAnchor = CGPointMake(0.5f, 0.5f);
                 marker.userData = vehicleViewId;
                 _vehicleMarkers[uuid] = marker;
             }
@@ -1312,6 +1312,11 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (!_pickupLocation)
         _pickupLocation = [[ICLocation alloc] initWithCoordinate:_mapView.camera.target];
     return _pickupLocation;
+}
+
+-(void)dealloc {
+    _googleService.delegate = nil;
+    _locationService.delegate = nil;
 }
 
 // TODO: Для разных машин асинхронно грузить картинки из сети и кэшировать их по url,

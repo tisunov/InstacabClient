@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "QuickDialog.h"
 
-@interface ICAccountViewController : UIViewController
+@interface ICAccountViewController : QuickDialogController<QuickDialogEntryElementDelegate>
 
 @end
