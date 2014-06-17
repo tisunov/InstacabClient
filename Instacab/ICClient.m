@@ -115,7 +115,7 @@
     return _token != NULL;
 }
 
-- (BOOL)cardPresent {
+- (BOOL)hasCardOnFile {
     return self.paymentProfile && self.paymentProfile.canCharge;
 }
 

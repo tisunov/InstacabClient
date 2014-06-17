@@ -118,7 +118,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
-    return 5;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -136,7 +136,8 @@
         cell.selectedBackgroundView = [[UIView alloc] init];
     }
     
-    NSArray *titles = @[@"Домой", @"Профиль", @"Оплата", @"Промо-предложения", @"Пригласить друзей"];
+    // , @"Пригласить друзей"
+    NSArray *titles = @[@"Домой", @"Профиль", @"Оплата", @"Промо-предложения"];
     NSArray *images = @[@"home_icon_white", @"account_profile_icon", @"farequote_icon_white", @"promo_icon_white", @"share_icon_white"];
     cell.textLabel.text = [titles[indexPath.row] uppercaseString];
     cell.imageView.image = [UIImage imageNamed:images[indexPath.row]];

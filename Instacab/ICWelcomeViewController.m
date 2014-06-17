@@ -89,6 +89,11 @@
                                              selector:@selector(applicationDidEnterBackground:)
                                                  name:UIApplicationDidEnterBackgroundNotification
                                                object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillTerminate:)
+                                                 name:UIApplicationWillTerminateNotification
+                                               object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(applicationDidBecomeActive:)
@@ -134,6 +139,10 @@
     
     _inBackground = YES;
     [_clientService disconnectWithoutTryingToReconnect];
+}
+
+- (void)applicationWillTerminate:(NSNotification *)n {
+    NSLog(@"+ Will terminate");
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)n {

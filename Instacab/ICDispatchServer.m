@@ -48,7 +48,6 @@ NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
 
 #if !(TARGET_IPHONE_SIMULATOR)
-    // @"http://192.168.1.36.xip.io:9000/"
     NSString * const kDispatchServerUrl = @"http://node.instacab.ru";
     NSString * const kDispatchServerEventsUrl = @"http://node.instacab.ru/mobile/event";
     NSString * const kDispatchServerHostName = @"node.instacab.ru";
@@ -86,7 +85,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
         _dateFormatter.timeZone = gmt;
         _dateFormatterWithT.timeZone = gmt;
-        
         
         _httpManager = [AFHTTPRequestOperationManager manager];
         _httpManager.requestSerializer = [AFJSONRequestSerializer serializer];        
@@ -348,7 +346,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 
 #pragma mark - Misc
 
-- (NSMutableDictionary *)buildGenericDataWithLatitude:(double) latitude longitude: (double) longitude
+- (NSMutableDictionary *)buildGenericDataWithLatitude:(double)latitude longitude:(double)longitude
 {
     NSMutableDictionary *data = [NSMutableDictionary dictionary];
     [data setValue:_deviceOS forKey:@"deviceOS"];

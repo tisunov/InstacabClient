@@ -14,6 +14,7 @@
 #import "ICClientService.h"
 #import "Colours.h"
 #import "Constants.h"
+#import "UIActionSheet+Blocks.h"
 
 @interface ICAccountViewController ()
 
@@ -80,11 +81,18 @@
         
         // Logout
         QButtonElement *button = [[QButtonElement alloc] initWithTitle:@"ВЫЙТИ"];
-        button.onSelected = ^{
-            // TODO: Добавить UIActionSheet с Block syntax чтобы подтвердить выход
-            
-            [[ICClientService sharedInstance] logOut];
-            [[NSNotificationCenter defaultCenter] postNotificationName:kLogoutNotification object:self];
+        button.onSelected = ^{            
+            [UIActionSheet presentOnView:self.view
+                               withTitle:@"Уверены что хотите выйти?"
+                            cancelButton:@"Остаться"
+                       destructiveButton:@"Выйти"
+                            otherButtons:nil
+                                onCancel:nil
+                           onDestructive:^(UIActionSheet *actionSheet) {
+                               [[ICClientService sharedInstance] logOut];
+                               [[NSNotificationCenter defaultCenter] postNotificationName:kLogoutNotification object:self];
+                           }
+                         onClickedButton:nil];
         };
         
         section = [[QSection alloc] init];

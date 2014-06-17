@@ -93,6 +93,7 @@
 		D9C1932C1889016000A889E4 /* UIViewController+TitleLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C1932B1889016000A889E4 /* UIViewController+TitleLabel.m */; };
 		D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */; };
 		D9C4B43F194B0AB600F62C9E /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C4B43E194B0AB600F62C9E /* Constants.m */; };
+		D9C878A9194D98AB0054F205 /* AnalyticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D9C878A8194D98AB0054F205 /* AnalyticsManager.m */; };
 		D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */; };
 		D9CD0E4D1829A55400A02619 /* ICReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */; };
 		D9CDF22B192A8EC4009F7D4A /* ICCity.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CDF22A192A8EC4009F7D4A /* ICCity.m */; };
@@ -274,6 +275,8 @@
 		D9C27D921845B7A7007969EA /* UIApplication+Alerts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+Alerts.m"; sourceTree = "<group>"; };
 		D9C4B43D194B0AA900F62C9E /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		D9C4B43E194B0AB600F62C9E /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		D9C878A7194D98AB0054F205 /* AnalyticsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnalyticsManager.h; path = Analytics/AnalyticsManager.h; sourceTree = "<group>"; };
+		D9C878A8194D98AB0054F205 /* AnalyticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AnalyticsManager.m; path = Analytics/AnalyticsManager.m; sourceTree = "<group>"; };
 		D9CD0E491829A55400A02619 /* ICReceiptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICReceiptViewController.h; sourceTree = "<group>"; };
 		D9CD0E4A1829A55400A02619 /* ICReceiptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICReceiptViewController.m; sourceTree = "<group>"; };
 		D9CD0E4B1829A55400A02619 /* ICReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICReceiptViewController.xib; sourceTree = "<group>"; };
@@ -620,6 +623,7 @@
 		D9B0323E180572B400F7AF69 /* Instacab */ = {
 			isa = PBXGroup;
 			children = (
+				D9C878A6194D96F90054F205 /* Analytics */,
 				D92019361816FD9A00EEA47C /* Models */,
 				D949AC6818F3A61C0053EB2E /* Networking */,
 				D9AD51581817C78100692E7E /* Location */,
@@ -729,6 +733,15 @@
 				D900105019069B2000F0FB09 /* ICPromoViewController.xib */,
 			);
 			name = Promo;
+			sourceTree = "<group>";
+		};
+		D9C878A6194D96F90054F205 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				D9C878A8194D98AB0054F205 /* AnalyticsManager.m */,
+				D9C878A7194D98AB0054F205 /* AnalyticsManager.h */,
+			);
+			name = Analytics;
 			sourceTree = "<group>";
 		};
 		D9D08D2118B4F6F300760327 /* Localytics */ = {
@@ -987,6 +1000,7 @@
 				D9AD515B1817C7A200692E7E /* ICClientService.m in Sources */,
 				D911228418094462006A49DA /* ICHighlightButton.m in Sources */,
 				D9C27D931845B7A7007969EA /* UIApplication+Alerts.m in Sources */,
+				D9C878A9194D98AB0054F205 /* AnalyticsManager.m in Sources */,
 				D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */,
 				D97A48D318F03FCB0095B4BC /* ICVerifyMobileViewController.m in Sources */,
 				D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */,

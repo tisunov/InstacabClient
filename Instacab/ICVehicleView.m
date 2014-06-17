@@ -22,8 +22,13 @@
         @"pickupEtaString": @"pickupEtaString",
         @"noneAvailableString": @"noneAvailableString",
         @"mapImages": @"mapImages",
-        @"monoImages": @"monoImages"
+        @"monoImages": @"monoImages",
+        @"requestAfterMobileConfirm": @"requestAfterMobileConfirm"
     };
+}
+
++ (NSValueTransformer *)requestAfterMobileConfirmJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
 + (NSValueTransformer *)mapImagesJSONTransformer {

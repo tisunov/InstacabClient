@@ -58,6 +58,8 @@
     BOOL _justStarted;
     BOOL _sideMenuOpen;
     BOOL _showAvailableVehicle;
+    
+    NSDate *_pickupRequestedAt;
 }
 
 NSString * const kGoToMarker = @"Приехать к булавке";
@@ -423,19 +425,22 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _draggingPin = dragging;
     
     if (dragging) {
-        [UIView animateWithDuration:0.35 animations:^(void){
-            [self.navigationController setNavigationBarHidden:YES animated:YES];
-            
-            _centerMapButton.alpha = 0.0;
-            
-            // Slide up
-            _addressView.y = -24.0;
-            // Slide down
-            _pickupView.y = [[UIScreen mainScreen] bounds].size.height;
-            _pickupView.alpha = 0.0f;
-            
-            _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
-        }];
+        
+        if (!_readyToRequest) {
+            [UIView animateWithDuration:0.35 animations:^(void){
+                [self.navigationController setNavigationBarHidden:YES animated:YES];
+                
+                _centerMapButton.alpha = 0.0;
+                
+                // Slide up
+                _addressView.y = -24.0;
+                // Slide down
+                _pickupView.y = [[UIScreen mainScreen] bounds].size.height;
+                _pickupView.alpha = 0.0f;
+                
+                _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
+            }];
+        }
     }
     else {
         [_pinDragFinishTimer invalidate];
@@ -449,19 +454,21 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self findAddressAndNearbyCabsAtCameraTarget:YES];
     
-    [UIView animateWithDuration:0.35 animations:^(void){
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
-        
-        _centerMapButton.alpha = 1.0;
-        
-        // Slide down
-        _addressView.y = _addressViewOriginY;
-        // Slide up
-        _pickupView.y = [[UIScreen mainScreen] bounds].size.height - _pickupView.frame.size.height;
-        _pickupView.alpha = 1.0f;
-        
-        _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
-    }];
+    if (!_readyToRequest) {
+        [UIView animateWithDuration:0.35 animations:^(void){
+            [self.navigationController setNavigationBarHidden:NO animated:YES];
+            
+            _centerMapButton.alpha = 1.0;
+            
+            // Slide down
+            _addressView.y = _addressViewOriginY;
+            // Slide up
+            _pickupView.y = [[UIScreen mainScreen] bounds].size.height - _pickupView.frame.size.height;
+            _pickupView.alpha = 1.0f;
+            
+            _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
+        }];
+    }
 }
 
 -(void)recognizeTapOnMap:(id)sender {
@@ -475,7 +482,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)recognizeDragOnMap:(UIPanGestureRecognizer *)sender {
-    if ([ICClient sharedInstance].state != ICClientStatusLooking || _readyToRequest) return;
+    if ([ICClient sharedInstance].state != ICClientStatusLooking) return;
     
     UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
     // Hide UI controls when user starts map drag to show move of the map
@@ -645,9 +652,24 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)showVerifyMobileDialog {
+    _pickupRequestedAt = [NSDate date];
+    
     ICVerifyMobileViewController *controller = [[ICVerifyMobileViewController alloc] initWithNibName:@"ICVerifyMobileViewController" bundle:nil];
+    controller.delegate = self;
     
     [self presentModalViewController:controller];
+}
+
+- (void)didConfirmMobile {
+    if (![self activeVehicleView].requestAfterMobileConfirm) return;
+    
+    NSTimeInterval timeSinceRequest = -[_pickupRequestedAt timeIntervalSinceNow];
+    // Send PickupRequest automatically if less than 60 passed
+    if (timeSinceRequest < 60) {
+        [self checkCardLinkedAndRequestPickup];
+    }
+    
+    _pickupRequestedAt = nil;
 }
 
 - (void)loadDriverDetails {
@@ -920,7 +942,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.view addSubview:_pickupLocationMarker];
 }
 
-// TODO: A/B Test this
 // Zoom out to include any nearby vehicle,
 // Try to motivate client to request pickup
 - (void)makeVisibleAvailableVehicles {
@@ -1016,6 +1037,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (!vehicleView) return nil;
     
     return [[ICNearbyVehicles shared] vehicleByViewId:vehicleViewId];
+}
+
+- (ICVehicleView *)activeVehicleView {
+    return [[ICCity shared] vehicleViewById:[self vehicleViewId]];
 }
 
 -(void)updateVehicleMarkers {
@@ -1294,7 +1319,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     CGSize centeredMarkerBoundsSize = CGSizeMake(2.0 * markerBoundsCurrentLocationMaxDelta.x, 2.0 * markerBoundsCurrentLocationMaxDelta.y);
     
     // inset the view bounds to fit markers
-    CGSize insetViewBoundsSize = CGSizeMake(_mapView.bounds.size.width - kMarkerSize / 2.0 - kMarkerMargin, _mapView.bounds.size.height - kMarkerSize / 2.0 - kMarkerSize);
+    CGSize insetViewBoundsSize = CGSizeMake(_mapView.bounds.size.width - kMarkerSize / 2.0 - kMarkerMargin, _mapView.bounds.size.height - 4 * kMarkerSize);
     
     CGFloat x1;
     CGFloat x2;
@@ -1312,6 +1337,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
     
     CGFloat zoom = log2(x2 * pow(2, _mapView.camera.zoom) / x1);
+    if (zoom >= 18) zoom = 18;
     
     GMSCameraPosition* camera = [GMSCameraPosition cameraWithTarget:_mapView.camera.target zoom:zoom];
     
@@ -1393,7 +1419,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     if (_sideMenuOpen)
         [_mapView animateToLocation:[self pickupLocation].coordinate];
 }
-
 
 // TODO: Для разных машин асинхронно грузить картинки из сети и кэшировать их по url,
 // грузить только если их нету.

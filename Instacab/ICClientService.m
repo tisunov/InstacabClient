@@ -57,11 +57,17 @@ float const kPingIntervalInSeconds = 6.0f;
 
 #pragma mark - Remote Commands
 
+// TODO: Uber - addressSearch (поиск адреса вручную), locationChange(??), locationRequest, selectFavorite
 -(void)ping:(CLLocationCoordinate2D)location
      reason:(NSString *)aReason
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure
 {
+    ICClient *client = [ICClient sharedInstance];
+    if (client.token.length == 0 || !client.uID) {
+        if (failure) failure();
+    }
+    
     if (success) {
         self.successBlock = success;
     }
@@ -72,14 +78,14 @@ float const kPingIntervalInSeconds = 6.0f;
     // TODO: Посылать текущий vehicleViewId
     NSDictionary *pingMessage = @{
         kFieldMessageType: @"PingClient",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID
+        @"token": client.token,
+        @"id": client.uID
     };
 
     // TODO: Посылать vehicleViewId (текущий тип автомобилей), vehicleViewIds (все доступные, так как они могут быть динамическими ото дня ко дню)
     // TODO: Чтобы верно считать открытия приложения нужно также посылать reason=openApp при успешном выполнении Login
     // Analytics
-    [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": aReason, @"clientId":[ICClient sharedInstance].uID}];
+    [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": aReason, @"clientId":client.uID}];
 
     [self sendMessage:pingMessage coordinates:location];
     
@@ -395,9 +401,11 @@ float const kPingIntervalInSeconds = 6.0f;
     [[NSNotificationCenter defaultCenter] postNotificationName:kClientServiceMessageNotification object:self userInfo:@{@"message":msg}];
     
     if (_successBlock != nil) {
-        _successBlock(msg);
-        _successBlock = nil;
-        _failureBlock = nil;
+        ICClientServiceSuccessBlock success = [self.successBlock copy];
+        self.successBlock = nil;
+        self.failureBlock = nil;
+        
+        success(msg);
     }
 }
 
@@ -407,9 +415,11 @@ float const kPingIntervalInSeconds = 6.0f;
 
 - (void)triggerFailure {
     if (_failureBlock != nil) {
-        _failureBlock();
-        _failureBlock = nil;
-        _successBlock = nil;
+        ICClientServiceFailureBlock failure = [self.failureBlock copy];
+        self.failureBlock = nil;
+        self.successBlock = nil;
+        
+        failure();
     }
 }
 

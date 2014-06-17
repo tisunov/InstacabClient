@@ -55,20 +55,17 @@
     _promoCodeTextField.delegate = self;
 
     BOOL standalone = [self.navigationController.parentViewController isKindOfClass:RESideMenu.class];
-    UIBarButtonItem *leftNavButton;
     
     if (standalone) {
-        leftNavButton = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"sidebar_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]  style:UIBarButtonItemStylePlain target:self action:@selector(showMenu)];
+        UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"sidebar_icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal]  style:UIBarButtonItemStylePlain target:self action:@selector(showMenu)];
+        
+        self.navigationItem.leftBarButtonItem = barButton;
     }
     else {
-        leftNavButton = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(back)];
-    }
-    self.navigationItem.leftBarButtonItem = leftNavButton;
-    
-    UIBarButtonItem *applyButton = [[UIBarButtonItem alloc] initWithTitle:@"ПРИМЕНИТЬ" style:UIBarButtonItemStyleDone target:self action:@selector(applyPromo)];
-    applyButton.enabled = NO;
-    [self setupCallToActionBarButton:applyButton];
-    self.navigationItem.rightBarButtonItem = applyButton;
+        UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(back)];
+        
+        self.navigationItem.rightBarButtonItem = barButton;
+    }    
 }
 
 -(void)showMenu {

@@ -20,6 +20,10 @@
 @property (nonatomic, copy, readonly) NSString *noneAvailableString;
 @property (nonatomic, copy, readonly) NSArray *mapImages;
 @property (nonatomic, copy, readonly) NSArray *monoImages;
+@property (nonatomic, assign, readonly) BOOL requestAfterMobileConfirm;
+@property (nonatomic, assign, readonly) BOOL allowCashPayment;
+@property (nonatomic, copy, readonly) NSString *allowCashError;
+@property (nonatomic, copy, readonly) NSString *addCreditCardButtonTitle;
 
 @property (nonatomic, readonly) ICImage *mapImage;
 @property (nonatomic, readonly) ICImage *monoImage;

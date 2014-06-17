@@ -76,12 +76,12 @@
             QButtonElement *button = [[QButtonElement alloc] init];
             button.object = client.paymentProfile;
             button.onSelected = ^{
-                // TODO: Позволить отредактировать карту, например изменить номер или срок действия
+                // TODO: Показать readonly TableView с данными карты
             };
             
             [section addElement:button];
         }
-//        else {
+        else {
             QButtonElement *button = [[QButtonElement alloc] initWithTitle:@"ДОБАВИТЬ КАРТУ"];
             button.key = @"addCard";
             button.onSelected = ^{
@@ -89,7 +89,7 @@
             };
             
             [section addElement:button];
-//        }
+        }
         
         [self.root addSection:section];
 

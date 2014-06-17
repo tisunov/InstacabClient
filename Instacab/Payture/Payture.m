@@ -82,7 +82,7 @@ float const kPaymentProfileTimeout = 15.0f;
     [[ICClientService sharedInstance] ping:coord
                                     reason:kNearestCabRequestReasonPing
                                    success:^(ICPing *message) {
-                                       if (message.apiResponse.paymentProfile) {
+                                       if (message.client.hasCardOnFile) {
                                            if (_cardRegisterSuccess) {
                                                _cardRegisterSuccess();
                                                _cardRegisterSuccess = nil;

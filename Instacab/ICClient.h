@@ -31,7 +31,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, copy, readonly) NSDictionary *lastEstimatedTrip;
 
 // Computed properties
-@property (readonly) BOOL cardPresent;
+@property (readonly) BOOL hasCardOnFile;
 @property (nonatomic, readonly) NSString *cardHolder;
 @property (readonly) BOOL mobileConfirmed;
 

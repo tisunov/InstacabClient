@@ -56,6 +56,7 @@
     BOOL _cardio;
     NSUInteger _cardioAttempts;
     BOOL _cardRegistrationInProgress;
+    Payture *_payture;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -65,6 +66,7 @@
         _cardio = NO;
         _cardioAttempts = 0;
         _cardRegistrationInProgress = NO;
+        _payture = [[Payture alloc] init];
     }
     return self;
 }
@@ -165,6 +167,8 @@
     NSLog(@"Card last4: %@", card.last4);
     NSLog(@"Card expiry: %lu/%lu", (unsigned long)card.expMonth, (unsigned long)card.expYear);
 
+    [MBProgressHUD showGlobalProgressHUDWithTitle:@"Сохранение"];
+    
     [[ICClientService sharedInstance] createCardSession:^{
         [MBProgressHUD hideGlobalHUD];
 
@@ -254,9 +258,6 @@
 //                      }];
 //}
 //
-//- (void)paymentView:(PKView *)paymentView withCard:(PKCard *)card isValid:(BOOL)valid {
-//    self.navigationItem.rightBarButtonItem.enabled = valid;
-//}
 //
 //- (void)clientCardCreated {
 //    [MBProgressHUD hideGlobalHUD];
@@ -311,6 +312,32 @@
     }];
 }
 
+- (void)paymentView:(PKView *)paymentView withCard:(PKCard *)card isValid:(BOOL)valid {
+    self.navigationItem.rightBarButtonItem.enabled = valid;
+}
+
+- (void)createCard:(ICApiResponse *)apiResponse {
+    PKCard *card = self.paymentView.card;
+
+    [_payture createCardNumber:card.number
+                   cardHolder:[ICClient sharedInstance].cardHolder
+              expirationMonth:[NSNumber numberWithUnsignedLong:card.expMonth]
+               expirationYear:[NSNumber numberWithUnsignedLong:card.expYear]
+                   secureCode:card.cvc
+                   addCardUrl:apiResponse.data[@"add_card_page_url"]
+                submitCardUrl:apiResponse.data[@"submit_card_url"]
+                       cardio:_cardio
+                      success:^{
+                          // TODO: PaymentViewController должен показать добавленную карту в списке и удалить кнопку добавления карты
+                          [self.navigationController popViewControllerAnimated:YES];
+                      }
+                      failure:^(NSString *errorTitle, NSString *errorMessage){
+                          [MBProgressHUD hideGlobalHUD];
+
+                          [[UIApplication sharedApplication] showAlertWithTitle:errorTitle message:errorMessage cancelButtonTitle:@"OK"];
+                      }];
+}
+
 // Slow connection results in timed out requests.
 // Which subsequently gets resent, but success callback (stored in ICClientService)
 // can belong to another request, which receives unexpected response
@@ -321,7 +348,7 @@
     switch (message.messageType) {
         case SVMessageTypeOK:
             if ([message.apiResponse.data[@"add_card_page_url"] length] > 0 && !_cardRegistrationInProgress) {
-//                [self createCard:message.apiResponse];
+                [self createCard:message.apiResponse];
                 _cardRegistrationInProgress = YES;
             }
             

@@ -109,6 +109,9 @@
                             else {
                                 [[ICClient sharedInstance] confirmMobile];
                                 
+                                if ([strongSelf.delegate respondsToSelector:@selector(didConfirmMobile)])
+                                    [strongSelf.delegate didConfirmMobile];
+                                
                                 [strongSelf cancel];
                             }
                         }

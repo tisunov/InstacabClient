@@ -17,6 +17,5 @@
 @interface ICApiResponse : MTLModel <MTLJSONSerializing>
 @property (nonatomic, copy, readonly) ICError *error;
 @property (nonatomic, strong, readonly) ICClient *client;
-@property (nonatomic, strong) ICPaymentProfile *paymentProfile;
 @property (nonatomic, copy, readonly) NSDictionary *data;
 @end

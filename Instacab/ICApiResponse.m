@@ -25,7 +25,6 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"error": @"error",
-        @"paymentProfile": @"payment_profile",
         @"client": @"client",
         @"data": @"data"
     };
@@ -37,10 +36,6 @@
 
 + (NSValueTransformer *)clientJSONTransformer {
     return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICClient.class];
-}
-
-+ (NSValueTransformer *)hasPaymentProfileJSONTransformer {
-    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
 @end
