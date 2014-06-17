@@ -11,6 +11,7 @@
 		D900105119069B2000F0FB09 /* ICPromoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D900104F19069B2000F0FB09 /* ICPromoViewController.m */; };
 		D900105219069B2000F0FB09 /* ICPromoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D900105019069B2000F0FB09 /* ICPromoViewController.xib */; };
 		D906B11B18A924230065E256 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D906B11A18A924230065E256 /* libsqlite3.dylib */; };
+		D90A172919506A8300078BE8 /* CreditCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90A172819506A8300078BE8 /* CreditCardViewController.m */; };
 		D90A9C9E18AE5CEB002B80F4 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */; };
 		D90A9CA018AE5CFE002B80F4 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */; };
 		D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE121884306600E03F3E /* ICWelcomeViewController.m */; };
@@ -139,6 +140,8 @@
 		D900104F19069B2000F0FB09 /* ICPromoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPromoViewController.m; sourceTree = "<group>"; };
 		D900105019069B2000F0FB09 /* ICPromoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICPromoViewController.xib; sourceTree = "<group>"; };
 		D906B11A18A924230065E256 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		D90A172719506A8300078BE8 /* CreditCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditCardViewController.h; path = Account/CreditCardViewController.h; sourceTree = "<group>"; };
+		D90A172819506A8300078BE8 /* CreditCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditCardViewController.m; path = Account/CreditCardViewController.m; sourceTree = "<group>"; };
 		D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
 		D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 		D90BAE111884306600E03F3E /* ICWelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICWelcomeViewController.h; sourceTree = "<group>"; };
@@ -459,6 +462,8 @@
 				D9C193211888779200A889E4 /* ICAccountViewController.m */,
 				D9C193201888779200A889E4 /* ICAccountViewController.h */,
 				D9C193221888779200A889E4 /* ICAccountViewController.xib */,
+				D90A172819506A8300078BE8 /* CreditCardViewController.m */,
+				D90A172719506A8300078BE8 /* CreditCardViewController.h */,
 			);
 			name = Account;
 			sourceTree = "<group>";
@@ -1033,6 +1038,7 @@
 				D9C1932C1889016000A889E4 /* UIViewController+TitleLabel.m in Sources */,
 				D9B03245180572B400F7AF69 /* main.m in Sources */,
 				D9378E5F190A780900F805DB /* UIViewController+Location.m in Sources */,
+				D90A172919506A8300078BE8 /* CreditCardViewController.m in Sources */,
 				D9D9C7CA194B2E6F003B68AF /* Payture.m in Sources */,
 				D98058C6181A5A1800DD0BBF /* ICSingleton.m in Sources */,
 				D9CD0E4C1829A55400A02619 /* ICReceiptViewController.m in Sources */,

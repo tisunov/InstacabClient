@@ -86,7 +86,8 @@ typedef void (^ICClientServiceFailureBlock)();
          withSuccess:(ICClientServiceSuccessBlock)success
              failure:(ICClientServiceFailureBlock)failure;
 
-- (void)createCardSession:(ICClientServiceFailureBlock)failure;
+- (void)createCardSessionSuccess:(ICClientServiceSuccessBlock)success
+                         failure:(ICClientServiceFailureBlock)failure;
 
 - (void)disconnectWithoutTryingToReconnect;
 

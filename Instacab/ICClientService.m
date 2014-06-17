@@ -66,6 +66,7 @@ float const kPingIntervalInSeconds = 6.0f;
     ICClient *client = [ICClient sharedInstance];
     if (client.token.length == 0 || !client.uID) {
         if (failure) failure();
+        return;
     }
     
     if (success) {
@@ -363,8 +364,10 @@ float const kPingIntervalInSeconds = 6.0f;
     
 }
 
-- (void)createCardSession:(ICClientServiceFailureBlock)failure;
+- (void)createCardSessionSuccess:(ICClientServiceSuccessBlock)success
+                         failure:(ICClientServiceFailureBlock)failure
 {
+    self.successBlock = success;
     self.failureBlock = failure;
     
     NSDictionary *message = @{
@@ -381,14 +384,13 @@ float const kPingIntervalInSeconds = 6.0f;
 - (void)didReceiveMessage:(NSDictionary *)responseMessage {
     [super didReceiveMessage:responseMessage];
     
-    NSError *error;
-    
     [self delayPing];
     
     // Deserialize to object instance
+    NSError *error;
     ICPing *msg = [MTLJSONAdapter modelOfClass:ICPing.class
-                               fromJSONDictionary:responseMessage
-                                            error:&error];
+                            fromJSONDictionary:responseMessage
+                                         error:&error];
     
     if (msg.messageType != SVMessageTypeError) {
         [[ICCity shared] update:msg.city];

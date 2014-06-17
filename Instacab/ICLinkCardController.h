@@ -17,13 +17,16 @@
 -(void)updateWithCardIO:(CardIOCreditCardInfo *)info;
 @end
 
+@protocol LinkCardControllerDelegate <NSObject>
+-(void)didRegisterPaymentCard;
+@end
+
 @interface ICLinkCardController : UIViewController<PKViewDelegate, CardIOPaymentViewControllerDelegate, UIGestureRecognizerDelegate>
 @property (strong, nonatomic) IBOutlet PKViewEx *paymentView;
 @property (strong, nonatomic) ICSignUpInfo *signupInfo;
 @property (strong, nonatomic) IBOutlet UIButton *cardioButton;
+@property (nonatomic, weak) id<LinkCardControllerDelegate> delegate;
 
-@property (nonatomic, weak) id<ICSignUpFlowDelegate> delegate;
 - (IBAction)displayTerms:(id)sender;
-
 - (IBAction)scanCardPressed:(id)sender;
 @end

@@ -12,7 +12,7 @@
 #import "ICClientService.h"
 #import "Colours.h"
 #import "RESideMenu.h"
-#import "ICLinkCardController.h"
+#import "CreditCardViewController.h"
 
 #pragma mark - QPaymentAppearance
 
@@ -26,15 +26,13 @@
 {
     QTableViewCell *qCell = (QTableViewCell *)cell;
     
-    if ([element isKindOfClass:QButtonElement.class]) {
-        qCell.textLabel.textAlignment = NSTextAlignmentLeft;
-        qCell.textLabel.font = [UIFont systemFontOfSize:16.0];
-        qCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
-    
     if([element.key isEqualToString:@"addCard"]) {
         qCell.imageView.image = [UIImage imageNamed:@"card_plus"];
         qCell.textLabel.textColor = [UIColor blueberryColor];
+        qCell.textLabel.textAlignment = NSTextAlignmentLeft;
+        qCell.textLabel.font = [UIFont systemFontOfSize:16.0];
+        qCell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
     }
     else if ([element.object isKindOfClass:ICPaymentProfile.class]) {
         ICPaymentProfile *profile = (ICPaymentProfile *)element.object;
@@ -45,6 +43,9 @@
             qCell.imageView.image = [UIImage imageNamed:@"mastercard"];
         else
             qCell.imageView.image = [UIImage imageNamed:@"placeholder"];
+        
+        qCell.textLabel.textAlignment = NSTextAlignmentLeft;
+        qCell.textLabel.font = [UIFont systemFontOfSize:16.0];
         
         NSString *useCase = profile.isPersonal ? @"Личная" : @"Корпоративная";
         qCell.textLabel.text = [[NSString stringWithFormat:@"%@ ●●●● %@", useCase, profile.cardNumber] uppercaseString];
@@ -59,7 +60,9 @@
 
 @end
 
-@implementation ICPaymentViewController
+@implementation ICPaymentViewController {
+    QSection *_paymentMethodsSection;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -69,31 +72,28 @@
         self.root.grouped = YES;
         self.root.appearance = [QPaymentAppearance new];
         
-        QSection *section = [[QSection alloc] init];
+        _paymentMethodsSection = [[QSection alloc] init];
         
         ICClient *client = [ICClient sharedInstance];
-        if (client.paymentProfile) {
-            QButtonElement *button = [[QButtonElement alloc] init];
-            button.object = client.paymentProfile;
-            button.onSelected = ^{
-                // TODO: Показать readonly TableView с данными карты
-            };
-            
-            [section addElement:button];
+        if (client.hasCardOnFile) {
+            [self addButtonForPaymentProfile:client.paymentProfile];
         }
         else {
             QButtonElement *button = [[QButtonElement alloc] initWithTitle:@"ДОБАВИТЬ КАРТУ"];
             button.key = @"addCard";
             button.onSelected = ^{
-                [self.navigationController pushViewController:[[ICLinkCardController alloc] initWithNibName:@"ICLinkCardController" bundle:nil] animated:YES];
+                ICLinkCardController *controller = [[ICLinkCardController alloc] initWithNibName:@"ICLinkCardController" bundle:nil];
+                controller.delegate = self;
+                
+                [self.navigationController pushViewController:controller animated:YES];
             };
             
-            [section addElement:button];
+            [_paymentMethodsSection addElement:button];
         }
         
-        [self.root addSection:section];
+        [self.root addSection:_paymentMethodsSection];
 
-        section = [[QSection alloc] init];
+        QSection *section = [[QSection alloc] init];
         section.title = @"Instacab Кредиты:";
         
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 16.0)];
@@ -115,6 +115,25 @@
     return self;
 }
 
+- (void)addButtonForPaymentProfile:(ICPaymentProfile *)profile {
+    QLabelElement *button = [[QLabelElement alloc] init];
+    button.object = profile;
+//    button.onSelected = ^{
+//        [self.navigationController pushViewController:[CreditCardViewController new] animated:YES];
+//    };
+    
+    [_paymentMethodsSection addElement:button];
+}
+
+- (void)didRegisterPaymentCard {
+    // show payment card
+    [self addButtonForPaymentProfile:[ICClient sharedInstance].paymentProfile];
+    
+    // remove add card button. allow only one card for now
+    [_paymentMethodsSection.elements removeObject:[self entryElementWithKey:@"addCard"]];
+    [self.quickDialogTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -133,9 +152,6 @@
 
 -(void)showMenu {
     [self.sideMenuViewController presentLeftMenuViewController];
-}
-
-- (void)handleAddPaymentButton:(QButtonElement *)button {
 }
 
 @end

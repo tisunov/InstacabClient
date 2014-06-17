@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "QuickDialog.h"
+#import "ICLinkCardController.h"
 
-@interface ICPaymentViewController : QuickDialogController<QuickDialogEntryElementDelegate>
+@interface ICPaymentViewController : QuickDialogController<QuickDialogEntryElementDelegate, LinkCardControllerDelegate>
 
 @end

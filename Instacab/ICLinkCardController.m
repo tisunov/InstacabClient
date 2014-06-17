@@ -103,9 +103,9 @@
     else {
         self.titleText = @"ДОБАВИТЬ КАРТУ";
         
-        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
-        [self setupBarButton:cancel];
-        self.navigationItem.leftBarButtonItem = cancel;
+//        UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Отмена" style:UIBarButtonItemStylePlain target:self action:@selector(cancel:)];
+//        [self setupBarButton:cancel];
+//        self.navigationItem.leftBarButtonItem = cancel;
         
 //        rightNavButton = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStyleDone target:self action:@selector(signupClient)];
     }
@@ -119,12 +119,12 @@
     self.paymentView.delegate = self;
     
 #if (TARGET_IPHONE_SIMULATOR)
-//    self.paymentView.cardNumberField.text = @"4111111111111111";
-//    self.paymentView.cardExpiryField.text = @"12/15";
-//    self.paymentView.cardCVCField.text = @"123";
+    self.paymentView.cardNumberField.text = @"4111111111111116";
+    self.paymentView.cardExpiryField.text = @"12/15";
+    self.paymentView.cardCVCField.text = @"123";
 #endif
     
-    [[ICClientService sharedInstance] trackScreenView:@"Link Card"];    
+    [[ICClientService sharedInstance] trackScreenView:@"Link Card"];
 }
 
 - (void)showMenuNavbarButton {
@@ -138,28 +138,13 @@
     [self.sideMenuViewController presentLeftMenuViewController];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(didReceiveMessage:)
-                                                 name:kClientServiceMessageNotification
-                                               object:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 - (void)back:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)cancel:(id)sender {
-    [self.delegate cancelSignUp:self signUpInfo:self.signupInfo];
-}
+//-(void)cancel:(id)sender {
+//    [self.delegate cancelSignUp:self signUpInfo:self.signupInfo];
+//}
 
 - (void)saveCreditCard {
     PKCard *card = self.paymentView.card;
@@ -169,7 +154,14 @@
 
     [MBProgressHUD showGlobalProgressHUDWithTitle:@"Сохранение"];
     
-    [[ICClientService sharedInstance] createCardSession:^{
+    
+    _cardRegistrationInProgress = NO;
+    [[ICClientService sharedInstance] createCardSessionSuccess:^(ICPing *message) {
+        if ([message.apiResponse.data[@"add_card_page_url"] length] > 0 && !_cardRegistrationInProgress) {
+            [self createCard:message.apiResponse];
+            _cardRegistrationInProgress = YES;
+        }
+    } failure:^{
         [MBProgressHUD hideGlobalHUD];
 
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка добавления карты" message:@"Отсутствует сетевое соединение." cancelButtonTitle:@"OK"];
@@ -328,7 +320,11 @@
                 submitCardUrl:apiResponse.data[@"submit_card_url"]
                        cardio:_cardio
                       success:^{
-                          // TODO: PaymentViewController должен показать добавленную карту в списке и удалить кнопку добавления карты
+                          [MBProgressHUD hideGlobalHUD];
+
+                          if ([self.delegate respondsToSelector:@selector(didRegisterPaymentCard)])
+                              [self.delegate didRegisterPaymentCard];
+                          
                           [self.navigationController popViewControllerAnimated:YES];
                       }
                       failure:^(NSString *errorTitle, NSString *errorMessage){
@@ -336,27 +332,6 @@
 
                           [[UIApplication sharedApplication] showAlertWithTitle:errorTitle message:errorMessage cancelButtonTitle:@"OK"];
                       }];
-}
-
-// Slow connection results in timed out requests.
-// Which subsequently gets resent, but success callback (stored in ICClientService)
-// can belong to another request, which receives unexpected response
-// So instead of block callbacks, rely on NotificationCenter message
-- (void)didReceiveMessage:(NSNotification *)note {
-    ICPing *message = [[note userInfo] objectForKey:@"message"];
-    
-    switch (message.messageType) {
-        case SVMessageTypeOK:
-            if ([message.apiResponse.data[@"add_card_page_url"] length] > 0 && !_cardRegistrationInProgress) {
-                [self createCard:message.apiResponse];
-                _cardRegistrationInProgress = YES;
-            }
-            
-            break;
-            
-        default:
-            break;
-    }
 }
 
 @end
