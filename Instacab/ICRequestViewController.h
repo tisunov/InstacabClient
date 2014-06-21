@@ -18,9 +18,10 @@
 #import "ICVerifyMobileViewController.h"
 #import "ICSearchViewController.h"
 #import "RESideMenu.h"
+#import "ICVehicleSelectionView.h"
+#import "ICPickupCalloutView.h"
 
-@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICSearchViewDelegate, GMSMapViewDelegate, RESideMenuDelegate, UIGestureRecognizerDelegate, ICVerifyMobileDelegate>
-- (IBAction)requestPickup:(id)sender;
+@interface ICRequestViewController : UIViewController<ICGoogleServiceDelegate, ICLocationServiceDelegate, ICSearchViewDelegate, GMSMapViewDelegate, RESideMenuDelegate, UIGestureRecognizerDelegate, ICVerifyMobileDelegate, ICVehicleSelectionViewDelegate, ICPickupCalloutViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *view;
 @property (strong, nonatomic) IBOutlet UIButton *centerMapButton;
@@ -49,5 +50,6 @@
 @property (strong, nonatomic) IBOutlet ICHighlightButton *confirmPickupButton;
 - (IBAction)handlePromoTap:(id)sender;
 - (IBAction)handleFareEsimateTap:(id)sender;
+- (IBAction)requestPickup:(id)sender;
 
 @end

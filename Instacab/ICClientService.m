@@ -13,6 +13,7 @@
 #import "LocalyticsSession.h"
 #import "ICLocationService.h"
 #import "ICNearbyVehicles.h"
+#import "ICSession.h"
 
 NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
 NSString *const kNearestCabRequestReasonOpenApp = @"openApp";
@@ -76,15 +77,13 @@ float const kPingIntervalInSeconds = 6.0f;
         self.failureBlock = failure;
     }
     
-    // TODO: Посылать текущий vehicleViewId
     NSDictionary *pingMessage = @{
         kFieldMessageType: @"PingClient",
         @"token": client.token,
-        @"id": client.uID
+        @"id": client.uID,
+        @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId)
     };
 
-    // TODO: Посылать vehicleViewId (текущий тип автомобилей), vehicleViewIds (все доступные, так как они могут быть динамическими ото дня ко дню)
-    // TODO: Чтобы верно считать открытия приложения нужно также посылать reason=openApp при успешном выполнении Login
     // Analytics
     [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": aReason, @"clientId":client.uID}];
 
@@ -95,7 +94,7 @@ float const kPingIntervalInSeconds = 6.0f;
 }
 
 -(void)loginWithEmail:(NSString *)email
-             password: (NSString *)password
+             password:(NSString *)password
               success:(ICClientServiceSuccessBlock)success
               failure:(ICClientServiceFailureBlock)failure
 {
@@ -175,10 +174,13 @@ float const kPingIntervalInSeconds = 6.0f;
         kFieldMessageType: @"Pickup",
         @"token": [ICClient sharedInstance].token,
         @"id": [ICClient sharedInstance].uID,
-        @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:location]
+        @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:location],
+        @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId)
     };
     
-    [self.dispatchServer sendLogEvent:@"PickupRequest" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
+    [self.dispatchServer sendLogEvent:@"PickupRequest"
+                           parameters:@{ @"clientId":[ICClient sharedInstance].uID,
+                                         @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId) }];
     
     [self sendMessage:message];
     
@@ -347,7 +349,8 @@ float const kPingIntervalInSeconds = 6.0f;
         @"id": [ICClient sharedInstance].uID,
         @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:pickupLocation],
         @"destination": [MTLJSONAdapter JSONDictionaryFromModel:destination],
-        @"performFareEstimate": @(YES)
+        @"performFareEstimate": @(YES),
+        @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId)
     };
     
     [self delayPing];

@@ -9,14 +9,12 @@
 #import "ICVehicleSelectionSliderView.h"
 #import "UIView+Positioning.h"
 #import "ICImageDownloader.h"
+#import "ICSession.h"
 
-
-// TODO: Когда vehicleView.count == 1 тогда поместить vehicle_picker_slider_point.png по центру и не показывать vehicle_picker_slider_background. Менять видимость при смене vehicleView.count
 @implementation ICVehicleSelectionSliderView {
     NSArray *_vehicleViews;
     ICVehicleSelectionSliderButton *_button;
     UIImageView *_sliderBackgroundView;
-    BOOL _shouldFixPositions;
     int _segmentWidth;
     int _selectedIndex;
     int _buttonLeftCenterBound;
@@ -39,7 +37,6 @@ NSInteger const kNodeTapTag = 2;
     if (self) {
         // Initialization code
         _labelViews = [[NSMutableArray alloc] init];
-        _shouldFixPositions = YES;
         _selectedIndex = -1;
         
         // Add background with two nodes
@@ -62,18 +59,16 @@ NSInteger const kNodeTapTag = 2;
     return self;
 }
 
-- (void)layoutSubviews {
-    if (_shouldFixPositions)
-    {
-        _shouldFixPositions = NO;
-        [self fixPositions];
-    }
-}
+//- (void)layoutSubviews {
+//    if (_shouldFixPositions)
+//    {
+//        _shouldFixPositions = NO;
+//        [self fixPositions];
+//    }
+//}
 
-- (void)fixPositions {
-    if (!_vehicleViews) return;
-
-    _segmentWidth = (kWidthPx / _vehicleViews.count);
+- (void)fixPositions:(NSArray *)vehicleViews {
+    _segmentWidth = (kWidthPx / vehicleViews.count);
     int leftMargin = _segmentWidth / 2 - 8;
     _buttonLeftCenterBound = (_segmentWidth / 2);
     _buttonRightCenterBound = (kWidthPx - _segmentWidth / 2);
@@ -84,16 +79,10 @@ NSInteger const kNodeTapTag = 2;
         [self moveButtonToIndex:_selectedIndex slowAnimation:NO];
         [self moveLabel:_selectedIndex y:kVehicleLabelSelectedY];
     }
-    
-    int index = 0;
-    for (ICVehicleSelectionSliderLabel *label in _labelViews) {
-        CGPoint pt = [self getCenterPointForIndex:index++];
-        label.centerX = pt.x;
-    }
 }
 
 - (void)moveButtonToIndex:(int)index slowAnimation:(BOOL)slowAnimate {
-    if (_shouldFixPositions || index < 0) return;
+    if (index < 0) return;
     
     float x = index * _segmentWidth + _segmentWidth / 2 - kButtonSize / 2;
     NSTimeInterval duration = slowAnimate ? 0.2 : 0.01;
@@ -139,7 +128,7 @@ NSInteger const kNodeTapTag = 2;
 #pragma mark - Properties
 
 - (ICVehicleView *)selectedVehicleView {
-    if (_selectedIndex < 0 || _selectedIndex > _vehicleViews.count) return nil;
+    if (_selectedIndex < 0 || _selectedIndex >= _vehicleViews.count) return nil;
     
     return _vehicleViews[_selectedIndex];
 }
@@ -164,9 +153,11 @@ NSInteger const kNodeTapTag = 2;
 }
 
 - (void)updateOrderedVehicleViews:(NSArray *)vehicleViews selectedIndex:(int)selectedIndex {
-    if (_vehicleViews.count != vehicleViews.count)
-        _shouldFixPositions = YES;
-    
+    if (_vehicleViews.count != vehicleViews.count) {
+        _selectedIndex = -1;
+        [self fixPositions:vehicleViews];
+    }
+        
     [self clearLabelViews];
     [self clearNodeTapViews];
     
@@ -175,23 +166,15 @@ NSInteger const kNodeTapTag = 2;
     UIImage *sliderPointImage = [UIImage imageNamed:@"vehicle_picker_slider_point.png"];
     
     int vehicleViewsCount = _vehicleViews.count;
-    for (int vehicleViewIndex = 0; ; vehicleViewIndex++)
+    for (int vehicleViewIndex = 0; vehicleViewIndex < vehicleViewsCount; vehicleViewIndex++)
     {
-        // Redraw
-        if (vehicleViewIndex >= vehicleViewsCount)
-        {
-            [self selectVehicleView:selectedIndex slowAnimation:NO];
-            [self setNeedsLayout];
-            return;
-        }
-        
         CGPoint centerPoint = [self getCenterPointForIndex:vehicleViewIndex];
         
         // Add middle nodes if > 2
         if ((vehicleViewIndex > 0) && (vehicleViewIndex < vehicleViewsCount - 1))
         {
             UIImageView *nodeView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 16, 16)];
-            nodeView.image = [UIImage imageNamed:@"vehicle_picker_slider_point"];
+            nodeView.image = sliderPointImage;
             nodeView.center = centerPoint;
             nodeView.tag = kNodeTapTag;
             [self insertSubview:nodeView belowSubview:_button];
@@ -201,11 +184,13 @@ NSInteger const kNodeTapTag = 2;
         ICVehicleSelectionSliderLabel *label = [[ICVehicleSelectionSliderLabel alloc] init];
         label.text = vehicleView.description;
         label.centerX = centerPoint.x;
-        label.y = kVehicleLabelUnselectedY;
+        label.y = selectedIndex == vehicleViewIndex ? kVehicleLabelSelectedY : kVehicleLabelUnselectedY;
         
         [_labelViews addObject:label];
         [self addSubview:label];
     }
+    
+    [self selectVehicleView:selectedIndex slowAnimation:NO];
 }
 
 -(void)selectVehicleView:(int)index slowAnimation:(BOOL)slowAnimate {
@@ -217,13 +202,16 @@ NSInteger const kNodeTapTag = 2;
     _selectedIndex = index;
     [self updateVehicleSliderIcon];
     
-    if ([self.delegate respondsToSelector:@selector(viewChanged)]) {
-        [self.delegate viewChanged];
+    // TODO: При первой установке VehicleViews не нужно сообщать delegate что Vehicle View изменился!
+    [ICSession sharedInstance].currentVehicleViewId = [self.selectedVehicleView.uniqueId intValue];
+    
+    if ([self.delegate respondsToSelector:@selector(vehicleViewChanged)]) {
+        [self.delegate vehicleViewChanged];
     }
 }
 
 -(void)moveLabel:(int)index y:(int)y {
-    if (index < 0 || index > _labelViews.count) return;
+    if (index < 0 || index >= _labelViews.count) return;
     
     ICVehicleSelectionSliderLabel *label = _labelViews[index];
     [UIView animateWithDuration:0.2 animations:^{
@@ -232,18 +220,12 @@ NSInteger const kNodeTapTag = 2;
 }
 
 -(void)updateVehicleSliderIcon {
+    if (_selectedIndex < 0 || _selectedIndex >= _vehicleViews.count) return;
+    
     ICVehicleView *vehicleView = _vehicleViews[_selectedIndex];
-    if (!vehicleView || vehicleView.monoImages.count == 0) return;
-    
-    NSString *url = vehicleView.monoImage.url;
-    
-    [[ICImageDownloader shared] downloadImageUrl:url].then(^(UIImage *image){
+    [vehicleView loadMonoImage:^(UIImage *image) {
         _button.icon = image;
-    }).catch(^(NSError *error){
-        NSHTTPURLResponse *rsp = error.userInfo[PMKURLErrorFailingURLResponseKey];
-        int HTTPStatusCode = rsp.statusCode;
-        NSLog(@"%@", error);
-    });;
+    }];
 }
 
 -(void)dealloc{

@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "server-alert.png"
+      "filename" : "set_pickup_location_bubble_left.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "server-alert@2x.png"
+      "filename" : "set_pickup_location_bubble_left@2x.png"
     }
   ],
   "info" : {

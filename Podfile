@@ -19,3 +19,4 @@ pod 'iOSBlocks', :git => 'https://github.com/dzenbot/iOSBlocks.git', :inhibit_wa
 pod 'UIView+AutoLayout'
 pod 'PromiseKit'
 pod 'RESideMenu'
+pod 'FastImageCache', '~> 1.3'

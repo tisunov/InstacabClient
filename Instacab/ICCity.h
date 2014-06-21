@@ -18,6 +18,7 @@ extern NSString * const kCityChangedNotification;
 @property (nonatomic, copy, readonly) NSNumber *defaultVehicleViewId;
 @property (nonatomic, copy, readonly) NSDictionary *vehicleViews;
 @property (nonatomic, copy, readonly) NSArray *vehicleViewsOrder;
+@property (nonatomic, copy, readonly) NSArray *orderedVehicleViews;
 
 -(void)update:(ICCity *)city;
 //-(void)updateVehicles:(ICNearbyVehicles *)nearbyVehicles;

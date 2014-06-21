@@ -8,6 +8,15 @@
 
 #import "ICVehicleView.h"
 #import "ICImage.h"
+#import "ICImageDownloader.h"
+#import "FICImageCache.h"
+
+NSString * const kRequestPickup = @"Заказать Автомобиль";
+
+@interface ICVehicleView ()
+@property (nonatomic, readonly) ICImage *mapImage;
+@property (nonatomic, readonly) ICImage *monoImage;
+@end
 
 @implementation ICVehicleView
 
@@ -15,19 +24,22 @@
     return @{
         @"uniqueId": @"id",
         @"description": @"description",
-//        @"pickupButtonString": @"pickupButtonString",
-//        @"confirmPickupButtonString": @"confirmPickupButtonString",
         @"requestPickupButtonString": @"requestPickupButtonString",
         @"setPickupLocationString": @"setPickupLocationString",
         @"pickupEtaString": @"pickupEtaString",
         @"noneAvailableString": @"noneAvailableString",
         @"mapImages": @"mapImages",
         @"monoImages": @"monoImages",
-        @"requestAfterMobileConfirm": @"requestAfterMobileConfirm"
+        @"requestAfterMobileConfirm": @"requestAfterMobileConfirm",
+        @"allowFareEstimate": @"allowFareEstimate"
     };
 }
 
 + (NSValueTransformer *)requestAfterMobileConfirmJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
+}
+
++ (NSValueTransformer *)allowFareEstimateJSONTransformer {
     return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
@@ -47,6 +59,33 @@
     return self.monoImages[0];
 }
 
+// TODO: Грузить картинки используя FastImageCache
+// Manual: https://github.com/path/FastImageCache
+- (void)loadMapImage:(void (^)(UIImage *))successBlock {
+    if (self.mapImages.count == 0 || !successBlock) return;
+    
+    [[ICImageDownloader shared] downloadImageUrl:self.mapImage.url].then(^(UIImage *image) {
+        successBlock([UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation]);
+    }).catch(^(NSError *error){
+        NSHTTPURLResponse *rsp = error.userInfo[PMKURLErrorFailingURLResponseKey];
+        NSLog(@"%@", error);
+    });
+}
+
+- (void)loadMonoImage:(void (^)(UIImage *image))successBlock {
+    if (self.monoImages.count == 0) return;
+    
+    [[ICImageDownloader shared] downloadImageUrl:self.monoImage.url].then(successBlock).catch(^(NSError *error){
+        NSHTTPURLResponse *rsp = error.userInfo[PMKURLErrorFailingURLResponseKey];
+        NSLog(@"%@", error);
+    });
+}
+
+- (NSString *)marketingRequestPickupButtonString {
+    return self.requestPickupButtonString.length ? [self.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:self.description] : kRequestPickup;
+}
+
+
 - (BOOL)isEqual:(id)object {
     if (self == object) {
         return YES;
@@ -62,9 +101,8 @@
     
     BOOL haveEqualDescriptions = (!self.description && !other.description) || [self.description isEqualToString:other.description];
     
-//    BOOL haveEqualPickupButtonStrings = (!self.pickupButtonString && !other.pickupButtonString) || [self.pickupButtonString isEqualToString:other.pickupButtonString];
-//    
-//    BOOL haveEqualConfirmPickupButtonStrings = (!self.confirmPickupButtonString && !other.confirmPickupButtonString) || [self.confirmPickupButtonString isEqualToString:other.confirmPickupButtonString];
+    BOOL haveEqualAllowFareEstimate = self.allowFareEstimate == other.allowFareEstimate;
+    BOOL haveEqualRequestAfterMobileConfirm = self.requestAfterMobileConfirm == other.requestAfterMobileConfirm;
     
     BOOL haveEqualRequestPickupButtonStrings = (!self.requestPickupButtonString && !other.requestPickupButtonString) || [self.requestPickupButtonString isEqualToString:other.requestPickupButtonString];
 
@@ -74,7 +112,8 @@
 
     BOOL haveEqualNoneAvailableString = (!self.noneAvailableString && !other.pickupEtaString) || [self.noneAvailableString isEqualToString:other.noneAvailableString];
     
-    BOOL equal = haveEqualIds && haveEqualDescriptions && /*haveEqualPickupButtonStrings && haveEqualConfirmPickupButtonStrings &&*/ haveEqualRequestPickupButtonStrings && haveEqualSetPickupLocationString && haveEqualPickupEtaString && haveEqualNoneAvailableString;
+    BOOL equal = haveEqualIds && haveEqualDescriptions && haveEqualRequestPickupButtonStrings && haveEqualSetPickupLocationString && haveEqualPickupEtaString && haveEqualNoneAvailableString &&
+        haveEqualRequestAfterMobileConfirm && haveEqualAllowFareEstimate;
     
     return equal;
 }

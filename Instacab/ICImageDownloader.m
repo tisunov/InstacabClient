@@ -9,7 +9,9 @@
 #import "ICImageDownloader.h"
 #import "AFHTTPRequestOperation.h"
 
-@implementation ICImageDownloader
+@implementation ICImageDownloader {
+    NSMutableDictionary *_promises;
+}
 
 + (instancetype)shared {
     static ICImageDownloader *sharedDownloader = nil;
@@ -20,11 +22,25 @@
     return sharedDownloader;
 }
 
-// TODO: Сохранить Promise* в NSDictionary по ключу url, и если уже есть такой Promise то просто вернуть его сразу
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _promises = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
 -(Promise *)downloadImageUrl:(NSString *)url {
-    return dispatch_promise(^{
+    Promise *promise = _promises[url];
+    if (promise) return promise;
+    
+    promise = dispatch_promise(^{
         return [NSURLConnection GET:url];
     });
+    
+    _promises[url] = promise;
+    return promise;
 }
 
 

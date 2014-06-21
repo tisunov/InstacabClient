@@ -11,6 +11,7 @@
 		D900105119069B2000F0FB09 /* ICPromoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D900104F19069B2000F0FB09 /* ICPromoViewController.m */; };
 		D900105219069B2000F0FB09 /* ICPromoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D900105019069B2000F0FB09 /* ICPromoViewController.xib */; };
 		D906B11B18A924230065E256 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D906B11A18A924230065E256 /* libsqlite3.dylib */; };
+		D908F5181951F13A0092E4DE /* ICPickupCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = D908F5171951F13A0092E4DE /* ICPickupCalloutView.m */; };
 		D90A172919506A8300078BE8 /* CreditCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90A172819506A8300078BE8 /* CreditCardViewController.m */; };
 		D90A9C9E18AE5CEB002B80F4 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */; };
 		D90A9CA018AE5CFE002B80F4 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */; };
@@ -83,6 +84,7 @@
 		D9B032881805863F00F7AF69 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B032871805863F00F7AF69 /* libicucore.dylib */; };
 		D9B0328A1805864800F7AF69 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B032891805864700F7AF69 /* libz.dylib */; };
 		D9B0328C1805864D00F7AF69 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9B0328B1805864D00F7AF69 /* OpenGLES.framework */; };
+		D9B43BBA1951ABDA002F657E /* ICSession.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B43BB91951ABDA002F657E /* ICSession.m */; };
 		D9B5F494190B78560090CB8D /* ICFareEstimateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9B5F492190B78560090CB8D /* ICFareEstimateViewController.m */; };
 		D9B5F495190B78560090CB8D /* ICFareEstimateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9B5F493190B78560090CB8D /* ICFareEstimateViewController.xib */; };
 		D9BA28AF181D4FF2009584D1 /* ICNearbyVehicle.m in Sources */ = {isa = PBXBuildFile; fileRef = D9BA28AE181D4FF2009584D1 /* ICNearbyVehicle.m */; };
@@ -140,6 +142,8 @@
 		D900104F19069B2000F0FB09 /* ICPromoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPromoViewController.m; sourceTree = "<group>"; };
 		D900105019069B2000F0FB09 /* ICPromoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICPromoViewController.xib; sourceTree = "<group>"; };
 		D906B11A18A924230065E256 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		D908F5161951F13A0092E4DE /* ICPickupCalloutView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICPickupCalloutView.h; sourceTree = "<group>"; };
+		D908F5171951F13A0092E4DE /* ICPickupCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPickupCalloutView.m; sourceTree = "<group>"; };
 		D90A172719506A8300078BE8 /* CreditCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditCardViewController.h; path = Account/CreditCardViewController.h; sourceTree = "<group>"; };
 		D90A172819506A8300078BE8 /* CreditCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditCardViewController.m; path = Account/CreditCardViewController.m; sourceTree = "<group>"; };
 		D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
@@ -259,6 +263,8 @@
 		D9B032871805863F00F7AF69 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		D9B032891805864700F7AF69 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		D9B0328B1805864D00F7AF69 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		D9B43BB81951ABDA002F657E /* ICSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ICSession.h; path = Models/ICSession.h; sourceTree = "<group>"; };
+		D9B43BB91951ABDA002F657E /* ICSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ICSession.m; path = Models/ICSession.m; sourceTree = "<group>"; };
 		D9B5F491190B78560090CB8D /* ICFareEstimateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICFareEstimateViewController.h; sourceTree = "<group>"; };
 		D9B5F492190B78560090CB8D /* ICFareEstimateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICFareEstimateViewController.m; sourceTree = "<group>"; };
 		D9B5F493190B78560090CB8D /* ICFareEstimateViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICFareEstimateViewController.xib; sourceTree = "<group>"; };
@@ -371,9 +377,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D908F5151951F0AE0092E4DE /* PickupCallout */ = {
+			isa = PBXGroup;
+			children = (
+				D908F5171951F13A0092E4DE /* ICPickupCalloutView.m */,
+				D908F5161951F13A0092E4DE /* ICPickupCalloutView.h */,
+			);
+			name = PickupCallout;
+			sourceTree = "<group>";
+		};
 		D92019361816FD9A00EEA47C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D9B43BB71951ABC2002F657E /* Persistence */,
 				D9EF8ED518170B3500F9DD52 /* ICClient.m */,
 				D9EF8ED418170B3500F9DD52 /* ICClient.h */,
 				D948113E18BCB6720005D348 /* ICPaymentProfile.m */,
@@ -430,8 +446,8 @@
 				D9AD51591817C7A200692E7E /* ICClientService.h */,
 				D9EF8ED218170AEB00F9DD52 /* ICDispatchServer.m */,
 				D9EF8ED118170AEB00F9DD52 /* ICDispatchServer.h */,
-				D99C8EA819332D0A00B5FA4D /* ICImageDownloader.h */,
 				D99C8EA919332D0A00B5FA4D /* ICImageDownloader.m */,
+				D99C8EA819332D0A00B5FA4D /* ICImageDownloader.h */,
 				D9D9C7C9194B2E6F003B68AF /* Payture.m */,
 				D9D9C7C8194B2E6F003B68AF /* Payture.h */,
 			);
@@ -525,14 +541,14 @@
 		D996A0C91930662F003E7349 /* VehicleSelector */ = {
 			isa = PBXGroup;
 			children = (
-				D996A0C619305F7A003E7349 /* ICVehicleSelectionView.h */,
 				D996A0C719305F7A003E7349 /* ICVehicleSelectionView.m */,
+				D996A0C619305F7A003E7349 /* ICVehicleSelectionView.h */,
 				D996A0CD19306672003E7349 /* ICVehicleSelectionSliderView.h */,
 				D996A0CE19306672003E7349 /* ICVehicleSelectionSliderView.m */,
-				D996A0CA19306656003E7349 /* ICVehicleSelectionSliderButton.h */,
 				D996A0CB19306656003E7349 /* ICVehicleSelectionSliderButton.m */,
-				D9329AE31931D9BD00453641 /* ICVehicleSelectionSliderLabel.h */,
+				D996A0CA19306656003E7349 /* ICVehicleSelectionSliderButton.h */,
 				D9329AE41931D9BD00453641 /* ICVehicleSelectionSliderLabel.m */,
+				D9329AE31931D9BD00453641 /* ICVehicleSelectionSliderLabel.h */,
 			);
 			name = VehicleSelector;
 			sourceTree = "<group>";
@@ -680,6 +696,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		D9B43BB71951ABC2002F657E /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				D9B43BB91951ABDA002F657E /* ICSession.m */,
+				D9B43BB81951ABDA002F657E /* ICSession.h */,
+			);
+			name = Persistence;
+			sourceTree = "<group>";
+		};
 		D9B5F496190BA20F0090CB8D /* Receipt */ = {
 			isa = PBXGroup;
 			children = (
@@ -696,6 +721,7 @@
 		D9BD8EAC1903A42A008E0F80 /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				D908F5151951F0AE0092E4DE /* PickupCallout */,
 				D9BD8EB21903A92E008E0F80 /* Search */,
 				D9C4B440194B1D0B00F62C9E /* Verify Mobile */,
 				D9C4B441194B1D1900F62C9E /* Promo */,
@@ -1008,6 +1034,7 @@
 				D9C878A9194D98AB0054F205 /* AnalyticsManager.m in Sources */,
 				D90BAE141884306600E03F3E /* ICWelcomeViewController.m in Sources */,
 				D97A48D318F03FCB0095B4BC /* ICVerifyMobileViewController.m in Sources */,
+				D9B43BBA1951ABDA002F657E /* ICSession.m in Sources */,
 				D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */,
 				D939FFE7190BCCF800FED191 /* ICLocationSingleLabel.m in Sources */,
 				D9AD51621817EE1E00692E7E /* ICLocation.m in Sources */,
@@ -1031,6 +1058,7 @@
 				D92D430F18F11D720052B245 /* MBProgressHud+Global.m in Sources */,
 				D9CDF22B192A8EC4009F7D4A /* ICCity.m in Sources */,
 				D9532E1E1819B44E0046E5EC /* ICPing.m in Sources */,
+				D908F5181951F13A0092E4DE /* ICPickupCalloutView.m in Sources */,
 				D9EF8ED618170B3500F9DD52 /* ICClient.m in Sources */,
 				D9BA28AF181D4FF2009584D1 /* ICNearbyVehicle.m in Sources */,
 				D9C4B43F194B0AB600F62C9E /* Constants.m in Sources */,

@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "map-uberx.png"
+      "filename" : "magic_square_grid.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "map-uberx-1.png"
+      "filename" : "magic_square_grid@2x.png"
     }
   ],
   "info" : {

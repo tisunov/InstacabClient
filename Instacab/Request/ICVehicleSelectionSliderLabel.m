@@ -26,4 +26,8 @@
     [self sizeToFit];
 }
 
+-(void)setAvailable:(BOOL)available {
+    // TODO: Изменить цвет текста на темно-серый или светло-серый
+}
+
 @end

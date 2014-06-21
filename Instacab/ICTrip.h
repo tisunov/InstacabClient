@@ -24,6 +24,7 @@ extern NSString *const kTripChangedNotification;
 @property (nonatomic, strong, readonly) ICLocation *dropoffLocation;
 @property (nonatomic, copy, readonly) NSNumber *dropoffAt;
 @property (nonatomic, copy, readonly) NSNumber *eta;
+@property (nonatomic, copy, readonly) NSNumber *vehicleViewId;
 
 @property (nonatomic, readonly) BOOL billingComplete;
 

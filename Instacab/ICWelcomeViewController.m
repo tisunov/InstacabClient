@@ -61,18 +61,12 @@
         self.edgesForExtendedLayout = UIRectEdgeNone;
     
     // http://stackoverflow.com/questions/19022210/preferredstatusbarstyle-isnt-called/19513714#19513714
-    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth_pattern"]];
+//    self.view.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"cloth_pattern"]];
     
     self.loadingIndicator.hidesWhenStopped = YES;
     
-    _signinButton.layer.cornerRadius = 3.0f;
-    _signinButton.tintColor = [UIColor whiteColor];
-    _signinButton.normalColor = [UIColor denimColor];
-    _signinButton.highlightedColor = [UIColor colorFromHexString:@"#3c6698"];
-    
-    _signupButton.layer.cornerRadius = 3.0f;
-    _signupButton.normalColor = _signinButton.normalColor;
-    _signupButton.highlightedColor = _signinButton.highlightedColor;
+    [self setupButton:_signupButton];
+    [self setupButton:_signinButton];
     
     // Uncomment to take LaunchImage screenshot
 //    [self setNeedsStatusBarAppearanceUpdate];
@@ -103,6 +97,15 @@
     [self beginLoading];
 }
 
+- (void)setupButton:(ICHighlightButton *)button {
+//    button.layer.cornerRadius = 3.0f;
+    button.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
+    button.normalColor = [UIColor colorFromHexString:@"#efefef"];
+    button.highlightedColor = [UIColor coolGrayColor];
+    [button setTitleColor:[UIColor colorFromHexString:@"#4f4f4f"] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+}
+
 - (void)beginLoading {
     if ([[ICClient sharedInstance] isSignedIn])
         [self beginSignIn];
@@ -112,14 +115,14 @@
     self.signinButton.hidden = YES;
     self.signupButton.hidden = YES;
     self.loadingIndicator.hidden = NO;
-    self.loadingLabel.hidden = NO;
+//    self.loadingLabel.hidden = NO;
     [self.loadingIndicator startAnimating];
 }
 
 - (void)stopLoading {
     self.signinButton.hidden = NO;
     self.signupButton.hidden = NO;
-    self.loadingLabel.hidden = YES;
+//    self.loadingLabel.hidden = YES;
     [self.loadingIndicator stopAnimating];
 }
 
@@ -206,9 +209,9 @@
     if (![ICClient sharedInstance].isSignedIn || _inBackground) return;
     
     [TSMessage showNotificationInViewController:self
-                                          title:@"Нет Сетевого Подключения"
-                                       subtitle:@"Проверьте подключение к сети."
-                                          image:[UIImage imageNamed:@"server-alert"]
+                                          title:@"Сбой сетевого подключения"
+                                       subtitle:@"Проверьте подключение к сети"
+                                          image:[UIImage imageNamed:@"network-alert"]
                                            type:TSMessageNotificationTypeError
                                        duration:TSMessageNotificationDurationAutomatic];
     
@@ -235,6 +238,9 @@
         }
         
         [self showNotification];
+    }
+    else {
+        [TSMessage dismissActiveNotification];
     }
 }
 

@@ -2,13 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "vehicle_picker_background_pattern.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "vehicle_picker_background_pattern@2x.png"
+      "filename" : "map-burger.png"
     }
   ],
   "info" : {

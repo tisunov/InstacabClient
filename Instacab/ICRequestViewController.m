@@ -25,7 +25,6 @@
 #import "UIImageView+AFNetworking.h"
 #import "ICPromoViewController.h"
 #import "ICFareEstimateViewController.h"
-#import "ICVehicleSelectionView.h"
 #import "Constants.h"
 
 @interface ICRequestViewController ()
@@ -50,6 +49,7 @@
     CGFloat _mapVerticalPadding;
     UIImageView *_fogView;
     ICVehicleSelectionView *_vehicleSelector;
+    ICPickupCalloutView *_pickupCallout;
     
     NSTimer *_pinDragFinishTimer;
 
@@ -63,8 +63,6 @@
 }
 
 NSString * const kGoToMarker = @"Приехать к булавке";
-NSString * const kRequestPickup = @"Заказать Автомобиль";
-NSString * const kSetPickupLocation = @"Выбрать место посадки";
 
 NSString * const kProgressRequestingPickup = @"Выполняется заказ";
 NSString * const kProgressCancelingTrip = @"Отмена заказа";
@@ -108,9 +106,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     self.navigationController.navigationBarHidden = NO;
     
     _addressViewOriginY = [UIApplication sharedApplication].statusBarFrame.size.height;
-    _mapVerticalPadding = _pickupView.frame.size.height;
     
     [self showMenuNavbarButton];
+    [self setupVehicleSelectionView];
     [self setupMapView];
     [self setupAddressBar];
     [self setupDriverPanel];
@@ -121,8 +119,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     self.sideMenuViewController.delegate = self;
     
-//    [self setupVehicleSelectionView];
-    
     // Should be sent only once when view is created to track open-to-order ratio
     // Even if user opens app and gets straight to ReceiptView, that method should be called
     [_clientService logMapPageView];
@@ -130,7 +126,22 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)setupVehicleSelectionView {
     _vehicleSelector = [[ICVehicleSelectionView alloc] initWithFrame:CGRectMake(0, [[UIScreen mainScreen] bounds].size.height - 80, 320, 80)];
+
+    [self setViewTopShadow:_vehicleSelector];
+    
+    [self updateVehicleSelector];
+    // set delegate after loading vehicle selector with vehicle views to prevent vehicleViewChanged callback
+    _vehicleSelector.delegate = self;
+    
     [self.view addSubview:_vehicleSelector];
+}
+
+- (void)vehicleViewChanged {
+    [self updateSetPickup];
+    [self updateVehicleMarkers];
+    
+    _showAvailableVehicle = YES;
+    [self makeVisibleAvailableVehicles];
 }
 
 - (void)handleAddressBarTap:(UITapGestureRecognizer *)recognizer {
@@ -196,7 +207,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self presentDriverState];
     [self pingUpdated];
-    [self onCityChanged:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onDispatcherReceiveResponse:)
@@ -344,6 +354,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self showFog];
     
     [self showConfirmPickupView];
+    
+    [_pickupCallout hide];
 }
 
 - (void)showConfirmPickupView {
@@ -352,7 +364,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self.view addSubview:_confirmPickupView];
     
     [UIView animateWithDuration:0.25 animations:^{
-        _pickupView.alpha = 0;
+        _vehicleSelector.alpha = 0;
         _confirmPickupView.y = [UIScreen mainScreen].bounds.size.height - _confirmPickupView.height;
     }];
 }
@@ -381,12 +393,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)transitionFromConfirmViewToPickupView {
-    _pickupView.y = [UIScreen mainScreen].bounds.size.height;
-    _pickupView.alpha = 1;
+    _vehicleSelector.y = [UIScreen mainScreen].bounds.size.height;
+    _vehicleSelector.alpha = 1;
+    
+    [_pickupCallout show];
     
     [UIView animateWithDuration:0.25 animations:^{
         _confirmPickupView.alpha = 0;
-        _pickupView.y = [UIScreen mainScreen].bounds.size.height - _pickupView.height;
+        _vehicleSelector.y = [UIScreen mainScreen].bounds.size.height - _vehicleSelector.height;
+        
     } completion:^(BOOL finished) {
         [_confirmPickupView removeFromSuperview];
     }];
@@ -394,13 +409,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)transitionFromDriverViewToPickupView {
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
+
+    [_pickupCallout show];
     
-    _pickupView.y = screenBounds.size.height;
-    _pickupView.alpha = 1;
+    _vehicleSelector.y = screenBounds.size.height;
+    _vehicleSelector.alpha = 1;
     
     [UIView animateWithDuration:0.35 animations:^(void){
         // Slide up
-        _pickupView.y = screenBounds.size.height - _pickupView.frame.size.height;
+        _vehicleSelector.y = screenBounds.size.height - _vehicleSelector.frame.size.height;
         // Slide down
         _driverView.alpha = 0;
     }];
@@ -435,8 +452,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                 // Slide up
                 _addressView.y = -24.0;
                 // Slide down
-                _pickupView.y = [[UIScreen mainScreen] bounds].size.height;
-                _pickupView.alpha = 0.0f;
+                _vehicleSelector.y = [[UIScreen mainScreen] bounds].size.height;
+                _vehicleSelector.alpha = 0.0f;
+                
+                [_pickupCallout hide];
                 
                 _mapView.padding = UIEdgeInsetsMake(0, 0, 0, 0);
             }];
@@ -463,8 +482,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             // Slide down
             _addressView.y = _addressViewOriginY;
             // Slide up
-            _pickupView.y = [[UIScreen mainScreen] bounds].size.height - _pickupView.frame.size.height;
-            _pickupView.alpha = 1.0f;
+            _vehicleSelector.y = [[UIScreen mainScreen] bounds].size.height - _vehicleSelector.frame.size.height;
+            _vehicleSelector.alpha = 1.0f;
+            
+            [_pickupCallout show];
             
             _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
         }];
@@ -607,6 +628,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
+- (void)didSetPickupLocation {
+    [self transitionToConfirmScreenAtCoordinate:_mapView.camera.target];
+}
+
 - (void)checkCardLinkedAndRequestPickup {
     // Check if card registered
 //    if (![ICClient sharedInstance].cardPresent) {
@@ -634,7 +659,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                             description = response.description;
                                         }
                                         else {
-                                            ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:[self vehicleViewId]];
+                                            ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:[self selectedVehicleViewId]];
                                             
                                             if (vehicle && vehicle.sorryMsg.length) {
                                                 description = vehicle.sorryMsg;
@@ -661,7 +686,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)didConfirmMobile {
-    if (![self activeVehicleView].requestAfterMobileConfirm) return;
+    if (![self selectedVehicleView].requestAfterMobileConfirm) return;
     
     NSTimeInterval timeSinceRequest = -[_pickupRequestedAt timeIntervalSinceNow];
     // Send PickupRequest automatically if less than 60 passed
@@ -848,8 +873,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(NSNumber *)vehicleViewId {
-    return [ICCity shared].defaultVehicleViewId;
+-(NSNumber *)selectedVehicleViewId {
+    NSNumber *viewId = _vehicleSelector.selectedVehicleViewId;
+    return !!viewId ? viewId : [ICCity shared].defaultVehicleViewId;
 }
 
 -(void)removeVehicleMarkers {
@@ -869,6 +895,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         [self removeVehicleMarkers];
     
     if (clientStatus == ICClientStatusLooking) {
+        [self destroyPickupMarker];
+        [self addPickupLocationMarker];
         [self updateSetPickup];
     }
     else if (clientStatus == ICClientStatusWaitingForPickup || clientStatus == ICClientStatusOnTrip) {
@@ -896,22 +924,25 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         [_pickupLocationMarker removeFromSuperview];
         _pickupLocationMarker = nil;
     }
+    
+    if (_pickupCallout) {
+        [_pickupCallout removeFromSuperview];
+        _pickupCallout = nil;
+    }
 }
 
-// TODO: Обновить надписи на кнопках в соответствии с defaultVehicleViewId и строками в default VehicleView
--(void)onCityChanged:(NSNotification *)note {
+-(void)updateVehicleSelector {
+    NSLog(@" [+] updateVehicleSelector");
+    
     ICCity *city = [ICCity shared];
     
+    [_vehicleSelector layoutWithOrderedVehicleViews:city.orderedVehicleViews selectedViewId:city.defaultVehicleViewId];
+}
+
+-(void)onCityChanged:(NSNotification *)note {
     [self updateSetPickup];
-    
-    if (!city.vehicleViewsOrder) return;
-    
-//    NSMutableArray *items = [NSMutableArray arrayWithArray:city.vehicleViews.allValues];
-//    [items sortUsingComparator:^NSComparisonResult(ICVehicleView *obj1, ICVehicleView *obj2) {
-//        return [@([city.vehicleViewsOrder indexOfObject:obj1.uniqueId]) compare:@([city.vehicleViewsOrder indexOfObject:obj2.uniqueId])];
-//    }];
-//    
-//    [_vehicleSelector layoutWithOrderedVehicleViews:items selectedViewId:city.defaultVehicleViewId];
+    [self updateAllowFareEstimate];
+    [self updateVehicleSelector];
 }
 
 -(void)onNearbyVehiclesChanged:(NSNotification *)note {
@@ -922,6 +953,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)onTripChanged:(NSNotification *)note {
     [self updateTripStatus];
     [self updateMapMarkers];
+}
+
+-(void)updateAllowFareEstimate {
+//    _fareEstimateButton.enabled = [self selectedVehicleView].allowFareEstimate;
 }
 
 -(void)updateTripStatus {
@@ -940,12 +975,23 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _pickupLocationMarker = [[UIImageView alloc] initWithFrame:CGRectMake(pinX, pinY, pinGreen.size.width, pinGreen.size.height)];
     _pickupLocationMarker.image = pinGreen;
     [self.view addSubview:_pickupLocationMarker];
+
+    // add "Set pickup location" callout
+    _pickupCallout = [[ICPickupCalloutView alloc] init];
+    _pickupCallout.delegate = self;
+    
+    int bubbleX = screenBounds.size.width / 2 - 1;
+    int bubbleY = screenBounds.size.height / 2 - pinGreen.size.height - _pickupCallout.height / 2 + 8;
+    
+    _pickupCallout.center = CGPointMake(bubbleX, bubbleY);
+    
+    [self.view addSubview:_pickupCallout];
 }
 
 // Zoom out to include any nearby vehicle,
 // Try to motivate client to request pickup
 - (void)makeVisibleAvailableVehicles {
-    ICNearbyVehicle *vehicle = [self vehicleForActiveViewId];
+    ICNearbyVehicle *vehicle = [self selectedVehicle];
     if (vehicle.available && _showAvailableVehicle) {
         [self setZoomLevelToIncludeCoordinate:vehicle.anyCoordinate];
         _showAvailableVehicle = NO;
@@ -959,8 +1005,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     if (clientStatus == ICClientStatusLooking) {
         [self updateVehicleMarkers];
-        [self destroyPickupMarker];
-        [self addPickupLocationMarker];
     }
     else if (clientStatus == ICClientStatusWaitingForPickup || clientStatus == ICClientStatusOnTrip) {
         [self destroyPickupLocationMarker];
@@ -970,6 +1014,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         ICDriver *driver = trip.driver;
         ICVehicle *vehicle = trip.vehicle;
         
+        // TODO: Брать VehiclePathPoint координаты из NearbyVehicle, потому что диспетчер возвращает
+        // координаты когда активен Trip
         if (driver && vehicle) {
             GMSMarker *vehicleMarker = _vehicleMarkers[vehicle.uniqueId];
             if (vehicleMarker) {
@@ -977,7 +1023,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             }
             else {
                 GMSMarker *vehicleMarker = [GMSMarker markerWithPosition:driver.coordinate];
-                vehicleMarker.icon = [UIImage imageNamed:@"map-urban.png"];
+                // TODO: Скачивать из сети и кэшировать картинку
+                vehicleMarker.icon = [UIImage imageNamed:@"map-hit"];
                 vehicleMarker.map = _mapView;
                 // TODO: vehicleMarker.rotation = driver.course;
                 vehicleMarker.groundAnchor = CGPointMake(0.5f, 0.5f);
@@ -1000,38 +1047,33 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
-// TODO: Позже взять и объединить в памяти City VehicleViews и Nearby VehicleViews чтобы оперировать одним объектом ICNearbyVehicle в котором есть все свойства.
+// TODO: Взять и объединить в памяти City VehicleViews и Nearby VehicleViews чтобы оперировать одним объектом ICNearbyVehicle в котором есть все свойства.
 -(void)updateSetPickup {
-    ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:[self vehicleViewId]];
+    if ([ICClient sharedInstance].state != ICClientStatusLooking) return;
+    
+    ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:[self selectedVehicleViewId]];
     if (!vehicleView) return;
     
-    NSString *requestPickupButtonString =
-        vehicleView.requestPickupButtonString.length ?
-            [vehicleView.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:vehicleView.description] : kRequestPickup;
-    
-    [_confirmPickupButton setTitle:requestPickupButtonString forState:UIControlStateNormal];
-    
-    NSString *setPickupLocationString =
-        vehicleView.setPickupLocationString.length ?
-            vehicleView.setPickupLocationString : kSetPickupLocation;
-    
-    [_pickupBtn setTitle:setPickupLocationString forState:UIControlStateNormal];
-    
-    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:[self vehicleViewId]];
+    [_confirmPickupButton setTitle:vehicleView.marketingRequestPickupButtonString forState:UIControlStateNormal];
+    _pickupCallout.title = vehicleView.setPickupLocationString;
+
+    // show ETA in callout and confirm views
+    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:[self selectedVehicleViewId]];
     if (vehicle && vehicle.available) {
-        // Display ETA
-        _pickupEtaLabel.text = [vehicleView.pickupEtaString stringByReplacingOccurrencesOfString:@"{string}" withString:vehicle.etaStringShort];
+        if (vehicle.etaString.length != 0)
+            _confirmEtaLabel.text = [vehicleView.pickupEtaString stringByReplacingOccurrencesOfString:@"{string}" withString:vehicle.etaString];
+        
+        _pickupCallout.eta = vehicle.minEta;
     }
     else {
-        _pickupEtaLabel.text = vehicleView.noneAvailableString;
+        _confirmEtaLabel.text = vehicleView.noneAvailableString;
+        
+        [_pickupCallout clearEta];
     }
-    
-    _pickupEtaLabel.text = [_pickupEtaLabel.text uppercaseString];
-    _confirmEtaLabel.text = _pickupEtaLabel.text;
 }
 
-- (ICNearbyVehicle *)vehicleForActiveViewId {
-    NSNumber *vehicleViewId = [self vehicleViewId];
+- (ICNearbyVehicle *)selectedVehicle {
+    NSNumber *vehicleViewId = [self selectedVehicleViewId];
     
     ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:vehicleViewId];
     if (!vehicleView) return nil;
@@ -1039,14 +1081,18 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     return [[ICNearbyVehicles shared] vehicleByViewId:vehicleViewId];
 }
 
-- (ICVehicleView *)activeVehicleView {
-    return [[ICCity shared] vehicleViewById:[self vehicleViewId]];
+- (ICVehicleView *)selectedVehicleView {
+    return [[ICCity shared] vehicleViewById:[self selectedVehicleViewId]];
 }
 
 -(void)updateVehicleMarkers {
-    NSNumber *activeVehicleViewId = [self vehicleViewId];
+    NSNumber *selectedVehicleViewId = [self selectedVehicleViewId];
     
-    ICNearbyVehicle *vehicle = [self vehicleForActiveViewId];
+    // TODO: Код будет проще если при получении Ping объединить VehicleView с NearbyVehicles и использовать только VehicleView
+    ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:selectedVehicleViewId];
+    if (!vehicleView) return;
+    
+    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:selectedVehicleViewId];
     if (vehicle) {
         // Add new vehicles and update existing vehicles' positions
         for (NSString *uuid in vehicle.vehiclePaths) {
@@ -1064,12 +1110,16 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                 }
             }
             else {
+                // TODO: Для vehicleViewId == 1 всегда ставить картинку маркера из ресурсов
+                // А уже потом пробовать грузить из сети
                 GMSMarker *marker = [GMSMarker markerWithPosition:pathPoint.coordinate];
-                marker.icon = [UIImage imageNamed:@"map-urban"];
-                marker.map = _mapView;
+                [vehicleView loadMapImage:^(UIImage *image) {
+                    marker.icon = image;
+                }];
                 marker.rotation = pathPoint.course;
                 marker.groundAnchor = CGPointMake(0.5f, 0.5f);
-                marker.userData = activeVehicleViewId;
+                marker.userData = selectedVehicleViewId;
+                marker.map = _mapView;
                 _vehicleMarkers[uuid] = marker;
             }
         }
@@ -1079,7 +1129,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     NSMutableArray *uuids = [NSMutableArray new];
     for (NSString *uuid in _vehicleMarkers) {
         GMSMarker *vehicleMarker = _vehicleMarkers[uuid];
-        if (!vehicle.vehiclePaths[uuid] && vehicleMarker.userData == activeVehicleViewId) {
+        
+        BOOL vehicleGoneOrFromOtherViewId = (!vehicle.vehiclePaths[uuid] && vehicleMarker.userData == selectedVehicleViewId) || (vehicleMarker.userData && vehicleMarker.userData != selectedVehicleViewId);
+        if (vehicleGoneOrFromOtherViewId) {
             vehicleMarker.map = nil;
             [uuids addObject:uuid];
         }
@@ -1208,6 +1260,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _mapView = [GMSMapView mapWithFrame:[UIScreen mainScreen].bounds camera:camera];
     _mapView.delegate = self;
     // to account for address view
+    _mapVerticalPadding = _vehicleSelector.frame.size.height;
     _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
     _mapView.myLocationEnabled = YES;
     _mapView.indoorEnabled = NO;
@@ -1362,16 +1415,17 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (void)styleButtons {
-    _buttonContainerView.layer.borderColor = [UIColor colorWithRed:223/255.0 green:223/255.0 blue:223/255.0 alpha:1].CGColor;
+    _buttonContainerView.layer.borderColor = [UIColor colorWithWhite:223/255.0 alpha:1].CGColor;
     _buttonContainerView.layer.borderWidth = 1.0;
     _buttonContainerView.layer.cornerRadius = 3.0;
     
-    [_fareEstimateButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
+    [_fareEstimateButton setTitleColor:[UIColor colorWithWhite:(140/255.0) alpha:1] forState:UIControlStateNormal];
+    [_fareEstimateButton setTitleColor:[UIColor colorWithWhite:(180/255.0) alpha:1] forState:UIControlStateDisabled];
     [_fareEstimateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
     _fareEstimateButton.highlightedColor = _promoCodeButton.highlightedColor = [UIColor blueberryColor];
     
-    [_promoCodeButton setTitleColor:[UIColor colorWithRed:(140/255.0) green:(140/255.0) blue:(140/255.0) alpha:1] forState:UIControlStateNormal];
+    [_promoCodeButton setTitleColor:[UIColor colorWithWhite:(140/255.0) alpha:1] forState:UIControlStateNormal];
     [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
     // CTA buttons

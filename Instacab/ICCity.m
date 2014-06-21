@@ -7,10 +7,13 @@
 //
 
 #import "ICCity.h"
+#import "ICSession.h"
 
 NSString * const kCityChangedNotification = @"cityChanged";
 
 @implementation ICCity
+
+@synthesize defaultVehicleViewId = _defaultVehicleViewId;
 
 + (instancetype)shared {
     static ICCity *sharedCity = nil;
@@ -40,7 +43,7 @@ NSString * const kCityChangedNotification = @"cityChanged";
         // Transform key values for each dictionary key to ICNearbyVehicle
         for (id vehicleViewId in vehicleViews) {
             NSDictionary *vehicleView = vehicleViews[vehicleViewId];
-            tranformedVehicleViews[vehicleViewId] = [dictionaryTransformer transformedValue:vehicleView];
+            tranformedVehicleViews[@([vehicleViewId intValue])] = [dictionaryTransformer transformedValue:vehicleView];
         }
         
         return tranformedVehicleViews;
@@ -67,16 +70,12 @@ NSString * const kCityChangedNotification = @"cityChanged";
 }
 
 - (ICVehicleView *)vehicleViewById:(NSNumber *)vehicleViewId {
-    return self.vehicleViews[[vehicleViewId stringValue]];
-}
-
--(ICNearbyVehicle *)vehicleByViewId:(NSNumber *)vehicleViewId {
-    return _vehicleViews[[vehicleViewId stringValue]];
+    return self.vehicleViews[vehicleViewId];
 }
 
 #pragma mark - NSObject
 
--(BOOL)isEqual:(ICCity *)object {
+- (BOOL)isEqual:(ICCity *)object {
     if (self == object) {
         return YES;
     }
@@ -92,6 +91,37 @@ NSString * const kCityChangedNotification = @"cityChanged";
     BOOL haveEqualDefaultVehicleViewId = (!self.defaultVehicleViewId && !object.defaultVehicleViewId) || [self.defaultVehicleViewId isEqual:object.defaultVehicleViewId];
     
     return haveEqualVehicleViews && haveEqualVehicleViewsOrder && haveEqualDefaultVehicleViewId;
+}
+
+- (NSArray *)vehicleViewIds {
+    if (self.vehicleViews.count == 0) return @[];
+    
+    return [self.vehicleViews allKeys];
+}
+
+- (NSNumber *)defaultVehicleViewId {
+    NSArray *ids = [self vehicleViewIds];
+    NSNumber *vehicleViewId = _defaultVehicleViewId;
+    if ([ICSession sharedInstance].currentVehicleViewId != -1)
+        vehicleViewId = @([ICSession sharedInstance].currentVehicleViewId);
+    
+    // if vehicleViewId not present in the vehicleViews hash then return id of the first VehicleView
+    if (ids.count > 0 && [ids indexOfObject:vehicleViewId] == NSNotFound) {
+        return ids[0];
+    }
+    
+    return vehicleViewId;
+}
+
+- (NSArray *)orderedVehicleViews {
+    if (self.vehicleViewsOrder.count < 2) return self.vehicleViews.allValues;
+    
+    NSMutableArray *orderedViews = [NSMutableArray arrayWithArray:self.vehicleViews.allValues];
+    [orderedViews sortUsingComparator:^NSComparisonResult(ICVehicleView *obj1, ICVehicleView *obj2) {
+        return [@([self.vehicleViewsOrder indexOfObject:obj1.uniqueId]) compare:@([self.vehicleViewsOrder indexOfObject:obj2.uniqueId])];
+    }];
+    
+    return orderedViews;
 }
 
 @end

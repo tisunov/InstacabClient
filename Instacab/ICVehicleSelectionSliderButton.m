@@ -39,8 +39,6 @@
 @implementation ICVehicleSelectionSliderButton
 
 
-// TODO: http://stackoverflow.com/questions/1957317/how-do-i-scale-a-uibuttons-imageview
-//
 -(void)setIcon:(UIImage *)icon {
     [self setImage:icon forState:UIControlStateNormal];
     [self setImage:[icon tintedImageWithColor:self.tintColor] forState:UIControlStateHighlighted];
@@ -50,6 +48,8 @@
 
 - (void)setupButton {
     self.tintColor = [UIColor whiteColor];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    self.imageEdgeInsets = UIEdgeInsetsMake(0, 11.0f, 0, 11.0f);
     
     [self setBackgroundImage:[UIImage imageNamed:@"vehicle_picker_slider_up.png"] forState:UIControlStateNormal];
     [self setBackgroundImage:[UIImage imageNamed:@"vehicle_picker_slider_down.png"] forState:UIControlStateHighlighted];

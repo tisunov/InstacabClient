@@ -12,7 +12,7 @@
 #import "ICVehicleView.h"
 
 @protocol ICVehicleSelectionViewDelegate <NSObject>
--(void)viewChanged;
+-(void)vehicleViewChanged;
 @end
 
 @interface ICVehicleSelectionSliderView : UIControl

@@ -84,6 +84,12 @@
 #define COCOAPODS_VERSION_MINOR_FCUtilities 1
 #define COCOAPODS_VERSION_PATCH_FCUtilities 0
 
+// FastImageCache
+#define COCOAPODS_POD_AVAILABLE_FastImageCache
+#define COCOAPODS_VERSION_MAJOR_FastImageCache 1
+#define COCOAPODS_VERSION_MINOR_FastImageCache 3
+#define COCOAPODS_VERSION_PATCH_FastImageCache 0
+
 // HexColors
 #define COCOAPODS_POD_AVAILABLE_HexColors
 #define COCOAPODS_VERSION_MAJOR_HexColors 2

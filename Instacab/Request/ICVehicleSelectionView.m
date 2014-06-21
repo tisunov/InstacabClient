@@ -16,7 +16,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"vehicle_picker_background_pattern"]];
+        self.backgroundColor = [UIColor colorWithWhite:252.0/255.0 alpha:1.0];
         
         _sliderView = [[ICVehicleSelectionSliderView alloc] init];
         [self addSubview:_sliderView];

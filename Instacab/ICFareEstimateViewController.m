@@ -44,7 +44,7 @@ NSString *const kFareDescription = @"Тариф может изменяться 
 {
     [super viewDidLoad];
     
-    self.titleText = @"СТОИМОСТЬ ПОЕЗДКИ";
+    self.titleText = @"ОЦЕНКА СТОИМОСТИ";
     searchBar.placeholder = @"Введите место назначения";
     
     _fareEstimateView = [[UIView alloc] initForAutoLayout];

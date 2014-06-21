@@ -16,7 +16,6 @@
     return @{
         @"minEta": @"minEta",
         @"etaString": @"etaString",
-        @"etaStringShort": @"etaStringShort",
         @"vehiclePaths": @"vehiclePaths",
         @"sorryMsg": @"sorryMsg",
     };
@@ -69,11 +68,10 @@
     ICNearbyVehicle *other = (ICNearbyVehicle *)object;
     
     BOOL haveEqualEtaStrings = (!self.etaString && !other.etaString) || [self.etaString isEqualToString:other.etaString];
-    BOOL haveEqualEtaStringShorts = (!self.etaStringShort && !other.etaStringShort) || [self.etaStringShort isEqualToString:other.etaStringShort];
     BOOL haveEqualSorryMsgs = (!self.sorryMsg && !other.sorryMsg) || [self.sorryMsg isEqualToString:other.sorryMsg];
     BOOL haveEqualVehiclePaths = (!self.vehiclePaths && !other.vehiclePaths) || [self.vehiclePaths isEqualToDictionary:other.vehiclePaths];
     
-    BOOL equal = self.minEta == other.minEta && haveEqualEtaStrings && haveEqualEtaStringShorts && haveEqualSorryMsgs && haveEqualVehiclePaths;
+    BOOL equal = self.minEta == other.minEta && haveEqualEtaStrings && haveEqualSorryMsgs && haveEqualVehiclePaths;
     
     return equal;
 }

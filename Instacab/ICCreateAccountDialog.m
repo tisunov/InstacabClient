@@ -99,7 +99,7 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
 -(void)viewDidAppear:(BOOL)animated
 {
     // Focus email field and show keyboard
-    [self cellForElementKey:@"email"];
+    [[self cellForElementKey:@"email"] becomeFirstResponder];
     
     NSArray *signals = @[
         [self textFieldForEntryElementWithKey:@"email"].rac_textSignal,

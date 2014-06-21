@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ICVehicleSelectionSliderLabel : UILabel
+-(void)setAvailable:(BOOL)available;
 
 @end
