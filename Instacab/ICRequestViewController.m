@@ -534,7 +534,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Find street address
     [_googleService reverseGeocodeLocation:coordinates];
     // Find nearby vehicles
-    [self requestNearestCabs:coordinates reason:kNearestCabRequestReasonMovePin];
+    [self refreshPing:coordinates reason:kNearestCabRequestReasonMovePin];
 }
 
 - (void)clearMap {
@@ -869,7 +869,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICDispatchServer *dispatcher = [note object];
     // Connection was lost, now it's online again
     if (dispatcher.connected) {
-        [self requestNearestCabs:_mapView.camera.target reason:kNearestCabRequestReasonPing];
+        [self refreshPing:_mapView.camera.target reason:kNearestCabRequestReasonPing];
     }
 }
 
@@ -1013,21 +1013,23 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         ICTrip *trip = [ICTrip sharedInstance];
         ICDriver *driver = trip.driver;
         ICVehicle *vehicle = trip.vehicle;
+        ICVehicleView *vehicleView = [[ICCity shared] vehicleViewById:trip.vehicleViewId];
         
-        // TODO: Брать VehiclePathPoint координаты из NearbyVehicle, потому что диспетчер возвращает
-        // координаты когда активен Trip
         if (driver && vehicle) {
             GMSMarker *vehicleMarker = _vehicleMarkers[vehicle.uniqueId];
             if (vehicleMarker) {
                 vehicleMarker.position = driver.coordinate;
+                vehicleMarker.rotation = driver.course;
             }
             else {
                 GMSMarker *vehicleMarker = [GMSMarker markerWithPosition:driver.coordinate];
-                // TODO: Скачивать из сети и кэшировать картинку
-                vehicleMarker.icon = [UIImage imageNamed:@"map-hit"];
-                vehicleMarker.map = _mapView;
-                // TODO: vehicleMarker.rotation = driver.course;
+                [vehicleView loadMapImage:^(UIImage *image) {
+                    vehicleMarker.icon = image;
+                    vehicleMarker.map = _mapView;
+                }];
+                vehicleMarker.rotation = driver.course;
                 vehicleMarker.groundAnchor = CGPointMake(0.5f, 0.5f);
+                
                 _vehicleMarkers[vehicle.uniqueId] = vehicleMarker;
             }
             [self centerMap];
@@ -1110,16 +1112,15 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                 }
             }
             else {
-                // TODO: Для vehicleViewId == 1 всегда ставить картинку маркера из ресурсов
-                // А уже потом пробовать грузить из сети
                 GMSMarker *marker = [GMSMarker markerWithPosition:pathPoint.coordinate];
                 [vehicleView loadMapImage:^(UIImage *image) {
                     marker.icon = image;
+                    marker.map = _mapView;
                 }];
                 marker.rotation = pathPoint.course;
                 marker.groundAnchor = CGPointMake(0.5f, 0.5f);
                 marker.userData = selectedVehicleViewId;
-                marker.map = _mapView;
+
                 _vehicleMarkers[uuid] = marker;
             }
         }
@@ -1174,7 +1175,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)requestNearestCabs:(CLLocationCoordinate2D)coordinates reason:(NSString *)aReason {
+-(void)refreshPing:(CLLocationCoordinate2D)coordinates reason:(NSString *)aReason {
     [_clientService ping:coordinates reason:aReason success:nil failure:nil];
 }
 

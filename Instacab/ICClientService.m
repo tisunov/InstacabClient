@@ -34,6 +34,7 @@ float const kPingIntervalInSeconds = 6.0f;
         
     FCReachability *_reachability;
     NSTimer *_pingTimer;
+    CLLocationCoordinate2D _pingLocation;
 }
 
 @synthesize successBlock = _successBlock;
@@ -76,6 +77,9 @@ float const kPingIntervalInSeconds = 6.0f;
     if (failure) {
         self.failureBlock = failure;
     }
+    
+    // Keep location for subsequent Pings
+    _pingLocation = location;
     
     NSDictionary *pingMessage = @{
         kFieldMessageType: @"PingClient",
@@ -468,7 +472,10 @@ float const kPingIntervalInSeconds = 6.0f;
 }
 
 -(void)sendPing {
-    [self ping:[ICLocationService sharedInstance].coordinates reason:kNearestCabRequestReasonPing success:nil failure:nil];
+    if (_pingLocation.latitude == 0 || _pingLocation.longitude == 0)
+        _pingLocation = [ICLocationService sharedInstance].coordinates;
+    
+    [self ping:_pingLocation reason:kNearestCabRequestReasonPing success:nil failure:nil];
 }
 
 -(void)stopPing {

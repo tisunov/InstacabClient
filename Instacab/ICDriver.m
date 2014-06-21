@@ -55,4 +55,8 @@
     return self.location.coordinate;
 }
 
+-(int)course {
+    return self.location.course;
+}
+
 @end

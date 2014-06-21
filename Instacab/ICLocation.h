@@ -24,6 +24,7 @@
 @property (nonatomic, copy, readonly) NSString *city;
 @property (nonatomic, copy) NSNumber *latitude;
 @property (nonatomic, copy) NSNumber *longitude;
+@property (nonatomic, assign, readonly) int course;
 
 -(CLLocationCoordinate2D)coordinate;
 @end

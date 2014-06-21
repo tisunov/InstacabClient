@@ -92,7 +92,8 @@ NSString * const kLocationTypeGoogle = @"google";
         @"streetAddress": @"streetAddress",
         @"city": @"city",
         @"latitude": @"latitude",
-        @"longitude": @"longitude"
+        @"longitude": @"longitude",
+        @"course": @"course"
     };
 }
 

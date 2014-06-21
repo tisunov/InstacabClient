@@ -25,7 +25,8 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign, readonly) SVDriverState state;
 @property (nonatomic, copy, readonly) NSString *photoUrl;
 
--(void)call;
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
+@property (nonatomic, readonly) int course;
 
+-(void)call;
 @end
