@@ -26,6 +26,7 @@
 #import "ICPromoViewController.h"
 #import "ICFareEstimateViewController.h"
 #import "Constants.h"
+#import "AnalyticsManager.h"
 
 @interface ICRequestViewController ()
 @property (nonatomic, strong) ICLocation *pickupLocation;
@@ -93,10 +94,24 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         
         _vehicleMarkers = [[NSMutableDictionary alloc] init];
         
-        // Analytics
-        [_clientService vehicleViewEventWithReason:kNearestCabRequestReasonOpenApp];
+        [self trackNearestCabEvent:@"openApp"];
     }
     return self;
+}
+
+- (void)trackNearestCabEvent:(NSString *)reason {
+    ICCity *city = [ICCity shared];
+    NSNumber *vehicleViewId = city.defaultVehicleViewId;
+    NSNumber *vehicleCount = [city vehicleCountByViewId:vehicleViewId];
+    NSNumber *minEta = [city minEtaByViewId:vehicleViewId];
+    
+    NSDictionary *eventProperties = @{
+        @"reason": reason,
+        @"vehicleViewId": vehicleViewId,
+        @"minEta": minEta,
+        @"vehicleCount": vehicleCount
+    };
+    [AnalyticsManager track:@"NearestCabRequest" withProperties:eventProperties];
 }
 
 - (void)viewDidLoad {
@@ -118,10 +133,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self styleButtons];
     
     self.sideMenuViewController.delegate = self;
-    
-    // Should be sent only once when view is created to track open-to-order ratio
-    // Even if user opens app and gets straight to ReceiptView, that method should be called
-    [_clientService logMapPageView];
 }
 
 - (void)setupVehicleSelectionView {
@@ -142,13 +153,31 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     _showAvailableVehicle = YES;
     [self makeVisibleAvailableVehicles];
+    
+    [self trackVehicleViewChange];
+}
+
+- (void)trackVehicleViewChange {
+    ICCity *city = [ICCity shared];
+    NSNumber *vehicleViewId = city.defaultVehicleViewId;
+    NSNumber *vehicleCount = [city vehicleCountByViewId:vehicleViewId];
+    NSNumber *minEta = [city minEtaByViewId:vehicleViewId];
+    
+    NSDictionary *eventProperties = @{
+        @"vehicleViewId": vehicleViewId,
+        @"minEta": minEta,
+        @"vehicleCount": vehicleCount
+    };
+    [AnalyticsManager track:@"ChangeVehicleView" withProperties:eventProperties];
 }
 
 - (void)handleAddressBarTap:(UITapGestureRecognizer *)recognizer {
     ICSearchViewController *vc = [[ICSearchViewController alloc] initWithLocation:_mapView.camera.target];
     vc.delegate = self;
-
+    
     [self presentModalViewController:vc];
+    
+    [AnalyticsManager track:@"SearchPageView" withProperties:nil];
 }
 
 - (void)didSelectManualLocation:(ICLocation *)location {
@@ -160,12 +189,12 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [self transitionToConfirmScreenAtCoordinate:location.coordinate];
     
-    if (location.name.length > 0) {
-        [self updateAddressLabel:location.name];
-    }
-    else {
-        [self updateAddressLabel:location.streetAddress];
-    }
+    [self updateAddressLabel:location.name.length > 0 ? location.name : location.streetAddress];
+    
+    // refresh vehicles for new location
+    [self refreshPing:_mapView.camera.target];
+    
+    [self trackNearestCabEvent:@"addressSearch"];
 }
 
 - (void)showMenuNavbarButton {
@@ -232,13 +261,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                              selector:@selector(onTripChanged:)
                                                  name:kTripChangedNotification
                                                object:nil];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
     
-    [_clientService trackScreenView:@"Map"];
+    [AnalyticsManager track:@"MapPageView" withProperties:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -293,6 +317,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)cancelTrip {
     [_clientService cancelTrip];
     [self showProgressWithMessage:kProgressCancelingTrip allowCancel:NO];
+    
+    [AnalyticsManager track:@"CancelTripRequest" withProperties:nil];
 }
 
 -(void)popViewController {
@@ -356,6 +382,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self showConfirmPickupView];
     
     [_pickupCallout hide];
+    
+    [AnalyticsManager track:@"ConfirmPageView" withProperties:nil];
 }
 
 - (void)showConfirmPickupView {
@@ -442,7 +470,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _draggingPin = dragging;
     
     if (dragging) {
-        
         if (!_readyToRequest) {
             [UIView animateWithDuration:0.35 animations:^(void){
                 [self.navigationController setNavigationBarHidden:YES animated:YES];
@@ -490,6 +517,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
         }];
     }
+    
+    [self trackNearestCabEvent:@"movePin"];
 }
 
 -(void)recognizeTapOnMap:(id)sender {
@@ -534,7 +563,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     // Find street address
     [_googleService reverseGeocodeLocation:coordinates];
     // Find nearby vehicles
-    [self refreshPing:coordinates reason:kNearestCabRequestReasonMovePin];
+    [self refreshPing:coordinates];
 }
 
 - (void)clearMap {
@@ -549,8 +578,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 
 - (void)didFailToGeocodeWithError:(NSError*)error {
     NSLog(@"didFailToGeocodeWithError %@", error);
-    // Analytics
-    [_clientService trackError:@{@"type": @"geocoder", @"description": [error localizedDescription]}];
 }
 
 - (void)updateAddressLabel: (NSString *)text {
@@ -615,31 +642,13 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)cancelPickup {
-
-}
-
 - (IBAction)requestPickup:(id)sender {
-    if (_readyToRequest) {
-        [self checkCardLinkedAndRequestPickup];
-    }
-    else {
-        [self transitionToConfirmScreenAtCoordinate:_mapView.camera.target];
-    }
-}
-
-- (void)didSetPickupLocation {
-    [self transitionToConfirmScreenAtCoordinate:_mapView.camera.target];
-}
-
-- (void)checkCardLinkedAndRequestPickup {
     // Check if card registered
-//    if (![ICClient sharedInstance].cardPresent) {
-//        [_clientService trackEvent:@"Request Vehicle Denied" params:@{ @"reason":kRequestVehicleDeniedReasonNoCard  }];
-//        
-//        [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
-//        return;
-//    }
+    //    if (![ICClient sharedInstance].cardPresent) {
+    //
+    //        [[UIApplication sharedApplication] showAlertWithTitle:@"Банковская Карта Отсутствует" message:@"Необходимо зарегистрировать банковскую карту, чтобы автоматически оплачивать поездки. Войдите в аккаунт на www.instacab.ru чтобы добавить карту." cancelButtonTitle:@"OK"];
+    //        return;
+    //    }
     
     [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
     
@@ -670,10 +679,16 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                     }
                                 }
                             }
-                failure:^{
-                    
-                }
-    ];
+                            failure:^{
+                                // TODO: Показать человеку ошибку
+                            }
+     ];
+    
+    [AnalyticsManager trackRequestVehicle:[self selectedVehicleViewId] pickupLocation:self.pickupLocation];
+}
+
+- (void)didSetPickupLocation {
+    [self transitionToConfirmScreenAtCoordinate:_mapView.camera.target];
 }
 
 - (void)showVerifyMobileDialog {
@@ -691,7 +706,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     NSTimeInterval timeSinceRequest = -[_pickupRequestedAt timeIntervalSinceNow];
     // Send PickupRequest automatically if less than 60 passed
     if (timeSinceRequest < 60) {
-        [self checkCardLinkedAndRequestPickup];
+        [self requestPickup:nil];
     }
     
     _pickupRequestedAt = nil;
@@ -869,7 +884,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     ICDispatchServer *dispatcher = [note object];
     // Connection was lost, now it's online again
     if (dispatcher.connected) {
-        [self refreshPing:_mapView.camera.target reason:kNearestCabRequestReasonPing];
+        [self refreshPing:_mapView.camera.target];
     }
 }
 
@@ -945,6 +960,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self updateVehicleSelector];
 }
 
+// TODO: Отправить в track event количество автомобилей и minEta для текущего vehicleViewId
+// Возьми код из setupAnalytics вверху
 -(void)onNearbyVehiclesChanged:(NSNotification *)note {
     [self updateSetPickup];
     [self updateMapMarkers];
@@ -1175,8 +1192,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
 }
 
--(void)refreshPing:(CLLocationCoordinate2D)coordinates reason:(NSString *)aReason {
-    [_clientService ping:coordinates reason:aReason success:nil failure:nil];
+-(void)refreshPing:(CLLocationCoordinate2D)coordinates {
+    [_clientService ping:coordinates success:nil failure:nil];
 }
 
 -(void)setupForLooking {
@@ -1202,8 +1219,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)callDriver{
     ICDriver *driver = [ICTrip sharedInstance].driver;
     
-    // Analytics
-    [_clientService trackEvent:@"Call Driver" params:nil];
+    [AnalyticsManager track:@"CallDriver" withProperties:@{ @"vehicleViewId": [self selectedVehicleViewId] }];
     
     [driver call];
 }
@@ -1268,6 +1284,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _mapView.settings.myLocationButton = NO;
     _mapView.settings.indoorPicker = NO;
     _mapView.settings.rotateGestures = NO;
+    _mapView.settings.tiltGestures = NO;
     [self.view insertSubview:_mapView atIndex:0];
     
     [self attachMyLocationButtonTapHandler];
@@ -1469,15 +1486,14 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _sideMenuOpen = NO;
 }
 
+- (void)sideMenu:(RESideMenu *)sideMenu didShowMenuViewController:(UIViewController *)menuViewController {
+    [AnalyticsManager track:@"SidebarPageView" withProperties:nil];
+}
+
 // Keep map in the same location when swiping to open side menu
 - (void)mapView:(GMSMapView *)mapView willMove:(BOOL)gesture {
     if (_sideMenuOpen)
         [_mapView animateToLocation:[self pickupLocation].coordinate];
 }
-
-// TODO: Для разных машин асинхронно грузить картинки из сети и кэшировать их по url,
-// грузить только если их нету.
-// TODO: Выполнить это после pingUpdated, проверить есть ли загруженные картинки для vehicleViewId
-// и если нету то выполнить асинхронную загрузку для этого vehicleViewId, а после этого выполнить код по присвоению загруженной картинки всем маркерам на карте для данного vehicleViewId, и ОБЯЗАТЕЛЬНО в главной нитке
 
 @end

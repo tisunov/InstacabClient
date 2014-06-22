@@ -16,17 +16,11 @@
 -(BOOL)locationServicesEnabled {
     if (![ICLocationService sharedInstance].isEnabled) {
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Службы геолокации выключены. Включите их пройдя в Настройки -> Приватность -> Службы геолокации." cancelButtonTitle:@"OK"];
-        
-        // Analytics
-        [[ICClientService sharedInstance] trackError:@{@"type": @"loginLocationSevicesDisabled"}];
         return NO;
     }
     
     if ([ICLocationService sharedInstance].isRestricted) {
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Геолокации" message:@"Доступ к вашей геопозиции ограничен. Разрешите Instacab доступ пройдя в Настройки -> Приватность -> Службы геолокации." cancelButtonTitle:@"OK"];
-        
-        // Analytics
-        [[ICClientService sharedInstance] trackError:@{@"type": @"loginLocationServicesRestricted"}];
         return NO;
     }
 

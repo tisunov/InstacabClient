@@ -12,27 +12,23 @@
 
 extern NSString *const kClientServiceMessageNotification;
 
-extern NSString *const kNearestCabRequestReasonOpenApp;
-extern NSString *const kNearestCabRequestReasonMovePin;
-extern NSString *const kNearestCabRequestReasonPing;
-
-extern NSString *const kRequestVehicleDeniedReasonNoCard;
-
 typedef void (^ICClientServiceSuccessBlock)(ICPing *message);
 typedef void (^ICClientServiceFailureBlock)();
 
 @interface ICClientService : BaseService
--(void)loginWithEmail:(NSString *)email
-             password:(NSString *)password
-              success:(ICClientServiceSuccessBlock)success
-              failure:(ICClientServiceFailureBlock)failure;
+
+-(void)signInEmail:(NSString *)email
+          password:(NSString *)password
+           success:(ICClientServiceSuccessBlock)success
+           failure:(ICClientServiceFailureBlock)failure;
+
+-(void)signOut;
 
 -(void)requestPickupAt:(ICLocation *)location
                success:(ICClientServiceSuccessBlock)success
                failure:(ICClientServiceFailureBlock)failure;
 
 -(void)ping:(CLLocationCoordinate2D)location
-     reason:(NSString *)aReason
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure;
 
@@ -44,8 +40,6 @@ typedef void (^ICClientServiceFailureBlock)();
             forTrip: (ICTrip*)trip
             success:(ICClientServiceSuccessBlock)success
             failure:(ICClientServiceFailureBlock)failure;
-
--(void)logOut;
 
 -(void)requestMobileConfirmation:(ICClientServiceSuccessBlock)success;
 
@@ -92,23 +86,5 @@ typedef void (^ICClientServiceFailureBlock)();
 - (void)disconnectWithoutTryingToReconnect;
 
 @property (nonatomic, readonly) BOOL isOnline;
-
-#pragma mark - Analytics
-
-// TODO: Вынести в класс ICAnalytics
-- (void)vehicleViewEventWithReason:(NSString *)reason;
-
-// Localytics
-// TODO: Сделать их методами класса +(void)
-- (void)trackScreenView:(NSString *)name;
-- (void)trackEvent:(NSString *)name params:(NSDictionary *)aParams;
-- (void)trackError:(NSDictionary *)attributes;
-
-#pragma mark - Events
-
-- (void)logMapPageView;
-- (void)logSignInPageView;
-- (void)logSignUpPageView;
-- (void)logSignUpCancel:(ICSignUpInfo *)signUpData;
 
 @end

@@ -59,10 +59,6 @@ NSString * const kFieldPassword = @"password";
     [_dispatchServer sendMessage:message coordinates:coordinates];
 }
 
--(void)trackError:(NSDictionary *)attributes {
-    
-}
-
 #pragma mark - Request Timeout
 
 -(void)startRequestTimeout {
@@ -87,8 +83,6 @@ NSString * const kFieldPassword = @"password";
     
     // Resend one more time
     if (_pendingRequest) {
-        [self trackError:@{ @"type":@"requestTimeOut", @"messageType":[_pendingRequest objectForKey:kFieldMessageType] }];
-        
         // TODO: На сервер пошлются координаты не из _pendingRequest, а новые
         [self sendMessage:_pendingRequest];
         

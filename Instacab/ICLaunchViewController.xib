@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ICWelcomeViewController">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ICLaunchViewController">
             <connections>
                 <outlet property="backgroundImageView" destination="0AB-2K-URk" id="Rp2-H3-3mD"/>
                 <outlet property="loadingIndicator" destination="KOO-kU-Fm2" id="TLG-W9-UbP"/>

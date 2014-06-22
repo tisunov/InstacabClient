@@ -14,6 +14,7 @@
 #import "MBProgressHUD.h"
 #import "QuickDialogController+Additions.h"
 #import "UIApplication+Alerts.h"
+#import "AnalyticsManager.h"
 
 @interface ICLoginViewController ()
 
@@ -79,8 +80,6 @@
     next.enabled = NO;
     [self setupCallToActionBarButton:next];
     self.navigationItem.rightBarButtonItem = next;
-    
-    [_clientService logSignInPageView];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -103,7 +102,7 @@
                  return @(email.length > 0 && password.length > 0);
              }];
 
-    [_clientService trackScreenView:@"Login"];
+    [AnalyticsManager track:@"SignInPageView" withProperties:nil];
 }
 
 -(void)login {
@@ -111,9 +110,6 @@
     
     if (![ICClientService sharedInstance].isOnline) {
         [[UIApplication sharedApplication] showAlertWithTitle:@"Отсутствует подключение к сети" message:@"Проверьте свое подключение к сети и повторите попытку." cancelButtonTitle:@"OK"];
-        
-        // Analytics
-        [_clientService trackError:@{@"type": @"loginNetworkOffline"}];
         return;
     }
     
@@ -125,18 +121,19 @@
 
     [self showProgress];
     
-    [_clientService loginWithEmail:[self clientEmail]
-                          password:[self textForElementKey:@"password"]
-                           success:^(ICPing *message) {
-                               [self loginResponseReceived:message];
-                           } failure:^{
-                               [self dismissProgress];
-                               
-                               // Analytics
-                               [_clientService trackError:@{@"type": @"loginNetworkError"}];
-                               
-                               [[UIApplication sharedApplication] showAlertWithTitle:@"Нет соединения с сервером Instacab" message:@"Проверьте свое подключение к сети и повторите попытку." cancelButtonTitle:@"OK"];
-                           }];
+    [_clientService signInEmail:[self clientEmail]
+                       password:[self textForElementKey:@"password"]
+                        success:^(ICPing *message) {
+                            [self loginResponseReceived:message];
+                        } failure:^{
+                            [self dismissProgress];
+                           
+                            [[UIApplication sharedApplication] showAlertWithTitle:@"Сбой сетевого подключения" message:@"Проверьте свое подключение к сети и повторите попытку." cancelButtonTitle:@"OK"];
+                           
+                            [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(408) }];
+    }];
+    
+    [AnalyticsManager track:@"SignInRequest" withProperties:nil];
 }
 
 - (NSString *)clientEmail {
@@ -173,15 +170,16 @@
             if ([self.delegate respondsToSelector:@selector(closeLoginViewController:signIn:client:)]) {
                 [self.delegate closeLoginViewController:self signIn:YES client:client];
             }
+            
+            [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(200) }];
             break;
             
         case SVMessageTypeError:
             [self dismissProgress];
             
-            // Analytics
-            [_clientService trackError:@{@"type": @"loginBadCredentials", @"description": message.description}];
-            
             [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Входа" message:message.description cancelButtonTitle:@"OK"];
+            
+            [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(401) }];
             break;
             
         default:

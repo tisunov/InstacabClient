@@ -14,6 +14,7 @@
 #import "UIApplication+Alerts.h"
 #import "UIViewController+TitleLabel.h"
 #import "MBProgressHud+Global.h"
+#import "AnalyticsManager.h"
 
 @interface ICVerifyMobileViewController ()
 
@@ -49,15 +50,13 @@
     _tokenTextField.backgroundColor = [UIColor whiteColor];
     _tokenTextField.delegate = self;
 
-    NSString *formattedMobile = [AKNumericFormatter formatString:[ICClient sharedInstance].mobilePhone
+    NSString *formattedMobile = [AKNumericFormatter formatString:[ICClient sharedInstance].mobile
                                                        usingMask:@"+7 (***) ***-**-**"
                                             placeholderCharacter:'*'];
     
     _mobileNumberLabel.text = [NSString stringWithFormat:@"который был отправлен на номер %@", formattedMobile];
     
     _requestConfirmationButton.tintColor = [UIColor pastelBlueColor];
-    
-    [[ICClientService sharedInstance] trackScreenView:@"Verify Mobile"];
 }
 
 #define MAXLENGTH 4
@@ -79,13 +78,14 @@
     [super viewDidAppear:animated];
     
     [_tokenTextField becomeFirstResponder];
+    
+    [AnalyticsManager track:@"VerifyMobilePageView" withProperties:nil];
 }
 
 - (void)cancel {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
-// TODO: Сервер может отдать код в приложение. И приложение сможет моментально подтвердить код, открыть карту и в фоне отправить подтверждение на сервер
 - (void)confirmMobile
 {
     [self.view endEditing:YES];

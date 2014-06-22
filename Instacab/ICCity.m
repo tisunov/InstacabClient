@@ -73,6 +73,16 @@ NSString * const kCityChangedNotification = @"cityChanged";
     return self.vehicleViews[vehicleViewId];
 }
 
+-(NSNumber *)vehicleCountByViewId:(NSNumber *)vehicleViewId {
+    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:vehicleViewId];
+    return @(vehicle.vehiclePaths.count);
+}
+
+-(NSNumber *)minEtaByViewId:(NSNumber *)vehicleViewId {
+    ICNearbyVehicle *vehicle = [[ICNearbyVehicles shared] vehicleByViewId:vehicleViewId];
+    return vehicle ? @(vehicle.minEta) : @(0);
+}
+
 #pragma mark - NSObject
 
 - (BOOL)isEqual:(ICCity *)object {

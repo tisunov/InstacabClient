@@ -10,7 +10,7 @@
 
 @implementation NSString (Helper)
 
-- (BOOL)isPresent {
+- (int)presentAsInt {
     return self && self.length;
 }
 
@@ -43,7 +43,7 @@
 }
 
 -(BOOL)accountDataPresent {
-    return [_password isPresent] || [_email isPresent] || [_mobile isPresent];
+    return [_password presentAsInt] || [_email presentAsInt] || [_mobile presentAsInt];
 }
 
 @end

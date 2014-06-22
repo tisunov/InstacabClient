@@ -21,8 +21,9 @@ extern NSString * const kCityChangedNotification;
 @property (nonatomic, copy, readonly) NSArray *orderedVehicleViews;
 
 -(void)update:(ICCity *)city;
-//-(void)updateVehicles:(ICNearbyVehicles *)nearbyVehicles;
 -(ICVehicleView *)vehicleViewById:(NSNumber *)vehicleViewId;
+-(NSNumber *)vehicleCountByViewId:(NSNumber *)vehicleViewId;
+-(NSNumber *)minEtaByViewId:(NSNumber *)vehicleViewId;
 
 +(instancetype)shared;
 @end

@@ -16,6 +16,7 @@
 #import "TargetConditionals.h"
 #import "RESideMenu.h"
 #import "Payture/Payture.h"
+#import "AnalyticsManager.h"
 
 @implementation PKViewEx
 
@@ -57,6 +58,7 @@
     NSUInteger _cardioAttempts;
     BOOL _cardRegistrationInProgress;
     Payture *_payture;
+    NSDate *_startTime;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -124,7 +126,7 @@
     self.paymentView.cardCVCField.text = @"123";
 #endif
     
-    [[ICClientService sharedInstance] trackScreenView:@"Link Card"];
+    [AnalyticsManager track:@"CreatePaymentProfilePageView" withProperties:@{ @"type": @"creditCard" }];
 }
 
 - (void)showMenuNavbarButton {
@@ -154,18 +156,36 @@
 
     [MBProgressHUD showGlobalProgressHUDWithTitle:@"Сохранение"];
     
-    
     _cardRegistrationInProgress = NO;
     [[ICClientService sharedInstance] createCardSessionSuccess:^(ICPing *message) {
-        if ([message.apiResponse.data[@"add_card_page_url"] length] > 0 && !_cardRegistrationInProgress) {
-            [self createCard:message.apiResponse];
-            _cardRegistrationInProgress = YES;
+        if ([message.apiResponse.data[@"add_card_page_url"] length] > 0) {
+            if (!_cardRegistrationInProgress) {
+                [self createCard:message.apiResponse];
+                _cardRegistrationInProgress = YES;
+            }
+        }
+        else {
+            [MBProgressHUD hideGlobalHUD];
+
+            [[UIApplication sharedApplication] showAlertWithTitle:@"Упс, ошибка"
+                                                          message:@"К сожалению сейчас не получится добавить карту"
+                                                cancelButtonTitle:@"OK"];
+            
+            [AnalyticsManager track:@"CreatePaymentProfileResponse"
+                     withProperties:@{ @"latency": [self calculateLatency], @"statusCode": message.apiResponse.error.statusCode}];
         }
     } failure:^{
         [MBProgressHUD hideGlobalHUD];
 
         [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка добавления карты" message:@"Отсутствует сетевое соединение." cancelButtonTitle:@"OK"];
+        
+        [AnalyticsManager track:@"CreatePaymentProfileResponse"
+                 withProperties:@{ @"latency": [self calculateLatency], @"statusCode": @(408)}];
     }];
+    
+    _startTime = [NSDate date];
+    [AnalyticsManager track:@"CreatePaymentProfileRequest"
+             withProperties:@{ @"cardio": @((int)_cardio), @"cardioTries": @(_cardioAttempts) }];
 }
 
 //- (void)signupClient {
@@ -322,16 +342,28 @@
                       success:^{
                           [MBProgressHUD hideGlobalHUD];
 
+                          // Analytics: card created
+                          [AnalyticsManager track:@"CreatePaymentProfileResponse"
+                                   withProperties:@{ @"latency": [self calculateLatency], @"statusCode": @(201) }];
+                          
                           if ([self.delegate respondsToSelector:@selector(didRegisterPaymentCard)])
                               [self.delegate didRegisterPaymentCard];
                           
                           [self.navigationController popViewControllerAnimated:YES];
                       }
-                      failure:^(NSString *errorTitle, NSString *errorMessage){
+                      failure:^(NSString *errorTitle, NSString *errorMessage, NSInteger statusCode){
                           [MBProgressHUD hideGlobalHUD];
 
+                          [AnalyticsManager track:@"CreatePaymentProfileResponse"
+                                   withProperties:@{ @"latency": [self calculateLatency], @"statusCode": @(statusCode)}];
+                          
                           [[UIApplication sharedApplication] showAlertWithTitle:errorTitle message:errorMessage cancelButtonTitle:@"OK"];
                       }];
+}
+
+-(NSNumber *)calculateLatency {
+    NSTimeInterval timeSinceRequest = -[_startTime timeIntervalSinceNow];
+    return @(timeSinceRequest);
 }
 
 @end

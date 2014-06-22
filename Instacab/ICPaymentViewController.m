@@ -13,6 +13,7 @@
 #import "Colours.h"
 #import "RESideMenu.h"
 #import "CreditCardViewController.h"
+#import "AnalyticsManager.h"
 
 #pragma mark - QPaymentAppearance
 
@@ -141,6 +142,8 @@
     self.view.backgroundColor = [UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1];
     
     [self showMenuNavbarButton];
+    
+    [AnalyticsManager track:@"PaymentProfilesPageView" withProperties:nil];
 }
 
 - (void)showMenuNavbarButton {

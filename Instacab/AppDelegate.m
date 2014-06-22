@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import <GoogleMaps/GoogleMaps.h>
 #import "ICLoginViewController.h"
-#import "ICWelcomeViewController.h"
+#import "ICLaunchViewController.h"
 #import "ICDispatchServer.h"
 #import "ICLocationService.h"
 #import "Colours.h"
@@ -19,21 +19,21 @@
 #import "ICSidebarController.h"
 #import "Bugsnag.h"
 #import "LocalyticsSession.h"
+#import "Heap.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #if !(TARGET_IPHONE_SIMULATOR)
-    // [Crashlytics startWithAPIKey:@"513638f30675a9a0e0197887a95cd129213cb96a"];
     [Bugsnag startBugsnagWithApiKey:@"07683146286ebf0f4aff27edae5b5043"];
 #endif
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
     [self setupServices:application];
     
-    ICWelcomeViewController *vc = [[ICWelcomeViewController alloc] initWithNibName:@"ICWelcomeViewController" bundle:nil];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    ICLaunchViewController *vc = [[ICLaunchViewController alloc] initWithNibName:@"ICLaunchViewController" bundle:nil];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:vc];
     navigationController.navigationBar.barTintColor = [UIColor colorFromHexString:@"#F8F8F4"];
 
@@ -63,20 +63,25 @@
     return YES;
 }
 
-// Что делать когда сети нету и невозможно достучаться до сервера
-// http://stackoverflow.com/questions/1290260/reachability-best-practice-before-showing-webview
-// Если соединение с сервером теряется или доступ в сеть пропадает, то сделать еще 3 попытки установить соединение с интервалом в 1 секунду и если не удалось то показать ошибку пользователю и выйти на LoginView
-// Из LoginView пользователь будет пробовать еще раз ввести пароль и пытаться войти и если интернета нету то не сможет войти, если есть то войдет и снова продолжит работу с прерванного места.
-
-// Еще мудрые советы от Apple Engineer http://stackoverflow.com/questions/12490578/should-i-listen-for-reachability-updates-in-each-uiviewcontroller
-
-// Как узнать тип соединения, WiFi, 3G or EDGE или Нету Соединения с помощью класса Reachability
-// http://stackoverflow.com/questions/11049660/detect-carrier-connection-type-3g-edge-gprs - 2ой ответ
-
 - (void)setupServices:(UIApplication *)application {
     // Google Maps key
     [GMSServices provideAPIKey:@"AIzaSyCvlC3MQG4t2MFq92mxsYjFSynAJ-bGqfo"];
 
+    // Heap + Localytics analytics
+#if !(TARGET_IPHONE_SIMULATOR)
+#ifdef DEBUG
+    [Heap setAppId:@"1172153281"];
+    
+    // Development Key: f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25
+    [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
+#else
+    [Heap setAppId:@"755342236"];
+    
+    // Production Key: 80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25
+    [[LocalyticsSession shared] LocalyticsSession:@"80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25"];
+#endif
+#endif
+    
     [[ICLocationService sharedInstance] startUpdatingLocation];
 }
 
@@ -128,18 +133,16 @@
 {
 #if !(TARGET_IPHONE_SIMULATOR)
 #ifdef DEBUG
+    [Heap setAppId:@"755342236"];
+    
     // Development Key: f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25
     [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
 #else
+    [Heap setAppId:@"755342236"];
+    
     // Production Key: 80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25
     [[LocalyticsSession shared] LocalyticsSession:@"80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25"];
 #endif
-    if ([ICClient sharedInstance].isSignedIn) {
-        ICClient *client = [ICClient sharedInstance];
-        [[LocalyticsSession shared] setCustomerName:client.firstName];
-        [[LocalyticsSession shared] setCustomerEmail:client.email];
-        [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
-    }
     
     [[LocalyticsSession shared] resume];
     [[LocalyticsSession shared] upload];

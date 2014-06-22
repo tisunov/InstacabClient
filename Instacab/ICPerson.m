@@ -11,7 +11,8 @@
 @interface ICPerson()
 @property (nonatomic, copy) NSNumber *uID;
 @property (nonatomic, copy) NSString *firstName;
-@property (nonatomic, copy) NSString *mobilePhone;
+@property (nonatomic, copy) NSString *lastName;
+@property (nonatomic, copy) NSString *mobile;
 @property (nonatomic, copy) NSString *rating;
 @end
 
@@ -22,7 +23,7 @@
         @"uID": @"id",
         @"firstName": @"firstName",
         @"lastName": @"lastName",
-        @"mobilePhone": @"mobile",
+        @"mobile": @"mobile",
         @"rating": @"rating"
     };
 }
@@ -39,9 +40,14 @@
 
 -(void)clear {
     self.uID = nil;
-    self.mobilePhone = nil;
+    self.mobile = nil;
     self.firstName = nil;
+    self.lastName = nil;
     self.rating = nil;
+}
+
+-(NSString *)fullName {
+    return [NSString stringWithFormat:@"%@ %@", self.firstName, self.lastName];
 }
 
 @end

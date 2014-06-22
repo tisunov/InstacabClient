@@ -203,6 +203,14 @@ THE SOFTWARE.</string>
 		</dict>
 		<dict>
 			<key>FooterText</key>
+			<string>See https://heapanalytics.com/terms</string>
+			<key>Title</key>
+			<string>Heap</string>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+		</dict>
+		<dict>
+			<key>FooterText</key>
 			<string>The MIT License (MIT)
 Copyright (c) 2012 Marius Landwehr marius.landwehr@gmail.com
 

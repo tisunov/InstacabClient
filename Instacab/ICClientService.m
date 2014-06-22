@@ -10,16 +10,12 @@
 #import "ICSingleton.h"
 #import "ICClient.h"
 #import "FCReachability.h"
-#import "LocalyticsSession.h"
 #import "ICLocationService.h"
 #import "ICNearbyVehicles.h"
 #import "ICSession.h"
+#import "AnalyticsManager.h"
 
 NSString *const kClientServiceMessageNotification = @"kClientServiceMessageNotification";
-NSString *const kNearestCabRequestReasonOpenApp = @"openApp";
-NSString *const kNearestCabRequestReasonMovePin = @"movepin";
-NSString *const kNearestCabRequestReasonPing = @"ping";
-NSString *const kRequestVehicleDeniedReasonNoCard = @"nocard";
 
 float const kPingIntervalInSeconds = 6.0f;
 
@@ -51,7 +47,8 @@ float const kPingIntervalInSeconds = 6.0f;
         
         // Don't allow automatic login on launch if Location Services access is disabled
         if (![ICLocationService sharedInstance].isAvailable) {
-            [self logOut];
+            [AnalyticsManager track:@"SignOut" withProperties:@{ @"reason": @"locationServicesDisabled" }];
+            [self signOut];
         }
     }
     return self;
@@ -59,9 +56,7 @@ float const kPingIntervalInSeconds = 6.0f;
 
 #pragma mark - Remote Commands
 
-// TODO: Uber - addressSearch (поиск адреса вручную), locationChange(??), locationRequest, selectFavorite
 -(void)ping:(CLLocationCoordinate2D)location
-     reason:(NSString *)aReason
     success:(ICClientServiceSuccessBlock)success
     failure:(ICClientServiceFailureBlock)failure
 {
@@ -88,19 +83,13 @@ float const kPingIntervalInSeconds = 6.0f;
         @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId)
     };
 
-    // Analytics
-    [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": aReason, @"clientId":client.uID}];
-
     [self sendMessage:pingMessage coordinates:location];
-    
-    // Analytics
-    [self trackEvent:@"Request Nearest Cabs" params:@{@"reason": aReason}];
 }
 
--(void)loginWithEmail:(NSString *)email
-             password:(NSString *)password
-              success:(ICClientServiceSuccessBlock)success
-              failure:(ICClientServiceFailureBlock)failure
+-(void)signInEmail:(NSString *)email
+          password:(NSString *)password
+           success:(ICClientServiceSuccessBlock)success
+           failure:(ICClientServiceFailureBlock)failure
 {
     self.successBlock = success;
     self.failureBlock = failure;
@@ -114,28 +103,17 @@ float const kPingIntervalInSeconds = 6.0f;
         kFieldPassword: password,
         kFieldMessageType: @"Login"
     };
-    
-    [self.dispatchServer sendLogEvent:@"SignInRequest" parameters:nil];
-    
+        
     [self sendMessage:message];
-    
-    // Analytics
-    [self trackEvent:@"Log In" params:nil]; 
 }
 
-// TODO: Добавить (reason=initialPingFailed), (reason=locationServicesDisabled), reason=userInitiated
--(void)logOut {
+// TODO: Добавить указание других причин если нужно (reason=initialPingFailed, pingResponseStatusUnknown)
+-(void)signOut {
     // Don't reconnect after logout
     self.dispatchServer.maintainConnection = NO;
     [self.dispatchServer disconnect];
 
-    if ([ICClient sharedInstance].uID)
-        [self.dispatchServer sendLogEvent:@"SignOut" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
-
     [[ICClient sharedInstance] logout];
-    
-    // Analytics
-    [self trackEvent:@"Sign Out" params:nil];
 }
 
 -(void)submitRating:(NSUInteger)rating
@@ -181,15 +159,8 @@ float const kPingIntervalInSeconds = 6.0f;
         @"pickupLocation": [MTLJSONAdapter JSONDictionaryFromModel:location],
         @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId)
     };
-    
-    [self.dispatchServer sendLogEvent:@"PickupRequest"
-                           parameters:@{ @"clientId":[ICClient sharedInstance].uID,
-                                         @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId) }];
-    
+        
     [self sendMessage:message];
-    
-    // Analytics
-    [self trackEvent:@"Request Vehicle" params:nil];
 }
 
 -(void)cancelInstacabRequest {
@@ -212,13 +183,8 @@ float const kPingIntervalInSeconds = 6.0f;
         @"id": [ICClient sharedInstance].uID,
         @"tripId": [ICTrip sharedInstance].tripId
     };
-
-    [self.dispatchServer sendLogEvent:@"CancelTripRequest" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
     
-    [self sendMessage:message];
-    
-    // Analytics
-    [self trackEvent:@"Cancel Trip" params:nil];
+    [self sendMessage:message];    
 }
 
 #pragma mark - Signup Flow
@@ -238,9 +204,7 @@ float const kPingIntervalInSeconds = 6.0f;
             @"user": [MTLJSONAdapter JSONDictionaryFromModel:info],
         }
     }];
-    
-    [self.dispatchServer sendLogEvent:@"SignUpRequest" parameters:nil];
-    
+        
     [self sendMessage:message];
 }
 
@@ -475,7 +439,7 @@ float const kPingIntervalInSeconds = 6.0f;
     if (_pingLocation.latitude == 0 || _pingLocation.longitude == 0)
         _pingLocation = [ICLocationService sharedInstance].coordinates;
     
-    [self ping:_pingLocation reason:kNearestCabRequestReasonPing success:nil failure:nil];
+    [self ping:_pingLocation success:nil failure:nil];
 }
 
 -(void)stopPing {
@@ -485,76 +449,6 @@ float const kPingIntervalInSeconds = 6.0f;
         [_pingTimer invalidate];
         _pingTimer = nil;
     }
-}
-
-#pragma mark - Analytics
-
-- (void)vehicleViewEventWithReason:(NSString *)reason {
-    [self.dispatchServer sendLogEvent:@"NearestCabRequest" parameters:@{@"reason": reason, @"clientId":[ICClient sharedInstance].uID}];
-}
-
-- (void)trackScreenView:(NSString *)name {
-    [[LocalyticsSession shared] tagScreen:name];
-}
-
-- (void)trackEvent:(NSString *)name params:(NSDictionary *)aParams {
-    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:aParams];
-    CLLocationAccuracy accuracy = [ICLocationService sharedInstance].location.horizontalAccuracy;
-    NSString *accuracyBucket = @"none";
-    
-    if (accuracy > 0 && accuracy <= 10) {
-        accuracyBucket = @"0-10";
-    }
-    else if (accuracy > 10 && accuracy <= 30) {
-        accuracyBucket = @"10-30";
-    }
-    else if (accuracy > 30 && accuracy <= 60) {
-        accuracyBucket = @"30-60";
-    }
-    else if (accuracy > 60 && accuracy <= 100) {
-        accuracyBucket = @"60-100";
-    }
-    else if (accuracy > 100) {
-        accuracyBucket = @"> 100";
-    }
-    
-    [params setObject:accuracyBucket forKey:@"location accuracy"];
-    
-    [[LocalyticsSession shared] tagEvent:name attributes:params];
-}
-
-- (void)trackError:(NSDictionary *)attributes {
-    [self trackEvent:@"Error" params:attributes];
-}
-
-#pragma mark - Log Events
-
-- (void)logMapPageView {
-    [self.dispatchServer sendLogEvent:@"MapPageView" parameters:@{@"clientId":[ICClient sharedInstance].uID}];
-}
-
-- (void)logSignInPageView {
-    [self.dispatchServer sendLogEvent:@"SignInPageView" parameters:nil];
-}
-
-- (void)logSignUpPageView {
-    [self.dispatchServer sendLogEvent:@"SignUpPageView" parameters:nil];
-}
-
-- (void)logSignUpCancel:(ICSignUpInfo *)info {
-    NSDictionary *params = @{
-        @"firstName": @([info.firstName isPresent]),
-        @"lastName": @([info.lastName isPresent]),
-        @"email": @([info.email isPresent]),
-        @"password": @([info.password isPresent]),
-        @"mobile": @([info.mobile isPresent]),
-        @"cardNumber": @([info.cardNumber isPresent]),
-        @"cardExpirationMonth": @([info.cardExpirationMonth isPresent]),
-        @"cardExpirationYear": @([info.cardExpirationYear isPresent]),
-        @"cardCode": @([info.cardCode isPresent]),
-    };
-    
-    [self.dispatchServer sendLogEvent:@"SignUpCancel" parameters:params];
 }
 
 @end

@@ -11,11 +11,14 @@
 
 @interface ICClient ()
 @property (nonatomic, copy) NSNumber *uID;
+@property (nonatomic, copy) NSString *firstName;
+@property (nonatomic, copy) NSString *lastName;
+@property (nonatomic, copy) NSString *mobile;
 @end
 
 @implementation ICClient
 
-@synthesize uID;
+@synthesize uID, firstName, lastName, mobile;
 
 + (instancetype)sharedInstance {
     static ICClient *sharedClient = nil;
@@ -81,19 +84,21 @@
 
 -(void)load {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    self.email = [defaults objectForKey:@"client.email"];
-    self.password = [defaults objectForKey:@"client.password"];
-    self.token = [defaults objectForKey:@"client.token"];
+    self.email = [defaults stringForKey:@"client.email"];
+    self.firstName = [defaults stringForKey:@"client.firstName"];
+    self.lastName = [defaults stringForKey:@"client.lastName"];
+    self.mobile = [defaults stringForKey:@"client.mobile"];
+    self.password = [defaults stringForKey:@"client.password"];
+    self.token = [defaults stringForKey:@"client.token"];
     self.uID = [defaults objectForKey:@"client.id"];
-    
-    NSLog(@"Load client %@", self.email);
 }
 
 -(void)save {
-    NSLog(@"Save client %@", self.email);
-    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:self.email forKey:@"client.email"];
+    [defaults setObject:self.firstName forKey:@"client.firstName"];
+    [defaults setObject:self.lastName forKey:@"client.lastName"];
+    [defaults setObject:self.mobile forKey:@"client.mobile"];
     [defaults setObject:self.password forKey:@"client.password"];
     [defaults setObject:self.token forKey:@"client.token"];
     [defaults setObject:self.uID forKey:@"client.id"];
@@ -103,7 +108,6 @@
 -(void)logout {
     [super clear];
     self.token = nil;
-    self.uID = nil;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"client.token"];

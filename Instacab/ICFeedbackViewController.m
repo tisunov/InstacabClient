@@ -15,6 +15,7 @@
 #import "MBProgressHUD.h"
 #import "UIApplication+Alerts.h"
 #import "ICClientService.h"
+#import "AnalyticsManager.h"
 
 @interface ICFeedbackViewController ()
 
@@ -65,15 +66,12 @@ NSString * const kFeedbackPlaceholder = @"Что мы могли сделать 
     _starRating.editable = YES;
     _starRating.displayMode = EDStarRatingDisplayFull;
     [_starRating setNeedsDisplay];
-    
-//    _keybdSupport = [[SLScrollViewKeyboardSupport alloc] initWithScrollView:(UIScrollView *)self.view];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [[ICClientService sharedInstance] trackScreenView:@"Feedback"];
+    [AnalyticsManager track:@"FeedbackPageView" withProperties:nil];
 }
 
 -(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating
@@ -109,7 +107,6 @@ NSString * const kFeedbackPlaceholder = @"Что мы могли сделать 
                       }
                   }
                   failure:^{
-                      NSLog(@"[Feedback] Failed to submit feedback");
                       [self dismissProgress];
                   }
      ];
@@ -187,13 +184,6 @@ NSString * const kFeedbackPlaceholder = @"Что мы могли сделать 
 
 -(void)handleActionBarDone:(id)sender {
     [_feedbackTextView resignFirstResponder];
-}
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

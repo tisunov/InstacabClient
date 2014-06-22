@@ -11,6 +11,7 @@
 #import "ICClientService.h"
 #import "Colours.h"
 #import "ICFeedbackViewController.h"
+#import "AnalyticsManager.h"
 
 @interface ICReceiptViewController ()
 @end
@@ -104,7 +105,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [[ICClientService sharedInstance] trackScreenView:@"Receipt"];
+    [AnalyticsManager track:@"ReceiptPageView" withProperties:nil];
 }
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context

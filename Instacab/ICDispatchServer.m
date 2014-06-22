@@ -35,8 +35,6 @@
     NSTimer *_pingTimer;
     NSDateFormatter *_dateFormatter;
     NSDateFormatter *_dateFormatterWithT;
-    
-    AFHTTPRequestOperationManager *_httpManager;
 }
 
 NSUInteger const kMaxReconnectAttemps = 1;
@@ -44,7 +42,6 @@ NSUInteger const kInternalPingIntervalInSeconds = 20;
 NSTimeInterval const kConnectTimeoutSecs = 5.0; // 2 seconds connect timeout
 NSTimeInterval const kReconnectInterval = 2.0; // 2 seconds reconnect interval
 
-NSString * const kDevice = @"iphone";
 NSString * const kDispatchServerConnectionChangeNotification = @"connection:notification";
 
 #if !(TARGET_IPHONE_SIMULATOR)
@@ -85,9 +82,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         NSTimeZone *gmt = [NSTimeZone timeZoneWithAbbreviation:@"GMT"];
         _dateFormatter.timeZone = gmt;
         _dateFormatterWithT.timeZone = gmt;
-        
-        _httpManager = [AFHTTPRequestOperationManager manager];
-        _httpManager.requestSerializer = [AFJSONRequestSerializer serializer];        
     }
     return self;
 }
@@ -304,46 +298,6 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 //    _pingTimer = nil;
 //}
 
-#pragma mark - Log Events
-
-- (void)sendLogEvent:(NSString *)eventName parameters:(NSDictionary *)params
-{
-    NSDictionary *eventData = [self buildLogEventWithName:eventName parameters:params];
-    [_httpManager POST:kDispatchServerEventsUrl parameters:eventData success:nil failure:nil];
-}
-
-// TODO: Добавить отправку identifierForVendor (меняется при удалении всех приложений от моего имени с устройства)
-- (NSDictionary *)buildLogEventWithName:(NSString *)eventName
-                             parameters:(NSDictionary *)params
-{
-    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithDictionary:@{
-      @"eventName": eventName,
-      @"app":_appType,
-      @"device":kDevice,
-      @"appVersion":_appVersion,
-      @"deviceOS":_deviceOS,
-      @"deviceModel":_deviceModel,
-      @"deviceModelHuman":_deviceModelHuman,
-      @"deviceId": _deviceId,
-      @"epoch": [self timestampEpoch],
-    }];
-    
-    CLLocationCoordinate2D coordinates = [ICLocationService sharedInstance].coordinates;
-    [data setValue:@[@(coordinates.longitude), @(coordinates.latitude)] forKey:@"location"];
-
-    // Parameters
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:params];
-    
-    CLLocation *location = [ICLocationService sharedInstance].location;
-    [parameters setObject:@(location.altitude) forKey:@"locationAltitude"];
-    [parameters setObject:@(location.verticalAccuracy) forKey:@"locationVerticalAccuracy"];
-    [parameters setObject:@(location.horizontalAccuracy) forKey:@"locationHorizontalAccuracy"];
-    
-    [data setObject:parameters forKey:@"parameters"];
-    
-    return data;
-}
-
 #pragma mark - Misc
 
 - (NSMutableDictionary *)buildGenericDataWithLatitude:(double)latitude longitude:(double)longitude
@@ -354,7 +308,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
     [data setValue:_deviceModelHuman forKey:@"deviceModelHuman"];
     [data setValue:_appVersion forKey:@"appVersion"];
     [data setValue:_appType forKey:@"app"];
-    [data setValue:kDevice forKey:@"device"];
+    [data setValue:@"iphone" forKey:@"device"];
     // Unix epoch time
     [data setValue:[self timestampEpoch] forKey:@"epoch"];
     // Humand readable timestamp

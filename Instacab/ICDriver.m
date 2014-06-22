@@ -42,7 +42,7 @@
 }
 
 -(void)call {
-    NSString *phoneURLString = [NSString stringWithFormat:@"tel:%@", self.mobilePhone];
+    NSString *phoneURLString = [NSString stringWithFormat:@"tel:%@", self.mobile];
     NSURL *phoneURL = [NSURL URLWithString:phoneURLString];
     [[UIApplication sharedApplication] openURL:phoneURL];
 }

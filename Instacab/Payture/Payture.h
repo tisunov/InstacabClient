@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 typedef void (^CardRegisterSuccessBlock)();
-typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description);
+typedef void (^CardRegisterFailureBlock)(NSString *error, NSString *description, NSInteger statusCode);
 
 @interface Payture : NSObject
 

@@ -10,6 +10,7 @@
 #import "ICClientService.h"
 #import "MBProgressHud+Global.h"
 #import "RESideMenu.h"
+#import "AnalyticsManager.h"
 
 @implementation ICTextField
 
@@ -65,7 +66,9 @@
         UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"close_black"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStyleDone target:self action:@selector(back)];
         
         self.navigationItem.rightBarButtonItem = barButton;
-    }    
+    }
+    
+    [AnalyticsManager track:@"PromoPageView" withProperties:nil];
 }
 
 -(void)showMenu {
@@ -76,6 +79,9 @@
     MBProgressHUD *hud = [MBProgressHUD showGlobalProgressHUDWithTitle:@"Загрузка"];
     
     [[ICClientService sharedInstance] applyPromo:_promoCodeTextField.text success:^(ICPing *message) {
+        ICApiResponse *response = message.apiResponse;
+        if (!response) return;
+        
         NSDictionary *data = message.apiResponse.data;
         if (data) {
             NSString *error = data[@"error"];
@@ -99,10 +105,14 @@
                 [hud hide:YES afterDelay:2];
             }
         }
+        
+        [AnalyticsManager track:@"ApplyPromoResponse" withProperties:@{ @"statusCode": message.apiResponse.error.statusCode }];
     } failure:^{
-        _messageLabel.text = @"Произошла сетевая ошибка";
+        _messageLabel.text = @"Произошел сбой сетевого соединения";
         [MBProgressHUD hideGlobalHUD];
     }];
+    
+    [AnalyticsManager track:@"ApplyPromoRequest" withProperties:nil];
 }
 
 - (void)back

@@ -20,15 +20,9 @@ typedef enum : NSUInteger {
     SVMessageTypeTripCanceled,
 } ICMessageType;
 
-typedef enum : NSUInteger {
-    ICErrorTypeInvalidToken,
-    ICErrorTypeNoAvailableDrivers,
-} ICErrorCode;
-
 @interface ICPing : MTLModel<MTLJSONSerializing>
 @property (nonatomic, assign, readonly) ICMessageType messageType;
 @property (nonatomic, copy, readonly) NSString *description;
-@property (nonatomic, assign) ICErrorCode errorCode;
 @property (nonatomic, copy, readonly) NSString *reason;
 @property (nonatomic, strong, readonly) ICCity *city;
 @property (nonatomic, strong, readonly) ICClient *client;

@@ -1,12 +1,12 @@
 //
-//  ICWelcomeViewController.m
+//  ICLaunchViewController.m
 //  Instacab
 //
 //  Created by Pavel Tisunov on 13/01/14.
 //  Copyright (c) 2014 Bright Stripe. All rights reserved.
 //
 
-#import "ICWelcomeViewController.h"
+#import "ICLaunchViewController.h"
 #import "ICLoginViewController.h"
 #import "ICCreateAccountDialog.h"
 #import <QuartzCore/QuartzCore.h>
@@ -21,15 +21,15 @@
 #import "TSMessage.h"
 #import "MBProgressHUD.h"
 #import "ICLinkCardController.h"
-#import "LocalyticsSession.h"
 #import "ICVerifyMobileViewController.h"
 #import "UIViewController+Location.h"
+#import "AnalyticsManager.h"
 
-@interface ICWelcomeViewController ()
+@interface ICLaunchViewController ()
 
 @end
 
-@implementation ICWelcomeViewController {
+@implementation ICLaunchViewController {
     ICClientService *_clientService;
     ICLocationService *_locationService;
     BOOL _inBackground;
@@ -94,21 +94,18 @@
                                                  name:UIApplicationDidBecomeActiveNotification
                                                object:nil];
     
-    [self beginLoading];
+    if ([[ICClient sharedInstance] isSignedIn]) {
+        [AnalyticsManager identify];
+        [self beginSignIn];
+    }
 }
 
 - (void)setupButton:(ICHighlightButton *)button {
-//    button.layer.cornerRadius = 3.0f;
     button.tintAdjustmentMode = UIViewTintAdjustmentModeNormal;
     button.normalColor = [UIColor colorFromHexString:@"#efefef"];
     button.highlightedColor = [UIColor coolGrayColor];
     [button setTitleColor:[UIColor colorFromHexString:@"#4f4f4f"] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-}
-
-- (void)beginLoading {
-    if ([[ICClient sharedInstance] isSignedIn])
-        [self beginSignIn];
 }
 
 - (void)beginSignIn {
@@ -126,9 +123,8 @@
     [self.loadingIndicator stopAnimating];
 }
 
-- (void)pingToRestoreStateReason:(NSString *)reason {
+- (void)ping {
     [_clientService ping:_locationService.coordinates
-                  reason:reason
                  success:^(ICPing *message) {
                      [self pingResponseReceived:message];
                  }
@@ -145,16 +141,14 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification *)n {
-    NSLog(@"+ Will terminate");
+
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)n {
-    NSLog(@"+ Become active");
-    
     _inBackground = NO;
     
     if ([ICClient sharedInstance].isSignedIn) {
-        [self pingToRestoreStateReason:kNearestCabRequestReasonPing];
+        [self ping];
     }
 }
 
@@ -166,6 +160,8 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBarHidden = YES;
     self.sideMenuViewController.panGestureEnabled = NO;
+    
+    [AnalyticsManager track:@"LaunchPageView" withProperties:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -177,12 +173,6 @@
     [TSMessage dismissActiveNotification];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    [_clientService trackScreenView:@"Welcome"];
-}
-
 - (void)locationWasUpdated:(CLLocationCoordinate2D)coordinates {
     
 }
@@ -190,8 +180,6 @@
 - (void)didFailToAcquireLocationWithErrorMsg:(NSString *)errorMsg {
     NSLog(@"%@", errorMsg);
 
-    [_clientService trackError:@{@"type": @"didNotAcquireLocation"}];
-    
     [self stopLoading];
     
     // Show location services error only when trying to auto login
@@ -214,9 +202,6 @@
                                           image:[UIImage imageNamed:@"network-alert"]
                                            type:TSMessageNotificationTypeError
                                        duration:TSMessageNotificationDurationAutomatic];
-    
-    // Analytics
-    [_clientService trackError:@{@"type": @"connectionLost"}];
 }
 
 // Hide any top level Progress HUD that happened to be visible
@@ -260,21 +245,13 @@
     [vc.navigationController dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)setupAnalyticsForClient:(ICClient *)client {
-    [[LocalyticsSession shared] setCustomerName:client.firstName];
-    [[LocalyticsSession shared] setCustomerEmail:client.email];
-    [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
-}
-
 - (void)signInClient:(ICClient *)client {
-    if ([ICClient sharedInstance].state == ICClientStatusPendingRating) {
-        self.navigationController.viewControllers = [self stackedRequestAndReceiptViewControllers];
-    }
-    else {
-        [self pushRequestViewControllerAnimated:NO];
-    }
+    [AnalyticsManager identify];
     
-    [self setupAnalyticsForClient:client];
+    if ([ICClient sharedInstance].state == ICClientStatusPendingRating)
+        self.navigationController.viewControllers = [self stackedRequestAndReceiptViewControllers];
+    else
+        [self pushRequestViewControllerAnimated:NO];
 }
 
 - (IBAction)signup:(id)sender
@@ -288,7 +265,7 @@
 
 -(void)cancelSignUp:(UIViewController *)controller signUpInfo:(ICSignUpInfo *)info {
     if (![info accountDataPresent]) {
-        [_clientService logSignUpCancel:info];
+        [AnalyticsManager trackSignUpCancel:info];
         [controller.navigationController dismissViewControllerAnimated:YES completion:NULL];
         return;
     }
@@ -299,7 +276,7 @@
                     buttonHandler:^(NSUInteger index) {
                         /* ДА */
                         if (index == 1) {
-                            [_clientService logSignUpCancel:info];
+                            [AnalyticsManager trackSignUpCancel:info];
                             [controller.navigationController dismissViewControllerAnimated:YES completion:NULL];
                         }
                     }];
@@ -310,26 +287,28 @@
     
     ICClient *client = [ICClient sharedInstance];
     
-    [_clientService loginWithEmail:client.email
-                          password:client.password
-                           success:^(ICPing *message) {
-                               [self stopLoading];
+    [_clientService signInEmail:client.email
+                       password:client.password
+                        success:^(ICPing *message) {
+                            [self stopLoading];
                                
-                               if (message.messageType == SVMessageTypeError) {
-                                   [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка входа" message:message.description cancelButtonTitle:@"OK"];
-                                   return;
-                               }
-                               
-                               [self signInClient:message.client];
-                               
-                           } failure:^{
-                               [self stopLoading];
-                               
-                               // Analytics
-                               [_clientService trackError:@{@"type": @"loginNetworkError"}];
-                               
-                               [[UIApplication sharedApplication] showAlertWithTitle:@"Отсутствует сетевое соединение" message:@"Не удалось выполнить вход." cancelButtonTitle:@"OK"];
-                           }];
+                            if (message.messageType == SVMessageTypeError) {
+                                [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка входа" message:message.description cancelButtonTitle:@"OK"];
+                                return;
+                            }
+
+                            [self signInClient:message.client];
+                            
+                            [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(200) }];
+                        } failure:^{
+                            [self stopLoading];
+                            
+                            [[UIApplication sharedApplication] showAlertWithTitle:@"Сбой сетевого соединения" message:@"Проверьте свое подключение к сети и повторите попытку" cancelButtonTitle:@"OK"];
+                            
+                            [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(408) }];
+                        }];
+    
+    [AnalyticsManager track:@"SignInRequest" withProperties:nil];
 }
 
 //- (void)showVerifyMobileAlert {
@@ -345,12 +324,10 @@
         return;
 
     ICRequestViewController *vc = [[ICRequestViewController alloc] initWithNibName:@"ICRequestViewController" bundle:nil];
-    if (animate) {
+    if (animate)
         [self.navigationController slideLayerInDirection:kCATransitionFromBottom andPush:vc];
-    }
-    else {
+    else
         [self.navigationController pushViewController:vc animated:NO];
-    }
 }
 
 - (NSArray *)stackedRequestAndReceiptViewControllers {
@@ -380,6 +357,10 @@
             
         case SVMessageTypeError:
             [self stopLoading];
+            
+            [AnalyticsManager track:@"SignOut" withProperties:@{ @"reason": @"initialPingError" }];
+            
+            [[ICClientService sharedInstance] signOut];
             break;
             
         default:

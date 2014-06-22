@@ -15,6 +15,7 @@
 #import "MBprogressHUD.h"
 #import "MBProgressHud+UIViewController.h"
 #import "UIView+AutoLayout.h"
+#import "AnalyticsManager.h"
 
 // http://patrickcrosby.com/2010/04/27/iphone-ipad-uisearchbar-uisearchdisplaycontroller-asynchronous-example.html
 
@@ -193,6 +194,7 @@
     [_overlayView autoPinEdge:ALEdgeBottom toEdge:ALEdgeBottom ofView:searchTableView];
 }
 
+// Sample: https://api.foursquare.com/v2/venues/search?client_id=LYCPRBQO5IHY0SMMHIGT213S100HX3NGRASK0530UA2NCGLJ&client_secret=RMQ12C5UUDQY5NRXWJBLZOH3J1YZ1VGGCDMKB2LJCXES0OHW&intent=browse&limit=5&ll=51.683448%2C39.122151&locale=ru&query=9%20%D1%8F%D0%BD%D0%B2%D0%B0%D1%80%D1%8F%20300&radius=20000&v=20140421
 - (NSArray *)foursquareJSONToLocations:(NSDictionary *)JSON {
     NSMutableArray *locations = [NSMutableArray new];
     for (NSDictionary *venue in JSON[@"response"][@"venues"]) {
@@ -410,13 +412,15 @@
 
 #pragma mark - UISearchBarDelegate
 
-// Sample: https://api.foursquare.com/v2/venues/search?client_id=LYCPRBQO5IHY0SMMHIGT213S100HX3NGRASK0530UA2NCGLJ&client_secret=RMQ12C5UUDQY5NRXWJBLZOH3J1YZ1VGGCDMKB2LJCXES0OHW&intent=browse&limit=5&ll=51.683448%2C39.122151&locale=ru&query=9%20%D1%8F%D0%BD%D0%B2%D0%B0%D1%80%D1%8F%20300&radius=20000&v=20140421
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBarLocal
 {
     [self showProgress];
     [searchBar resignFirstResponder];
     
     [self performQuerySearch];
+    
+    [AnalyticsManager track:@"LocationSearch"
+             withProperties:@{ @"query": searchBar.text }];
 }
 
 - (void)performQuerySearch {

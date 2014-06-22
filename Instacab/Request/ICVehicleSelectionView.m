@@ -16,7 +16,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor colorWithWhite:252.0/255.0 alpha:1.0];
+        self.backgroundColor = [UIColor colorWithWhite:244.0/255.0 alpha:1.0];
         
         _sliderView = [[ICVehicleSelectionSliderView alloc] init];
         [self addSubview:_sliderView];

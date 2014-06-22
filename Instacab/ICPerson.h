@@ -12,8 +12,9 @@
 @property (nonatomic, copy, readonly) NSNumber *uID;
 @property (nonatomic, copy, readonly) NSString *firstName;
 @property (nonatomic, copy, readonly) NSString *lastName;
-@property (nonatomic, copy, readonly) NSString *mobilePhone;
+@property (nonatomic, copy, readonly) NSString *mobile;
 @property (nonatomic, copy, readonly) NSString *rating;
+@property (nonatomic, readonly) NSString *fullName;
 
 -(void)clear;
 

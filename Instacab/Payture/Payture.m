@@ -66,7 +66,7 @@ float const kPaymentProfileTimeout = 15.0f;
     NSTimeInterval sinceCardRegistration = -[_cardRegisteredAt timeIntervalSinceNow];
     if (sinceCardRegistration >= kPaymentProfileTimeout) {
         if (_cardRegisterFailure) {
-            _cardRegisterFailure(@"Банк не сообщил вовремя о добавлении карты", @"Попробуйте повторно сохранить карту.");
+            _cardRegisterFailure(@"Банк не сообщил вовремя о добавлении карты", @"Попробуйте повторно сохранить карту.", 408);
             _cardRegisterFailure = nil;
             _cardRegisterSuccess = nil;
         }
@@ -80,7 +80,6 @@ float const kPaymentProfileTimeout = 15.0f;
     
     // Poll server for update
     [[ICClientService sharedInstance] ping:coord
-                                    reason:kNearestCabRequestReasonPing
                                    success:^(ICPing *message) {
                                        if (message.client.hasCardOnFile) {
                                            if (_cardRegisterSuccess) {
@@ -148,19 +147,19 @@ float const kPaymentProfileTimeout = 15.0f;
                            [self waitForPaymentProfileSuccess:success failure:failure];
                        }
                        else {
-                           NSLog(@"Error: Submit failed. Try again");
-                           failure(@"Ваш банк не может обработать эту карту", @"Свяжитесь с вашим банком и повторите попытку. Если проблема не будет устранена, укажите другую карту.");
+                           NSLog(@"Error: Payture refused card. Try again");
+                           failure(@"Ваш банк не может обработать эту карту", @"Свяжитесь с вашим банком и повторите попытку. Если проблема не будет устранена, укажите другую карту.", 406);
                        }
                    }
                    failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                        NSLog(@"Error: %@", error);
-                       failure(@"Ошибка передачи данных в банк", @"Пожалуйста, повторите попытку.");
+                       failure(@"Ошибка передачи данных в банк", @"Пожалуйста, повторите попытку.", [operation.response statusCode]);
                    }
               ];
          }
          failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              NSLog(@"Error: %@", error);
-             failure(@"Ошибка связи с банком", @"Пожалуйста, повторите попытку.");
+             failure(@"Ошибка связи с банком", @"Пожалуйста, повторите попытку.", [operation.response statusCode]);
          }
      ];
 }

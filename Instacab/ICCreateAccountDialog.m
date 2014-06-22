@@ -19,6 +19,7 @@
 #import "Colours.h"
 #import <ObjectiveSugar/ObjectiveSugar.h>
 #import "QCustomAppearance.h"
+#import "AnalyticsManager.h"
 
 @interface ICCreateAccountDialog ()
 
@@ -91,9 +92,6 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
     next.enabled = NO;
     [self setupBarButton:next];
     self.navigationItem.rightBarButtonItem = next;
-    
-    [_clientService trackScreenView:@"Create Account"];
-    [_clientService logSignUpPageView];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -113,6 +111,8 @@ NSUInteger const kValidMobilePhoneNumberLength = 18;
              reduce:^(NSString *email, NSString *mobile, NSString *password) {
                  return @(email.length > 0 && mobile.length > 0 && password.length > 0);
              }];
+    
+    [AnalyticsManager track:@"SignUpPageView" withProperties:nil];
 }
 
 // Handle Done button

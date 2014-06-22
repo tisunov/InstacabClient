@@ -15,6 +15,7 @@
 #import "Colours.h"
 #import "Constants.h"
 #import "UIActionSheet+Blocks.h"
+#import "AnalyticsManager.h"
 
 @interface ICAccountViewController ()
 
@@ -81,7 +82,7 @@
         
         // Logout
         QButtonElement *button = [[QButtonElement alloc] initWithTitle:@"ВЫЙТИ"];
-        button.onSelected = ^{            
+        button.onSelected = ^{
             [UIActionSheet presentOnView:self.view
                                withTitle:@"Уверены что хотите выйти?"
                             cancelButton:@"Остаться"
@@ -89,7 +90,11 @@
                             otherButtons:nil
                                 onCancel:nil
                            onDestructive:^(UIActionSheet *actionSheet) {
-                               [[ICClientService sharedInstance] logOut];
+                               // Notify analytics before actually signing out to track clientId
+                               [AnalyticsManager track:@"SignOut" withProperties:@{ @"reason": @"userInitiated" }];
+                               
+                               [[ICClientService sharedInstance] signOut];
+                               
                                [[NSNotificationCenter defaultCenter] postNotificationName:kLogoutNotification object:self];
                            }
                          onClickedButton:nil];
@@ -116,8 +121,10 @@
     
     [self entryElementWithKey:@"firstName"].textValue = client.firstName;
     [self entryElementWithKey:@"lastName"].textValue = client.lastName;
-    [self entryElementWithKey:@"mobile"].textValue = client.mobilePhone;
+    [self entryElementWithKey:@"mobile"].textValue = client.mobile;
     [self entryElementWithKey:@"email"].textValue = client.email;
+    
+    [AnalyticsManager track:@"AccountPageView" withProperties:nil];
 }
 
 - (void)showMenuNavbarButton {

@@ -109,7 +109,7 @@
                     <rect key="frame" x="20" y="100" width="280" height="24"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
-                    <color key="textColor" red="0.17205436860000001" green="0.17205436860000001" blue="0.17205436860000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" white="0.37899178832116792" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>

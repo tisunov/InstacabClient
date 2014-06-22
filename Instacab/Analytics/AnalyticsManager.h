@@ -7,7 +7,19 @@
 //
 
 #import "ICSingleton.h"
+#import "ICSignUpInfo.h"
+#import "ICLocation.h"
 
+// Track only events and actions
+// Events - something that happens: MapPageView
+// Actions - something that user does: Sign In
 @interface AnalyticsManager : ICSingleton
++ (void)identify;
++ (void)track:(NSString *)event withProperties:(NSDictionary *)properties;
++ (void)trackSignUpCancel:(ICSignUpInfo *)info;
++ (void)trackRequestVehicle:(NSNumber *)vehicleViewId pickupLocation:(ICLocation *)location;
++ (NSString *)trackFareEstimate:(NSNumber *)vehicleViewId
+                 pickupLocation:(ICLocation *)pickupLocation
+                 destinationLocation:(ICLocation *)destinationLocation;
 
 @end

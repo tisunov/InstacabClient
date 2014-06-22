@@ -21,7 +21,6 @@ extern NSString * const kFieldPassword;
 -(id)initWithAppType:(NSString *)appType keepConnection:(BOOL)keep infiniteResend:(BOOL)infiniteResend;
 -(void)sendMessage:(NSDictionary *)message;
 -(void)sendMessage:(NSDictionary *)message coordinates:(CLLocationCoordinate2D)coordinates;
--(void)trackError:(NSDictionary *)attributes;
 
 -(void)cancelRequestTimeout;
 

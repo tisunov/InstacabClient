@@ -16,7 +16,7 @@
 #import "ICVerifyMobileViewController.h"
 #import "ICClientService.h"
 #import "MBProgressHud+Global.h"
-//#import "ACTReporter.h"
+#import "AnalyticsManager.h"
 
 @interface ICCreateProfileDialog ()
 
@@ -65,8 +65,6 @@
     next.enabled = NO;
     [self setupBarButton:next];
     self.navigationItem.rightBarButtonItem = next;
-    
-    [[ICClientService sharedInstance] trackScreenView:@"Create Profile"];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -86,6 +84,8 @@
              reduce:^(NSString *first, NSString *last) {
                  return @(first.length > 0 && last.length > 0);
              }];
+    
+    [AnalyticsManager track:@"CreateProfilePageView" withProperties:nil];
 }
 
 -(void)cancel:(id)sender {
@@ -122,9 +122,6 @@
                 else {
                     [self saveClient:response.client];
                     
-                    // Google iOS in-app conversion tracking snippet
-//                    [ACTConversionReporter reportWithConversionID:@"1025317418" label:@"zljtCPb0_QgQqrT06AM" value:@"0.000000" isRepeatable:YES];
-                    
                     [self.navigationController dismissViewControllerAnimated:YES completion:^{
                         [self.delegate signUpCompleted];
                     }];
@@ -136,13 +133,14 @@
                 [[UIApplication sharedApplication] showAlertWithTitle:errorTitle message:errorMessage cancelButtonTitle:@"OK"];
             }];
     
-    
+    [AnalyticsManager track:@"SignUpRequest" withProperties:nil];
+}
+
 //    ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
 //    controller.signupInfo = self.signupInfo;
 //    controller.delegate = self.delegate;
-//    
+//
 //    [self.navigationController pushViewController:controller animated:YES];
-}
 
 - (void)saveClient:(ICClient *)registeredClient
 {

@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "RESideMenu.h"
 
-@interface ICSidebarController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ICSidebarController : UIViewController <UITableViewDataSource, UITableViewDelegate, RESideMenuDelegate>
 
 @end

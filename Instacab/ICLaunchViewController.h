@@ -1,5 +1,5 @@
 //
-//  ICWelcomeViewController.h
+//  ICLaunchViewController.h
 //  Instacab
 //
 //  Created by Pavel Tisunov on 13/01/14.
@@ -13,7 +13,7 @@
 #import "ICSignUpFlowDelegate.h"
 #import "ICLoginViewController.h"
 
-@interface ICWelcomeViewController : UIViewController<ICLocationServiceDelegate, ICSignUpFlowDelegate, ICLoginViewControllerDelegate, BaseServiceDelegate>
+@interface ICLaunchViewController : UIViewController<ICLocationServiceDelegate, ICSignUpFlowDelegate, ICLoginViewControllerDelegate, BaseServiceDelegate>
 @property (strong, nonatomic) IBOutlet ICHighlightButton *signinButton;
 @property (strong, nonatomic) IBOutlet ICHighlightButton *signupButton;
 @property (strong, nonatomic) IBOutlet UILabel *loadingLabel;

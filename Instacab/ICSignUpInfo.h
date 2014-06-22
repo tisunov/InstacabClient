@@ -9,7 +9,7 @@
 #import "Mantle.h"
 
 @interface NSString (Helper)
-- (BOOL)isPresent;
+- (int)presentAsInt;
 @end
     
 @interface ICSignUpInfo : MTLModel <MTLJSONSerializing>

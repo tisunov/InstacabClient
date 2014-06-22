@@ -13,6 +13,8 @@
 #import "Colours.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Views/ICLocationLabelView.h"
+#import "AnalyticsManager.h"
+#import "ICSession.h"
 
 @interface ICFareEstimateViewController ()
 
@@ -26,6 +28,7 @@
     UILabel *_fareLabel;
     UILabel *_descriptionLabel;
     ICLocationLabelView *_locationLabelView;
+    NSString *_requestUuid;
 }
 
 NSString *const kFareEstimateError = @"Произошла ошибка сети при расчете тарифа. Пожалуйста проверьте свое подключение к сети и попробуйте снова.";
@@ -66,6 +69,8 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     _estimateViewLeftConstraint = [_fareEstimateView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:self.view.bounds.size.width relation:NSLayoutRelationLessThanOrEqual];
     
     [self setupFareEstimateView];
+    
+    [AnalyticsManager track:@"FareEstimatePageView" withProperties:nil];
 }
 
 -(void)handleFareEstimateSwipe:(UISwipeGestureRecognizer *)swipeRecognizer {
@@ -103,10 +108,6 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     newDestinationButton.layer.borderColor = [UIColor blueberryColor].CGColor;
     newDestinationButton.titleLabel.font = [UIFont systemFontOfSize:15];
     newDestinationButton.tintColor = [UIColor blueberryColor];
-//    [newDestinationButton setTitleColor:[UIColor blueberryColor] forState:UIControlStateNormal];
-//    newDestinationButton.tintAdjustmentMode = UIViewTintAdjustmentModeDimmed;
-//    newDestinationButton.normalColor = [UIColor colorWithRed:87/255.0 green:87/255.0 blue:101/255.0 alpha:1];
-//    newDestinationButton.highlightedColor = [UIColor blueberryColor];
     [newDestinationButton setTitle:@"НОВОЕ МЕСТО НАЗНАЧЕНИЯ" forState:UIControlStateNormal];
     [newDestinationButton addTarget:self action:@selector(changeDestination:) forControlEvents:UIControlEventTouchUpInside];
     [_fareEstimateView addSubview:newDestinationButton];
@@ -179,7 +180,13 @@ NSString *const kFareDescription = @"Тариф может изменяться 
         [self showEstimateError];
     }];
     
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];    
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
+    // Analytics
+    _requestUuid =
+        [AnalyticsManager trackFareEstimate:@([ICSession sharedInstance].currentVehicleViewId)
+                             pickupLocation:_pickupLocation
+                        destinationLocation:destination];
 }
 
 -(void)showEstimateError {
@@ -201,6 +208,8 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     _fareLabel.hidden = NO;
     
     _descriptionLabel.text = kFareDescription;
+    
+    [AnalyticsManager track:@"FareEstimateResponse" withProperties:@{ @"fare": fare, @"requestUuid": _requestUuid }];
 }
 
 @end
