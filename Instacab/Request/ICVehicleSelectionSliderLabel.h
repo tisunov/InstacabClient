@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ICVehicleSelectionSliderLabel : UILabel
--(void)setAvailable:(BOOL)available;
+@property (nonatomic, assign) BOOL available;
 
 @end

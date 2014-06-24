@@ -39,7 +39,8 @@
         @"paymentProfile": @"paymentProfile",
         @"hasConfirmedMobile": @"hasConfirmedMobile",
         @"lastEstimatedTrip": @"lastEstimatedTrip",
-        @"referralCode": @"referralCode"
+        @"referralCode": @"referralCode",
+        @"isAdmin": @"isAdmin"
     }];
 }
 
@@ -49,6 +50,10 @@
 
 + (NSValueTransformer *)paymentProfileJSONTransformer {
     return [NSValueTransformer mtl_JSONDictionaryTransformerWithModelClass:ICPaymentProfile.class];
+}
+
++ (NSValueTransformer *)isAdminJSONTransformer {
+    return [NSValueTransformer valueTransformerForName:MTLBooleanValueTransformerName];
 }
 
 + (NSValueTransformer *)stateJSONTransformer {

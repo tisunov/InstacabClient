@@ -134,8 +134,6 @@
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)n {
-    NSLog(@"+ Enter background");
-    
     _inBackground = YES;
     [_clientService disconnectWithoutTryingToReconnect];
 }

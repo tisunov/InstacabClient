@@ -120,6 +120,12 @@
 #define COCOAPODS_VERSION_MINOR_Mantle_extobjc 4
 #define COCOAPODS_VERSION_PATCH_Mantle_extobjc 1
 
+// Mixpanel
+#define COCOAPODS_POD_AVAILABLE_Mixpanel
+#define COCOAPODS_VERSION_MAJOR_Mixpanel 2
+#define COCOAPODS_VERSION_MINOR_Mixpanel 4
+#define COCOAPODS_VERSION_PATCH_Mixpanel 0
+
 // ObjectiveSugar
 #define COCOAPODS_POD_AVAILABLE_ObjectiveSugar
 #define COCOAPODS_VERSION_MAJOR_ObjectiveSugar 1

@@ -114,13 +114,19 @@
                                 
                                 [strongSelf cancel];
                             }
+                            
+                            [AnalyticsManager track:@"ConfirmMobileResponse" withProperties: @{ @"statusCode": error.statusCode }];
                         }
                         failure:^{
                             [MBProgressHUD hideGlobalHUD];
                         }];
+    
+    [AnalyticsManager track:@"ConfirmMobileRequest" withProperties:nil];
 }
 
 - (IBAction)resendConfirmation:(id)sender {
+    [AnalyticsManager track:@"ResendMobileConfirmationRequest" withProperties:nil];
+    
     [[ICClientService sharedInstance] requestMobileConfirmation:^(ICPing *message){
         [[UIApplication sharedApplication] showAlertWithTitle:@"Готово!" message:@"В течение нескольких секунд вам придет СМС"];
     }];

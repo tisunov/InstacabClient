@@ -32,6 +32,7 @@ PODS:
     - Mantle/extobjc
   - Mantle/extobjc (1.4.1)
   - MBProgressHUD (0.8)
+  - Mixpanel (2.4.0)
   - ObjectiveSugar (1.1.0)
   - PaymentKit (1.0.5)
   - PromiseKit (0.9.7.1):
@@ -88,6 +89,7 @@ DEPENDENCIES:
   - iOSBlocks (from `https://github.com/dzenbot/iOSBlocks.git`)
   - Mantle (~> 1.0)
   - MBProgressHUD (from `https://github.com/dannybabiy/MBProgressHUD.git`, branch `ios7`)
+  - Mixpanel
   - ObjectiveSugar
   - PaymentKit (from `https://github.com/stripe/PaymentKit.git`)
   - PromiseKit
@@ -134,6 +136,7 @@ SPEC CHECKSUMS:
   iOSBlocks: fecd9f6ff80da30bc23b9d35ccf78f483baa8043
   Mantle: 1ca9c0fa84d3d3fc98524e7229f30489b6dd44e5
   MBProgressHUD: 2bbc6f470111daf7f3eaa4eb12b8cbf01c4c0622
+  Mixpanel: 8cdf6fc831ae1f7515f0d8164dcc381990e0a23a
   ObjectiveSugar: f48793f5902c77cfc02a4ce46d2e8ecddcad4dc2
   PaymentKit: 92df7c2fb4fb3b4e0c3f5fb8c8e75cc528025126
   PromiseKit: 2eb1c6754c9b9a1577e6886dac4c4cf82fc6a447

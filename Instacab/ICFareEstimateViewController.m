@@ -82,6 +82,16 @@ NSString *const kFareDescription = @"Тариф может изменяться 
 - (void)setupFareEstimateView {
     _locationLabelView = [[ICLocationLabelView alloc] init];
     [_fareEstimateView addSubview:_locationLabelView];
+
+//    UILabel *descLabel = [[UILabel alloc] initForAutoLayout];
+//    descLabel.font = [UIFont systemFontOfSize:12];
+//    descLabel.textColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
+//    descLabel.adjustsFontSizeToFitWidth = YES;
+//    descLabel.minimumScaleFactor = 0.5;
+//    descLabel.hidden = NO;
+//    descLabel.textAlignment = NSTextAlignmentCenter;
+//    descLabel.text = @"Instacab";
+//    [_fareEstimateView addSubview:descLabel];
     
     _fareLabel = [[UILabel alloc] initForAutoLayout];
     _fareLabel.font = [UIFont systemFontOfSize:60];

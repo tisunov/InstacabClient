@@ -947,33 +947,38 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)updateVehicleSelector {
-    NSLog(@" [+] updateVehicleSelector");
-    
     ICCity *city = [ICCity shared];
     
     [_vehicleSelector layoutWithOrderedVehicleViews:city.orderedVehicleViews selectedViewId:city.defaultVehicleViewId];
+    
+    [self updateVehicleViewAvailability];
 }
 
 -(void)onCityChanged:(NSNotification *)note {
     [self updateSetPickup];
-    [self updateAllowFareEstimate];
     [self updateVehicleSelector];
 }
 
-// TODO: Отправить в track event количество автомобилей и minEta для текущего vehicleViewId
-// Возьми код из setupAnalytics вверху
 -(void)onNearbyVehiclesChanged:(NSNotification *)note {
     [self updateSetPickup];
     [self updateMapMarkers];
+    [self updateVehicleViewAvailability];
+}
+
+-(void)updateVehicleViewAvailability {
+    // dim button icon and labels for unavailable vehicle views
+    NSMutableDictionary *map = [NSMutableDictionary dictionary];
+    [[ICCity shared].vehicleViews enumerateKeysAndObjectsUsingBlock:^(NSNumber *vehicleViewId, ICVehicleView *vehicleView, BOOL *stop) {
+        
+        if (vehicleView.available)
+            map[vehicleViewId] = @(YES);
+    }];
+    [_vehicleSelector setAvailableVehicleViewIdMap:map];
 }
 
 -(void)onTripChanged:(NSNotification *)note {
     [self updateTripStatus];
     [self updateMapMarkers];
-}
-
--(void)updateAllowFareEstimate {
-//    _fareEstimateButton.enabled = [self selectedVehicleView].allowFareEstimate;
 }
 
 -(void)updateTripStatus {
@@ -1086,9 +1091,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     }
     else {
         _confirmEtaLabel.text = vehicleView.noneAvailableString;
-        
         [_pickupCallout clearEta];
     }
+    
+    _fareEstimateButton.alpha = vehicleView.allowFareEstimate ? 1.0f : 0.6f;
 }
 
 - (ICNearbyVehicle *)selectedVehicle {
@@ -1250,6 +1256,12 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 - (IBAction)handleFareEsimateTap:(id)sender {
+    ICVehicleView *view = [self selectedVehicleView];
+    if (!view.allowFareEstimate) {
+        [[UIApplication sharedApplication] showAlertWithTitle:nil message:[NSString stringWithFormat:@"Оценка стоимости не доступна для %@", view.description]];
+        return;
+    }
+    
     ICFareEstimateViewController *vc = [[ICFareEstimateViewController alloc] initWithPickupLocation:self.pickupLocation];
     
     [self presentModalViewController:vc];

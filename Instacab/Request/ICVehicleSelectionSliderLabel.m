@@ -7,6 +7,7 @@
 //
 
 #import "ICVehicleSelectionSliderLabel.h"
+#import "Colours.h"
 
 @implementation ICVehicleSelectionSliderLabel
 
@@ -27,7 +28,7 @@
 }
 
 -(void)setAvailable:(BOOL)available {
-    // TODO: Изменить цвет текста на темно-серый или светло-серый
+    self.textColor = available ? [UIColor black25PercentColor] : [UIColor colorWithWhite:0.6f alpha:1.0f];
 }
 
 @end

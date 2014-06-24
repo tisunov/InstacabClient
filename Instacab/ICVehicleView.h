@@ -26,6 +26,7 @@
 @property (nonatomic, copy, readonly) NSString *addCreditCardButtonTitle;
 
 @property (nonatomic, readonly) NSString *marketingRequestPickupButtonString;
+@property (nonatomic, readonly) BOOL available;
 
 - (void)loadMonoImage:(void (^)(UIImage *image))successBlock;
 - (void)loadMapImage:(void (^)(UIImage *image))successBlock;

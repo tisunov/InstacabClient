@@ -80,18 +80,11 @@
     // Production Key: 80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25
     [[LocalyticsSession shared] LocalyticsSession:@"80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25"];
 #endif
+    [[LocalyticsSession shared] open];
+    [[LocalyticsSession shared] upload];
 #endif
     
     [[ICLocationService sharedInstance] startUpdatingLocation];
-}
-
-- (void)setupBugTracking {
-// Developed by the same developer, these two frameworks offer ability to stand up your own ad-hoc beta app distribution service and incorporate live crash reporting. This situation would be akin to having your own internal TestFlightApp portal and framework available. These frameworks are used by the Flipboard app. The PLCrashReporter framework is at the heart of QuincyKit.
-//    https://github.com/TheRealKerni/QuincyKit
-//    http://code.google.com/p/plcrashreporter/
-    
-//  Beta distribution
-//    https://github.com/TheRealKerni/HockeyKit
 }
 
 - (void)setupLogging {
@@ -132,18 +125,6 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
 #if !(TARGET_IPHONE_SIMULATOR)
-#ifdef DEBUG
-    [Heap setAppId:@"755342236"];
-    
-    // Development Key: f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25
-    [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
-#else
-    [Heap setAppId:@"755342236"];
-    
-    // Production Key: 80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25
-    [[LocalyticsSession shared] LocalyticsSession:@"80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25"];
-#endif
-    
     [[LocalyticsSession shared] resume];
     [[LocalyticsSession shared] upload];
 #endif

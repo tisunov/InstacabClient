@@ -54,6 +54,8 @@
 
 + (void)identify {
     ICClient *client = [ICClient sharedInstance];
+    if (client.isAdmin) return;
+    
     NSMutableDictionary* userProperties = [NSMutableDictionary dictionaryWithDictionary:@{
         @"handle": client.uID,
         @"email": client.email,
@@ -71,6 +73,8 @@
     [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
     [[LocalyticsSession shared] setCustomerName:client.fullName];
     [[LocalyticsSession shared] setCustomerEmail:client.email];
+    
+    [[LocalyticsSession shared] setCustomDimension:0 value: client.hasCardOnFile ? @"Card" : @"Cash"]; // Payment Profile Type
 }
 
 + (void)track:(NSString *)event withProperties:(NSDictionary *)properties {
@@ -81,6 +85,8 @@
 }
 
 + (void)trackThirdParty:(NSString *)event withProperties:(NSDictionary *)properties {
+    if ([ICClient sharedInstance].isAdmin) return;
+    
     [Heap track:event withProperties:properties];
     
     [[LocalyticsSession shared] tagEvent:event attributes:properties];
@@ -147,6 +153,8 @@
 
 - (void)logEvent:(NSString *)eventName parameters:(NSDictionary *)params
 {
+    if ([ICClient sharedInstance].isAdmin) return;
+    
     NSDictionary *eventData = [self buildLogEvent:eventName parameters:params];
     [_httpManager POST:kEventsApiUrl parameters:eventData success:nil failure:nil];
 }

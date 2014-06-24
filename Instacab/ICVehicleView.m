@@ -10,6 +10,7 @@
 #import "ICImage.h"
 #import "ICImageDownloader.h"
 #import "FICImageCache.h"
+#import "ICNearbyVehicles.h"
 
 NSString * const kRequestPickup = @"Заказать Автомобиль";
 
@@ -85,6 +86,9 @@ NSString * const kRequestPickup = @"Заказать Автомобиль";
     return self.requestPickupButtonString.length ? [self.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:self.description] : kRequestPickup;
 }
 
+-(BOOL)available {
+    return [[ICNearbyVehicles shared] vehicleByViewId: self.uniqueId].available;
+}
 
 - (BOOL)isEqual:(id)object {
     if (self == object) {

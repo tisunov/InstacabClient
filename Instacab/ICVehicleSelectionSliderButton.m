@@ -10,7 +10,7 @@
 
 @implementation UIImage (Tinted)
 
-// TODO: Для экономии батареи делать это только один раз!
+// TODO: Для экономии батареи делать это только один раз для каждой картинки с ключом по URL!
 - (UIImage *)tintedImageWithColor:(UIColor *)tintColor {
     UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -36,12 +36,15 @@
 
 @end
 
-@implementation ICVehicleSelectionSliderButton
+@implementation ICVehicleSelectionSliderButton {
+}
 
-
--(void)setIcon:(UIImage *)icon {
-    [self setImage:icon forState:UIControlStateNormal];
-    [self setImage:[icon tintedImageWithColor:self.tintColor] forState:UIControlStateHighlighted];
+// PERFORMANCE ENHANCE ME:
+-(void)updateIcon:(UIImage *)image available:(BOOL)available {
+    [self setImage:[image tintedImageWithColor:self.tintColor] forState:UIControlStateHighlighted];
+    
+    image = available ? image : [image tintedImageWithColor:[UIColor lightGrayColor]];
+    [self setImage:image forState:UIControlStateNormal];
 }
 
 #pragma mark Initialization

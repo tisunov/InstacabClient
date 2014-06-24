@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface ICVehicleSelectionSliderButton : UIButton
-@property (nonatomic, strong) UIImage *icon;
+-(void)updateIcon:(UIImage *)image available:(BOOL)available;
 @end

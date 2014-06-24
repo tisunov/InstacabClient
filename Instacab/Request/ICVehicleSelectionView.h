@@ -15,4 +15,5 @@
 @property (nonatomic, weak) id<ICVehicleSelectionViewDelegate> delegate;
 
 -(void)layoutWithOrderedVehicleViews:(NSArray *)vehicleViews selectedViewId:(NSNumber *)viewId;
+-(void)setAvailableVehicleViewIdMap:(NSDictionary *)map;
 @end

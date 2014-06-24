@@ -42,6 +42,10 @@
     }
 }
 
+-(void)setAvailableVehicleViewIdMap:(NSDictionary *)map {
+    [_sliderView setAvailableVehicleViewIdMap:map];
+}
+
 #pragma mark - Delegate
 
 -(void)setDelegate:(id<ICVehicleSelectionViewDelegate>)delegate {

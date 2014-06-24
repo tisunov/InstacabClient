@@ -129,6 +129,7 @@
 
 -(void)setEta:(long)eta {
     _etaLabel.text = [NSString stringWithFormat:@"%ld", eta];
+    
 }
 
 -(void)clearEta {

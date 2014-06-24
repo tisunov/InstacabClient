@@ -21,6 +21,7 @@
     int _buttonRightCenterBound;
     CGPoint _buttonOffsetPoint;
     NSMutableArray *_labelViews;
+    NSDictionary *_availableVehicleViewIdMap;
 }
 
 NSInteger const kWidthPx = 320;
@@ -139,7 +140,7 @@ NSInteger const kNodeTapTag = 2;
 }
 
 -(void)clearLabelViews {
-    for (UILabel *label in _labelViews) {
+    for (ICVehicleSelectionSliderLabel *label in _labelViews) {
         [label removeFromSuperview];
     }
     [_labelViews removeAllObjects];
@@ -150,6 +151,21 @@ NSInteger const kNodeTapTag = 2;
         if (view.tag == kNodeTapTag)
             [view removeFromSuperview];
     }
+}
+
+-(BOOL)isVehicleViewAvailable:(NSInteger)index {
+    if (!_availableVehicleViewIdMap) return NO;
+    
+    ICVehicleView *view = _vehicleViews[index];
+    return [_availableVehicleViewIdMap objectForKey:view.uniqueId] != nil;
+}
+
+-(void)setAvailableVehicleViewIdMap:(NSDictionary *)map {
+    _availableVehicleViewIdMap = map;
+    [_labelViews enumerateObjectsUsingBlock:^(ICVehicleSelectionSliderLabel *label, NSUInteger idx, BOOL *stop) {
+        label.available = [self isVehicleViewAvailable:idx];
+    }];
+    [self updateVehicleSliderIcon];
 }
 
 - (void)updateOrderedVehicleViews:(NSArray *)vehicleViews selectedIndex:(int)selectedIndex {
@@ -202,9 +218,9 @@ NSInteger const kNodeTapTag = 2;
     _selectedIndex = index;
     [self updateVehicleSliderIcon];
     
-    // TODO: При первой установке VehicleViews не нужно сообщать delegate что Vehicle View изменился!
     [ICSession sharedInstance].currentVehicleViewId = [self.selectedVehicleView.uniqueId intValue];
-    
+
+    // TODO: При первой установке VehicleViews не нужно сообщать delegate что Vehicle View изменился!
     if ([self.delegate respondsToSelector:@selector(vehicleViewChanged)]) {
         [self.delegate vehicleViewChanged];
     }
@@ -224,7 +240,7 @@ NSInteger const kNodeTapTag = 2;
     
     ICVehicleView *vehicleView = _vehicleViews[_selectedIndex];
     [vehicleView loadMonoImage:^(UIImage *image) {
-        _button.icon = image;
+        [_button updateIcon:image available:[self isVehicleViewAvailable:_selectedIndex]];
     }];
 }
 
