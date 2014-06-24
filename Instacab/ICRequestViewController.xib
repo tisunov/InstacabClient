@@ -21,9 +21,6 @@
                 <outlet property="driverRatingLabel" destination="pfy-cl-tfc" id="XWr-wg-ax5"/>
                 <outlet property="driverView" destination="tGL-uD-7oP" id="fzq-hZ-OpB"/>
                 <outlet property="fareEstimateButton" destination="IYU-ee-siK" id="mfP-iW-q2X"/>
-                <outlet property="pickupBtn" destination="WW7-hF-aDX" id="mZP-Nb-5nb"/>
-                <outlet property="pickupEtaLabel" destination="7tm-9b-PCc" id="kWV-E2-SKM"/>
-                <outlet property="pickupView" destination="T9t-2n-lFJ" id="c6h-wZ-SaT"/>
                 <outlet property="promoCodeButton" destination="QPr-Ri-iSH" id="x4x-q4-dSU"/>
                 <outlet property="searchAddressButton" destination="WlW-QL-mBW" id="CBa-i9-xye"/>
                 <outlet property="statusLabel" destination="4fC-fN-8Km" id="hVC-uP-ft6"/>
@@ -177,45 +174,6 @@
                     </subviews>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.91000000000000003" colorSpace="calibratedRGB"/>
                 </view>
-                <view hidden="YES" contentMode="scaleToFill" id="T9t-2n-lFJ" userLabel="PickupView">
-                    <rect key="frame" x="0.0" y="402" width="320" height="78"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
-                    <subviews>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="request_mask" id="HfH-sb-heg">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="78"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WW7-hF-aDX" customClass="ICHighlightButton">
-                            <rect key="frame" x="20" y="8" width="280" height="40"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" red="0.24131059954753478" green="0.76225685586734693" blue="0.3890975385997309" alpha="1" colorSpace="calibratedRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                            <state key="normal" title="ВЫБРАТЬ МЕСТО ПОСАДКИ">
-                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </state>
-                            <state key="selected">
-                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </state>
-                            <state key="highlighted">
-                                <color key="titleColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
-                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </state>
-                            <connections>
-                                <action selector="requestPickup:" destination="-1" eventType="touchUpInside" id="OUY-w8-kPn"/>
-                            </connections>
-                        </button>
-                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="5" id="7tm-9b-PCc">
-                            <rect key="frame" x="20" y="52" width="280" height="24"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="10"/>
-                            <color key="textColor" red="0.17205436862244894" green="0.17205436862244894" blue="0.17205436862244894" alpha="1" colorSpace="calibratedRGB"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                    </subviews>
-                </view>
                 <view alpha="0.94999999999999996" contentMode="scaleToFill" id="tGL-uD-7oP" userLabel="DriverView">
                     <rect key="frame" x="0.0" y="480" width="320" height="75"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinY="YES"/>
@@ -276,7 +234,6 @@
         <image name="farequote_icon_white" width="16" height="16"/>
         <image name="promo_icon" width="16" height="16"/>
         <image name="promo_icon_white" width="16" height="16"/>
-        <image name="request_mask" width="320" height="78"/>
         <image name="search_icon_up" width="16" height="16"/>
         <image name="star" width="26" height="26"/>
     </resources>

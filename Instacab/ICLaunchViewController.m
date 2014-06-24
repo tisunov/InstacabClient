@@ -98,6 +98,8 @@
         [AnalyticsManager identify];
         [self beginSignIn];
     }
+    
+    [AnalyticsManager track:@"LaunchPageView" withProperties:nil];
 }
 
 - (void)setupButton:(ICHighlightButton *)button {
@@ -158,8 +160,6 @@
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     self.navigationController.navigationBarHidden = YES;
     self.sideMenuViewController.panGestureEnabled = NO;
-    
-    [AnalyticsManager track:@"LaunchPageView" withProperties:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -283,6 +283,8 @@
 - (void)signUpCompleted {
     [self beginSignIn];
     
+    [AnalyticsManager track:@"SignInRequest" withProperties:nil];
+    
     ICClient *client = [ICClient sharedInstance];
     
     [_clientService signInEmail:client.email
@@ -305,8 +307,6 @@
                             
                             [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(408) }];
                         }];
-    
-    [AnalyticsManager track:@"SignInRequest" withProperties:nil];
 }
 
 //- (void)showVerifyMobileAlert {

@@ -100,14 +100,18 @@
 
 -(void)onTouchDown:(id)sender {
     _clockImageView.tintColor = [UIColor colorWithWhite:148/255.0 alpha:1.0];
+    _etaLabel.textColor = _etaMinutesLabel.textColor = _clockImageView.tintColor;
 }
 
 -(void)onTouchUp:(id)sender {
     _clockImageView.tintColor = [UIColor colorWithWhite:248/255.0 alpha:1.0];
+    _etaLabel.textColor = _etaMinutesLabel.textColor = _clockImageView.tintColor;
 }
 
 -(void)onTouch:(id)sender {
-    _clockImageView.tintColor = [UIColor colorWithWhite:248/255.0 alpha:1.0];    
+    _clockImageView.tintColor = [UIColor colorWithWhite:248/255.0 alpha:1.0];
+    _etaLabel.textColor = _etaMinutesLabel.textColor = _clockImageView.tintColor;
+
     if ([self.delegate respondsToSelector:@selector(didSetPickupLocation)])
         [self.delegate didSetPickupLocation];
 }

@@ -18,8 +18,19 @@
 + (void)track:(NSString *)event withProperties:(NSDictionary *)properties;
 + (void)trackSignUpCancel:(ICSignUpInfo *)info;
 + (void)trackRequestVehicle:(NSNumber *)vehicleViewId pickupLocation:(ICLocation *)location;
++ (void)trackContactDriver:(NSNumber *)vehicleViewId;
+
++ (void)trackNearestCab:(NSNumber *)vehicleViewId
+                 reason:(NSString *)reason
+      availableVehicles:(NSNumber *)availableVehicles
+                    eta:(NSNumber *)eta;
+
++ (void)trackChangeVehicleView:(NSNumber *)vehicleViewId
+             availableVehicles:(NSNumber *)availableVehicles
+                           eta:(NSNumber *)eta;
+
 + (NSString *)trackFareEstimate:(NSNumber *)vehicleViewId
                  pickupLocation:(ICLocation *)pickupLocation
                  destinationLocation:(ICLocation *)destinationLocation;
-
++ (void)linkPreSignupEventsWithClientId:(NSNumber *)clientId;
 @end

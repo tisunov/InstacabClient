@@ -121,7 +121,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 - (BOOL)_sendData:(NSDictionary *)data {
     if (!self.connected) return NO;
 
-    NSLog(@"Sending: %@", data[@"messageType"]);
+//    NSLog(@"Sending: %@", data[@"messageType"]);
     [_socket send:[self _serializeToJSON:data]];
     return YES;
 }
@@ -166,8 +166,8 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
         return;
     }
     
-    NSLog(@"Initiating connection to dispatch server");
-    NSLog(@"Have %lu messages in offline queue", (unsigned long)_offlineQueue.count);
+//    NSLog(@"Initiating connection to dispatch server");
+//    NSLog(@"Have %lu messages in offline queue", (unsigned long)_offlineQueue.count);
     
     _socket = [[SRWebSocket alloc] initWithURL:[NSURL URLWithString:kDispatchServerUrl]];
     _socket.delegate = self;
@@ -178,7 +178,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 -(void)disconnect {
     if (!_socket || _socket.readyState == SR_CLOSED || _socket.readyState == SR_CLOSING) return;
     
-    NSLog(@"Close connection to dispatch server");
+//    NSLog(@"Close connection to dispatch server");
     
 //    [self stopPingTimer];
     [_socket closeWithCode:1000 reason:@"Graceful disconnect"];
@@ -223,7 +223,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
                                         options:NSJSONReadingMutableContainers
                                           error:&error];
 
-    NSLog(@"Received: %@", jsonDictionary[@"messageType"]);
+//    NSLog(@"Received: %@", jsonDictionary[@"messageType"]);
     
     NSAssert(jsonDictionary, @"Got an error converting string to JSON dictionary: %@", error);
     
@@ -231,7 +231,7 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 }
 
 - (void)webSocketDidOpen:(SRWebSocket *)webSocket {
-    NSLog(@"Connected to dispatch server %@", kDispatchServerHostName);
+//    NSLog(@"Connected to dispatch server %@", kDispatchServerHostName);
     _reconnectAttempts = kMaxReconnectAttemps;
     
     // Resend all messages that were queued while we were offline
@@ -247,13 +247,13 @@ NSString * const kDispatchServerConnectionChangeNotification = @"connection:noti
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    NSLog(@"Dispatch server connection closed with code %ld, reason %@", (long)code, reason);
+//    NSLog(@"Dispatch server connection closed with code %ld, reason %@", (long)code, reason);
     
     [self handleDisconnect];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    NSLog(@"Dispatch server connection failed with %@", error);
+//    NSLog(@"Dispatch server connection failed with %@", error);
 
     [self handleDisconnect];
 }

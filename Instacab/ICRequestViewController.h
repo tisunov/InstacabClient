@@ -28,10 +28,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *searchAddressButton;
 @property (strong, nonatomic) IBOutlet UILabel *addressLabel;
 @property (strong, nonatomic) IBOutlet UIView *addressView;
-@property (strong, nonatomic) IBOutlet ICHighlightButton *pickupBtn;
 @property (strong, nonatomic) IBOutlet UILabel *addressTitleLabel;
-@property (strong, nonatomic) IBOutlet UIView *pickupView;
-@property (strong, nonatomic) IBOutlet UILabel *pickupEtaLabel;
 @property (strong, nonatomic) IBOutlet UILabel *confirmEtaLabel;
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;

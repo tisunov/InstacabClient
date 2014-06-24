@@ -135,6 +135,8 @@
 
 -(void)starsSelectionChanged:(EDStarRating *)control rating:(float)rating
 {
+    if (rating == 0) return;
+    
     ICFeedbackViewController *vc = [[ICFeedbackViewController alloc] initWithNibName:@"ICFeedbackViewController" bundle:nil];
     vc.driverRating = rating;
     [self.navigationController pushViewController:vc animated:YES];

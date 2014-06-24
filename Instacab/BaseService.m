@@ -67,7 +67,7 @@ NSString * const kFieldPassword = @"password";
     // Give first request longer timeout, because we have to connect first
     NSTimeInterval timeout = _dispatchServer.connected ? kRequestTimeoutSecs : kRequestTimeoutSecs + kConnectTimeoutSecs;
     
-    NSLog(@"Start Request timeout: %f seconds, connected: %d", timeout, _dispatchServer.connected);
+//    NSLog(@"Start Request timeout: %f seconds, connected: %d", timeout, _dispatchServer.connected);
     _requestTimer =
         [NSTimer scheduledTimerWithTimeInterval:timeout
                                          target:self
@@ -78,7 +78,7 @@ NSString * const kFieldPassword = @"password";
 
 -(void)requestDidTimeOut:(NSTimer *)timer {
     if (_pendingRequest) {
-        NSLog(@"%@ Request timed out", [_pendingRequest objectForKey:@"messageType"]);
+//        NSLog(@"%@ Request timed out", [_pendingRequest objectForKey:@"messageType"]);
     }
     
     // Resend one more time
@@ -126,7 +126,7 @@ NSString * const kFieldPassword = @"password";
 
 -(void)didReceiveMessage:(NSDictionary *)jsonDictionary {
     if (_requestTimestamp > 0) {
-        NSLog(@"Network latency %0.0f ms", ([[NSDate date] timeIntervalSince1970] - _requestTimestamp) * 1000);
+//        NSLog(@"Network latency %0.0f ms", ([[NSDate date] timeIntervalSince1970] - _requestTimestamp) * 1000);
         
         // TODO: Отправлять Latency на сервер: SignInResponse, CancelTripResponse, RequestVehicleResponse, SignUpResponse
         // TODO: Чтобы можно было оценивать прием в разных частях города, и узнавать мертвые зоны.

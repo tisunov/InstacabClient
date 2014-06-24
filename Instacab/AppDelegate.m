@@ -20,6 +20,7 @@
 #import "Bugsnag.h"
 #import "LocalyticsSession.h"
 #import "Heap.h"
+#import "Mixpanel.h"
 
 @implementation AppDelegate
 
@@ -67,14 +68,19 @@
     // Google Maps key
     [GMSServices provideAPIKey:@"AIzaSyCvlC3MQG4t2MFq92mxsYjFSynAJ-bGqfo"];
 
-    // Heap + Localytics analytics
+    // Mixpanel, Heap, Localytics analytics
 #if !(TARGET_IPHONE_SIMULATOR)
 #ifdef DEBUG
+    // Development
+    [Mixpanel sharedInstanceWithToken:@"e00c33993ed8ce0c53083fe0cdaf0cc2"];
+    
     [Heap setAppId:@"1172153281"];
     
-    // Development Key: f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25
     [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
 #else
+    // Production
+    [Mixpanel sharedInstanceWithToken:@"ffffaea03e792c0a06a52cf59119d1f1"];
+    
     [Heap setAppId:@"755342236"];
     
     // Production Key: 80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25

@@ -418,7 +418,7 @@ float const kPingIntervalInSeconds = 6.0f;
 -(void)startPing {
     if(_pingTimer) return;
     
-    NSLog(@"Start Ping every %d seconds", (int)kPingIntervalInSeconds);
+//    NSLog(@"Start Ping every %d seconds", (int)kPingIntervalInSeconds);
     [self delayPing];
 }
 
@@ -444,7 +444,7 @@ float const kPingIntervalInSeconds = 6.0f;
 
 -(void)stopPing {
     if (_pingTimer) {
-        NSLog(@"Stop Ping");
+//        NSLog(@"Stop Ping");
         
         [_pingTimer invalidate];
         _pingTimer = nil;

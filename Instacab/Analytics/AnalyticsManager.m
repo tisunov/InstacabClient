@@ -15,10 +15,12 @@
 #import "UIDevice+FCUtilities.h"
 #import "TargetConditionals.h"
 #import "ICClient.h"
+#import "ICCity.h"
 #import "Heap.h"
 #import "LocalyticsSession.h"
 #import "ICLocationService.h"
 #import "ICSession.h"
+#import "Mixpanel.h"
 
 @implementation AnalyticsManager {
     AFHTTPRequestOperationManager *_httpManager;
@@ -56,25 +58,55 @@
     ICClient *client = [ICClient sharedInstance];
     if (client.isAdmin) return;
     
-    NSMutableDictionary* userProperties = [NSMutableDictionary dictionaryWithDictionary:@{
-        @"handle": client.uID,
-        @"email": client.email,
-    }];
-    
-    if (client.firstName.length != 0)
-        [userProperties setObject:client.fullName forKey:@"name"];
-    if (client.mobile.length != 0)
-        [userProperties setObject:client.mobile forKey:@"mobile"];
+    NSString *clientId = [client.uID stringValue];
+    NSString *paymentType = client.hasCardOnFile ? @"Card" : @"Cash";
+    NSString *fullName = client.firstName.length == 0 ? @"": client.fullName;
+    NSString *mobile = client.mobile.length == 0 ? @"": client.mobile;
     
     // Heap Analytics: identify client
-    [Heap identify:userProperties];
+    [Heap identify:@{
+        @"handle": clientId,
+        @"email": client.email,
+        @"paymentType": paymentType,
+        @"mobile": mobile,
+        @"name": fullName
+    }];
     
     // Localytics: identify client
-    [[LocalyticsSession shared] setCustomerId:[client.uID stringValue]];
-    [[LocalyticsSession shared] setCustomerName:client.fullName];
-    [[LocalyticsSession shared] setCustomerEmail:client.email];
+    LocalyticsSession *localytics = [LocalyticsSession shared];
+    [localytics setCustomerId:clientId];
+    [localytics setCustomerName:fullName];
+    [localytics setCustomerEmail:client.email];
+    [localytics setCustomDimension:0 value:paymentType]; // Payment Profile Type
     
-    [[LocalyticsSession shared] setCustomDimension:0 value: client.hasCardOnFile ? @"Card" : @"Cash"]; // Payment Profile Type
+    // Mixpanel
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // Before you send profile updates, you must call identify:.
+    // This ensures that you only have actual registered users saved in the system.
+    [mixpanel identify:clientId];
+
+    [mixpanel.people set:@{ @"name": fullName, @"email": client.email, @"mobile": mobile, @"paymentType": paymentType}];
+
+    // Properties that you want to include with each event you send.
+    // Generally, these are things you know about the user rather than about a specific
+    // event—for example, the user's age, gender, or source
+    [mixpanel registerSuperProperties:@{ @"paymentType": paymentType }];
+}
+
+// Mixpanel: Linking two user IDs
+// The recommended usage pattern is to call both createAlias: and identify: when the user signs up,
+// and only identify: (with their new user ID) when they log in.
+// This will keep your signup funnels working correctly.
++ (void)linkPreSignupEventsWithClientId:(NSNumber *)clientId {
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    
+    // This makes the current ID (an auto-generated GUID)
+    // and clientId interchangeable distinct ids.
+    [mixpanel createAlias:[clientId stringValue] forDistinctID:mixpanel.distinctId];
+    
+    // You must call identify if you haven't already
+    [mixpanel identify:mixpanel.distinctId];
 }
 
 + (void)track:(NSString *)event withProperties:(NSDictionary *)properties {
@@ -85,15 +117,19 @@
 }
 
 + (void)trackThirdParty:(NSString *)event withProperties:(NSDictionary *)properties {
+    NSLog(@"%@: %@", event, properties);
+    
     if ([ICClient sharedInstance].isAdmin) return;
     
+    [[Mixpanel sharedInstance] track:event properties:properties];
+
     [Heap track:event withProperties:properties];
     
     [[LocalyticsSession shared] tagEvent:event attributes:properties];
 }
 
 + (void)trackRequestVehicle:(NSNumber *)vehicleViewId pickupLocation:(ICLocation *)location {
-    
+
     NSDictionary *eventProperties = @{
         @"vehicleViewId": vehicleViewId,
         @"pickupLocation": [AnalyticsManager transformLocation:location]
@@ -105,6 +141,47 @@
     // send simplified event
     [AnalyticsManager trackThirdParty:@"RequestVehicleRequest"
                        withProperties:@{ @"vehicleViewId": vehicleViewId }];
+}
+
++ (void)trackNearestCab:(NSNumber *)vehicleViewId
+                 reason:(NSString *)reason
+      availableVehicles:(NSNumber *)availableVehicles
+                    eta:(NSNumber *)eta {
+    
+    // send complete location details to Instacab analytics
+    [[AnalyticsManager sharedInstance] logEvent:@"NearestCabRequest" parameters:@{
+        @"vehicleViewId": vehicleViewId,
+        @"reason": reason,
+        @"eta": eta,
+        @"availableVehicles": availableVehicles
+    }];
+    
+    // send simplified event
+    [AnalyticsManager trackThirdParty:@"NearestCabRequest" withProperties:@{
+        @"vehicleViewId": vehicleViewId,
+        @"reason": reason,
+        @"eta": eta,
+        @"availableVehicles": availableVehicles
+    }];
+}
+
++ (void)trackChangeVehicleView:(NSNumber *)vehicleViewId
+             availableVehicles:(NSNumber *)availableVehicles
+                           eta:(NSNumber *)eta {
+    // send complete location details to Instacab analytics
+    [[AnalyticsManager sharedInstance] logEvent:@"ChangeVehicleView" parameters:@{
+        @"vehicleViewId": vehicleViewId,
+        @"eta": eta,
+        @"availableVehicles": availableVehicles
+    }];
+    
+    // send simplified event
+    [AnalyticsManager trackThirdParty:@"ChangeVehicleView" withProperties:@{
+        @"vehicleViewId": vehicleViewId,
+        @"eta": eta,
+        @"availableVehicles": availableVehicles
+    }];
+    
 }
 
 + (NSString *)trackFareEstimate:(NSNumber *)vehicleViewId
@@ -123,14 +200,20 @@
     [[AnalyticsManager sharedInstance] logEvent:@"FareEstimateRequest" parameters:eventProperties];
  
     // send simplified event
-    eventProperties = @{
+    [AnalyticsManager trackThirdParty:@"FareEstimateRequest" withProperties:@{
         @"requestUuid": requestUuid,
-        @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId)
-    };
-    
-    [AnalyticsManager trackThirdParty:@"FareEstimateRequest" withProperties:eventProperties];
+        @"vehicleViewId": vehicleViewId
+    }];
     
     return requestUuid;
+}
+
++ (void)trackContactDriver:(NSNumber *)vehicleViewId {
+    // send id to Instacab analytics
+    [[AnalyticsManager sharedInstance] logEvent:@"ContactDriver" parameters:@{ @"vehicleViewId": vehicleViewId }];
+    
+    // send text to third-party
+    [AnalyticsManager trackThirdParty:@"ContactDriver" withProperties:@{ @"vehicleViewId": vehicleViewId }];
 }
 
 #pragma mark - Instacab Analytics
@@ -177,6 +260,11 @@
     CLLocationCoordinate2D coordinates = [ICLocationService sharedInstance].coordinates;
     [data setValue:@[@(coordinates.longitude), @(coordinates.latitude)] forKey:@"location"];
     
+    // identify event
+    ICClient *client = [ICClient sharedInstance];
+    if ([ICClient sharedInstance].isSignedIn)
+        [data setObject:client.uID forKey:@"clientId"];
+    
     // event parameters
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:params];
     
@@ -185,18 +273,17 @@
     [parameters setObject:@(location.speed) forKey:@"speed"];
     [parameters setObject:@(location.verticalAccuracy) forKey:@"locationVerticalAccuracy"];
     [parameters setObject:@(location.horizontalAccuracy) forKey:@"locationHorizontalAccuracy"];
-
-    // identify event
-    ICClient *client = [ICClient sharedInstance];
-    if ([ICClient sharedInstance].isSignedIn)
-        [parameters setObject:client.uID forKey:@"clientId"];
-    
     [data setObject:parameters forKey:@"parameters"];
     
     return data;
 }
 
 #pragma mark - Utils
+
++ (NSString *)vehicleViewNameById:(NSNumber *)vehicleViewId {
+    NSString *vehicleViewName = [[ICCity shared] vehicleViewById:vehicleViewId].description;
+    return vehicleViewName.length == 0 ? [vehicleViewId stringValue] : vehicleViewName;
+}
 
 + (NSDictionary *)transformLocation:(ICLocation *)location {
     return @{

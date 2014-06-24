@@ -105,13 +105,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     NSNumber *vehicleCount = [city vehicleCountByViewId:vehicleViewId];
     NSNumber *minEta = [city minEtaByViewId:vehicleViewId];
     
-    NSDictionary *eventProperties = @{
-        @"reason": reason,
-        @"vehicleViewId": vehicleViewId,
-        @"minEta": minEta,
-        @"vehicleCount": vehicleCount
-    };
-    [AnalyticsManager track:@"NearestCabRequest" withProperties:eventProperties];
+    [AnalyticsManager trackNearestCab:vehicleViewId reason:reason availableVehicles:vehicleCount eta:minEta];
 }
 
 - (void)viewDidLoad {
@@ -133,6 +127,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self styleButtons];
     
     self.sideMenuViewController.delegate = self;
+    
+    [AnalyticsManager track:@"MapPageView" withProperties:nil];
 }
 
 - (void)setupVehicleSelectionView {
@@ -163,12 +159,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     NSNumber *vehicleCount = [city vehicleCountByViewId:vehicleViewId];
     NSNumber *minEta = [city minEtaByViewId:vehicleViewId];
     
-    NSDictionary *eventProperties = @{
-        @"vehicleViewId": vehicleViewId,
-        @"minEta": minEta,
-        @"vehicleCount": vehicleCount
-    };
-    [AnalyticsManager track:@"ChangeVehicleView" withProperties:eventProperties];
+    [AnalyticsManager trackChangeVehicleView:vehicleViewId availableVehicles:vehicleCount eta:minEta];
 }
 
 - (void)handleAddressBarTap:(UITapGestureRecognizer *)recognizer {
@@ -261,8 +252,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                              selector:@selector(onTripChanged:)
                                                  name:kTripChangedNotification
                                                object:nil];
-    
-    [AnalyticsManager track:@"MapPageView" withProperties:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -383,7 +372,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     
     [_pickupCallout hide];
     
-    [AnalyticsManager track:@"ConfirmPageView" withProperties:nil];
+    [AnalyticsManager track:@"ConfirmPageView" withProperties:@{ @"vehicleViewId": [self selectedVehicleViewId]}];
 }
 
 - (void)showConfirmPickupView {
@@ -470,6 +459,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     _draggingPin = dragging;
     
     if (dragging) {
+        _pickupLocation = nil;
+        [self updateAddressLabel:kGoToMarker];
+        
         if (!_readyToRequest) {
             [UIView animateWithDuration:0.35 animations:^(void){
                 [self.navigationController setNavigationBarHidden:YES animated:YES];
@@ -517,8 +509,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             _mapView.padding = UIEdgeInsetsMake(_mapVerticalPadding, 0, _mapVerticalPadding, 0);
         }];
     }
-    
-    [self trackNearestCabEvent:@"movePin"];
 }
 
 -(void)recognizeTapOnMap:(id)sender {
@@ -537,7 +527,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     UIGestureRecognizer *gestureRecognizer = (UIGestureRecognizer *)sender;
     // Hide UI controls when user starts map drag to show move of the map
     if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        [self updateAddressLabel:kGoToMarker];
         [self setDraggingPin:YES];
         return;
     }
@@ -564,6 +553,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_googleService reverseGeocodeLocation:coordinates];
     // Find nearby vehicles
     [self refreshPing:coordinates];
+    
+    [self trackNearestCabEvent:@"movePin"];
 }
 
 - (void)clearMap {
@@ -650,6 +641,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     //        return;
     //    }
     
+    [AnalyticsManager trackRequestVehicle:[self selectedVehicleViewId] pickupLocation:self.pickupLocation];
+    
     [self showProgressWithMessage:kProgressRequestingPickup allowCancel:NO];
     
     [_clientService requestPickupAt:self.pickupLocation
@@ -683,8 +676,6 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                                 // TODO: Показать человеку ошибку
                             }
      ];
-    
-    [AnalyticsManager trackRequestVehicle:[self selectedVehicleViewId] pickupLocation:self.pickupLocation];
 }
 
 - (void)didSetPickupLocation {
@@ -1051,6 +1042,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
                 }];
                 vehicleMarker.rotation = driver.course;
                 vehicleMarker.groundAnchor = CGPointMake(0.5f, 0.5f);
+                vehicleMarker.userData = trip.vehicleViewId;
                 
                 _vehicleMarkers[vehicle.uniqueId] = vehicleMarker;
             }
@@ -1225,7 +1217,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 -(void)callDriver{
     ICDriver *driver = [ICTrip sharedInstance].driver;
     
-    [AnalyticsManager track:@"CallDriver" withProperties:@{ @"vehicleViewId": [self selectedVehicleViewId] }];
+    [AnalyticsManager trackContactDriver:[self selectedVehicleViewId]];
     
     [driver call];
 }
@@ -1458,14 +1450,9 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_promoCodeButton setTitleColor:[UIColor colorWithWhite:(140/255.0) alpha:1] forState:UIControlStateNormal];
     [_promoCodeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
-    // CTA buttons
-    _pickupBtn.layer.cornerRadius = 3.0f;
-    _pickupBtn.normalColor = [UIColor colorFromHexString:@"#00b4ae"];
-    _pickupBtn.highlightedColor = [UIColor colorFromHexString:@"#008b87"];
-    
-    _confirmPickupButton.layer.cornerRadius = _pickupBtn.layer.cornerRadius;
-    _confirmPickupButton.normalColor = _pickupBtn.normalColor;
-    _confirmPickupButton.highlightedColor = _pickupBtn.highlightedColor;
+    _confirmPickupButton.layer.cornerRadius = 3.0f;
+    _confirmPickupButton.normalColor = [UIColor colorFromHexString:@"#00b4ae"];
+    _confirmPickupButton.highlightedColor = [UIColor colorFromHexString:@"#008b87"];
 }
 
 - (void)setViewTopShadow:(UIView *)view {

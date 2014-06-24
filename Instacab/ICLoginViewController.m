@@ -119,6 +119,8 @@
 - (void)performLogin {
     [self.view endEditing:YES];
 
+    [AnalyticsManager track:@"SignInRequest" withProperties:nil];
+
     [self showProgress];
     
     [_clientService signInEmail:[self clientEmail]
@@ -132,8 +134,6 @@
                            
                             [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(408) }];
     }];
-    
-    [AnalyticsManager track:@"SignInRequest" withProperties:nil];
 }
 
 - (NSString *)clientEmail {

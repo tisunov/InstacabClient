@@ -63,7 +63,7 @@
     
     UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(linkCard)];
     next.enabled = NO;
-    [self setupBarButton:next];
+    [self setupCallToActionBarButton:next];
     self.navigationItem.rightBarButtonItem = next;
 }
 
@@ -105,6 +105,8 @@
 }
 
 - (void)linkCard {
+    [AnalyticsManager track:@"SignUpRequest" withProperties:nil];
+    
     self.signupInfo.firstName = [self textForElementKey:@"firstName"];
     self.signupInfo.lastName = [self textForElementKey:@"lastName"];
     
@@ -132,8 +134,6 @@
               
                 [[UIApplication sharedApplication] showAlertWithTitle:errorTitle message:errorMessage cancelButtonTitle:@"OK"];
             }];
-    
-    [AnalyticsManager track:@"SignUpRequest" withProperties:nil];
 }
 
 //    ICLinkCardDialog *controller = [[ICLinkCardDialog alloc] initWithNibName:@"ICLinkCardDialog" bundle:nil];
@@ -147,9 +147,10 @@
     ICClient *client = [ICClient sharedInstance];
     client.email = self.signupInfo.email;
     client.password = self.signupInfo.password;
-    
     [client update:registeredClient];
     [client save];
+    
+    [AnalyticsManager linkPreSignupEventsWithClientId:client.uID];
 }
 
 

@@ -179,7 +179,7 @@ NSString * const kLocationTypeGoogle = @"google";
 }
 
 -(NSString *)formattedAddressWithCity:(BOOL)includeCity country:(BOOL)includeCountry {
-    NSString *address = @"";
+    NSString *address;
     
     if (_streetNumber.length != 0)
         address = [NSString stringWithFormat:@"%@, %@", _streetNameLong, _streetNumber];
@@ -192,7 +192,7 @@ NSString * const kLocationTypeGoogle = @"google";
     if (includeCountry && _countryLong.length != 0)
         address = [address stringByAppendingFormat:@", %@", _countryLong];
     
-    return address;
+    return address ? address : @"";
 }
 
 @end

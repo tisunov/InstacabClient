@@ -40,9 +40,9 @@ NSString * const kNearbyVehiclesChangedNotification = @"nearbyVehiclesChanged";
 
 #pragma mark - NSObject
 
+// TODO: Неправильно, надо сравнить еще и value каждого key
 -(BOOL)isEqual:(NSDictionary *)object {
     BOOL haveEqualNearbyVehicles = (!_vehicleViews && !object) || [_vehicleViews isEqualToDictionary:object];
-    
     return haveEqualNearbyVehicles;
 }
 
