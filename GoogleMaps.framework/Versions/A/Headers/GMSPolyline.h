@@ -77,7 +77,7 @@
 @property(nonatomic, assign) CGFloat strokeWidth;
 
 /**
- * The UIColor used to render the polyline. Defaults to blueColor.
+ * The UIColor used to render the polyline. Defaults to [UIColor blueColor].
  */
 @property(nonatomic, strong) UIColor *strokeColor;
 
@@ -91,9 +91,11 @@
 + (instancetype)polylineWithPath:(GMSPath *)path;
 
 /**
- * NSArray of GMSStyleSpan. Overrides the strokeColor property - strokeColor is ignored if spans is
- * not nil. To make a polyline of solid color use:
- * polyline.spans = @[[GMSStyleSpan spanWithColor:color]];
+ * An array containing GMSStyleSpan, the spans used to render this polyline.
+ *
+ * If this array contains fewer segments than the polyline itself, the final segment will be applied
+ * over the remaining length. If this array is unset or empty, then |strokeColor| is used for the
+ * entire line instead.
  */
 @property(nonatomic, copy) NSArray *spans;
 

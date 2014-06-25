@@ -17,7 +17,7 @@
     if (self) {
         _currentVehicleViewId = -1;
         if ([[NSUserDefaults standardUserDefaults] objectForKey:@"vehicleViewId"] != nil)
-            _currentVehicleViewId = [[NSUserDefaults standardUserDefaults] integerForKey:@"vehicleViewId"];
+            _currentVehicleViewId = (int)[[NSUserDefaults standardUserDefaults] integerForKey:@"vehicleViewId"];
     }
     return self;
 }

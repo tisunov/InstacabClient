@@ -73,7 +73,7 @@
 #ifdef DEBUG
     // Development
     [Mixpanel sharedInstanceWithToken:@"e00c33993ed8ce0c53083fe0cdaf0cc2"];
-    
+
     [Heap setAppId:@"1172153281"];
     
     [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
@@ -83,8 +83,7 @@
     
     [Heap setAppId:@"755342236"];
     
-    // Production Key: 80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25
-    [[LocalyticsSession shared] LocalyticsSession:@"80a18383d5a10faf7879a5c-722c7190-996e-11e3-9987-009c5fda0a25"];
+    [[LocalyticsSession shared] LocalyticsSession:@"f55217e330feb2352b76e5f-3863dc50-fbac-11e3-9f4f-009c5fda0a25"];
 #endif
     [[LocalyticsSession shared] open];
     [[LocalyticsSession shared] upload];

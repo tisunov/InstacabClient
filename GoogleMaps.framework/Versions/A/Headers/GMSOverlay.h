@@ -18,7 +18,7 @@
  * instead, instances of concrete overlay types should be created directly
  * (such as GMSMarker, GMSPolyline, and GMSPolygon).
  *
- * This supports ths NSCopying protocol; [overlay_ copy] will return a copy
+ * This supports the NSCopying protocol; [overlay_ copy] will return a copy
  * of the overlay type, but with |map| set to nil.
  */
 @interface GMSOverlay : NSObject<NSCopying>

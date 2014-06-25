@@ -119,6 +119,19 @@
 - (UIView *)mapView:(GMSMapView *)mapView markerInfoWindow:(GMSMarker *)marker;
 
 /**
+ * Called when mapView:markerInfoWindow: returns nil. If this method returns a
+ * view, it will be placed within the default info window frame. If this method
+ * returns nil, then the default rendering will be used instead.
+ *
+ * @param mapView The map view that was pressed.
+ * @param marker The marker that was pressed.
+ * @return The custom view to disaply as contents in the info window, or null to
+ * use the default content rendering instead
+ */
+
+- (UIView *)mapView:(GMSMapView *)mapView markerInfoContents:(GMSMarker *)marker;
+
+/**
  * Called when dragging has been initiated on a marker.
  */
 - (void)mapView:(GMSMapView *)mapView didBeginDraggingMarker:(GMSMarker *)marker;

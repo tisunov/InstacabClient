@@ -181,7 +181,7 @@ NSInteger const kNodeTapTag = 2;
     
     UIImage *sliderPointImage = [UIImage imageNamed:@"vehicle_picker_slider_point.png"];
     
-    int vehicleViewsCount = _vehicleViews.count;
+    long vehicleViewsCount = _vehicleViews.count;
     for (int vehicleViewIndex = 0; vehicleViewIndex < vehicleViewsCount; vehicleViewIndex++)
     {
         CGPoint centerPoint = [self getCenterPointForIndex:vehicleViewIndex];

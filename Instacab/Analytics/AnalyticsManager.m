@@ -62,6 +62,7 @@
     NSString *paymentType = client.hasCardOnFile ? @"Card" : @"Cash";
     NSString *fullName = client.firstName.length == 0 ? @"": client.fullName;
     NSString *mobile = client.mobile.length == 0 ? @"": client.mobile;
+    NSString *mobileConfirmed = client.mobileConfirmed ? @"true" : @"false";
     
     // Heap Analytics: identify client
     [Heap identify:@{
@@ -69,7 +70,8 @@
         @"email": client.email,
         @"paymentType": paymentType,
         @"mobile": mobile,
-        @"name": fullName
+        @"name": fullName,
+        @"mobileConfirmed": mobileConfirmed
     }];
     
     // Localytics: identify client
@@ -78,6 +80,7 @@
     [localytics setCustomerName:fullName];
     [localytics setCustomerEmail:client.email];
     [localytics setCustomDimension:0 value:paymentType]; // Payment Profile Type
+    [localytics setCustomDimension:1 value:mobileConfirmed]; // Mobile Confirmed
     
     // Mixpanel
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -86,7 +89,7 @@
     // This ensures that you only have actual registered users saved in the system.
     [mixpanel identify:clientId];
 
-    [mixpanel.people set:@{ @"name": fullName, @"email": client.email, @"mobile": mobile, @"paymentType": paymentType}];
+    [mixpanel.people set:@{ @"name": fullName, @"email": client.email, @"mobile": mobile, @"paymentType": paymentType, @"mobileConfirmed": mobileConfirmed }];
 
     // Properties that you want to include with each event you send.
     // Generally, these are things you know about the user rather than about a specific

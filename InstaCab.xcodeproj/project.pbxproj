@@ -13,8 +13,6 @@
 		D906B11B18A924230065E256 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D906B11A18A924230065E256 /* libsqlite3.dylib */; };
 		D908F5181951F13A0092E4DE /* ICPickupCalloutView.m in Sources */ = {isa = PBXBuildFile; fileRef = D908F5171951F13A0092E4DE /* ICPickupCalloutView.m */; };
 		D90A172919506A8300078BE8 /* CreditCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90A172819506A8300078BE8 /* CreditCardViewController.m */; };
-		D90A9C9E18AE5CEB002B80F4 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */; };
-		D90A9CA018AE5CFE002B80F4 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */; };
 		D90BAE141884306600E03F3E /* ICLaunchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE121884306600E03F3E /* ICLaunchViewController.m */; };
 		D90BAE151884306600E03F3E /* ICLaunchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D90BAE131884306600E03F3E /* ICLaunchViewController.xib */; };
 		D90BAE191884353300E03F3E /* ICCreateAccountDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = D90BAE171884353300E03F3E /* ICCreateAccountDialog.m */; };
@@ -119,6 +117,8 @@
 		D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EFF9A31805867100A68AED /* QuartzCore.framework */; };
 		D9EFF9A61805867700A68AED /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9EFF9A51805867700A68AED /* SystemConfiguration.framework */; };
 		D9F222AE18C9FA8500A6B02B /* MBProgressHud+UIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D9F222AD18C9FA8500A6B02B /* MBProgressHud+UIViewController.m */; };
+		D9FAF61F1959FDF90021F726 /* GoogleMaps.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9FAF61E1959FDF90021F726 /* GoogleMaps.framework */; };
+		D9FAF6211959FE190021F726 /* GoogleMaps.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D9FAF6201959FE190021F726 /* GoogleMaps.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,8 +144,6 @@
 		D908F5171951F13A0092E4DE /* ICPickupCalloutView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPickupCalloutView.m; sourceTree = "<group>"; };
 		D90A172719506A8300078BE8 /* CreditCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditCardViewController.h; path = Account/CreditCardViewController.h; sourceTree = "<group>"; };
 		D90A172819506A8300078BE8 /* CreditCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditCardViewController.m; path = Account/CreditCardViewController.m; sourceTree = "<group>"; };
-		D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
-		D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 		D90BAE111884306600E03F3E /* ICLaunchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICLaunchViewController.h; sourceTree = "<group>"; };
 		D90BAE121884306600E03F3E /* ICLaunchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICLaunchViewController.m; sourceTree = "<group>"; };
 		D90BAE131884306600E03F3E /* ICLaunchViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICLaunchViewController.xib; sourceTree = "<group>"; };
@@ -325,6 +323,8 @@
 		D9EFF9A51805867700A68AED /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		D9F222AC18C9FA8500A6B02B /* MBProgressHud+UIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHud+UIViewController.h"; sourceTree = "<group>"; };
 		D9F222AD18C9FA8500A6B02B /* MBProgressHud+UIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHud+UIViewController.m"; sourceTree = "<group>"; };
+		D9FAF61E1959FDF90021F726 /* GoogleMaps.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMaps.framework; sourceTree = "<group>"; };
+		D9FAF6201959FE190021F726 /* GoogleMaps.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GoogleMaps.bundle; path = GoogleMaps.framework/Versions/A/Resources/GoogleMaps.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -347,8 +347,8 @@
 				D9B032801805862700F7AF69 /* CoreText.framework in Frameworks */,
 				D9B0327E1805862000F7AF69 /* CoreLocation.framework in Frameworks */,
 				D9B0327C1805861300F7AF69 /* CoreData.framework in Frameworks */,
+				D9FAF61F1959FDF90021F726 /* GoogleMaps.framework in Frameworks */,
 				D9B0327A1805860400F7AF69 /* AVFoundation.framework in Frameworks */,
-				D90A9C9E18AE5CEB002B80F4 /* GoogleMaps.framework in Frameworks */,
 				D9B0323B180572B400F7AF69 /* CoreGraphics.framework in Frameworks */,
 				D9B0323D180572B400F7AF69 /* UIKit.framework in Frameworks */,
 				D9B03239180572B400F7AF69 /* Foundation.framework in Frameworks */,
@@ -583,9 +583,9 @@
 		D9B03237180572B400F7AF69 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D90A9C9D18AE5CEB002B80F4 /* GoogleMaps.framework */,
-				D90A9C9F18AE5CFE002B80F4 /* GoogleMaps.bundle */,
+				D9FAF61E1959FDF90021F726 /* GoogleMaps.framework */,
 				D906B11A18A924230065E256 /* libsqlite3.dylib */,
+				D9FAF6201959FE190021F726 /* GoogleMaps.bundle */,
 				D97B7AE618083E2A00B8315D /* AdSupport.framework */,
 				D9EFF9A51805867700A68AED /* SystemConfiguration.framework */,
 				D9EFF9A31805867100A68AED /* QuartzCore.framework */,
@@ -902,6 +902,7 @@
 				D90BAE241884359500E03F3E /* ICFeedbackViewController.xib in Resources */,
 				D9D4A277188655FA00067879 /* ICLinkCardController.xib in Resources */,
 				D9D08D2B18B4F6F300760327 /* LICENSE in Resources */,
+				D9FAF6211959FE190021F726 /* GoogleMaps.bundle in Resources */,
 				D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */,
 				D9B03243180572B400F7AF69 /* InfoPlist.strings in Resources */,
 				D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */,
@@ -917,7 +918,6 @@
 				D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */,
 				D9D5FAC718F24B12006AB0A8 /* EnRuRules.plist in Resources */,
 				D9D5FAC818F24B12006AB0A8 /* RuEnRules.plist in Resources */,
-				D90A9CA018AE5CFE002B80F4 /* GoogleMaps.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1181,6 +1181,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/tisunov/InstacabApp,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Instacab/InstaCab-Prefix.pch";
@@ -1216,6 +1217,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/tisunov/InstacabApp,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Instacab/InstaCab-Prefix.pch";
