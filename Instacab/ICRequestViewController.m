@@ -946,8 +946,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)onCityChanged:(NSNotification *)note {
-    [self updateSetPickup];
     [self updateVehicleSelector];
+    // If selected vehicle view has gone, vehicle selector will select the one that is still available
+    // then we need to update map, ui text and show vehicles
+    [self onNearbyVehiclesChanged:nil];
 }
 
 -(void)onNearbyVehiclesChanged:(NSNotification *)note {

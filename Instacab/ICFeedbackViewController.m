@@ -40,7 +40,7 @@ NSString * const kFeedbackPlaceholder = @"Что мы могли сделать 
 {
     [super viewDidLoad];
 
-    self.titleText = @"СПАСИБО ЗА ПОЕЗДКУ С INSTACAB";
+    self.titleText = @"СПАСИБО ВАМ";
     self.navigationItem.hidesBackButton = YES;
     self.view.backgroundColor = [UIColor colorFromHexString:@"#f4f7f7"];
     

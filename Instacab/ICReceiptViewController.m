@@ -66,7 +66,7 @@
     if (!trip.billingComplete) {
         [[ICClient sharedInstance] addObserver:self forKeyPath:@"tripPendingRating" options:NSKeyValueObservingOptionNew context:nil];
 
-        _billingStatusLabel.text = [@"Загрузка тарифа..." uppercaseString];
+        _billingStatusLabel.text = [@"Загрузка..." uppercaseString];
         
         _starRating.enabled = NO;
         [_billingActivityView startAnimating];
