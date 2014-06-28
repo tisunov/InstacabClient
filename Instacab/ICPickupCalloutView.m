@@ -55,7 +55,7 @@
     bubbleImageView.image = bubbleImage;
     
     _clockImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"circle_clock_normal"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-    _clockImageView.frame = CGRectMake(7.0, 8.0, 29.0, 29.0);
+    _clockImageView.frame = CGRectMake(8.0, 8.0, 29.0, 29.0);
     _clockImageView.tintColor = [UIColor colorWithWhite:248/255.0 alpha:1.0];
     
     _etaLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, 6, 29.0, 23.0)];

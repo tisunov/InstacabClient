@@ -89,7 +89,7 @@
     // This ensures that you only have actual registered users saved in the system.
     [mixpanel identify:clientId];
 
-    [mixpanel.people set:@{ @"name": fullName, @"email": client.email, @"mobile": mobile, @"paymentType": paymentType, @"mobileConfirmed": mobileConfirmed }];
+    [mixpanel.people set:@{ @"$name": fullName, @"$email": client.email, @"mobile": mobile, @"paymentType": paymentType, @"mobileConfirmed": mobileConfirmed }];
 
     // Properties that you want to include with each event you send.
     // Generally, these are things you know about the user rather than about a specific
