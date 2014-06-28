@@ -419,8 +419,8 @@
     
     [self performQuerySearch];
     
-    [AnalyticsManager track:@"LocationSearch"
-             withProperties:@{ @"query": searchBar.text }];
+    [AnalyticsManager track:@"LocationSearch" withProperties:@{ @"query": searchBar.text }];
+    [AnalyticsManager increment:@"address searches"];
 }
 
 - (void)performQuerySearch {

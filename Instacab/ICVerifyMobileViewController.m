@@ -109,6 +109,8 @@
                             else {
                                 [[ICClient sharedInstance] confirmMobile];
                                 
+                                [AnalyticsManager registerConfirmMobileProperty];
+                                
                                 if ([strongSelf.delegate respondsToSelector:@selector(didConfirmMobile)])
                                     [strongSelf.delegate didConfirmMobile];
                                 

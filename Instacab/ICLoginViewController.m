@@ -133,7 +133,9 @@
                             [[UIApplication sharedApplication] showAlertWithTitle:@"Сбой сетевого подключения" message:@"Проверьте свое подключение к сети и повторите попытку." cancelButtonTitle:@"OK"];
                            
                             [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(408) }];
-    }];
+                        
+                            [AnalyticsManager increment:@"login errors"];
+                        }];
 }
 
 - (NSString *)clientEmail {
@@ -180,6 +182,8 @@
             [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка Входа" message:message.description cancelButtonTitle:@"OK"];
             
             [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(401) }];
+            
+            [AnalyticsManager increment:@"login errors"];
             break;
             
         default:

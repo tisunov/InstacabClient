@@ -95,6 +95,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
         _vehicleMarkers = [[NSMutableDictionary alloc] init];
         
         [self trackNearestCabEvent:@"openApp"];
+        [AnalyticsManager increment:@"app opens"];
     }
     return self;
 }
@@ -308,6 +309,8 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self showProgressWithMessage:kProgressCancelingTrip allowCancel:NO];
     
     [AnalyticsManager track:@"CancelTripRequest" withProperties:nil];
+    
+    [AnalyticsManager increment:@"pickups canceled"];
 }
 
 -(void)popViewController {
@@ -373,6 +376,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [_pickupCallout hide];
     
     [AnalyticsManager track:@"ConfirmPageView" withProperties:@{ @"vehicleViewId": [self selectedVehicleViewId]}];
+    [AnalyticsManager increment:@"set pickup locations"];
 }
 
 - (void)showConfirmPickupView {
@@ -555,6 +559,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
     [self refreshPing:coordinates];
     
     [self trackNearestCabEvent:@"movePin"];
+    [AnalyticsManager increment:@"pin moves"];
 }
 
 - (void)clearMap {

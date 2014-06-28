@@ -184,8 +184,11 @@
     }];
     
     _startTime = [NSDate date];
+    
     [AnalyticsManager track:@"CreatePaymentProfileRequest"
              withProperties:@{ @"cardio": @((int)_cardio), @"cardioTries": @(_cardioAttempts) }];
+    
+    [AnalyticsManager increment:@"card registration attempts"];
 }
 
 //- (void)signupClient {
@@ -342,6 +345,9 @@
                       success:^{
                           [MBProgressHUD hideGlobalHUD];
 
+                          // Analytics: send paymentProfile=Card with every event
+                          [AnalyticsManager registerPaymentTypeCardProperty];
+                          
                           // Analytics: card created
                           [AnalyticsManager track:@"CreatePaymentProfileResponse"
                                    withProperties:@{ @"latency": [self calculateLatency], @"statusCode": @(201) }];

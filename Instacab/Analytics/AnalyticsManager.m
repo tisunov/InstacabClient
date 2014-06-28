@@ -63,6 +63,7 @@
     NSString *fullName = client.firstName.length == 0 ? @"": client.fullName;
     NSString *mobile = client.mobile.length == 0 ? @"": client.mobile;
     NSString *mobileConfirmed = client.mobileConfirmed ? @"true" : @"false";
+    NSString *platform = @"iphone";
     
     // Heap Analytics: identify client
     [Heap identify:@{
@@ -89,12 +90,26 @@
     // This ensures that you only have actual registered users saved in the system.
     [mixpanel identify:clientId];
 
-    [mixpanel.people set:@{ @"$name": fullName, @"$email": client.email, @"mobile": mobile, @"paymentType": paymentType, @"mobileConfirmed": mobileConfirmed }];
+    [mixpanel.people set:@{ @"$name": fullName, @"$email": client.email, @"mobile": mobile, @"paymentType": paymentType, @"mobileConfirmed": mobileConfirmed, @"platform": platform }];
 
     // Properties that you want to include with each event you send.
     // Generally, these are things you know about the user rather than about a specific
     // event—for example, the user's age, gender, or source
-    [mixpanel registerSuperProperties:@{ @"paymentType": paymentType }];
+    [mixpanel registerSuperProperties:@{ @"paymentType": paymentType, @"mobileConfirmed": mobileConfirmed, @"platform": platform }];
+}
+
+// Mixpanel: Update super property (gets sent with every event)
++ (void)registerConfirmMobileProperty {
+    [[Mixpanel sharedInstance] registerSuperProperties:@{ @"mobileConfirmed": @"true" }];
+}
+
+// Mixpanel: Update super property (gets sent with every event)
++ (void)registerPaymentTypeCardProperty {
+    [[Mixpanel sharedInstance] registerSuperProperties:@{ @"paymentType": @"Card" }];
+}
+
++ (void)increment:(NSString *)property {
+    [[Mixpanel sharedInstance].people increment:property by:@(1)];
 }
 
 // Mixpanel: Linking two user IDs
@@ -144,6 +159,8 @@
     // send simplified event
     [AnalyticsManager trackThirdParty:@"RequestVehicleRequest"
                        withProperties:@{ @"vehicleViewId": vehicleViewId }];
+    
+    [AnalyticsManager increment:@"vehicles requested"];
 }
 
 + (void)trackNearestCab:(NSNumber *)vehicleViewId

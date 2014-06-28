@@ -132,6 +132,7 @@
 }
 
 -(void)setEta:(long)eta {
+    eta = 4;
     _etaLabel.text = [NSString stringWithFormat:@"%ld", eta];
     
 }

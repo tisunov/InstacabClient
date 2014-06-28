@@ -197,6 +197,8 @@ NSString *const kFareDescription = @"Тариф может изменяться 
         [AnalyticsManager trackFareEstimate:@([ICSession sharedInstance].currentVehicleViewId)
                              pickupLocation:_pickupLocation
                         destinationLocation:destination];
+    
+    [AnalyticsManager increment:@"fares estimated"];
 }
 
 -(void)showEstimateError {

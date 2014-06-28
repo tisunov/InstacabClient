@@ -33,4 +33,8 @@
                  pickupLocation:(ICLocation *)pickupLocation
                  destinationLocation:(ICLocation *)destinationLocation;
 + (void)linkPreSignupEventsWithClientId:(NSNumber *)clientId;
++ (void)registerConfirmMobileProperty;
++ (void)registerPaymentTypeCardProperty;
+
++ (void)increment:(NSString *)property;
 @end

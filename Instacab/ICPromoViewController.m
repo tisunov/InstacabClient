@@ -78,7 +78,11 @@
 - (void)applyPromo {
     MBProgressHUD *hud = [MBProgressHUD showGlobalProgressHUDWithTitle:@"Загрузка"];
     
-    [[ICClientService sharedInstance] applyPromo:_promoCodeTextField.text success:^(ICPing *message) {
+    NSString *promoCode = _promoCodeTextField.text;
+    
+    [AnalyticsManager track:@"ApplyPromoRequest" withProperties:@{ @"promoCode": promoCode }];
+    
+    [[ICClientService sharedInstance] applyPromo:promoCode success:^(ICPing *message) {
         ICApiResponse *response = message.apiResponse;
         if (!response) return;
         
@@ -103,6 +107,8 @@
                 hud.mode = MBProgressHUDModeCustomView;
                 hud.labelText = @"Готово!";
                 [hud hide:YES afterDelay:2];
+                
+                [AnalyticsManager increment:@"promo codes activated"];
             }
         }
         
@@ -111,8 +117,6 @@
         _messageLabel.text = @"Произошел сбой сетевого соединения";
         [MBProgressHUD hideGlobalHUD];
     }];
-    
-    [AnalyticsManager track:@"ApplyPromoRequest" withProperties:nil];
 }
 
 - (void)back
