@@ -91,6 +91,8 @@
     [self.view endEditing:YES];
     [MBProgressHUD showGlobalProgressHUDWithTitle:@"Проверка"];
     
+    [AnalyticsManager track:@"ConfirmMobileRequest" withProperties:nil];
+    
     ICClientService *service = [ICClientService sharedInstance];
     
     __weak __typeof(self)weakSelf = self;
@@ -117,13 +119,12 @@
                                 [strongSelf cancel];
                             }
                             
-                            [AnalyticsManager track:@"ConfirmMobileResponse" withProperties: @{ @"statusCode": error.statusCode }];
+                            if (error.statusCode)
+                                [AnalyticsManager track:@"ConfirmMobileResponse" withProperties: @{ @"statusCode": error.statusCode }];
                         }
                         failure:^{
                             [MBProgressHUD hideGlobalHUD];
                         }];
-    
-    [AnalyticsManager track:@"ConfirmMobileRequest" withProperties:nil];
 }
 
 - (IBAction)resendConfirmation:(id)sender {

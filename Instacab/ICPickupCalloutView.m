@@ -58,7 +58,7 @@
     _clockImageView.frame = CGRectMake(8.0, 8.0, 29.0, 29.0);
     _clockImageView.tintColor = [UIColor colorWithWhite:248/255.0 alpha:1.0];
     
-    _etaLabel = [[UILabel alloc] initWithFrame:CGRectMake(7, 6, 29.0, 23.0)];
+    _etaLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 6, 29.0, 23.0)];
     _etaLabel.textColor = [UIColor whiteColor];
     _etaLabel.font = [UIFont boldSystemFontOfSize:11.0];
     _etaLabel.adjustsFontSizeToFitWidth = YES;
@@ -69,7 +69,7 @@
     _etaMinutesLabel.textColor = [UIColor whiteColor];
     _etaMinutesLabel.font = [UIFont systemFontOfSize:7.0];
     _etaMinutesLabel.text = @"МИН";
-    _etaMinutesLabel.center = CGPointMake(13.0, 23.0);
+    _etaMinutesLabel.center = CGPointMake(14.5, 23.0);
     [_etaMinutesLabel sizeToFit];
     
     _button = [[UIButton alloc] initWithFrame:CGRectMake(3.0, 3.0, bubbleImage.size.width - 6.0, BUBBLE_HEIGHT)];

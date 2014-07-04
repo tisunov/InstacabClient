@@ -61,7 +61,7 @@
     [self setupBarButton:cancel];
     self.navigationItem.leftBarButtonItem = cancel;
     
-    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Далее" style:UIBarButtonItemStylePlain target:self action:@selector(linkCard)];
+    UIBarButtonItem *next = [[UIBarButtonItem alloc] initWithTitle:@"Готово" style:UIBarButtonItemStylePlain target:self action:@selector(linkCard)];
     next.enabled = NO;
     [self setupCallToActionBarButton:next];
     self.navigationItem.rightBarButtonItem = next;

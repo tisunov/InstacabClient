@@ -156,6 +156,15 @@
 
     [MBProgressHUD showGlobalProgressHUDWithTitle:@"Сохранение"];
     
+    // Analytics
+    _startTime = [NSDate date];
+    
+    [AnalyticsManager track:@"CreatePaymentProfileRequest"
+             withProperties:@{ @"cardio": @((int)_cardio), @"cardioTries": @(_cardioAttempts) }];
+    
+    [AnalyticsManager increment:@"card registration attempts"];
+    
+    // Create Payture session, download HTML, get public key and submit card data
     _cardRegistrationInProgress = NO;
     [[ICClientService sharedInstance] createCardSessionSuccess:^(ICPing *message) {
         if ([message.apiResponse.data[@"add_card_page_url"] length] > 0) {
@@ -182,13 +191,6 @@
         [AnalyticsManager track:@"CreatePaymentProfileResponse"
                  withProperties:@{ @"latency": [self calculateLatency], @"statusCode": @(408)}];
     }];
-    
-    _startTime = [NSDate date];
-    
-    [AnalyticsManager track:@"CreatePaymentProfileRequest"
-             withProperties:@{ @"cardio": @((int)_cardio), @"cardioTries": @(_cardioAttempts) }];
-    
-    [AnalyticsManager increment:@"card registration attempts"];
 }
 
 //- (void)signupClient {

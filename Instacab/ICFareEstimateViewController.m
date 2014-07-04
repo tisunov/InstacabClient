@@ -177,12 +177,31 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     
     [_locationLabelView updatePickupLocation:_pickupLocation dropoffLocation:destination];
     
+    // Analytics
+    _requestUuid =
+        [AnalyticsManager trackFareEstimate:@([ICSession sharedInstance].currentVehicleViewId)
+                             pickupLocation:_pickupLocation
+                        destinationLocation:destination];
+    
+    [AnalyticsManager increment:@"fares estimated"];
+    
     [[ICClientService sharedInstance] fareEstimate:_pickupLocation destination:destination success:^(ICPing *message) {
         NSDictionary *lastEstimatedTrip = [ICClient sharedInstance].lastEstimatedTrip;
         if (lastEstimatedTrip) {
             NSString *fareEstimate = (NSString *)lastEstimatedTrip[@"fareEstimateString"];
-            if (fareEstimate && fareEstimate.length > 0)
+            if (fareEstimate && fareEstimate.length > 0) {
                 [self setFare:fareEstimate];
+                
+                [AnalyticsManager track:@"FareEstimateResponse"
+                         withProperties:@{
+                    @"vehicleViewId": @([ICSession sharedInstance].currentVehicleViewId),
+                    @"fareEstimateLow": lastEstimatedTrip[@"fareEstimateLow"],
+                    @"fareEstimateHigh": lastEstimatedTrip[@"fareEstimateHigh"],
+                    @"requestUuid": _requestUuid
+                }];
+            }
+            else
+                [self showEstimateError];
         }
         else
             [self showEstimateError];
@@ -191,14 +210,6 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     }];
     
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    
-    // Analytics
-    _requestUuid =
-        [AnalyticsManager trackFareEstimate:@([ICSession sharedInstance].currentVehicleViewId)
-                             pickupLocation:_pickupLocation
-                        destinationLocation:destination];
-    
-    [AnalyticsManager increment:@"fares estimated"];
 }
 
 -(void)showEstimateError {
@@ -220,8 +231,6 @@ NSString *const kFareDescription = @"Тариф может изменяться 
     _fareLabel.hidden = NO;
     
     _descriptionLabel.text = kFareDescription;
-    
-    [AnalyticsManager track:@"FareEstimateResponse" withProperties:@{ @"fare": fare, @"requestUuid": _requestUuid }];
 }
 
 @end

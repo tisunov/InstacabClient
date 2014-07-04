@@ -222,7 +222,9 @@
     // send simplified event
     [AnalyticsManager trackThirdParty:@"FareEstimateRequest" withProperties:@{
         @"requestUuid": requestUuid,
-        @"vehicleViewId": vehicleViewId
+        @"vehicleViewId": vehicleViewId,
+        @"pickupLocation": [pickupLocation formattedAddressWithCity:YES country:YES],
+        @"destinationLocation": [destinationLocation formattedAddressWithCity:YES country:YES]
     }];
     
     return requestUuid;

@@ -68,7 +68,7 @@ NSString * const kRequestPickup = @"Заказать Автомобиль";
     [[ICImageDownloader shared] downloadImageUrl:self.mapImage.url].then(^(UIImage *image) {
         successBlock([UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation]);
     }).catch(^(NSError *error){
-        NSHTTPURLResponse *rsp = error.userInfo[PMKURLErrorFailingURLResponseKey];
+//        NSHTTPURLResponse *rsp = error.userInfo[PMKURLErrorFailingURLResponseKey];
         NSLog(@"%@", error);
     });
 }
@@ -77,7 +77,7 @@ NSString * const kRequestPickup = @"Заказать Автомобиль";
     if (self.monoImages.count == 0) return;
     
     [[ICImageDownloader shared] downloadImageUrl:self.monoImage.url].then(successBlock).catch(^(NSError *error){
-        NSHTTPURLResponse *rsp = error.userInfo[PMKURLErrorFailingURLResponseKey];
+//        NSHTTPURLResponse *rsp = error.userInfo[PMKURLErrorFailingURLResponseKey];
         NSLog(@"%@", error);
     });
 }
