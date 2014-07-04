@@ -819,7 +819,7 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
             break;
 
         case SVDriverStateAccepted:
-            [self updateStatusLabel:@"Водитель подтвердил заказ и в пути" withETA:YES];
+            [self updateStatusLabel:@"Водитель принял заказ и выехал" withETA:YES];
             break;
 
         // TODO: Показать и скрыть статус через 6 секунд совсем alpha => 0
