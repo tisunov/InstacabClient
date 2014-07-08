@@ -33,7 +33,6 @@ typedef void (^ICClientServiceFailureBlock)();
     failure:(ICClientServiceFailureBlock)failure;
 
 -(void)cancelInstacabRequest;
--(void)cancelTrip;
 
 -(void)submitRating:(NSUInteger)rating
        withFeedback:(NSString *)feedback

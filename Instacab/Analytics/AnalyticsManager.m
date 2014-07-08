@@ -122,9 +122,6 @@
     // This makes the current ID (an auto-generated GUID)
     // and clientId interchangeable distinct ids.
     [mixpanel createAlias:[clientId stringValue] forDistinctID:mixpanel.distinctId];
-    
-    // You must call identify if you haven't already
-    [mixpanel identify:mixpanel.distinctId];
 }
 
 + (void)track:(NSString *)event withProperties:(NSDictionary *)properties {

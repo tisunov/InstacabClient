@@ -164,8 +164,8 @@ float const kPingIntervalInSeconds = 6.0f;
 }
 
 -(void)cancelInstacabRequest {
-    // Спросить у клиента причину отмены: feedbackType
-    
+    // Спросить у клиента причину отмены: feedbackType,
+    // чтобы помочь избежать заказа в будущем, пока не знаю чем именно это поможет
     NSDictionary *message = @{
         kFieldMessageType: @"PickupCanceledClient",
         @"token": [ICClient sharedInstance].token,
@@ -174,17 +174,6 @@ float const kPingIntervalInSeconds = 6.0f;
     };
     
     [self sendMessage:message];
-}
-
--(void)cancelTrip {
-    NSDictionary *message = @{
-        kFieldMessageType: @"CancelTripClient",
-        @"token": [ICClient sharedInstance].token,
-        @"id": [ICClient sharedInstance].uID,
-        @"tripId": [ICTrip sharedInstance].tripId
-    };
-    
-    [self sendMessage:message];    
 }
 
 #pragma mark - Signup Flow

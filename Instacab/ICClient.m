@@ -96,6 +96,7 @@
     self.password = [defaults stringForKey:@"client.password"];
     self.token = [defaults stringForKey:@"client.token"];
     self.uID = [defaults objectForKey:@"client.id"];
+    self.isAdmin = [[defaults objectForKey:@"client.isAdmin"] boolValue];
 }
 
 -(void)save {
@@ -107,6 +108,7 @@
     [defaults setObject:self.password forKey:@"client.password"];
     [defaults setObject:self.token forKey:@"client.token"];
     [defaults setObject:self.uID forKey:@"client.id"];
+    [defaults setObject:@(self.isAdmin) forKey:@"client.isAdmin"];
     [defaults synchronize];
 }
 

@@ -297,9 +297,9 @@
                                 return;
                             }
 
+                            [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(200) }];
                             [self signInClient:message.client];
                             
-                            [AnalyticsManager track:@"SignInResponse" withProperties:@{ @"statusCode": @(200) }];
                         } failure:^{
                             [self stopLoading];
                             

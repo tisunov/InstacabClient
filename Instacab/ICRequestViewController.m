@@ -305,11 +305,10 @@ CGFloat const kDriverInfoPanelHeight = 75.0f;
 }
 
 -(void)cancelTrip {
-    [_clientService cancelTrip];
+    [_clientService cancelInstacabRequest];
     [self showProgressWithMessage:kProgressCancelingTrip allowCancel:NO];
     
     [AnalyticsManager track:@"CancelTripRequest" withProperties:nil];
-    
     [AnalyticsManager increment:@"pickups canceled"];
 }
 
