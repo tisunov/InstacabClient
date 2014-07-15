@@ -79,7 +79,8 @@
 //    [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
 #else
     // Production
-    [Mixpanel sharedInstanceWithToken:@"ffffaea03e792c0a06a52cf59119d1f1"];
+    Mixpanel *mixpanel = [Mixpanel sharedInstanceWithToken:@"ffffaea03e792c0a06a52cf59119d1f1"];
+    mixpanel.flushInterval = 2;
     
     [Heap setAppId:@"755342236"];
     
