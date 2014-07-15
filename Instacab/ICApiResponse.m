@@ -25,7 +25,7 @@
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"error": @"error",
-        @"client": @"client",
+        @"client": @"data.client",
         @"data": @"data"
     };
 }

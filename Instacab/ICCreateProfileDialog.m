@@ -122,7 +122,7 @@
                     [[UIApplication sharedApplication] showAlertWithTitle:@"Ошибка регистрации." message:@"Пожалуйста, пожалуйста повторите попытку." cancelButtonTitle:@"OK"];
                 }
                 else {
-                    [self saveClient:response.client];
+                    [self saveClient:response.apiResponse.client];
                     
                     [self.navigationController dismissViewControllerAnimated:YES completion:^{
                         [self.delegate signUpCompleted];
