@@ -12,7 +12,7 @@
 
 @interface ICVehicleView : MTLModel <MTLJSONSerializing>
 @property (nonatomic, copy, readonly) NSNumber *uniqueId;
-@property (nonatomic, copy, readonly) NSString *description;
+@property (nonatomic, copy, readonly) NSString *name;
 @property (nonatomic, copy, readonly) NSString *requestPickupButtonString;
 @property (nonatomic, copy, readonly) NSString *setPickupLocationString;
 @property (nonatomic, copy, readonly) NSString *pickupEtaString;

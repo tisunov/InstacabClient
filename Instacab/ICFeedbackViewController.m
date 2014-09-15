@@ -54,8 +54,7 @@ NSString * const kFeedbackPlaceholder = @"Что мы могли сделать 
     _feedbackTextView.text = kFeedbackPlaceholder;
     _feedbackTextView.delegate = self;
     _feedbackTextView.textColor = [UIColor lightGrayColor];
-    UIToolbar *toolbar = [self createActionBar];
-    _feedbackTextView.inputAccessoryView = toolbar;
+    _feedbackTextView.inputAccessoryView = [self createActionBar];
     
     _starRating.rating = self.driverRating;
     _starRating.starImage = [UIImage imageNamed:@"rating_star_empty.png"];

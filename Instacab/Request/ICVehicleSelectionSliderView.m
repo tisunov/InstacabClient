@@ -198,7 +198,7 @@ NSInteger const kNodeTapTag = 2;
         
         ICVehicleView *vehicleView = (ICVehicleView *)_vehicleViews[vehicleViewIndex];
         ICVehicleSelectionSliderLabel *label = [[ICVehicleSelectionSliderLabel alloc] init];
-        label.text = vehicleView.description;
+        label.text = vehicleView.name;
         label.centerX = centerPoint.x;
         label.y = selectedIndex == vehicleViewIndex ? kVehicleLabelSelectedY : kVehicleLabelUnselectedY;
         

@@ -24,7 +24,7 @@ NSString * const kRequestPickup = @"Заказать Автомобиль";
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     return @{
         @"uniqueId": @"id",
-        @"description": @"description",
+        @"name": @"description",
         @"requestPickupButtonString": @"requestPickupButtonString",
         @"setPickupLocationString": @"setPickupLocationString",
         @"pickupEtaString": @"pickupEtaString",
@@ -83,7 +83,7 @@ NSString * const kRequestPickup = @"Заказать Автомобиль";
 }
 
 - (NSString *)marketingRequestPickupButtonString {
-    return self.requestPickupButtonString.length ? [self.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:self.description] : kRequestPickup;
+    return self.requestPickupButtonString.length ? [self.requestPickupButtonString stringByReplacingOccurrencesOfString:@"{string}" withString:self.name] : kRequestPickup;
 }
 
 -(BOOL)available {
@@ -103,7 +103,7 @@ NSString * const kRequestPickup = @"Заказать Автомобиль";
     
     BOOL haveEqualIds = (!self.uniqueId && !other.uniqueId) || [self.uniqueId isEqualToNumber:other.uniqueId];
     
-    BOOL haveEqualDescriptions = (!self.description && !other.description) || [self.description isEqualToString:other.description];
+    BOOL haveEqualDescriptions = (!self.name && !other.name) || [self.name isEqualToString:other.name];
     
     BOOL haveEqualAllowFareEstimate = self.allowFareEstimate == other.allowFareEstimate;
     BOOL haveEqualRequestAfterMobileConfirm = self.requestAfterMobileConfirm == other.requestAfterMobileConfirm;

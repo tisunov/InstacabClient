@@ -15,7 +15,9 @@
 // Actions - something that user does: Sign In
 @interface AnalyticsManager : ICSingleton
 + (void)identify;
++ (void)linkPreSignupEventsWithClientId:(NSNumber *)clientId;
 + (void)track:(NSString *)event withProperties:(NSDictionary *)properties;
+
 + (void)trackSignUpCancel:(ICSignUpInfo *)info;
 + (void)trackRequestVehicle:(NSNumber *)vehicleViewId pickupLocation:(ICLocation *)location;
 + (void)trackContactDriver:(NSNumber *)vehicleViewId;
@@ -32,7 +34,7 @@
 + (NSString *)trackFareEstimate:(NSNumber *)vehicleViewId
                  pickupLocation:(ICLocation *)pickupLocation
                  destinationLocation:(ICLocation *)destinationLocation;
-+ (void)linkPreSignupEventsWithClientId:(NSNumber *)clientId;
+
 + (void)registerConfirmMobileProperty;
 + (void)registerPaymentTypeCardProperty;
 
