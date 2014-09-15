@@ -4,33 +4,24 @@ Instacab is an iPhone app used to request cars, messengers and anything else muc
 
 ## This is What It Looks Like
 
-<p style="margin-right:15px;margin-bottom:15px;display:inline">
-<img src="./readme/request.png" alt="Request Screen" width="200">
-</p>
+<table cellpadding="0" cellspacing="0" border="0">
+  <tbody>
+    <tr>
+      <td><img src="./readme/request.png" alt="Request Screen" width="200"></td>
+      <td><img src="./readme/confirmation.png" alt="Confirmation Screen" width="200"></td>
+      <td><img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" width="200"></td>
+    </tr>
+    <tr>
+      <td><img src="./readme/fare_quote.png" alt="Fare Quote" width="200"></td>
+      <td><img src="./readme/progress.png" alt="Waiting For Pickup" width="200"></td>
+      <td><img src="./readme/receipt.png" alt="Receipt" width="200"></td>
+    </tr>
+    <tr>
+      <td><img src="./readme/feedback.png" alt="Feedback" width="200"></td>
+    </tr>
+  </tbody>
+</table>
 
-<p style="margin-right:15px;margin-bottom:15px;display:inline;">
-<img src="./readme/confirmation.png" alt="Confirmation Screen" width="200">
-</p>
-
-<div style="margin-right:15px;margin-bottom:15px;display:inline;">
-<img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" width="200">
-</div>
-
-<div style="margin-right:15px;margin-bottom:15px;display:inline;">
-<img src="./readme/fare_quote.png" alt="Fare Quote" width="200">
-</div>
-
-<div style="margin-right:15px;margin-bottom:15px;display:inline;">
-<img src="./readme/progress.png" alt="Waiting For Pickup" width="200">
-</div>
-
-<div style="margin-right:15px;margin-bottom:15px;display:inline;">
-<img src="./readme/receipt.png" alt="Receipt" width="200">
-</div>
-
-<div style="margin-right:15px;margin-bottom:15px;display:inline;">
-<img src="./readme/feedback.png" alt="Feedback" width="200">
-</div>
 
 ## Requirements
 * Latest version of XCode - download from https://developer.apple.com/xcode/.
