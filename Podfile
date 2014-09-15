@@ -1,4 +1,5 @@
 platform :ios, '7.0'
+inhibit_all_warnings!
 
 pod 'AFNetworking', '~> 2.0'
 pod 'Colours', '~> 5.0'
@@ -20,5 +21,4 @@ pod 'UIView+AutoLayout'
 pod 'PromiseKit'
 pod 'RESideMenu'
 pod 'FastImageCache', '~> 1.3'
-pod 'Heap'
 pod 'Mixpanel'

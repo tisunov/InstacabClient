@@ -16,8 +16,6 @@
 #import "TargetConditionals.h"
 #import "ICClient.h"
 #import "ICCity.h"
-#import "Heap.h"
-#import "LocalyticsSession.h"
 #import "ICLocationService.h"
 #import "ICSession.h"
 #import "Mixpanel.h"
@@ -64,24 +62,6 @@
     NSString *mobile = client.mobile.length == 0 ? @"": client.mobile;
     NSString *mobileConfirmed = client.mobileConfirmed ? @"true" : @"false";
     NSString *platform = @"iphone";
-    
-    // Heap Analytics: identify client
-    [Heap identify:@{
-        @"handle": clientId,
-        @"email": client.email,
-        @"paymentType": paymentType,
-        @"mobile": mobile,
-        @"name": fullName,
-        @"mobileConfirmed": mobileConfirmed
-    }];
-    
-    // Localytics: identify client
-    LocalyticsSession *localytics = [LocalyticsSession shared];
-    [localytics setCustomerId:clientId];
-    [localytics setCustomerName:fullName];
-    [localytics setCustomerEmail:client.email];
-    [localytics setCustomDimension:0 value:paymentType]; // Payment Profile Type
-    [localytics setCustomDimension:1 value:mobileConfirmed]; // Mobile Confirmed
     
     // Mixpanel
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -137,10 +117,6 @@
     if ([ICClient sharedInstance].isAdmin) return;
     
     [[Mixpanel sharedInstance] track:event properties:properties];
-
-    [Heap track:event withProperties:properties];
-    
-    [[LocalyticsSession shared] tagEvent:event attributes:properties];
 }
 
 + (void)trackRequestVehicle:(NSNumber *)vehicleViewId pickupLocation:(ICLocation *)location {

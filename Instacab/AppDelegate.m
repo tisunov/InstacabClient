@@ -18,7 +18,6 @@
 #import "ICClient.h"
 #import "ICSidebarController.h"
 #import "Bugsnag.h"
-#import "LocalyticsSession.h"
 #import "Heap.h"
 #import "Mixpanel.h"
 
@@ -73,21 +72,11 @@
 #ifdef DEBUG
     // Development
 //    [Mixpanel sharedInstanceWithToken:@"e00c33993ed8ce0c53083fe0cdaf0cc2"];
-//
-//    [Heap setAppId:@"1172153281"];
-//    
-//    [[LocalyticsSession shared] LocalyticsSession:@"f2fb47e962b6ebf3ffd4745-2ce9d316-9973-11e3-9987-009c5fda0a25"];
 #else
     // Production
     Mixpanel *mixpanel = [Mixpanel sharedInstanceWithToken:@"ffffaea03e792c0a06a52cf59119d1f1"];
     mixpanel.flushInterval = 2;
-    
-    [Heap setAppId:@"755342236"];
-    
-    [[LocalyticsSession shared] LocalyticsSession:@"f55217e330feb2352b76e5f-3863dc50-fbac-11e3-9f4f-009c5fda0a25"];
 #endif
-    [[LocalyticsSession shared] open];
-    [[LocalyticsSession shared] upload];
 #endif
     
     [[ICLocationService sharedInstance] startUpdatingLocation];
@@ -102,47 +91,27 @@
 // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-#if !(TARGET_IPHONE_SIMULATOR)
-    [[LocalyticsSession shared] close];
-    [[LocalyticsSession shared] upload];
-#endif
 }
 
 // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
 // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-#if !(TARGET_IPHONE_SIMULATOR)
-    [[LocalyticsSession shared] close];
-    [[LocalyticsSession shared] upload];
-#endif
 }
 
 // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-#if !(TARGET_IPHONE_SIMULATOR)
-    [[LocalyticsSession shared] resume];
-    [[LocalyticsSession shared] upload];
-#endif
 }
 
 // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-#if !(TARGET_IPHONE_SIMULATOR)
-    [[LocalyticsSession shared] resume];
-    [[LocalyticsSession shared] upload];
-#endif
 }
 
 // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-#if !(TARGET_IPHONE_SIMULATOR)
-    [[LocalyticsSession shared] close];
-    [[LocalyticsSession shared] upload];
-#endif
 }
 
 @end

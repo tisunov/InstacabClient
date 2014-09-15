@@ -30,7 +30,6 @@
 		D940FBC1187552C000288448 /* UIAlertView+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC0187552C000288448 /* UIAlertView+Additions.m */; };
 		D940FBC4187553E800288448 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */; };
 		D948113F18BCB6720005D348 /* ICPaymentProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = D948113E18BCB6720005D348 /* ICPaymentProfile.m */; };
-		D948114118BD3E680005D348 /* libLocalyticsAMP_x64.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */; };
 		D9532E1E1819B44E0046E5EC /* ICPing.m in Sources */ = {isa = PBXBuildFile; fileRef = D9532E1D1819B44E0046E5EC /* ICPing.m */; };
 		D96EEB291805895B0048A669 /* ICRequestViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D96EEB281805895B0048A669 /* ICRequestViewController.xib */; };
 		D97A48D318F03FCB0095B4BC /* ICVerifyMobileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D97A48D118F03FCB0095B4BC /* ICVerifyMobileViewController.m */; };
@@ -99,8 +98,6 @@
 		D9CDF22E192A9684009F7D4A /* ICVehicleView.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CDF22D192A9684009F7D4A /* ICVehicleView.m */; };
 		D9CDF231192A9828009F7D4A /* ICImage.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CDF230192A9828009F7D4A /* ICImage.m */; };
 		D9CDF237192B2FEF009F7D4A /* ICNearbyVehicles.m in Sources */ = {isa = PBXBuildFile; fileRef = D9CDF236192B2FEF009F7D4A /* ICNearbyVehicles.m */; };
-		D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */; };
-		D9D08D2B18B4F6F300760327 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = D9D08D2518B4F6F300760327 /* LICENSE */; };
 		D9D42FF518C4A84D004F761F /* UIView+Positioning.m in Sources */ = {isa = PBXBuildFile; fileRef = D9D42FF418C4A84D004F761F /* UIView+Positioning.m */; };
 		D9D4A277188655FA00067879 /* ICLinkCardController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D9D4A276188655FA00067879 /* ICLinkCardController.xib */; };
 		D9D4A2801886629C00067879 /* libCardIO.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9D4A27F1886629C00067879 /* libCardIO.a */; };
@@ -176,7 +173,6 @@
 		D940FBC3187553E800288448 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		D948113D18BCB6720005D348 /* ICPaymentProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICPaymentProfile.h; sourceTree = "<group>"; };
 		D948113E18BCB6720005D348 /* ICPaymentProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPaymentProfile.m; sourceTree = "<group>"; };
-		D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libLocalyticsAMP_x64.a; sourceTree = "<group>"; };
 		D9532E1C1819B44E0046E5EC /* ICPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICPing.h; sourceTree = "<group>"; };
 		D9532E1D1819B44E0046E5EC /* ICPing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICPing.m; sourceTree = "<group>"; };
 		D96EEB281805895B0048A669 /* ICRequestViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICRequestViewController.xib; sourceTree = "<group>"; };
@@ -288,10 +284,6 @@
 		D9CDF230192A9828009F7D4A /* ICImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICImage.m; sourceTree = "<group>"; };
 		D9CDF235192B2FEF009F7D4A /* ICNearbyVehicles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ICNearbyVehicles.h; sourceTree = "<group>"; };
 		D9CDF236192B2FEF009F7D4A /* ICNearbyVehicles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ICNearbyVehicles.m; sourceTree = "<group>"; };
-		D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = iOSa_2.21.1.version; sourceTree = "<group>"; };
-		D9D08D2518B4F6F300760327 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		D9D08D2618B4F6F300760327 /* LocalyticsAmpSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsAmpSession.h; sourceTree = "<group>"; };
-		D9D08D2718B4F6F300760327 /* LocalyticsSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalyticsSession.h; sourceTree = "<group>"; };
 		D9D42FF318C4A84D004F761F /* UIView+Positioning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Positioning.h"; sourceTree = "<group>"; };
 		D9D42FF418C4A84D004F761F /* UIView+Positioning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Positioning.m"; sourceTree = "<group>"; };
 		D9D4A276188655FA00067879 /* ICLinkCardController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ICLinkCardController.xib; sourceTree = "<group>"; };
@@ -336,7 +328,6 @@
 				D97B7AE718083E2A00B8315D /* AdSupport.framework in Frameworks */,
 				D9EFF9A61805867700A68AED /* SystemConfiguration.framework in Frameworks */,
 				D9EFF9A41805867100A68AED /* QuartzCore.framework in Frameworks */,
-				D948114118BD3E680005D348 /* libLocalyticsAMP_x64.a in Frameworks */,
 				D9B0328C1805864D00F7AF69 /* OpenGLES.framework in Frameworks */,
 				D9B0328A1805864800F7AF69 /* libz.dylib in Frameworks */,
 				D9B032881805863F00F7AF69 /* libicucore.dylib in Frameworks */,
@@ -493,7 +484,6 @@
 			children = (
 				D9D5FABF18F24B12006AB0A8 /* AKTransliteration */,
 				D9D4A2781886629C00067879 /* CardIO */,
-				D9D08D2118B4F6F300760327 /* Localytics */,
 			);
 			name = 3rdParty;
 			sourceTree = "<group>";
@@ -745,18 +735,6 @@
 			name = Analytics;
 			sourceTree = "<group>";
 		};
-		D9D08D2118B4F6F300760327 /* Localytics */ = {
-			isa = PBXGroup;
-			children = (
-				D948114018BD3E680005D348 /* libLocalyticsAMP_x64.a */,
-				D9D08D2218B4F6F300760327 /* iOSa_2.21.1.version */,
-				D9D08D2518B4F6F300760327 /* LICENSE */,
-				D9D08D2618B4F6F300760327 /* LocalyticsAmpSession.h */,
-				D9D08D2718B4F6F300760327 /* LocalyticsSession.h */,
-			);
-			path = Localytics;
-			sourceTree = "<group>";
-		};
 		D9D4A2781886629C00067879 /* CardIO */ = {
 			isa = PBXGroup;
 			children = (
@@ -901,11 +879,9 @@
 			files = (
 				D90BAE241884359500E03F3E /* ICFeedbackViewController.xib in Resources */,
 				D9D4A277188655FA00067879 /* ICLinkCardController.xib in Resources */,
-				D9D08D2B18B4F6F300760327 /* LICENSE in Resources */,
 				D9FAF6211959FE190021F726 /* GoogleMaps.bundle in Resources */,
 				D9C193241888779200A889E4 /* ICAccountViewController.xib in Resources */,
 				D9B03243180572B400F7AF69 /* InfoPlist.strings in Resources */,
-				D9D08D2818B4F6F300760327 /* iOSa_2.21.1.version in Resources */,
 				D99833D21820E89A00A7DA8E /* Images.xcassets in Resources */,
 				D9DD9BD718F793BC009798C2 /* ICUpdateMobileViewController.xib in Resources */,
 				D9A63CCE18B0843C00F9577E /* Skver.gpx in Resources */,
