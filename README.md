@@ -4,13 +4,13 @@ Instacab is an iPhone app used to request cars, messengers and anything else muc
 
 ## This is What It Looks Like
 
-<img src="./readme/request.png" alt="Request Screen" width="200">
-<img src="./readme/confirmation.png" alt="Confirmation Screen" width="200">
-<img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" width="200">
-<img src="./readme/fare_quote.png" alt="Fare Quote" width="200">
-<img src="./readme/progress.png" alt="Waiting For Pickup" width="200">
-<img src="./readme/receipt.png" alt="Receipt" width="200">
-<img src="./readme/feedback.png" alt="Feedback" width="200">
+<img src="./readme/request.png" alt="Request Screen" width="200" style="margin-right:15px">
+<img src="./readme/confirmation.png" alt="Confirmation Screen" width="200" style="margin-right:15px">
+<img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" width="200" style="margin-right:15px">
+<img src="./readme/fare_quote.png" alt="Fare Quote" width="200" style="margin-right:15px">
+<img src="./readme/progress.png" alt="Waiting For Pickup" width="200" style="margin-right:15px">
+<img src="./readme/receipt.png" alt="Receipt" width="200" style="margin-right:15px">
+<img src="./readme/feedback.png" alt="Feedback" width="200" style="margin-right:15px">
 
 ## Requirements
 * Latest version of XCode - download from https://developer.apple.com/xcode/.
