@@ -4,13 +4,13 @@ Instacab is an iPhone app used to request cars, messengers and anything else muc
 
 ## This is What It Looks Like
 
-<div style="margin-right:15px;margin-bottom:15px;display:inline">
+<p style="margin-right:15px;margin-bottom:15px;display:inline">
 <img src="./readme/request.png" alt="Request Screen" width="200">
-</div>
+</p>
 
-<div style="margin-right:15px;margin-bottom:15px;display:inline;">
+<p style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/confirmation.png" alt="Confirmation Screen" width="200">
-</div>
+</p>
 
 <div style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" width="200">
