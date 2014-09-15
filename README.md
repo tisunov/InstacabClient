@@ -21,12 +21,32 @@ Instacab is an iPhone app used to request cars, messengers and anything else muc
 
         pod install
 
-3. Open InstaCab.xcworkspace to build and run the app
-4. Register your Google Maps API key
-5. (Optionaly) Register your Mixpanel key for analytics
-6. (Optionaly) Register your BugSnag key for crash reporting
-7. Start Instacab Node.js Dispatcher
-8. Start Instacab Rails Backend
+3. Register your Google Maps API key and insert it in `AppDelegate.m`
+
+      ```Objective-C
+        - (void)setupServices:(UIApplication *)application {
+            // Google Maps key
+            [GMSServices provideAPIKey:@"<YOUR GOOGLE MAPS API KEY>"];
+      ```
+  You need it otherwise app won't load Google Maps
+
+4. (*optionaly*) Register your Mixpanel key for analytics, then insert development & production keys in `AppDelegate.m`
+
+      ```Objective-C
+        - (void)setupServices:(UIApplication *)application {
+            ...
+            // Mixpanel analytics
+            [Mixpanel sharedInstanceWithToken:@"<YOUR MIXPANEL KEY>"];
+      ```
+
+5. (*optionaly*) Register your BugSnag key for crash reporting, then add it to `AppDelegate.m` `application:didFinishLaunchingWithOptions:` method:
+  
+      ```Objective-C
+        [Bugsnag startBugsnagWithApiKey:@"<YOUR BUGSNAG API KEY>"];
+      ```
+
+6. Start Instacab Node.js Dispatcher
+7. Start Instacab Rails Backend
 
 ## Setting Up Dispatcher
 

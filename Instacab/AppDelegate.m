@@ -26,7 +26,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 #if !(TARGET_IPHONE_SIMULATOR)
-    [Bugsnag startBugsnagWithApiKey:@"07683146286ebf0f4aff27edae5b5043"];
+    [Bugsnag startBugsnagWithApiKey:@""];
 #endif
     
     [self setupServices:application];
@@ -65,16 +65,16 @@
 
 - (void)setupServices:(UIApplication *)application {
     // Google Maps key
-    [GMSServices provideAPIKey:@"AIzaSyCvlC3MQG4t2MFq92mxsYjFSynAJ-bGqfo"];
+    [GMSServices provideAPIKey:@""];
 
-    // Mixpanel, Heap, Localytics analytics
+    // Mixpanel analytics
 #if !(TARGET_IPHONE_SIMULATOR)
 #ifdef DEBUG
     // Development
-//    [Mixpanel sharedInstanceWithToken:@"e00c33993ed8ce0c53083fe0cdaf0cc2"];
+//    [Mixpanel sharedInstanceWithToken:@""];
 #else
     // Production
-    Mixpanel *mixpanel = [Mixpanel sharedInstanceWithToken:@"ffffaea03e792c0a06a52cf59119d1f1"];
+    Mixpanel *mixpanel = [Mixpanel sharedInstanceWithToken:@""];
     mixpanel.flushInterval = 2;
 #endif
 #endif
