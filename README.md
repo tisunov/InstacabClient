@@ -3,7 +3,7 @@
 Instacab is an iPhone app used to request cars, messengers and anything else much like Uber, with real-time progress tracking on the map, integrated payment and receipt after your ride or request is completed.
 
 ## This is What It Looks Like
-![Request Screen](./readme/request.png)
+![Request Screen](./readme/request.png =200x)
 
 <img src="./readme/confirmation.png" alt="Confirmation Screen" style="width:200px">
 <img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" style="width:200px">
