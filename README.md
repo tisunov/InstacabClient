@@ -3,13 +3,17 @@
 Instacab is an iPhone app used to request cars, messengers and anything else much like Uber, with real-time progress tracking on the map, integrated payment and receipt after your ride or request is completed.
 
 ## This is What It Looks Like
-<img src="./readme/request.png" alt="Request Screen" style="width:200px">
+![Request Screen](./readme/request.png)
+
 <img src="./readme/confirmation.png" alt="Confirmation Screen" style="width:200px">
 <img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" style="width:200px">
 <img src="./readme/fare_quote.png" alt="Fare Quote" style="width:200px">
 <img src="./readme/progress.png" alt="Waiting For Pickup" style="width:200px">
 <img src="./readme/receipt.png" alt="Receipt" style="width:200px">
 <img src="./readme/feedback.png" alt="Feedback" style="width:200px">
+
+## Requirements
+* Latest version of XCode - download from https://developer.apple.com/xcode/.
 
 ## Getting Started
 
@@ -21,7 +25,7 @@ Instacab is an iPhone app used to request cars, messengers and anything else muc
 
         pod install
 
-3. Register your Google Maps API key and insert it in `AppDelegate.m`
+3. Register your [Google Maps API key](https://developers.google.com/maps/documentation/ios/start#obtaining_an_api_key) and insert it in `AppDelegate.m`
 
       ```Objective-C
         - (void)setupServices:(UIApplication *)application {
