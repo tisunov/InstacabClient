@@ -4,33 +4,33 @@ Instacab is an iPhone app used to request cars, messengers and anything else muc
 
 ## This is What It Looks Like
 
-<span style="margin-right:15px;margin-bottom:15px;display:inline">
+<div style="margin-right:15px;margin-bottom:15px;display:inline">
 <img src="./readme/request.png" alt="Request Screen" width="200">
-</span>
+</div>
 
-<span style="margin-right:15px;margin-bottom:15px;display:inline;">
+<div style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/confirmation.png" alt="Confirmation Screen" width="200">
-</span>
+</div>
 
-<span style="margin-right:15px;margin-bottom:15px;display:inline;">
+<div style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/pickup_location.png" alt="Choosing Manual Pickup Location" width="200">
-</span>
+</div>
 
-<span style="margin-right:15px;margin-bottom:15px;display:inline;">
+<div style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/fare_quote.png" alt="Fare Quote" width="200">
-</span>
+</div>
 
-<span style="margin-right:15px;margin-bottom:15px;display:inline;">
+<div style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/progress.png" alt="Waiting For Pickup" width="200">
-</span>
+</div>
 
-<span style="margin-right:15px;margin-bottom:15px;display:inline;">
+<div style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/receipt.png" alt="Receipt" width="200">
-</span>
+</div>
 
-<span style="margin-right:15px;margin-bottom:15px;display:inline;">
+<div style="margin-right:15px;margin-bottom:15px;display:inline;">
 <img src="./readme/feedback.png" alt="Feedback" width="200">
-</span>
+</div>
 
 ## Requirements
 * Latest version of XCode - download from https://developer.apple.com/xcode/.
